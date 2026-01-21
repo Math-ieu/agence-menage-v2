@@ -107,7 +107,7 @@ const GrandMenageBureaux = () => {
         const whatsappLink = createWhatsAppLink(DESTINATION_PHONE_NUMBER, message);
 
         // Send email notification (async)
-        sendBookingEmail("Grand Ménage Bureaux", bookingData, totalPrice).catch(console.error);
+        sendBookingEmail("Grand Ménage Bureaux", bookingData, totalPrice, true).catch(console.error);
 
         window.open(whatsappLink, '_blank');
         setShowConfirmation(true);

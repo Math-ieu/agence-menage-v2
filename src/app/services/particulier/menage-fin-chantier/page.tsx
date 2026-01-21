@@ -75,7 +75,7 @@ const MenageFinChantier = () => {
         const whatsappLink = createWhatsAppLink(DESTINATION_PHONE_NUMBER, message);
 
         // Send email notification (async)
-        sendBookingEmail("Nettoyage Fin de chantier", bookingData, "Sur devis").catch(console.error);
+        sendBookingEmail("Nettoyage Fin de chantier", bookingData, "Sur devis", false).catch(console.error);
 
         window.open(whatsappLink, '_blank');
         setShowConfirmation(true);

@@ -100,7 +100,7 @@ const GardeMalade = () => {
     const whatsappLink = createWhatsAppLink(DESTINATION_PHONE_NUMBER, message);
 
     // Send email notification (async)
-    sendBookingEmail("Garde Malade", bookingData, priceValue).catch(console.error);
+    sendBookingEmail("Garde Malade", bookingData, priceValue, false).catch(console.error);
 
     window.open(whatsappLink, '_blank');
     setShowConfirmation(true);

@@ -159,7 +159,7 @@ const MenageRegulier = () => {
     const whatsappLink = createWhatsAppLink(DESTINATION_PHONE_NUMBER, message);
 
     // Send email notification (async)
-    sendBookingEmail("Ménage Régulier", bookingData, totalPrice).catch(console.error);
+    sendBookingEmail("Ménage Régulier", bookingData, totalPrice, false).catch(console.error);
 
     window.open(whatsappLink, '_blank');
     setShowConfirmation(true);

@@ -120,7 +120,7 @@ const MenageDemenagement = () => {
         const whatsappLink = createWhatsAppLink(DESTINATION_PHONE_NUMBER, message);
 
         // Send email notification (async)
-        sendBookingEmail("Ménage post-déménagement", bookingData, totalPrice || "Sur devis").catch(console.error);
+        sendBookingEmail("Ménage post-déménagement", bookingData, totalPrice || "Sur devis", false).catch(console.error);
 
         window.open(whatsappLink, '_blank');
         setShowConfirmation(true);
