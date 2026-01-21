@@ -113,19 +113,37 @@ const GrandMenageBureaux = () => {
         setShowConfirmation(true);
     };
 
+    const calculateMinResources = (surface: string) => {
+        const numericSurface = Number(surface);
+        if (numericSurface <= 70) return { duration: 6, people: 1 };
+        if (numericSurface <= 150) return { duration: 4, people: 2 };
+        if (numericSurface < 300) return { duration: 8, people: 2 };
+        return { duration: 8, people: 3 };
+    };
+
     const incrementPeople = () => setFormData({ ...formData, numberOfPeople: formData.numberOfPeople + 1 });
-    const decrementPeople = () => setFormData({ ...formData, numberOfPeople: Math.max(1, formData.numberOfPeople - 1) });
+    const decrementPeople = () => {
+        const minResources = calculateMinResources(formData.officeSurface);
+        if (formData.numberOfPeople > minResources.people) {
+            setFormData({ ...formData, numberOfPeople: formData.numberOfPeople - 1 });
+        }
+    };
 
     const incrementDuration = () => setFormData({ ...formData, duration: formData.duration + 1 });
-    const decrementDuration = () => setFormData({ ...formData, duration: Math.max(4, formData.duration - 1) });
+    const decrementDuration = () => {
+        const minResources = calculateMinResources(formData.officeSurface);
+        if (formData.duration > minResources.duration) {
+            setFormData({ ...formData, duration: formData.duration - 1 });
+        }
+    };
 
     const handleSurfaceChange = (surface: string) => {
-        const numericSurface = Number(surface);
-        const suggestedPeople = numericSurface > 150 ? 2 : 1;
+        const { duration: finalDuration, people: finalPeople } = calculateMinResources(surface);
         setFormData({
             ...formData,
             officeSurface: surface,
-            numberOfPeople: suggestedPeople
+            duration: finalDuration,
+            numberOfPeople: finalPeople
         });
     };
 
@@ -236,7 +254,7 @@ const GrandMenageBureaux = () => {
 
                             <div className="lg:col-span-2 space-y-8">
 
-                                <div className="bg-card rounded-lg p-6 border shadow-sm space-y-6">
+                                <div className="bg-card rounded-lg p-4 md:p-6 border shadow-sm space-y-6">
                                     <div>
                                         <h3 className="text-xl font-bold bg-primary text-white p-3 rounded-lg text-center mb-4">
                                             Indiquez la superficie de votre espace en m².
@@ -325,9 +343,9 @@ const GrandMenageBureaux = () => {
                                                 type="button"
                                                 variant="outline"
                                                 size="icon"
-                                                className="rounded-full"
+                                                className="rounded-full disabled:opacity-30"
                                                 onClick={decrementDuration}
-                                                disabled={formData.duration <= 4}
+                                                disabled={formData.duration <= calculateMinResources(formData.officeSurface).duration}
                                             >
                                                 -
                                             </Button>
@@ -355,8 +373,9 @@ const GrandMenageBureaux = () => {
                                                 type="button"
                                                 variant="outline"
                                                 size="icon"
-                                                className="rounded-full"
+                                                className="rounded-full disabled:opacity-30"
                                                 onClick={decrementPeople}
+                                                disabled={formData.numberOfPeople <= calculateMinResources(formData.officeSurface).people}
                                             >
                                                 -
                                             </Button>
@@ -440,7 +459,7 @@ const GrandMenageBureaux = () => {
                                                 </RadioGroup>
                                             </div>
                                             <div className="text-center">
-                                                <div className="font-semibold mb-2">Quand souhaitez-vous votre premier ménage ?</div>
+                                                <div className="font-semibold mb-2">Date</div>
                                                 <Input
                                                     type="date"
                                                     required

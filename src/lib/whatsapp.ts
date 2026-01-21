@@ -8,11 +8,10 @@ export const createWhatsAppLink = (phoneNumber: string, message: string): string
 };
 
 export const getConfirmationMessage = (clientName: string, isDevis: boolean): string => {
-    const numbers = CUSTOMER_SERVICE_NUMBERS.join(" / ");
     if (isDevis) {
-        return `Bonjour ${clientName}, Nous confirmons la bonne réception de votre réservation. Un conseiller clientèle vous contactera dans les plus brefs délais pour la validation de la demande et la transmission du devis correspondant. Pour toute question, contactez-nous au ${numbers}. Cordialement`;
+        return `Bonjour ${clientName}, Nous confirmons la bonne réception de votre réservation. Un conseiller clientèle vous contactera dans les plus brefs délais pour la validation de la demande et la transmission du devis correspondant. Cordialement`;
     }
-    return `Bonjour ${clientName}, Merci pour votre réservation Elle a bien été reçue. Notre équipe vous contactera très bientôt pour confirmer les détails. Vous pouvez nous joindre au ${numbers}. Cordialement.`;
+    return `Bonjour ${clientName}, Merci pour votre réservation, elle a bien été reçue. Notre équipe vous contactera très bientôt pour confirmer les détails. Cordialement`;
 };
 
 export const formatBookingMessage = (serviceName: string, data: any, price: number | string, isEntreprise: boolean = false): string => {

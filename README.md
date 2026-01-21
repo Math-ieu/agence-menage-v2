@@ -1,73 +1,78 @@
-# Welcome to your Lovable project
+# Agence Ménage - Services de Nettoyage Professionnels
 
-## Project info
+Bienvenue dans le projet **Agence Ménage**, une plateforme moderne et performante pour la réservation de services de nettoyage à Casablanca, tant pour les particuliers que pour les entreprises.
 
-**URL**: https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID
+Ce projet a été migré de Vite vers **Next.js 16** (App Router) pour offrir de meilleures performances, une optimisation SEO avancée et une expérience utilisateur fluide.
 
-## How can I edit this code?
+## 🚀 Technologies Utilisées
 
-There are several ways of editing your application.
+- **Framework** : [Next.js 16](https://nextjs.org/) (App Router)
+- **Langage** : [TypeScript](https://www.typescriptlang.org/)
+- **UI & Style** : [Tailwind CSS](https://tailwindcss.com/) & [Shadcn UI](https://ui.shadcn.com/)
+- **Icônes** : [Lucide React](https://lucide.dev/)
+- **Animations** : [Framer Motion](https://www.framer.com/motion/)
+- **Services tiers** : [EmailJS](https://www.emailjs.com/) pour la gestion des formulaires de contact
 
-**Use Lovable**
+## 🛠️ Installation et Démarrage
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and start prompting.
+### Pré-requis
 
-Changes made via Lovable will be committed automatically to this repo.
+- **Node.js** : v18.17.0 ou supérieure (v20+ recommandée)
+- **npm** ou **yarn**
 
-**Use your preferred IDE**
+### Étapes
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+1. **Cloner le projet**
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+   ```sh
+   git clone <URL_DU_REPO>
+   cd agence-menage-v2
+   ```
 
-Follow these steps:
+2. **Installer les dépendances**
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+   ```sh
+   npm install
+   ```
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+3. **Configurer les variables d'environnement**
+   Créez un fichier `.env` à la racine (voir `.env.example`) :
 
-# Step 3: Install the necessary dependencies.
-npm i
+   ```env
+   NEXT_PUBLIC_EMAILJS_SERVICE_ID=votre_service_id
+   NEXT_PUBLIC_EMAILJS_TEMPLATE_ID=votre_template_id
+   NEXT_PUBLIC_EMAILJS_PUBLIC_KEY=votre_public_key
+   ```
 
-# Step 4: Start the development server with auto-reloading and an instant preview.
-npm run dev
-```
+4. **Lancer le serveur de développement**
 
-**Edit a file directly in GitHub**
+   ```sh
+   npm run dev
+   ```
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+   L'application sera accessible sur [http://localhost:3000](http://localhost:3000).
 
-**Use GitHub Codespaces**
+## 📄 Structure du Projet
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+- `src/app/` : Routes de l'application (Pages, Layouts, API).
+- `src/components/` : Composants React réutilisables.
+- `src/components/ui/` : Composants de base de Shadcn UI.
+- `src/assets/` : Images et ressources statiques.
+- `src/lib/` : Utilitaires et configurations (EmailJS, etc.).
+- `public/` : Fichiers statiques servis directement (Vidéo, robots.txt, sitemap.xml).
 
-## What technologies are used for this project?
+## 📈 SEO et Performance
 
-This project is built with:
+- **Optimisation SEO** : Utilisation de la MetaData API de Next.js pour chaque page.
+- **Sitemap & Robots** : Génération dynamique du sitemap et configuration `robots.txt` à la racine.
+- **Performance** : Utilisation de `next/image` pour l'optimisation des images et `next/link` pour une navigation instantanée.
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+## 📝 Scripts Disponibles
 
-## How can I deploy this project?
+- `npm run dev` : Lance le serveur de développement.
+- `npm run build` : Crée un build de production optimisé.
+- `npm run start` : Lance l'application compilée.
+- `npm run lint` : Vérifie la qualité du code.
 
-Simply open [Lovable](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and click on Share -> Publish.
-
-## Can I connect a custom domain to my Lovable project?
-
-Yes, you can!
-
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
-
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/features/custom-domain#custom-domain)
+---
+Développé avec ❤️ pour Agence Ménage Casablanca.

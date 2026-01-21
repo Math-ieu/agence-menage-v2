@@ -138,29 +138,31 @@ const GrandMenage = () => {
     setShowConfirmation(true);
   };
 
+  const calculateMinResources = (surface: number) => {
+    if (surface <= 70) return { duration: 6, people: 1 };
+    if (surface <= 150) return { duration: 4, people: 2 };
+    if (surface < 300) return { duration: 8, people: 2 };
+    return { duration: 8, people: 3 };
+  };
+
   const incrementPeople = () => setFormData({ ...formData, numberOfPeople: formData.numberOfPeople + 1 });
-  const decrementPeople = () => setFormData({ ...formData, numberOfPeople: Math.max(1, formData.numberOfPeople - 1) });
+  const decrementPeople = () => {
+    const minResources = calculateMinResources(formData.surfaceArea);
+    if (formData.numberOfPeople > minResources.people) {
+      setFormData({ ...formData, numberOfPeople: formData.numberOfPeople - 1 });
+    }
+  };
 
   const incrementDuration = () => setFormData({ ...formData, duration: formData.duration + 1 });
-  const decrementDuration = () => setFormData({ ...formData, duration: Math.max(1, formData.duration - 1) });
+  const decrementDuration = () => {
+    const minResources = calculateMinResources(formData.surfaceArea);
+    if (formData.duration > minResources.duration) {
+      setFormData({ ...formData, duration: formData.duration - 1 });
+    }
+  };
 
   const calculateEstimation = (surface: number) => {
-    let finalDuration = 4;
-    let finalPeople = 1;
-
-    if (surface <= 70) {
-      finalDuration = 6;
-      finalPeople = 1;
-    } else if (surface <= 150) {
-      finalDuration = 4;
-      finalPeople = 2;
-    } else if (surface < 300) {
-      finalDuration = 8;
-      finalPeople = 2;
-    } else {
-      finalDuration = 8;
-      finalPeople = 3;
-    }
+    const { duration: finalDuration, people: finalPeople } = calculateMinResources(surface);
 
     setFormData(prev => ({
       ...prev,
@@ -304,7 +306,7 @@ Il comprend le :
               </div>
 
               <div className="lg:col-span-2 space-y-8">
-                <div className="bg-card rounded-lg p-8 border shadow-sm space-y-10">
+                <div className="bg-card rounded-lg p-4 md:p-8 border shadow-sm space-y-10">
                   <div>
                     <h3 className="text-xl font-bold bg-[#e2d9c2] text-[#4a4a4a] p-3 rounded-lg text-center mb-4 uppercase">
                       Type d'habitation
@@ -420,9 +422,9 @@ Il comprend le :
                         type="button"
                         variant="ghost"
                         size="icon"
-                        className="h-10 w-10 rounded-full bg-slate-100 text-[#c5b89a] hover:bg-slate-200 border border-slate-200 shadow-sm"
+                        className="h-10 w-10 rounded-full bg-slate-100 text-[#c5b89a] hover:bg-slate-200 border border-slate-200 shadow-sm disabled:opacity-30"
                         onClick={decrementDuration}
-                        disabled={true}
+                        disabled={formData.duration <= calculateMinResources(formData.surfaceArea).duration}
                       >
                         <span className="text-2xl">-</span>
                       </Button>
@@ -435,7 +437,6 @@ Il comprend le :
                         size="icon"
                         className="h-10 w-10 rounded-full bg-slate-100 text-[#c5b89a] hover:bg-slate-200 border border-slate-200 shadow-sm"
                         onClick={incrementDuration}
-                        disabled={true}
                       >
                         <span className="text-2xl">+</span>
                       </Button>
@@ -451,9 +452,9 @@ Il comprend le :
                         type="button"
                         variant="ghost"
                         size="icon"
-                        className="h-10 w-10 rounded-full bg-slate-100 text-[#c5b89a] hover:bg-slate-200 border border-slate-200 shadow-sm"
+                        className="h-10 w-10 rounded-full bg-slate-100 text-[#c5b89a] hover:bg-slate-200 border border-slate-200 shadow-sm disabled:opacity-30"
                         onClick={decrementPeople}
-                        disabled={true}
+                        disabled={formData.numberOfPeople <= calculateMinResources(formData.surfaceArea).people}
                       >
                         <span className="text-2xl">-</span>
                       </Button>
@@ -466,7 +467,6 @@ Il comprend le :
                         size="icon"
                         className="h-10 w-10 rounded-full bg-slate-100 text-[#c5b89a] hover:bg-slate-200 border border-slate-200 shadow-sm"
                         onClick={incrementPeople}
-                        disabled={true}
                       >
                         <span className="text-2xl">+</span>
                       </Button>
@@ -508,7 +508,7 @@ Il comprend le :
                         </RadioGroup>
                       </div>
                       <div className="text-center space-y-3">
-                        <div className="font-bold text-[#c5b89a] text-sm text-wrap">Quand souhaitez-vous votre premier ménage ?</div>
+                        <div className="font-bold text-[#c5b89a] text-sm text-wrap">Date</div>
                         <Input
                           type="date"
                           required

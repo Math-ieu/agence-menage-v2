@@ -175,7 +175,7 @@ Il comprend le :
 
                             <div className="lg:col-span-2 space-y-8">
 
-                                <div className="bg-card rounded-lg p-6 border shadow-sm space-y-6">
+                                <div className="bg-card rounded-lg p-4 md:p-6 border shadow-sm space-y-6">
                                     <div>
                                         <h3 className="text-xl font-bold bg-primary text-white p-3 rounded-lg mb-4 text-center">
                                             Type d'habitation
@@ -297,7 +297,7 @@ Il comprend le :
                                                 </RadioGroup>
                                             </div>
                                             <div className="text-center space-y-3">
-                                                <div className="font-bold text-primary text-sm">Quand souhaitez-vous votre premier ménage ?</div>
+                                                <div className="font-bold text-primary text-sm">Date</div>
                                                 <Input
                                                     type="date"
                                                     required

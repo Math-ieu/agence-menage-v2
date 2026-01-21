@@ -273,7 +273,7 @@ const MenageBureaux = () => {
 
               <div className="lg:col-span-2 space-y-8">
 
-                <div className="bg-card rounded-lg p-6 border shadow-sm space-y-6">
+                <div className="bg-card rounded-lg p-4 md:p-6 border shadow-sm space-y-6">
                   <div>
                     <h3 className="text-xl font-bold bg-primary text-white p-3 rounded-lg text-center mb-4 uppercase">
                       Superficie de votre cadre en M²
@@ -503,7 +503,7 @@ const MenageBureaux = () => {
                         </RadioGroup>
                       </div>
                       <div className="text-center">
-                        <div className="font-semibold mb-2">Quand souhaitez-vous votre premier ménage ?</div>
+                        <div className="font-semibold mb-2">Date</div>
                         <Input
                           type="date"
                           required

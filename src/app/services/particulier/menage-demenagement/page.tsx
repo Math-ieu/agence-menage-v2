@@ -237,7 +237,7 @@ Options possibles : vitres extérieures/grandes baies, terrasse.`}
                             </div>
 
                             <div className="lg:col-span-2 space-y-8">
-                                <div className="bg-card rounded-lg p-8 border shadow-sm space-y-10">
+                                <div className="bg-card rounded-lg p-4 md:p-8 border shadow-sm space-y-10">
                                     <div>
                                         <h3 className="text-xl font-bold bg-[#d1a246] text-white p-3 rounded-lg text-center mb-4 uppercase">
                                             Type d'habitation
@@ -409,7 +409,7 @@ Options possibles : vitres extérieures/grandes baies, terrasse.`}
                                                 </RadioGroup>
                                             </div>
                                             <div className="text-center space-y-3">
-                                                <div className="font-bold text-[#8a6d2f] text-sm text-wrap">Quand souhaitez-vous votre ménage ?</div>
+                                                <div className="font-bold text-[#8a6d2f] text-sm text-wrap">Date</div>
                                                 <Input
                                                     type="date"
                                                     required

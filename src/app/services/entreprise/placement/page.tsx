@@ -271,7 +271,7 @@ const PlacementEntreprise = () => {
 
                                     {/* Form Fields Column */}
                                     <div className="lg:col-span-2 space-y-8">
-                                        <div className="bg-white rounded-2xl p-8 border shadow-sm space-y-10">
+                                        <div className="bg-white rounded-2xl p-4 md:p-8 border shadow-sm space-y-10">
 
                                             {/* Service Type Selection */}
                                             <div className="space-y-4">

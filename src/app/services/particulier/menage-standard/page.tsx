@@ -343,7 +343,7 @@ Il comprend le :
 
               <div className="lg:col-span-2 space-y-8">
 
-                <div className="bg-card rounded-lg p-6 border shadow-sm space-y-6">
+                <div className="bg-card rounded-lg p-4 md:p-6 border shadow-sm space-y-6">
                   <div>
                     <h3 className="text-xl font-bold bg-[#1c6664] text-white p-3 rounded-lg mb-4 text-center">
                       Type d'habitation
@@ -434,10 +434,10 @@ Il comprend le :
                         { key: "suiteAvecBain", label: "Suite parentale avec salle de bain", time: "75 min" },
                         { key: "suiteSansBain", label: "Suite parentale sans salle de bain", time: "45 min" },
                         { key: "salleDeBain", label: "Salle de bain", time: "30 min" },
-                        { key: "chambre", label: "Chambre/pièce/bureau/chambre d'enfant", time: "40 min" },
-                        { key: "salonMarocain", label: "salon Marocain", time: "35 min" },
-                        { key: "salonEuropeen", label: "salon européen", time: "35 min" },
-                        { key: "toilettesLavabo", label: "toilette Lavabo", time: "25 min" },
+                        { key: "chambre", label: "Chambre/pièce/bureau/ chambre enfant", time: "40 min" },
+                        { key: "salonMarocain", label: "Salon Marocain", time: "35 min" },
+                        { key: "salonEuropeen", label: "Salon européen", time: "35 min" },
+                        { key: "toilettesLavabo", label: "Toilette Lavabo", time: "25 min" },
                         { key: "rooftop", label: "Rooftop", time: "30 min", type: "checkbox" },
                         { key: "escalier", label: "Escalier", time: "25 min", type: "checkbox" }
                       ].map((room) => (
@@ -592,7 +592,7 @@ Il comprend le :
                         </RadioGroup>
                       </div>
                       <div className="text-center space-y-3">
-                        <div className="font-bold text-[#1c6664] text-sm">Premier ménage ?</div>
+                        <div className="font-bold text-[#1c6664] text-sm">Date</div>
                         <Input
                           type="date"
                           required

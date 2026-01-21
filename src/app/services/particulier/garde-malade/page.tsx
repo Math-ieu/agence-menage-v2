@@ -292,7 +292,7 @@ const GardeMalade = () => {
                 </div>
 
                 <div className="lg:col-span-2 space-y-8">
-                  <div className="bg-white rounded-lg p-6 border shadow-sm space-y-10">
+                  <div className="bg-white rounded-lg p-4 md:p-6 border shadow-sm space-y-10">
                     {/* Frequency Section */}
                     <div className="space-y-6">
                       <h3 className="text-xl font-bold bg-[#b46d2f] text-white p-3 rounded-lg text-center mb-4 uppercase">
@@ -411,7 +411,7 @@ const GardeMalade = () => {
                             </RadioGroup>
                           </div>
                           <div className="space-y-2">
-                            <Label className="text-sm font-bold text-slate-600">Date début</Label>
+                            <Label className="text-sm font-bold text-slate-600">Date</Label>
                             <Input
                               type="date"
                               required

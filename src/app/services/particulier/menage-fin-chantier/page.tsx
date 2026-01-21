@@ -145,7 +145,7 @@ La prestation comprend : L’évacuation des poussières et résidus de chantier
 
                             <div className="lg:col-span-2 space-y-8">
 
-                                <div className="bg-card rounded-lg p-6 border shadow-sm space-y-6">
+                                <div className="bg-card rounded-lg p-4 md:p-6 border shadow-sm space-y-6">
                                     <div>
                                         <h3 className="text-xl font-bold bg-[#c2e5c2] text-slate-800 p-3 rounded-lg mb-4 text-center">
                                             Type d'habitation
