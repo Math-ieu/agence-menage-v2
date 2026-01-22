@@ -45,8 +45,8 @@ const Footer = () => {
               <li className="flex items-start gap-3 text-primary-foreground font-bold text-sm lg:text-base">
                 <Phone className="w-5 h-5 mt-1 shrink-0" />
                 <div className="flex flex-col">
-                  <a href="tel:+212664331463" className="hover:text-white transition-colors">06 64 33 14 63</a>
                   <a href="tel:+212664226790" className="hover:text-white transition-colors">06 64 22 67 90</a>
+                  <a href="tel:+212664331463" className="hover:text-white transition-colors">06 64 33 14 63</a>
                   <a href="tel:+212522200177" className="hover:text-white transition-colors opacity-90">05 22 20 01 77 (Fixe)</a>
                 </div>
               </li>
@@ -71,10 +71,10 @@ const Footer = () => {
             <div className="flex items-center gap-6">
               <span className="text-primary-foreground font-bold">Suivez-nous</span>
               <div className="flex items-center gap-4">
-                <a href="#" className="bg-primary-foreground/10 p-2.5 rounded-full hover:bg-primary-foreground/20 transition-colors">
+                <a href="https://www.facebook.com/profile.php?id=61586972460164" target="_blank" rel="noopener noreferrer" className="bg-primary-foreground/10 p-2.5 rounded-full hover:bg-primary-foreground/20 transition-colors">
                   <Facebook className="w-5 h-5" />
                 </a>
-                <a href="#" className="bg-primary-foreground/10 p-2.5 rounded-full hover:bg-primary-foreground/20 transition-colors">
+                <a href="https://www.instagram.com/agencemenage?igsh=MXBtNmxzNmNwcmdiYg==&utm_source=ig_contact_invite" target="_blank" rel="noopener noreferrer" className="bg-primary-foreground/10 p-2.5 rounded-full hover:bg-primary-foreground/20 transition-colors">
                   <Instagram className="w-5 h-5" />
                 </a>
                 <a href="#" className="bg-primary-foreground/10 p-2.5 rounded-full hover:bg-primary-foreground/20 transition-colors">

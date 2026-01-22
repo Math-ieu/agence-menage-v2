@@ -64,14 +64,14 @@ const Header = () => {
               : "border-primary/30 text-primary hover:bg-primary/5 hover:border-primary hover:shadow-sm"}
           `}>
             <a
-              href="tel:+212664331463"
+              href="tel:+212664226790"
               className="flex items-center"
             >
               <div className="w-0 group-hover:w-6 group-active:w-6 transition-all duration-300 overflow-hidden flex items-center shrink-0">
                 <Phone className={`w-4 h-4 mr-2 ${isEntreprise ? "text-white" : "text-primary"}`} />
               </div>
               <span className={`text-xs sm:text-sm md:text-base xl:text-lg font-black tracking-tighter transition-all duration-300 ${isEntreprise ? "text-white" : "text-primary"}`}>
-                06 64 33 14 63
+                06 64 22 67 90
               </span>
             </a>
           </div>
