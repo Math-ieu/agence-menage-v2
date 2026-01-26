@@ -46,7 +46,7 @@ export const sendBookingEmail = async (serviceName: string, data: any, price: st
             scheduling_date: data.schedulingDate,
             scheduling_time: data.fixedTime || data.schedulingTime || "14:00",
             total_price: typeof price === "number" ? `${price} MAD` : price,
-            notes: data.changeRepereNotes || data.notes || "-",
+            notes: data.changeRepereNotes || data.careAddress || data.additionalNotes || data.notes || "-",
             details: JSON.stringify(data, null, 2),
         };
 

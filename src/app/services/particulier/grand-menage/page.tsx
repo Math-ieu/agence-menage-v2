@@ -5,7 +5,7 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import ServiceHeroSection from "@/components/ServiceHeroSection";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import { Input } from "@/components/ui/input"; 
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Textarea } from "@/components/ui/textarea";
@@ -45,7 +45,7 @@ const GrandMenage = () => {
     propertyType: "studio",
     frequency: "oneshot",
     subFrequency: "",
-    surfaceArea: 50,
+    surfaceArea: 70,
     duration: 6,
     numberOfPeople: 1,
     city: "",

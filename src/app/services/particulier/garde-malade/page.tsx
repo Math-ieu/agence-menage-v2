@@ -606,7 +606,7 @@ const GardeMalade = () => {
                       </h3>
                       <div className="p-6 bg-slate-50/50 rounded-xl border border-slate-100 space-y-6">
                         <div className="bg-[#b46d2f]/5 p-4 rounded-lg text-center border border-[#b46d2f]/10">
-                          <p className="text-[#b46d2f] text-xs font-bold italic">"L'assistant social et garde-malade vous rappelleront pour valider les points essentiels."</p>
+                          <p className="text-[#b46d2f] text-xs font-bold italic">"Un chargé de clientèle prendra contact avec vous dans les plus brefs delais."</p>
                         </div>
                         <div className="grid md:grid-cols-2 gap-6">
                           <div className="space-y-2">

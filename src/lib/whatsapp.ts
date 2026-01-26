@@ -42,7 +42,10 @@ export const formatBookingMessage = (serviceName: string, data: any, price: numb
     } else if (serviceName === "Garde Malade") {
         serviceSpecificDetails = `*Patient :* ${data.patientGender || "-"}, ${data.patientAge || "-"} ans
 *Mobilité :* ${data.mobility || "-"}
+*Pathologie :* ${data.healthIssues || "-"}
+*Précisions :* ${data.additionalNotes || "-"}
 *Lieu :* ${data.careLocation || "-"}
+*Champs de repère :* ${data.careAddress || "-"}
 *Durée :* ${data.duration || "-"} heures`;
     } else {
         serviceSpecificDetails = commonDetails;
