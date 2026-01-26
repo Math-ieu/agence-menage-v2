@@ -160,7 +160,7 @@ const GrandMenageBureaux = () => {
     ];
 
     const getFrequencyLabel = (value: string, subValue: string) => {
-        if (value === "oneshot") return "One shot";
+        if (value === "oneshot") return "Une fois";
         const freq = frequencies.find(f => f.value === subValue);
         return freq ? `Abonnement - ${freq.label}` : "Abonnement";
     };
@@ -297,7 +297,7 @@ const GrandMenageBureaux = () => {
                                                             }`}
                                                         onClick={() => setFormData({ ...formData, frequency: "oneshot", subFrequency: "" })}
                                                     >
-                                                        une fois
+                                                        Une fois
                                                     </button>
                                                     <button
                                                         type="button"

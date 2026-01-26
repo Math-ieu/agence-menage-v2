@@ -43,7 +43,7 @@ export const formatBookingMessage = (serviceName: string, data: any, price: numb
 *Numéro whatsapp :* ${data.whatsappNumber || "-"}
 
 *Service :* ${serviceName}
-*Fréquence :* ${data.frequency || "-"}
+*Fréquence :* ${data.frequency === "oneshot" ? "Une fois" : `Abonnement ${data.subFrequency || ""}`}
 ${serviceSpecificDetails}
 *Service optionel :* -
 

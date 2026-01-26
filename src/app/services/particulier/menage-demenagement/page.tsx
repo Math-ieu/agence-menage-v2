@@ -128,7 +128,7 @@ const MenageDemenagement = () => {
 
     const frequencies = [
         { value: "4foisSemaine", label: "4 fois par semaine" },
-        { value: "1foisSemaine", label: "Une fois par par semaine" },
+        { value: "1foisSemaine", label: "Une fois par semaine" },
         { value: "2foisMois", label: "2 fois par mois" },
         { value: "1foisMois", label: "Une fois par mois" },
         { value: "1semaine2", label: "Une semaine sur deux" },
@@ -136,7 +136,7 @@ const MenageDemenagement = () => {
     ];
 
     const getFrequencyLabel = (value: string, subValue: string) => {
-        if (value === "oneshot") return "One shot";
+        if (value === "oneshot") return "Une fois";
         const freq = frequencies.find(f => f.value === subValue);
         return freq ? `Abonnement - ${freq.label}` : "Abonnement";
     };

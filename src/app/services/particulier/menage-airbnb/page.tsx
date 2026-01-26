@@ -209,7 +209,7 @@ Il comprend le :
                                                             }`}
                                                         onClick={() => setFormData({ ...formData, frequency: "oneshot" })}
                                                     >
-                                                        une fois
+                                                        Une fois
                                                     </button>
                                                     <button
                                                         type="button"

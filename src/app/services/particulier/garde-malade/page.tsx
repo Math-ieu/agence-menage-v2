@@ -125,7 +125,7 @@ const GardeMalade = () => {
   ];
 
   const getFrequencyLabel = (value: string, subValue: string) => {
-    if (value === "oneshot") return "One shot - Tranche de 24h";
+    if (value === "oneshot") return "Une fois - Tranche de 24h";
     const freq = frequencies.find(f => f.value === subValue);
     return freq ? `Abonnement - ${freq.label}` : "Abonnement";
   };
