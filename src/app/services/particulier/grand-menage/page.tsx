@@ -46,7 +46,7 @@ const GrandMenage = () => {
     frequency: "oneshot",
     subFrequency: "",
     surfaceArea: 50,
-    duration: 4,
+    duration: 6,
     numberOfPeople: 1,
     city: "",
     neighborhood: "",
@@ -85,7 +85,7 @@ const GrandMenage = () => {
       "7foisSemaine": 7,
       "3foisSemaine": 3,
       "1semaine2": 0.5,
-      "1foisAn": 1 / 52
+      
     };
     visitsPerWeek = visitsMap[formData.subFrequency] || 1;
     discountRate = 0.1;
@@ -182,7 +182,7 @@ const GrandMenage = () => {
     { value: "7foisSemaine", label: "7 fois par semaine" },
     { value: "3foisSemaine", label: "3 fois par semaine" },
     { value: "1semaine2", label: "Une semaine sur deux" },
-    { value: "1foisAn", label: "1 fois par an" }
+    
   ];
 
   const getFrequencyLabel = (value: string, subValue: string) => {

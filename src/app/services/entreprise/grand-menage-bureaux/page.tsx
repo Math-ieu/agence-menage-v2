@@ -35,7 +35,7 @@ const GrandMenageBureaux = () => {
         officeSurface: "50",
         frequency: "oneshot",
         subFrequency: "",
-        duration: 4,
+        duration: 6,
         numberOfPeople: 1,
         city: "",
         neighborhood: "",
