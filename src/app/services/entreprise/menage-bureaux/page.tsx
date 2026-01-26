@@ -101,7 +101,8 @@ const MenageBureaux = () => {
 
   const perVisitBasePrice = formData.duration * formData.numberOfPeople * 60;
   const productsPrice = formData.additionalServices.produitsEtOutils ? 60 : 0;
-  const perVisitTotal = perVisitBasePrice + productsPrice;
+  const torchonsPrice = formData.additionalServices.torchonsEtSerpierres ? 20 : 0;
+  const perVisitTotal = perVisitBasePrice + productsPrice + torchonsPrice;
 
   let totalPrice = 0;
   let discountAmount = 0;
@@ -231,6 +232,18 @@ const MenageBureaux = () => {
                           <span className="text-muted-foreground">Durée:</span>
                           <span className="font-medium text-right">{formData.duration}h</span>
                         </div>
+                        {formData.additionalServices.produitsEtOutils && (
+                          <div className="flex justify-between gap-4 text-xs">
+                            <span className="text-muted-foreground">Produits:</span>
+                            <span className="font-medium text-right text-slate-700">+60 MAD</span>
+                          </div>
+                        )}
+                        {formData.additionalServices.torchonsEtSerpierres && (
+                          <div className="flex justify-between gap-4 text-xs">
+                            <span className="text-muted-foreground">Torchons:</span>
+                            <span className="font-medium text-right text-slate-700">+20 MAD</span>
+                          </div>
+                        )}
                         <div className="flex justify-between gap-4 border-t border-primary/10 pt-2">
                           <span className="text-muted-foreground">Date:</span>
                           <span className="font-medium text-right">{formData.schedulingDate || "Non définie"}</span>
@@ -246,7 +259,7 @@ const MenageBureaux = () => {
                       {formData.frequency === "subscription" && discountAmount > 0 && (
                         <div className="flex justify-between gap-4 text-red-600 font-bold bg-red-50 p-2 rounded mb-4 text-xs">
                           <span>Réduction (10%):</span>
-                          <span>-{Math.round(discountAmount)} DH</span>
+                          <span>-{Math.round(discountAmount)} MAD</span>
                         </div>
                       )}
                       <div className="flex justify-between items-center">
@@ -254,7 +267,7 @@ const MenageBureaux = () => {
                           {formData.frequency === "subscription" ? "Total Mensuel HT" : "Total HT"}
                         </span>
                         <span className="text-2xl font-bold text-primary">
-                          {totalPrice > 0 ? `${Math.round(totalPrice)} DH` : "0 DH"}
+                          {totalPrice > 0 ? `${Math.round(totalPrice)} MAD` : "0 MAD"}
                         </span>
                       </div>
                     </div>
@@ -280,7 +293,7 @@ const MenageBureaux = () => {
                     </h3>
                     <div className="p-6 bg-muted/30 rounded-xl border border-muted">
                       <p className="text-center text-red-500 text-xs font-bold mb-4 italic">
-                        *(cliquez sur une superficie afin d'avoir un prix approximatif sur votre prestation)*
+                        Indiquez le nombre total de m² de l'espace à prendre en compte (ex. 70 m²).
                       </p>
                       <div className="grid grid-cols-2 gap-6">
                         {[
@@ -531,7 +544,7 @@ const MenageBureaux = () => {
                               <span className="text-2xl">🧴</span>
                             </div>
                             <div className="text-left">
-                              <p className="text-sm font-bold text-slate-700 leading-tight">Prix HT : 60 dh</p>
+                              <p className="text-sm font-bold text-slate-700 leading-tight">Prix HT : 60 MAD</p>
                             </div>
                           </div>
                           <Switch
@@ -551,7 +564,7 @@ const MenageBureaux = () => {
                           <div className="w-12 h-12 rounded-lg bg-blue-100 flex items-center justify-center">
                             <span className="text-2xl">🧹</span>
                           </div>
-                          <p className="text-sm font-bold text-slate-700">Torchons et serpières</p>
+                          <p className="text-sm font-bold text-slate-700">Torchons et serpières : + 20 MAD</p>
                         </div>
                         <Switch
                           checked={formData.additionalServices.torchonsEtSerpierres}

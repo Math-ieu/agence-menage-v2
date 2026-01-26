@@ -35,7 +35,7 @@ const PRODUCTS_LIST = [
   "Neutralisant d’odeur"
 ];
 
-const MenageRegulier = () => {
+const MenageStandard = () => {
   const [wasValidated, setWasValidated] = useState(false);
   const [showConfirmation, setShowConfirmation] = useState(false);
   const [isSummaryExpanded, setIsSummaryExpanded] = useState(false);
@@ -116,7 +116,7 @@ const MenageRegulier = () => {
   const calculateTotal = () => {
     let price = totalServicePrice;
     if (formData.additionalServices.produitsEtOutils) price += 90;
-    if (formData.additionalServices.torchonsEtSerpierres) price += 40;
+    if (formData.additionalServices.torchonsEtSerpierres) price += 20;
     return price;
   };
 
@@ -147,19 +147,24 @@ const MenageRegulier = () => {
       return;
     }
 
+    const frequencyLabel = formData.frequency === "oneshot"
+      ? "Une fois"
+      : (frequencies.find(f => f.value === formData.subFrequency)?.label || "");
+
     const bookingData = {
       ...formData,
+      frequencyLabel,
       phoneNumber: `${formData.phonePrefix} ${formData.phoneNumber}`,
       whatsappNumber: formData.useWhatsappForPhone
         ? `${formData.phonePrefix} ${formData.phoneNumber}`
         : `${formData.whatsappPrefix} ${formData.whatsappNumber}`
     };
 
-    const message = formatBookingMessage("Ménage Régulier", bookingData, totalPrice, false);
+    const message = formatBookingMessage("Ménage Standard", bookingData, totalPrice, false);
     const whatsappLink = createWhatsAppLink(DESTINATION_PHONE_NUMBER, message);
 
     // Send email notification (async)
-    sendBookingEmail("Ménage Régulier", bookingData, totalPrice, false).catch(console.error);
+    sendBookingEmail("Ménage Standard", bookingData, totalPrice, false).catch(console.error);
 
     window.open(whatsappLink, '_blank');
     setShowConfirmation(true);
@@ -272,7 +277,7 @@ Il comprend le :
                     <div className="space-y-3">
                       <div className="flex justify-between gap-4 border-b border-primary/10 pb-2">
                         <span className="text-muted-foreground">Service:</span>
-                        <span className="font-medium text-right">Ménage standard</span>
+                        <span className="font-medium text-right text-slate-700">Ménage Standard</span>
                       </div>
 
                       {/* Detailed info - hidden on mobile when collapsed */}
@@ -296,19 +301,19 @@ Il comprend le :
                         {formData.additionalServices.produitsEtOutils && (
                           <div className="flex justify-between gap-4 text-xs">
                             <span className="text-muted-foreground">Produits:</span>
-                            <span className="font-medium text-right">+90 DH</span>
+                            <span className="font-medium text-right">+90 MAD</span>
                           </div>
                         )}
                         {formData.additionalServices.torchonsEtSerpierres && (
                           <div className="flex justify-between gap-4 text-xs">
                             <span className="text-muted-foreground">Torchons:</span>
-                            <span className="font-medium text-right">+40 DH</span>
+                            <span className="font-medium text-right">+20 MAD</span>
                           </div>
                         )}
                         {discountRate > 0 && (
                           <div className="flex justify-between gap-4 text-red-600 font-bold bg-red-50 p-2 rounded">
                             <span>Réduction (10%):</span>
-                            <span>-{Math.round(discountAmount)} DH</span>
+                            <span>-{Math.round(discountAmount)} MAD</span>
                           </div>
                         )}
                         <div className="flex justify-between gap-4 border-t border-primary/10 pt-2">
@@ -325,7 +330,7 @@ Il comprend le :
                     <div className="pt-4 border-t">
                       <div className="flex justify-between items-center">
                         <span className="text-lg font-bold">Total</span>
-                        <span className="text-2xl font-bold text-primary">{totalPrice} DH</span>
+                        <span className="text-2xl font-bold text-primary">{totalPrice} MAD</span>
                       </div>
                     </div>
 
@@ -434,7 +439,7 @@ Il comprend le :
                         { key: "suiteAvecBain", label: "Suite parentale avec salle de bain", time: "75 min" },
                         { key: "suiteSansBain", label: "Suite parentale sans salle de bain", time: "45 min" },
                         { key: "salleDeBain", label: "Salle de bain", time: "30 min" },
-                        { key: "chambre", label: "Chambre/pièce/bureau/ chambre enfant", time: "40 min" },
+                        { key: "chambre", label: "Chambre/pièce/bureau /chambre enfant", time: "40 min" },
                         { key: "salonMarocain", label: "Salon Marocain", time: "35 min" },
                         { key: "salonEuropeen", label: "Salon européen", time: "35 min" },
                         { key: "toilettesLavabo", label: "Toilette Lavabo", time: "25 min" },
@@ -492,7 +497,7 @@ Il comprend le :
                         D'après les options choisies, nous recommandons {formData.recommendedDuration} heures pour un ménage optimal.
                       </p>
                       <div className="bg-[#94a3a3] text-white text-3xl font-bold px-10 py-3 rounded-full shadow-lg">
-                        {formData.duration}H : 00
+                        {formData.recommendedDuration}H : 00
                       </div>
                     </div>
 
@@ -500,7 +505,7 @@ Il comprend le :
                       Précisez le temps qui vous convient le mieux.
                     </h3>
                     <p className="text-red-500 text-[10px] text-center mb-4">
-                      La durée initiale de votre ménage est de {formData.recommendedDuration} h
+                      La durée minimale pour votre ménage est de 4 h
                     </p>
                     <div className="flex items-center justify-center gap-8 p-4">
                       <Button
@@ -529,7 +534,7 @@ Il comprend le :
                   </div>
 
                   <div>
-                    <h3 className="text-xl font-bold bg-[#1c6664] text-white p-3 rounded-lg text-center mb-4">
+                    <h3 className="text-xl font-bold bg-[#1c6664] text-white p-3 rounded-lg mb-4 text-center">
                       Nombre de personne
                     </h3>
                     <div className="flex items-center justify-center gap-8 p-4">
@@ -629,7 +634,7 @@ Il comprend le :
                             alt="Produits"
                             className="w-12 h-12 object-contain"
                           />
-                          <span className="font-bold text-[#1c6664]">Produit : + 90 dh</span>
+                          <span className="font-bold text-[#1c6664]">Produit : + 90 MAD</span>
                         </div>
                         <Switch
                           checked={formData.additionalServices.produitsEtOutils}
@@ -647,7 +652,7 @@ Il comprend le :
                           <div className="w-12 h-12 rounded-lg bg-blue-50 flex items-center justify-center text-2xl">
                             🧹
                           </div>
-                          <span className="font-bold text-[#1c6664]">Torchons et serpillères : + 40 dh</span>
+                          <span className="font-bold text-[#1c6664]">Torchons et serpillères : + 20 MAD</span>
                         </div>
                         <Switch
                           checked={formData.additionalServices.torchonsEtSerpierres}
@@ -833,4 +838,4 @@ Il comprend le :
   );
 };
 
-export default MenageRegulier;
+export default MenageStandard;

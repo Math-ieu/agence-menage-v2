@@ -75,8 +75,11 @@ const PlacementEntreprise = () => {
             return;
         }
 
+        const frequencyLabel = getFrequencyLabel(formData.frequency, formData.subFrequency);
+
         const bookingData = {
             ...formData,
+            frequencyLabel,
             phoneNumber: `${formData.phonePrefix} ${formData.phoneNumber}`,
             whatsappNumber: formData.useWhatsappForPhone
                 ? `${formData.phonePrefix} ${formData.phoneNumber}`

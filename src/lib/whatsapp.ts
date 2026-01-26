@@ -16,9 +16,25 @@ export const getConfirmationMessage = (clientName: string, isDevis: boolean): st
 
 export const formatBookingMessage = (serviceName: string, data: any, price: number | string, isEntreprise: boolean = false): string => {
     const sectionTitle = isEntreprise ? "SERVICES POUR ENTREPRISE" : "SERVICES POUR PARTICULIER";
-    const priceLabel = typeof price === "string" && price.toUpperCase().includes("DEVIS") ? "Sur DEVIS" : `${price} DH`;
+    const priceLabel = typeof price === "string" && price.toUpperCase().includes("DEVIS") ? "Sur DEVIS" : `${price} MAD`;
 
     let serviceSpecificDetails = "";
+
+    const durationDetails = [];
+    if (data.recommendedDuration && data.recommendedDuration > 0) {
+        durationDetails.push(`*Durée recommandée :* ${data.recommendedDuration} heures`);
+    }
+    if (data.duration) {
+        durationDetails.push(`*Durée choisie :* ${data.duration} heures`);
+    }
+
+    const options = [];
+    if (data.additionalServices?.produitsEtOutils) options.push("Produits et outils (+90 MAD)");
+    if (data.additionalServices?.torchonsEtSerpierres) options.push("Torchons et serpillères (+20 MAD)");
+    if (data.intensiveOption) options.push("Option Intensif");
+
+    const commonDetails = `${durationDetails.join('\n')}
+*Nbre de personne :* ${data.numberOfPeople || "-"}${options.length > 0 ? `\n*Services optionnels :* ${options.join(", ")}` : ""}`;
 
     if (serviceName === "Ménage Bureaux") {
         serviceSpecificDetails = `*Surface en m2 :* ${data.officeSurface || "-"} m2
@@ -29,9 +45,12 @@ export const formatBookingMessage = (serviceName: string, data: any, price: numb
 *Lieu :* ${data.careLocation || "-"}
 *Durée :* ${data.duration || "-"} heures`;
     } else {
-        serviceSpecificDetails = `*Durée :* ${data.duration || "-"} heures
-*Nbre de personne :* ${data.numberOfPeople || "-"}`;
+        serviceSpecificDetails = commonDetails;
     }
+
+    const freqLabel = data.frequency === "oneshot"
+        ? "Une fois"
+        : `Abonnement ( ${data.frequencyLabel || data.subFrequency || ""} )`;
 
     return `*RESERVATION*
 *${sectionTitle}*
@@ -43,9 +62,8 @@ export const formatBookingMessage = (serviceName: string, data: any, price: numb
 *Numéro whatsapp :* ${data.whatsappNumber || "-"}
 
 *Service :* ${serviceName}
-*Fréquence :* ${data.frequency === "oneshot" ? "Une fois" : `Abonnement ${data.subFrequency || ""}`}
+*Fréquence :* ${freqLabel}
 ${serviceSpecificDetails}
-*Service optionel :* -
 
 *Date :* ${data.schedulingDate || "Non définie"}
 *Heure :* ${data.fixedTime || data.schedulingTime || "14:00"}

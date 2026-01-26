@@ -1,5 +1,6 @@
 import { Metadata } from "next";
 import { Inter, Work_Sans } from "next/font/google";
+import Script from "next/script";
 import "./globals.css";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
@@ -33,6 +34,22 @@ export default function RootLayout({
 }>) {
     return (
         <html lang="fr" className={`${workSans.variable}`} suppressHydrationWarning>
+            <head>
+                <Script
+                    async
+                    src="https://www.googletagmanager.com/gtag/js?id=AW-17907112455"
+                    strategy="afterInteractive"
+                />
+                <Script id="google-tag-manager" strategy="afterInteractive">
+                    {`
+                      window.dataLayer = window.dataLayer || [];
+                      function gtag(){dataLayer.push(arguments);}
+                      gtag('js', new Date());
+
+                      gtag('config', 'AW-17907112455');
+                    `}
+                </Script>
+            </head>
             <body className="antialiased min-h-screen flex flex-col overflow-x-hidden">
                 <QueryProvider>
                     <TooltipProvider>

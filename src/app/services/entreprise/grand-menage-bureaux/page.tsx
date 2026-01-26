@@ -214,6 +214,12 @@ const GrandMenageBureaux = () => {
                                                     <span className="text-muted-foreground">Personnes:</span>
                                                     <span className="font-medium text-right text-slate-700">{formData.numberOfPeople}</span>
                                                 </div>
+                                                {formData.additionalServices.produitsEtOutils && (
+                                                    <div className="flex justify-between gap-4 text-xs">
+                                                        <span className="text-muted-foreground">Produits & Outils:</span>
+                                                        <span className="font-medium text-right text-slate-700 italic text-[10px]">Sur devis</span>
+                                                    </div>
+                                                )}
                                                 <div className="flex justify-between gap-4 border-t border-primary/10 pt-2">
                                                     <span className="text-muted-foreground">Date:</span>
                                                     <span className="font-medium text-right text-slate-700">{formData.schedulingDate || "Non définie"}</span>
@@ -229,14 +235,14 @@ const GrandMenageBureaux = () => {
                                             {formData.frequency === "subscription" && discountAmount > 0 && (
                                                 <div className="flex justify-between gap-4 text-red-600 font-bold bg-red-50 p-2 rounded mb-4 text-xs">
                                                     <span>Réduction (10%):</span>
-                                                    <span>-{Math.round(discountAmount)} DH</span>
+                                                    <span>-{Math.round(discountAmount)} MAD</span>
                                                 </div>
                                             )}
                                             <div className="flex justify-between items-center">
                                                 <span className="text-lg font-bold">
                                                     {formData.frequency === "subscription" ? "Total Mensuel HT" : "Total HT"}
                                                 </span>
-                                                <span className="text-2xl font-bold text-primary">{Math.round(totalPrice)} DH</span>
+                                                <span className="text-2xl font-bold text-primary">{Math.round(totalPrice)} MAD</span>
                                             </div>
                                         </div>
 
@@ -478,7 +484,7 @@ const GrandMenageBureaux = () => {
                                         <div className="flex items-center justify-between p-4 bg-muted/30 rounded">
                                             <div className="flex items-center gap-3">
                                                 <span className="text-4xl">🧴</span>
-                                                <span className="font-medium">Produits et outils + 150dh</span>
+                                                <span className="font-medium">Produits et outils + 150 MAD</span>
                                             </div>
                                             <Switch
                                                 checked={formData.additionalServices.produitsEtOutils}

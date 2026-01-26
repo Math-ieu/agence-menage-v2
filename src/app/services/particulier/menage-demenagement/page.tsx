@@ -193,10 +193,22 @@ Options possibles : vitres extérieures/grandes baies, terrasse.`}
                                                     <span className="text-muted-foreground">Salissure:</span>
                                                     <span className="font-medium text-right uppercase text-slate-700">{formData.cleanlinessType}</span>
                                                 </div>
+                                                {formData.additionalServices.nettoyageTerrasse && (
+                                                    <div className="flex justify-between gap-4 text-xs">
+                                                        <span className="text-muted-foreground">Nettoyage Terrasse:</span>
+                                                        <span className="font-medium text-right text-slate-700">+500 MAD</span>
+                                                    </div>
+                                                )}
+                                                {formData.additionalServices.baiesVitrees && (
+                                                    <div className="flex justify-between gap-4 text-xs">
+                                                        <span className="text-muted-foreground">Baies Vitrées:</span>
+                                                        <span className="font-medium text-right text-slate-700 italic text-[10px]">Sur devis</span>
+                                                    </div>
+                                                )}
                                                 {intensivePrice > 0 && (
                                                     <div className="flex justify-between gap-4 text-red-600 font-bold bg-red-50 p-2 rounded">
                                                         <span>Majoration Intensif (15%):</span>
-                                                        <span>+{intensivePrice} DH</span>
+                                                        <span>+{intensivePrice} MAD</span>
                                                     </div>
                                                 )}
                                                 <div className="flex justify-between gap-4 border-t border-primary/10 pt-2">
@@ -214,7 +226,7 @@ Options possibles : vitres extérieures/grandes baies, terrasse.`}
                                             <div className="flex justify-between items-center mb-4">
                                                 <span className="text-lg font-bold">Total</span>
                                                 <span className="text-2xl font-bold text-primary">
-                                                    {totalPrice > 0 ? `${Math.round(totalPrice)} DH` : "SUR DEVIS"}
+                                                    {totalPrice > 0 ? `${Math.round(totalPrice)} MAD` : "SUR DEVIS"}
                                                 </span>
                                             </div>
                                             <div className="p-3 bg-primary/10 rounded-lg border border-primary/20 text-center">
@@ -343,7 +355,7 @@ Options possibles : vitres extérieures/grandes baies, terrasse.`}
                                         </h3>
                                         <div className="p-6 border rounded-xl bg-slate-50/50 space-y-4">
                                             <div className="flex items-center justify-between p-4 bg-white border border-[#d1a246]/20 rounded-xl shadow-sm">
-                                                <span className="font-bold text-[#8a6d2f] text-sm">Nettoyage Terrasse : 500 DH</span>
+                                                <span className="font-bold text-[#8a6d2f] text-sm">Nettoyage Terrasse : 500 MAD</span>
                                                 <Switch
                                                     checked={formData.additionalServices.nettoyageTerrasse}
                                                     onCheckedChange={(checked) =>
@@ -357,7 +369,7 @@ Options possibles : vitres extérieures/grandes baies, terrasse.`}
                                             </div>
                                             <div className="flex items-center justify-between p-4 bg-white border border-[#d1a246]/20 rounded-xl shadow-sm">
                                                 <div className="flex flex-col">
-                                                    <span className="font-bold text-[#8a6d2f] text-sm">Baies Vitrées : à partir de 30 dh/m2</span>
+                                                    <span className="font-bold text-[#8a6d2f] text-sm">Baies Vitrées : à partir de 30 MAD/m2</span>
                                                     <span className="text-[10px] text-slate-400">(max 3 mètre de hauteur)</span>
                                                 </div>
                                                 <Switch

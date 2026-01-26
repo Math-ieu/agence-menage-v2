@@ -9,6 +9,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Textarea } from "@/components/ui/textarea";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { toast } from "sonner";
 import serviceAirbnb from "@/assets/service-menage-airbnb.png";
 import { createWhatsAppLink, formatBookingMessage, DESTINATION_PHONE_NUMBER, getConfirmationMessage } from "@/lib/whatsapp";
@@ -24,6 +25,19 @@ import {
     DialogFooter,
 } from "@/components/ui/dialog";
 
+const frequencies = [
+    { value: "4foisSemaine", label: "4 fois par semaine" },
+    { value: "2foisMois", label: "2 fois par mois" },
+    { value: "1foisSemaine", label: "Une fois par semaine" },
+    { value: "5foisSemaine", label: "5 fois par semaine" },
+    { value: "6foisSemaine", label: "6 fois par semaine" },
+    { value: "7foisSemaine", label: "7 fois par semaine" },
+    { value: "3foisSemaine", label: "3 fois par semaine" },
+    { value: "1semaine2", label: "Une semaine sur deux" },
+    { value: "1foisMois", label: "1 fois par mois" },
+    { value: "Variable", label: "Variable selon les réservations" },
+];
+
 const MenageAirbnb = () => {
     const [wasValidated, setWasValidated] = useState(false);
     const [showConfirmation, setShowConfirmation] = useState(false);
@@ -31,6 +45,7 @@ const MenageAirbnb = () => {
     const [formData, setFormData] = useState({
         propertyType: "studio",
         frequency: "oneshot",
+        subFrequency: "",
         duration: 4,
         numberOfPeople: 1,
         city: "",
@@ -64,8 +79,13 @@ const MenageAirbnb = () => {
             return;
         }
 
+        const frequencyLabel = formData.frequency === "oneshot"
+            ? "Une fois"
+            : (frequencies.find(f => f.value === formData.subFrequency)?.label || "");
+
         const bookingData = {
             ...formData,
+            frequencyLabel,
             phoneNumber: `${formData.phonePrefix} ${formData.phoneNumber}`,
             whatsappNumber: formData.useWhatsappForPhone
                 ? `${formData.phonePrefix} ${formData.phoneNumber}`
@@ -136,7 +156,7 @@ Il comprend le :
                                                 <div className="flex justify-between gap-4">
                                                     <span className="text-muted-foreground">Fréquence:</span>
                                                     <span className="font-medium text-right text-slate-700">
-                                                        {formData.frequency === "oneshot" ? "Une fois" : "Abonnement"}
+                                                        {formData.frequency === "oneshot" ? "Une fois" : `Abonnement (${frequencies.find(f => f.value === formData.subFrequency)?.label || ""})`}
                                                     </span>
                                                 </div>
                                                 <div className="flex justify-between gap-4">
@@ -223,10 +243,22 @@ Il comprend le :
                                                     </button>
                                                 </div>
                                                 {formData.frequency === "subscription" && (
-                                                    <div className="text-center animate-in fade-in slide-in-from-top-2 duration-300">
-                                                        <p className="text-sm font-bold text-primary">
-                                                            Variable selon les réservations
-                                                        </p>
+                                                    <div className="w-full max-w-md mx-auto animate-in fade-in slide-in-from-top-2 duration-300">
+                                                        <Select
+                                                            value={formData.subFrequency}
+                                                            onValueChange={(value) => setFormData({ ...formData, subFrequency: value })}
+                                                        >
+                                                            <SelectTrigger className="w-full">
+                                                                <SelectValue placeholder="Sélectionnez un abonnement" />
+                                                            </SelectTrigger>
+                                                            <SelectContent>
+                                                                {frequencies.map((freq) => (
+                                                                    <SelectItem key={freq.value} value={freq.value}>
+                                                                        {freq.label}
+                                                                    </SelectItem>
+                                                                ))}
+                                                            </SelectContent>
+                                                        </Select>
                                                     </div>
                                                 )}
                                             </div>

@@ -85,7 +85,7 @@ const GrandMenage = () => {
       "7foisSemaine": 7,
       "3foisSemaine": 3,
       "1semaine2": 0.5,
-      
+
     };
     visitsPerWeek = visitsMap[formData.subFrequency] || 1;
     discountRate = 0.1;
@@ -100,7 +100,7 @@ const GrandMenage = () => {
   const calculateTotal = () => {
     let price = totalServicePrice;
     if (formData.additionalServices.produitsEtOutils) price += 90;
-    if (formData.additionalServices.torchonsEtSerpieres) price += 40;
+    if (formData.additionalServices.torchonsEtSerpieres) price += 20;
     return price;
   };
 
@@ -182,7 +182,7 @@ const GrandMenage = () => {
     { value: "7foisSemaine", label: "7 fois par semaine" },
     { value: "3foisSemaine", label: "3 fois par semaine" },
     { value: "1semaine2", label: "Une semaine sur deux" },
-    
+
   ];
 
   const getFrequencyLabel = (value: string, subValue: string) => {
@@ -258,19 +258,19 @@ Il comprend le :
                         {formData.additionalServices.produitsEtOutils && (
                           <div className="flex justify-between gap-4 text-xs">
                             <span className="text-muted-foreground">Produits:</span>
-                            <span className="font-medium text-right text-slate-700 text-slate-700">+90 DH</span>
+                            <span className="font-medium text-right text-slate-700 text-slate-700">+90 MAD</span>
                           </div>
                         )}
                         {formData.additionalServices.torchonsEtSerpieres && (
                           <div className="flex justify-between gap-4 text-xs">
                             <span className="text-muted-foreground">Torchons:</span>
-                            <span className="font-medium text-right text-slate-700">+40 DH</span>
+                            <span className="font-medium text-right text-slate-700">+20 MAD</span>
                           </div>
                         )}
                         {discountRate > 0 && (
                           <div className="flex justify-between gap-4 text-red-600 font-bold bg-red-50 p-2 rounded">
                             <span>Réduction (10%):</span>
-                            <span>-{discountAmount} DH</span>
+                            <span>-{discountAmount} MAD</span>
                           </div>
                         )}
                         <div className="flex justify-between gap-4 border-t border-[#e2d9c2]/20 pt-2">
@@ -289,7 +289,7 @@ Il comprend le :
                         <span className="text-lg font-bold">
                           {formData.frequency === "subscription" ? "Total Mensuel" : "Total"}
                         </span>
-                        <span className="text-2xl font-bold text-[#c5b89a]">{Math.round(totalPrice)} DH</span>
+                        <span className="text-2xl font-bold text-[#c5b89a]">{Math.round(totalPrice)} MAD</span>
                       </div>
                     </div>
 
@@ -548,7 +548,7 @@ Il comprend le :
                               className="w-10 h-10 object-contain"
                             />
                             <div className="flex flex-col">
-                              <span className="font-bold text-[#c5b89a] text-sm">Produits : + 90 dh</span>
+                              <span className="font-bold text-[#c5b89a] text-sm">Produits : + 90 MAD</span>
                             </div>
                           </div>
                           <Switch
@@ -572,7 +572,7 @@ Il comprend le :
                                 className="w-full h-full object-cover"
                               />
                             </div>
-                            <span className="font-bold text-[#c5b89a] text-sm">Torchons et serpillères : + 40 dh</span>
+                            <span className="font-bold text-[#c5b89a] text-sm">Torchons et serpillères : + 20 MAD</span>
                           </div>
                           <Switch
                             checked={formData.additionalServices.torchonsEtSerpieres}

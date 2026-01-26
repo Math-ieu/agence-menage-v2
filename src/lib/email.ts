@@ -17,8 +17,12 @@ export const sendBookingEmail = async (serviceName: string, data: any, price: st
 
     try {
         const optionalServices = [];
-        if (data.additionalServices?.produitsEtOutils) optionalServices.push("Produits et outils");
-        if (data.additionalServices?.torchonsEtSerpierres) optionalServices.push("Torchons et serpillères");
+        if (data.additionalServices?.produitsEtOutils) {
+            optionalServices.push(serviceName === "Ménage Standard" ? "Produits et outils (+90 MAD)" : "Produits et outils");
+        }
+        if (data.additionalServices?.torchonsEtSerpierres) {
+            optionalServices.push(serviceName === "Ménage Standard" ? "Torchons et serpillères (+20 MAD)" : "Torchons et serpillères");
+        }
         if (data.intensiveOption) optionalServices.push("Option Intensif");
 
         const surfaceValue = data.officeSurface || data.surfaceArea || data.surface || "";
@@ -31,9 +35,9 @@ export const sendBookingEmail = async (serviceName: string, data: any, price: st
             client_phone: data.phoneNumber,
             client_whatsapp: data.whatsappNumber || "Non spécifié",
             client_email: data.email || "Non spécifié",
-            frequency: data.frequency === "oneshot" ? "Une fois" : `Abonnement ${data.subFrequency || ""}`,
+            frequency: data.frequency === "oneshot" ? "Une fois" : `Abonnement ( ${data.frequencyLabel || data.subFrequency || ""} )`,
             surface: formattedSurface,
-            recommended_duration: data.recommendedDuration ? `${data.recommendedDuration}h` : "",
+            recommended_duration: data.recommendedDuration && data.recommendedDuration > 0 ? `${data.recommendedDuration}h` : "-",
             duration: data.duration ? `${data.duration}h` : "-",
             people_count: data.numberOfPeople || "-",
             optional_services: optionalServices.length > 0 ? optionalServices.join(", ") : "-",
@@ -41,7 +45,7 @@ export const sendBookingEmail = async (serviceName: string, data: any, price: st
             neighborhood: data.neighborhood,
             scheduling_date: data.schedulingDate,
             scheduling_time: data.fixedTime || data.schedulingTime || "14:00",
-            total_price: typeof price === "number" ? `${price} DH` : price,
+            total_price: typeof price === "number" ? `${price} MAD` : price,
             notes: data.changeRepereNotes || data.notes || "-",
             details: JSON.stringify(data, null, 2),
         };
