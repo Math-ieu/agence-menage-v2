@@ -51,8 +51,8 @@ const MenageAirbnb = () => {
         city: "",
         neighborhood: "",
         schedulingTime: "morning",
-        schedulingHours: "09:00 - 12:00",
         schedulingDate: "",
+        schedulingType: "flexible",
         fixedTime: "14:00",
         additionalServices: {},
         phoneNumber: "",
@@ -169,7 +169,9 @@ Il comprend le :
                                                 </div>
                                                 <div className="flex justify-between gap-4">
                                                     <span className="text-muted-foreground">Heure:</span>
-                                                    <span className="font-medium text-right text-slate-700">{formData.fixedTime}</span>
+                                                    <span className="font-medium text-right text-slate-700">
+                                                        {formData.schedulingType === "fixed" ? formData.fixedTime : (formData.schedulingTime === "morning" ? "Le matin" : "L'après midi")}
+                                                    </span>
                                                 </div>
                                             </div>
                                         </div>
@@ -298,36 +300,63 @@ Il comprend le :
                                         <h3 className="text-xl font-bold bg-primary text-white p-3 rounded-lg mb-4 text-center">
                                             Planning pour votre demande
                                         </h3>
-                                        <div className="grid md:grid-cols-3 gap-6 p-4 border rounded-xl bg-white">
+                                        <div className="grid md:grid-cols-3 gap-6 p-4 border rounded-xl bg-white shadow-sm">
+                                            {/* Heure fixe */}
                                             <div className="text-center space-y-3">
-                                                <div className="font-bold text-primary text-sm">Je souhaite une heure fixe</div>
+                                                <div className="flex items-center justify-center space-x-2">
+                                                    <input
+                                                        type="radio"
+                                                        id="fixed"
+                                                        name="schedulingType"
+                                                        checked={formData.schedulingType === "fixed"}
+                                                        onChange={() => setFormData({ ...formData, schedulingType: "fixed" })}
+                                                        className="w-4 h-4 text-primary"
+                                                    />
+                                                    <Label htmlFor="fixed" className="font-bold text-primary text-sm cursor-pointer text-center">Je souhaite une heure fixe</Label>
+                                                </div>
                                                 <div className="flex justify-center">
                                                     <Input
                                                         type="time"
                                                         required
                                                         value={formData.fixedTime}
                                                         onChange={(e) => setFormData({ ...formData, fixedTime: e.target.value })}
+                                                        disabled={formData.schedulingType !== "fixed"}
                                                         className="w-32 text-center text-xl font-bold h-12 border-primary/30"
                                                     />
                                                 </div>
                                             </div>
+
+                                            {/* Flexible */}
                                             <div className="text-center space-y-3">
-                                                <div className="font-bold text-primary text-sm">Je suis flexible et disponible</div>
+                                                <div className="flex items-center justify-center space-x-2">
+                                                    <input
+                                                        type="radio"
+                                                        id="flexible"
+                                                        name="schedulingType"
+                                                        checked={formData.schedulingType === "flexible"}
+                                                        onChange={() => setFormData({ ...formData, schedulingType: "flexible" })}
+                                                        className="w-4 h-4 text-primary"
+                                                    />
+                                                    <Label htmlFor="flexible" className="font-bold text-primary text-sm cursor-pointer text-center">Je suis flexible</Label>
+                                                </div>
                                                 <RadioGroup
                                                     value={formData.schedulingTime}
                                                     onValueChange={(value) => setFormData({ ...formData, schedulingTime: value })}
+                                                    disabled={formData.schedulingType !== "flexible"}
                                                     className="space-y-2 text-left inline-block"
                                                 >
                                                     <div className="flex items-center space-x-2">
                                                         <RadioGroupItem value="morning" id="morning" className="border-primary text-primary" />
-                                                        <Label htmlFor="morning" className="text-sm font-medium">Le matin (09h - 12h)</Label>
+                                                        <Label htmlFor="morning" className="text-sm font-medium">Le matin</Label>
                                                     </div>
                                                     <div className="flex items-center space-x-2">
                                                         <RadioGroupItem value="afternoon" id="afternoon" className="border-primary text-primary" />
-                                                        <Label htmlFor="afternoon" className="text-sm font-medium">L'après midi (13h - 18h)</Label>
+                                                        <Label htmlFor="afternoon" className="text-sm font-medium">L'après midi</Label>
                                                     </div>
                                                 </RadioGroup>
                                             </div>
+
+                                            {/* Date */}
                                             <div className="text-center space-y-3">
                                                 <div className="font-bold text-primary text-sm">Date</div>
                                                 <Input

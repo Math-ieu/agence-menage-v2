@@ -40,8 +40,8 @@ const GrandMenageBureaux = () => {
         city: "",
         neighborhood: "",
         schedulingTime: "morning",
-        schedulingHours: "09:00 - 12:00",
         schedulingDate: "",
+        schedulingType: "flexible",
         fixedTime: "14:00",
         additionalServices: {
             produitsEtOutils: false
@@ -226,7 +226,9 @@ const GrandMenageBureaux = () => {
                                                 </div>
                                                 <div className="flex justify-between gap-4">
                                                     <span className="text-muted-foreground">Heure:</span>
-                                                    <span className="font-medium text-right text-slate-700">{formData.fixedTime}</span>
+                                                    <span className="font-medium text-right text-slate-700">
+                                                        {formData.schedulingType === "fixed" ? formData.fixedTime : (formData.schedulingTime === "morning" ? "Le matin" : "L'après midi")}
+                                                    </span>
                                                 </div>
                                             </div>
                                         </div>
@@ -434,44 +436,71 @@ const GrandMenageBureaux = () => {
                                         <h3 className="text-xl font-bold bg-primary text-white p-3 rounded-lg mb-4">
                                             Planning pour votre demande
                                         </h3>
-                                        <div className="grid md:grid-cols-3 gap-6 p-4 bg-muted/30 rounded">
-                                            <div className="text-center">
-                                                <div className="font-semibold mb-2">Je souhaite une heure fixe</div>
+                                        <div className="grid md:grid-cols-3 gap-6 p-4 border rounded-xl bg-white shadow-sm">
+                                            {/* Heure fixe */}
+                                            <div className="text-center space-y-3">
+                                                <div className="flex items-center justify-center space-x-2">
+                                                    <input
+                                                        type="radio"
+                                                        id="gm-bureau-fixed"
+                                                        name="schedulingType"
+                                                        checked={formData.schedulingType === "fixed"}
+                                                        onChange={() => setFormData({ ...formData, schedulingType: "fixed" })}
+                                                        className="w-4 h-4 text-[#c7dd54]"
+                                                    />
+                                                    <Label htmlFor="gm-bureau-fixed" className="font-bold text-[#c7dd54] text-sm cursor-pointer text-center">Je souhaite une heure fixe</Label>
+                                                </div>
                                                 <div className="flex justify-center">
                                                     <Input
                                                         type="time"
                                                         required
                                                         value={formData.fixedTime}
                                                         onChange={(e) => setFormData({ ...formData, fixedTime: e.target.value })}
-                                                        className="w-32 text-center text-xl font-bold h-12"
+                                                        disabled={formData.schedulingType !== "fixed"}
+                                                        className="w-32 text-center text-xl font-bold h-12 border-[#c7dd54]/30"
                                                     />
                                                 </div>
                                             </div>
-                                            <div className="text-center">
-                                                <div className="font-semibold mb-2">Je suis flexible et disponible</div>
+
+                                            {/* Flexible */}
+                                            <div className="text-center space-y-3">
+                                                <div className="flex items-center justify-center space-x-2">
+                                                    <input
+                                                        type="radio"
+                                                        id="gm-bureau-flexible"
+                                                        name="schedulingType"
+                                                        checked={formData.schedulingType === "flexible"}
+                                                        onChange={() => setFormData({ ...formData, schedulingType: "flexible" })}
+                                                        className="w-4 h-4 text-[#c7dd54]"
+                                                    />
+                                                    <Label htmlFor="gm-bureau-flexible" className="font-bold text-[#c7dd54] text-sm cursor-pointer text-center">Je suis flexible</Label>
+                                                </div>
                                                 <RadioGroup
                                                     value={formData.schedulingTime}
                                                     onValueChange={(value) => setFormData({ ...formData, schedulingTime: value })}
-                                                    className="space-y-2"
+                                                    disabled={formData.schedulingType !== "flexible"}
+                                                    className="space-y-2 text-left inline-block"
                                                 >
                                                     <div className="flex items-center space-x-2">
                                                         <RadioGroupItem value="morning" id="gm-bureau-morning" />
-                                                        <Label htmlFor="gm-bureau-morning">Le matin (09h 00 - 12h 00)</Label>
+                                                        <Label htmlFor="gm-bureau-morning">Le matin</Label>
                                                     </div>
                                                     <div className="flex items-center space-x-2">
                                                         <RadioGroupItem value="afternoon" id="gm-bureau-afternoon" />
-                                                        <Label htmlFor="gm-bureau-afternoon">L'après midi (13h 00 - 18h 00)</Label>
+                                                        <Label htmlFor="gm-bureau-afternoon">L'après midi</Label>
                                                     </div>
                                                 </RadioGroup>
                                             </div>
-                                            <div className="text-center">
-                                                <div className="font-semibold mb-2">Date</div>
+
+                                            {/* Date */}
+                                            <div className="text-center space-y-3">
+                                                <div className="font-bold text-[#c7dd54] text-sm">Date</div>
                                                 <Input
                                                     type="date"
                                                     required
                                                     value={formData.schedulingDate}
                                                     onChange={(e) => setFormData({ ...formData, schedulingDate: e.target.value })}
-                                                    className="w-full"
+                                                    className="w-full border-slate-300"
                                                 />
                                             </div>
                                         </div>
@@ -484,7 +513,7 @@ const GrandMenageBureaux = () => {
                                         <div className="flex items-center justify-between p-4 bg-muted/30 rounded">
                                             <div className="flex items-center gap-3">
                                                 <span className="text-4xl">🧴</span>
-                                                <span className="font-medium">Produits et outils + 150 MAD</span>
+                                                <span className="font-medium">Produits et outils + 90 MAD</span>
                                             </div>
                                             <Switch
                                                 checked={formData.additionalServices.produitsEtOutils}

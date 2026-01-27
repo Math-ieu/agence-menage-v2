@@ -37,7 +37,7 @@ const NettoyageUrgenceContent = () => {
     const [formData, setFormData] = useState({
         propertyType: "appartement",
         interventionNature: "sinistre",
-        schedulingType: "fixed",
+        schedulingType: "flexible",
         fixedTime: "14:00",
         schedulingTime: "morning",
         schedulingDate: "",
@@ -167,7 +167,7 @@ Les interventions d’urgence couvrent exclusivement les cas suivants :
                                                     <div className="flex justify-between gap-4 border-b border-primary/10 pb-2">
                                                         <span className="text-muted-foreground text-sm">Heure:</span>
                                                         <span className="font-medium text-right text-sm">
-                                                            {formData.schedulingType === "fixed" ? formData.fixedTime : (formData.schedulingTime === "morning" ? "Matin (8h-13h)" : "Journée (10h+)")}
+                                                            {formData.schedulingType === "fixed" ? formData.fixedTime : (formData.schedulingTime === "morning" ? "Le matin" : "L'après midi")}
                                                         </span>
                                                     </div>
 
@@ -177,13 +177,13 @@ Les interventions d’urgence couvrent exclusivement les cas suivants :
                                                             {formData.additionalServices.produitsEtOutils && (
                                                                 <div className="flex justify-between gap-4 text-xs">
                                                                     <span>Produits:</span>
-                                                                    <span className="font-medium">+50 MAD</span>
+                                                                    <span className="font-medium">+90 MAD</span>
                                                                 </div>
                                                             )}
                                                             {formData.additionalServices.torchonsEtSerpierres && (
                                                                 <div className="flex justify-between gap-4 text-xs">
                                                                     <span>Torchons:</span>
-                                                                    <span className="font-medium">+20 MAD</span>
+                                                                    <span className="font-medium">+40 MAD</span>
                                                                 </div>
                                                             )}
                                                         </div>
@@ -324,11 +324,11 @@ Les interventions d’urgence couvrent exclusivement les cas suivants :
                                                     >
                                                         <div className="flex items-center space-x-2">
                                                             <RadioGroupItem value="morning" id="morning" className="border-primary text-primary" />
-                                                            <Label htmlFor="morning" className="text-sm font-medium">Le matin (08h - 13h)</Label>
+                                                            <Label htmlFor="morning" className="text-sm font-medium">Le matin</Label>
                                                         </div>
                                                         <div className="flex items-center space-x-2">
                                                             <RadioGroupItem value="afternoon" id="afternoon" className="border-primary text-primary" />
-                                                            <Label htmlFor="afternoon" className="text-sm font-medium">Journée (10h+)</Label>
+                                                            <Label htmlFor="afternoon" className="text-sm font-medium">L'après midi</Label>
                                                         </div>
                                                     </RadioGroup>
                                                 </div>
@@ -361,7 +361,7 @@ Les interventions d’urgence couvrent exclusivement les cas suivants :
                                                                 🧴
                                                             </div>
                                                             <div>
-                                                                <p className="font-black text-sm text-primary">Produits : 50 MAD</p>
+                                                                <p className="font-black text-sm text-primary">Produits : 90 MAD</p>
                                                                 <p className="text-[10px] text-muted-foreground uppercase font-bold">Kit complet</p>
                                                             </div>
                                                         </div>
@@ -380,7 +380,7 @@ Les interventions d’urgence couvrent exclusivement les cas suivants :
                                                                 🧹
                                                             </div>
                                                             <div>
-                                                                <p className="font-black text-sm text-primary">Chiffons : 20 MAD</p>
+                                                                <p className="font-black text-sm text-primary">Chiffons : 40 MAD</p>
                                                                 <p className="text-[10px] text-muted-foreground uppercase font-bold">Torchons et serpillères</p>
                                                             </div>
                                                         </div>

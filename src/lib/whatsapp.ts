@@ -30,14 +30,14 @@ export const formatBookingMessage = (serviceName: string, data: any, price: numb
 
     const options = [];
     if (serviceName === "Nettoyage d'urgence") {
-        if (data.additionalServices?.produitsEtOutils) options.push("Produits fournis (+50 MAD)");
-        if (data.additionalServices?.torchonsEtSerpierres) options.push("Torchons et serpillères (+20 MAD)");
+        if (data.additionalServices?.produitsEtOutils) options.push("Produits fournis (+90 MAD)");
+        if (data.additionalServices?.torchonsEtSerpierres) options.push("Torchons et serpillères (+40 MAD)");
     } else if (serviceName === "Ménage post-déménagement") {
         if (data.additionalServices?.nettoyageTerrasse) options.push("Nettoyage Terrasse (+500 MAD)");
         if (data.additionalServices?.baiesVitrees) options.push("Baies Vitrées (Sur devis)");
     } else {
         if (data.additionalServices?.produitsEtOutils) options.push("Produits et outils (+90 MAD)");
-        if (data.additionalServices?.torchonsEtSerpierres) options.push("Torchons et serpillères (+20 MAD)");
+        if (data.additionalServices?.torchonsEtSerpierres) options.push("Torchons et serpillères (+40 MAD)");
     }
     if (data.intensiveOption || data.cleanlinessType === "intensif") options.push("Option Intensif");
 
@@ -97,7 +97,7 @@ export const formatBookingMessage = (serviceName: string, data: any, price: numb
 ${serviceSpecificDetails}
 
 *Date :* ${data.schedulingDate || "Non définie"}
-*Heure :* ${data.schedulingTime || data.fixedTime || "14:00"}
+*Heure :* ${data.schedulingType === 'fixed' || !data.schedulingType ? data.fixedTime : (data.schedulingTime === 'morning' ? 'Le matin' : data.schedulingTime === 'afternoon' ? "L'après midi" : data.schedulingTime || "14:00")}
 --------------------------------
 *Total :* *${priceLabel}*`;
 };

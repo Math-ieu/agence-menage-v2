@@ -50,6 +50,7 @@ const GardeMalade = () => {
     healthIssues: "",
     schedulingTime: "morning",
     schedulingDate: "",
+    schedulingType: "flexible",
     fixedTime: "14:00",
     numberOfDays: 1,
     additionalNotes: "",
@@ -263,8 +264,14 @@ const GardeMalade = () => {
                             <span className="font-medium text-right text-slate-700">{formData.numberOfPeople}</span>
                           </div>
                           <div className="flex justify-between gap-4 border-t border-[#b46d2f]/5 pt-2">
-                            <span className="text-muted-foreground">Date début:</span>
-                            <span className="font-medium text-right text-slate-700">{formData.schedulingDate || "Non définie"}</span>
+                            <span className="text-muted-foreground text-sm">Date début:</span>
+                            <span className="font-medium text-right text-slate-700 text-sm">{formData.schedulingDate || "Non définie"}</span>
+                          </div>
+                          <div className="flex justify-between gap-4 border-b border-[#b46d2f]/5 pb-2">
+                            <span className="text-muted-foreground text-sm">Heure:</span>
+                            <span className="font-medium text-right text-slate-700 text-sm">
+                              {formData.schedulingType === "fixed" ? formData.fixedTime : (formData.schedulingTime === "morning" ? "Le matin" : "L'après midi")}
+                            </span>
                           </div>
                         </div>
                       </div>
@@ -383,41 +390,70 @@ const GardeMalade = () => {
                       </h3>
                       <div className="p-6 bg-slate-50/50 rounded-xl border border-slate-100 space-y-8">
                         <div className="grid md:grid-cols-3 gap-6">
-                          <div className="space-y-2">
-                            <Label className="text-sm font-bold text-slate-600">Heure fixe</Label>
-                            <Input
-                              type="time"
-                              required
-                              value={formData.fixedTime}
-                              onChange={(e) => setFormData({ ...formData, fixedTime: e.target.value })}
-                              className="h-10"
-                            />
+                          {/* Heure fixe */}
+                          <div className="text-center space-y-3">
+                            <div className="flex items-center justify-center space-x-2">
+                              <input
+                                type="radio"
+                                id="garde-fixed"
+                                name="schedulingType"
+                                checked={formData.schedulingType === "fixed"}
+                                onChange={() => setFormData({ ...formData, schedulingType: "fixed" })}
+                                className="w-4 h-4 text-[#b46d2f]"
+                              />
+                              <Label htmlFor="garde-fixed" className="font-bold text-[#b46d2f] text-sm cursor-pointer text-center">Je souhaite une heure fixe</Label>
+                            </div>
+                            <div className="flex justify-center">
+                              <Input
+                                type="time"
+                                required
+                                value={formData.fixedTime}
+                                onChange={(e) => setFormData({ ...formData, fixedTime: e.target.value })}
+                                disabled={formData.schedulingType !== "fixed"}
+                                className="w-32 text-center text-xl font-bold h-12 border-[#b46d2f]/30"
+                              />
+                            </div>
                           </div>
-                          <div className="space-y-2">
-                            <Label className="text-sm font-bold text-slate-600">Je suis flexible</Label>
+
+                          {/* Flexible */}
+                          <div className="text-center space-y-3">
+                            <div className="flex items-center justify-center space-x-2">
+                              <input
+                                type="radio"
+                                id="garde-flexible"
+                                name="schedulingType"
+                                checked={formData.schedulingType === "flexible"}
+                                onChange={() => setFormData({ ...formData, schedulingType: "flexible" })}
+                                className="w-4 h-4 text-[#b46d2f]"
+                              />
+                              <Label htmlFor="garde-flexible" className="font-bold text-[#b46d2f] text-sm cursor-pointer text-center">Je suis flexible</Label>
+                            </div>
                             <RadioGroup
                               value={formData.schedulingTime}
                               onValueChange={(value) => setFormData({ ...formData, schedulingTime: value })}
-                              className="flex flex-col gap-2 p-2 bg-white rounded-lg border border-slate-200"
+                              disabled={formData.schedulingType !== "flexible"}
+                              className="space-y-2 text-left inline-block"
                             >
                               <div className="flex items-center space-x-2">
                                 <RadioGroupItem value="morning" id="garde-morning" className="border-[#b46d2f] text-[#b46d2f]" />
-                                <Label htmlFor="garde-morning" className="text-xs font-medium">Matin (09h-12h)</Label>
+                                <Label htmlFor="garde-morning" className="text-sm font-medium">Le matin</Label>
                               </div>
                               <div className="flex items-center space-x-2">
                                 <RadioGroupItem value="afternoon" id="garde-afternoon" className="border-[#b46d2f] text-[#b46d2f]" />
-                                <Label htmlFor="garde-afternoon" className="text-xs font-medium">Après midi (13h-18h)</Label>
+                                <Label htmlFor="garde-afternoon" className="text-sm font-medium">L'après midi</Label>
                               </div>
                             </RadioGroup>
                           </div>
-                          <div className="space-y-2">
-                            <Label className="text-sm font-bold text-slate-600">Date</Label>
+
+                          {/* Date */}
+                          <div className="text-center space-y-3">
+                            <div className="font-bold text-[#b46d2f] text-sm">Date</div>
                             <Input
                               type="date"
                               required
                               value={formData.schedulingDate}
                               onChange={(e) => setFormData({ ...formData, schedulingDate: e.target.value })}
-                              className="h-10"
+                              className="w-full border-slate-300"
                             />
                           </div>
                         </div>

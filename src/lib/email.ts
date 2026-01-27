@@ -18,11 +18,10 @@ export const sendBookingEmail = async (serviceName: string, data: any, price: st
     try {
         const optionalServices = [];
         if (data.additionalServices?.produitsEtOutils) {
-            optionalServices.push(serviceName === "Ménage Standard" ? "Produits et outils (+90 MAD)" :
-                serviceName === "Nettoyage d'urgence" ? "Produits fournis (+50 MAD)" : "Produits et outils");
+            optionalServices.push("Produits et outils (+90 MAD)");
         }
         if (data.additionalServices?.torchonsEtSerpierres) {
-            optionalServices.push(serviceName === "Ménage Standard" || serviceName === "Nettoyage d'urgence" ? "Torchons et serpillères (+20 MAD)" : "Torchons et serpillères");
+            optionalServices.push("Torchons et serpillères (+40 MAD)");
         }
         if (data.additionalServices?.nettoyageTerrasse) {
             optionalServices.push("Nettoyage Terrasse (+500 MAD)");
@@ -68,7 +67,7 @@ export const sendBookingEmail = async (serviceName: string, data: any, price: st
             property_type: data.propertyType || "-",
             intervention_nature: natureLabel,
             scheduling_date: data.schedulingDate,
-            scheduling_time: data.fixedTime || data.schedulingTime || "14:00",
+            scheduling_time: data.schedulingType === 'fixed' || !data.schedulingType ? data.fixedTime : (data.schedulingTime === 'morning' ? 'Le matin' : data.schedulingTime === 'afternoon' ? "L'après midi" : data.schedulingTime),
             total_price: typeof price === "number" ? `${price} MAD` : price,
             notes: data.changeRepereNotes || data.careAddress || data.additionalNotes || data.notes || "-",
             details: JSON.stringify(data, null, 2),
