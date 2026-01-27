@@ -351,7 +351,7 @@ Options possibles : vitres extérieures/grandes baies, terrasse.`}
 
                                     <div>
                                         <h3 className="text-xl font-bold bg-[#d1a246] text-white p-3 rounded-lg text-center mb-4 uppercase">
-                                            Service Optionnels
+                                            Services Optionnels
                                         </h3>
                                         <div className="p-6 border rounded-xl bg-slate-50/50 space-y-4">
                                             <div className="flex items-center justify-between p-4 bg-white border border-[#d1a246]/20 rounded-xl shadow-sm">

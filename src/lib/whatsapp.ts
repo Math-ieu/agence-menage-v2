@@ -29,9 +29,17 @@ export const formatBookingMessage = (serviceName: string, data: any, price: numb
     }
 
     const options = [];
-    if (data.additionalServices?.produitsEtOutils) options.push("Produits et outils (+90 MAD)");
-    if (data.additionalServices?.torchonsEtSerpierres) options.push("Torchons et serpillères (+20 MAD)");
-    if (data.intensiveOption) options.push("Option Intensif");
+    if (serviceName === "Nettoyage d'urgence") {
+        if (data.additionalServices?.produitsEtOutils) options.push("Produits fournis (+50 MAD)");
+        if (data.additionalServices?.torchonsEtSerpierres) options.push("Torchons et serpillères (+20 MAD)");
+    } else if (serviceName === "Ménage post-déménagement") {
+        if (data.additionalServices?.nettoyageTerrasse) options.push("Nettoyage Terrasse (+500 MAD)");
+        if (data.additionalServices?.baiesVitrees) options.push("Baies Vitrées (Sur devis)");
+    } else {
+        if (data.additionalServices?.produitsEtOutils) options.push("Produits et outils (+90 MAD)");
+        if (data.additionalServices?.torchonsEtSerpierres) options.push("Torchons et serpillères (+20 MAD)");
+    }
+    if (data.intensiveOption || data.cleanlinessType === "intensif") options.push("Option Intensif");
 
     const commonDetails = `${durationDetails.join('\n')}
 *Nbre de personne :* ${data.numberOfPeople || "-"}${options.length > 0 ? `\n*Services optionnels :* ${options.join(", ")}` : ""}`;
@@ -47,6 +55,26 @@ export const formatBookingMessage = (serviceName: string, data: any, price: numb
 *Lieu :* ${data.careLocation || "-"}
 *Champs de repère :* ${data.careAddress || "-"}
 *Durée :* ${data.duration || "-"} heures`;
+    } else if (serviceName === "Nettoyage d'urgence") {
+        const natureLabels: Record<string, string> = {
+            'sinistre': 'Nettoyage après sinistre',
+            'event': 'Nettoyage post/après évènement',
+            'express': 'Remise en état express',
+            'autre': 'Autre situation urgente (à préciser)'
+        };
+        serviceSpecificDetails = `*Type :* ${data.propertyType || "-"}
+*Nature :* ${natureLabels[data.interventionNature] || data.interventionNature || "-"}
+*Ville :* ${data.city || "Casablanca"}
+*Quartier :* ${data.neighborhood || "-"}
+*Repère/Notes :* ${data.changeRepereNotes || "-"}${options.length > 0 ? `\n*Services optionnels :* ${options.join(", ")}` : ""}`;
+    } else if (serviceName === "Ménage post-déménagement") {
+        serviceSpecificDetails = `*Type :* ${data.propertyType || "-"}
+*Surface :* ${data.surfaceArea || "-"} m2
+*État du logement :* ${data.accommodationState || "-"}
+*Salissure :* ${data.cleanlinessType || "-"}
+*Ville :* ${data.city || "-"}
+*Quartier :* ${data.neighborhood || "-"}
+*Repère/Notes :* ${data.changeRepereNotes || "-"}${options.length > 0 ? `\n*Services optionnels :* ${options.join(", ")}` : ""}`;
     } else {
         serviceSpecificDetails = commonDetails;
     }
@@ -69,7 +97,7 @@ export const formatBookingMessage = (serviceName: string, data: any, price: numb
 ${serviceSpecificDetails}
 
 *Date :* ${data.schedulingDate || "Non définie"}
-*Heure :* ${data.fixedTime || data.schedulingTime || "14:00"}
+*Heure :* ${data.schedulingTime || data.fixedTime || "14:00"}
 --------------------------------
 *Total :* *${priceLabel}*`;
 };

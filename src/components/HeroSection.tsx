@@ -1,5 +1,4 @@
 "use client";
-
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import heroParticulier from "@/assets/hero-home-particulier.png";
@@ -66,6 +65,16 @@ const HeroSection = () => {
                     }`}
                 >
                   Services<br />pour entreprises
+                </button>
+              </Link>
+            </div>
+
+            <div className="mt-6 md:mt-8 animate-fade-in" style={{ animationDelay: "0.4s" }}>
+              <Link href={`/services/particulier/nettoyage-urgence${isEntreprise ? '?type=entreprise' : ''}`}>
+                <button
+                  className="bg-gradient-to-r from-[#149AFE] via-[#0047AB] to-[#001529] hover:brightness-110 text-white px-10 py-3 rounded-full font-bold text-lg md:text-xl shadow-[0_0_20px_rgba(20,154,254,0.3)] animate-blink transition-all hover:scale-105 active:scale-95 flex items-center gap-2 text-center"
+                >
+                  Nettoyage d'urgence
                 </button>
               </Link>
             </div>

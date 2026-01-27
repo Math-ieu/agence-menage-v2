@@ -18,15 +18,37 @@ export const sendBookingEmail = async (serviceName: string, data: any, price: st
     try {
         const optionalServices = [];
         if (data.additionalServices?.produitsEtOutils) {
-            optionalServices.push(serviceName === "Ménage Standard" ? "Produits et outils (+90 MAD)" : "Produits et outils");
+            optionalServices.push(serviceName === "Ménage Standard" ? "Produits et outils (+90 MAD)" :
+                serviceName === "Nettoyage d'urgence" ? "Produits fournis (+50 MAD)" : "Produits et outils");
         }
         if (data.additionalServices?.torchonsEtSerpierres) {
-            optionalServices.push(serviceName === "Ménage Standard" ? "Torchons et serpillères (+20 MAD)" : "Torchons et serpillères");
+            optionalServices.push(serviceName === "Ménage Standard" || serviceName === "Nettoyage d'urgence" ? "Torchons et serpillères (+20 MAD)" : "Torchons et serpillères");
         }
-        if (data.intensiveOption) optionalServices.push("Option Intensif");
+        if (data.additionalServices?.nettoyageTerrasse) {
+            optionalServices.push("Nettoyage Terrasse (+500 MAD)");
+        }
+        if (data.additionalServices?.baiesVitrees) {
+            optionalServices.push("Baies Vitrées (Sur devis)");
+        }
+        if (data.intensiveOption || data.cleanlinessType === "intensif") optionalServices.push("Option Intensif");
 
         const surfaceValue = data.officeSurface || data.surfaceArea || data.surface || "";
         const formattedSurface = surfaceValue ? `${surfaceValue} m²` : "";
+
+        let natureLabel = "-";
+        if (serviceName === "Nettoyage d'urgence") {
+            const natureLabels: Record<string, string> = {
+                'sinistre': 'Nettoyage après sinistre',
+                'event': 'Nettoyage post/après évènement',
+                'express': 'Remise en état express',
+                'autre': 'Autre situation urgente (à préciser)'
+            };
+            natureLabel = natureLabels[data.interventionNature] || data.interventionNature || "-";
+        }
+
+        if (serviceName === "Ménage post-déménagement") {
+            natureLabel = `État: ${data.accommodationState || "-"}, Salissure: ${data.cleanlinessType || "-"}`;
+        }
 
         const templateParams = {
             is_entreprise: isEntreprise,
@@ -43,6 +65,8 @@ export const sendBookingEmail = async (serviceName: string, data: any, price: st
             optional_services: optionalServices.length > 0 ? optionalServices.join(", ") : "-",
             city: data.city,
             neighborhood: data.neighborhood,
+            property_type: data.propertyType || "-",
+            intervention_nature: natureLabel,
             scheduling_date: data.schedulingDate,
             scheduling_time: data.fixedTime || data.schedulingTime || "14:00",
             total_price: typeof price === "number" ? `${price} MAD` : price,
