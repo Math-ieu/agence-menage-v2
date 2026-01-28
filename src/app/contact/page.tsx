@@ -9,6 +9,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
 import { createWhatsAppLink, formatContactMessage, DESTINATION_PHONE_NUMBER } from "@/lib/whatsapp";
 import { Checkbox } from "@/components/ui/checkbox";
+import { sendContactEmail } from "@/app/actions";
 
 const Contact = () => {
     const [wasValidated, setWasValidated] = useState(false);
@@ -42,6 +43,9 @@ const Contact = () => {
 
         const whatsappMessage = formatContactMessage(processedData);
         const whatsappLink = createWhatsAppLink(DESTINATION_PHONE_NUMBER, whatsappMessage);
+
+        // Send email copy via Resend (async)
+        sendContactEmail(processedData).catch(console.error);
 
         // Trigger GTM conversion event
         if (typeof window !== 'undefined' && (window as any).gtag) {
