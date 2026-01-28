@@ -42,6 +42,14 @@ const Contact = () => {
 
         const whatsappMessage = formatContactMessage(processedData);
         const whatsappLink = createWhatsAppLink(DESTINATION_PHONE_NUMBER, whatsappMessage);
+
+        // Trigger GTM conversion event
+        if (typeof window !== 'undefined' && (window as any).gtag) {
+            (window as any).gtag('event', 'conversion', {
+                'send_to': 'AW-17907112455/IwYmCPvxvu4bEIe049pC'
+            });
+        }
+
         window.open(whatsappLink, "_blank");
         toast.success("Votre message a été préparé pour WhatsApp.");
     };
