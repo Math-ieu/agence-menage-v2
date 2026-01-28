@@ -48,3 +48,55 @@ export async function sendContactEmail(formData: {
         return { success: false, error: err };
     }
 }
+
+export async function sendEmployeeEmail(formData: {
+    firstName: string;
+    lastName: string;
+    phoneNumber: string;
+    whatsappNumber: string;
+    position: string;
+    experience: string;
+    languages: string[];
+    nationality: string;
+    neighborhood: string;
+    city: string;
+}) {
+    try {
+        const { data, error } = await resend.emails.send({
+            from: 'Agence Ménage Recrutement <onboarding@resend.dev>',
+            to: ['contact@agencemenage.ma'],
+            subject: `Nouvelle Candidature: ${formData.firstName} ${formData.lastName} - ${formData.position}`,
+            html: `
+        <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #e2e8f0; rounded: 12px;">
+          <h1 style="color: #1e293b; border-bottom: 2px solid #fbbf24; padding-bottom: 10px;">Nouvelle Candidature</h1>
+          <div style="margin-top: 20px; line-height: 1.6;">
+            <p><strong>Nom :</strong> ${formData.lastName}</p>
+            <p><strong>Prénom :</strong> ${formData.firstName}</p>
+            <p><strong>Téléphone :</strong> ${formData.phoneNumber}</p>
+            <p><strong>WhatsApp :</strong> ${formData.whatsappNumber || "Non spécifié"}</p>
+            <hr style="border: 0; border-top: 1px solid #e2e8f0; margin: 20px 0;">
+            <p><strong>Poste souhaité :</strong> ${formData.position}</p>
+            <p><strong>Expérience :</strong> ${formData.experience}</p>
+            <p><strong>Langues :</strong> ${formData.languages.join(", ")}</p>
+            <p><strong>Nationalité :</strong> ${formData.nationality}</p>
+            <p><strong>Ville :</strong> ${formData.city}</p>
+            <p><strong>Quartier :</strong> ${formData.neighborhood}</p>
+          </div>
+          <footer style="margin-top: 30px; font-size: 12px; color: #64748b; text-align: center;">
+            Envoyé via l'Espace Employé - Agence Ménage
+          </footer>
+        </div>
+      `,
+        });
+
+        if (error) {
+            console.error("Resend error:", error);
+            return { success: false, error };
+        }
+
+        return { success: true, data };
+    } catch (err) {
+        console.error("Action error:", err);
+        return { success: false, error: err };
+    }
+}

@@ -9,6 +9,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { toast } from "sonner";
 import { createWhatsAppLink, formatCandidateMessage, DESTINATION_PHONE_NUMBER } from "@/lib/whatsapp";
+import { sendEmployeeEmail } from "@/app/actions";
 import heroImage from "@/assets/hero-espace-employe.png";
 
 import { GraduationCap, Clock, MapPin, Heart, Users } from "lucide-react";
@@ -105,6 +106,10 @@ const EspaceEmploye = () => {
 
         const message = formatCandidateMessage(processedData);
         const whatsappLink = createWhatsAppLink(DESTINATION_PHONE_NUMBER, message);
+
+        // Send email copy via Resend (async)
+        sendEmployeeEmail(processedData).catch(console.error);
+
         window.open(whatsappLink, "_blank");
         toast.success("Votre candidature a été préparée pour WhatsApp.");
     };

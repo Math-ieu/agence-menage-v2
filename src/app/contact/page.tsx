@@ -1,5 +1,6 @@
 "use client";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
@@ -12,6 +13,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { sendContactEmail } from "@/app/actions";
 
 const Contact = () => {
+    const router = useRouter();
     const [wasValidated, setWasValidated] = useState(false);
     const [formData, setFormData] = useState({
         name: "",
@@ -47,15 +49,11 @@ const Contact = () => {
         // Send email copy via Resend (async)
         sendContactEmail(processedData).catch(console.error);
 
-        // Trigger GTM conversion event
-        if (typeof window !== 'undefined' && (window as any).gtag) {
-            (window as any).gtag('event', 'conversion', {
-                'send_to': 'AW-17907112455/IwYmCPvxvu4bEIe049pC'
-            });
-        }
-
         window.open(whatsappLink, "_blank");
         toast.success("Votre message a été préparé pour WhatsApp.");
+
+        // Redirect to fixed confirmation page for Google Ads tracking
+        router.push('/contact/merci');
     };
 
     return (
