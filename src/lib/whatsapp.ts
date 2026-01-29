@@ -102,7 +102,7 @@ export const formatBookingMessage = (serviceName: string, data: any, price: numb
         if (schedTime) details.push(`*Heure :* ${schedTime}`);
     }
     if (data.city) details.push(`*Ville :* ${data.city}`);
-    if (data.neighborhood) details.push(`*Quartier :* ${data.neighborhood}`);
+    if (data.neighborhood) details.push(`*Adresse :* ${data.neighborhood}`);
 
     // Notes
     const notes = data.changeRepereNotes || data.careAddress || data.additionalNotes || data.notes;
@@ -135,7 +135,7 @@ export const formatCandidateMessage = (data: any): string => {
 *Nationalité:* ${data.nationality}
 
 *Ville:* ${data.city}
-*Quartier:* ${data.neighborhood}
+*Adresse:* ${data.neighborhood}
 
 --------------------------------
 Envoyé depuis l'Espace Employé.`;

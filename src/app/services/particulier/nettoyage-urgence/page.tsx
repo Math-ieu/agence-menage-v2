@@ -415,10 +415,10 @@ Les interventions d’urgence couvrent exclusivement les cas suivants :
                                                     />
                                                 </div>
                                                 <div className="space-y-1">
-                                                    <Label className="text-[10px] font-bold text-primary uppercase ml-1 underline">Quartier (précisez le votre)*</Label>
+                                                    <Label className="text-[10px] font-bold text-primary uppercase ml-1 underline">Adresse (précisez la votre)*</Label>
                                                     <Input
                                                         required
-                                                        placeholder="Ex: Maârif, Gauthier, Oasis..."
+                                                        placeholder="Adresse"
                                                         value={formData.neighborhood}
                                                         onChange={(e) => setFormData({ ...formData, neighborhood: e.target.value })}
                                                         className="h-12 font-medium border-primary/20"

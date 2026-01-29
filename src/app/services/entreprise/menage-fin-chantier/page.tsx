@@ -314,9 +314,9 @@ La prestation comprend : L’évacuation des poussières et résidus de chantier
                                                     />
                                                 </div>
                                                 <div className="space-y-2">
-                                                    <Label className="text-xs font-bold text-muted-foreground uppercase">Quartier</Label>
+                                                    <Label className="text-xs font-bold text-muted-foreground uppercase">Adresse</Label>
                                                     <Input
-                                                        placeholder="ex: Maarif"
+                                                        placeholder="Adresse"
                                                         required
                                                         value={formData.neighborhood}
                                                         onChange={(e) => setFormData({ ...formData, neighborhood: e.target.value })}

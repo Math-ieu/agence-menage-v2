@@ -529,7 +529,7 @@ const PlacementEntreprise = () => {
                                                         className="bg-white"
                                                     />
                                                     <Input
-                                                        placeholder="Quartier (ex: Gauthier)"
+                                                        placeholder="Adresse"
                                                         required
                                                         value={formData.neighborhood}
                                                         onChange={(e) => setFormData({ ...formData, neighborhood: e.target.value })}

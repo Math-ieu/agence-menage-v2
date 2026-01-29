@@ -383,7 +383,7 @@ Il comprend le :
                                                 className="border-slate-300"
                                             />
                                             <Input
-                                                placeholder="Quartier : j'inscris le nom"
+                                                placeholder="Adresse"
                                                 required
                                                 value={formData.neighborhood}
                                                 onChange={(e) => setFormData({ ...formData, neighborhood: e.target.value })}

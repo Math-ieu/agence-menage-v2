@@ -612,9 +612,9 @@ const GardeMalade = () => {
                             />
                           </div>
                           <div className="space-y-2">
-                            <Label className="text-sm font-bold text-slate-600">Quartier</Label>
+                            <Label className="text-sm font-bold text-slate-600">Adresse</Label>
                             <Input
-                              placeholder="ex: Maarif"
+                              placeholder="Adresse"
                               required
                               value={formData.neighborhood}
                               onChange={(e) => setFormData({ ...formData, neighborhood: e.target.value })}

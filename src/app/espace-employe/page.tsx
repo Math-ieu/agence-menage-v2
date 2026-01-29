@@ -339,14 +339,14 @@ const EspaceEmploye = () => {
 
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-4 border-t border-slate-100">
                                     <div className="space-y-2">
-                                        <Label htmlFor="neighborhood">Quartier*</Label>
+                                        <Label htmlFor="neighborhood">Adresse*</Label>
                                         <Input
                                             id="neighborhood"
                                             required
                                             value={formData.neighborhood}
                                             onChange={e => setFormData({ ...formData, neighborhood: e.target.value })}
                                             className="border-slate-300 h-11"
-                                            placeholder="Ex: Mâarif"
+                                            placeholder="Adresse"
                                         />
                                     </div>
                                     <div className="space-y-2">

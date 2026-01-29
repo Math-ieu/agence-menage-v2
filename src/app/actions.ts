@@ -108,7 +108,7 @@ export async function sendEmployeeEmail(formData: {
     <h3 style="color: #175e5c; border-left: 4px solid #175e5c; padding-left: 10px; margin-bottom: 10px;">Localisation</h3>
     <table style="width: 100%; border-collapse: collapse;">
       <tr><td style="padding: 5px 0; width: 40%;"><strong>Ville:</strong></td><td>${formData.city}</td></tr>
-      <tr><td style="padding: 5px 0; width: 40%;"><strong>Quartier:</strong></td><td>${formData.neighborhood}</td></tr>
+      <tr><td style="padding: 5px 0; width: 40%;"><strong>Adresse:</strong></td><td>${formData.neighborhood}</td></tr>
     </table>
   </div>
   <footer style="margin-top: 30px; font-size: 12px; color: #64748b; text-align: center; border-top: 1px solid #eee; padding-top: 10px;">
@@ -240,7 +240,7 @@ export async function sendBookingEmailResend(serviceName: string, data: any, pri
       ${scheduling_time ? `<tr><td style="padding: 5px 0; width: 40%;"><strong>Heure:</strong></td><td>${scheduling_time}</td></tr>` : ""}
       ${isGardeMalade && data.careLocation ? `<tr><td style="padding: 5px 0; width: 40%;"><strong>Lieu de garde:</strong></td><td>${data.careLocation}</td></tr>` : ""}
       ${data.city ? `<tr><td style="padding: 5px 0; width: 40%;"><strong>Ville:</strong></td><td>${data.city}</td></tr>` : ""}
-      ${data.neighborhood ? `<tr><td style="padding: 5px 0; width: 40%;"><strong>Quartier:</strong></td><td>${data.neighborhood}</td></tr>` : ""}
+      ${data.neighborhood ? `<tr><td style="padding: 5px 0; width: 40%;"><strong>Adresse:</strong></td><td>${data.neighborhood}</td></tr>` : ""}
     </table>
   </div>
   ${combinedNotes ? `
