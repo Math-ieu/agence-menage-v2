@@ -5,98 +5,255 @@ import { Resend } from 'resend';
 const resend = new Resend(process.env.RESEND_API_KEY);
 
 export async function sendContactEmail(formData: {
-    name: string;
-    email: string;
-    phoneNumber: string;
-    whatsappNumber: string;
-    message: string;
+  name: string;
+  email: string;
+  phoneNumber: string;
+  whatsappNumber: string;
+  message: string;
 }) {
-    try {
-        // Note: If you have a verified domain on Resend, change 'onboarding@resend.dev' to your domain email
-        const { data, error } = await resend.emails.send({
-            from: 'Agence Ménage <onboarding@resend.dev>',
-            to: ['contact@agencemenage.ma'], // Replace with actual recipient email
-            subject: `Nouveau message de contact: ${formData.name}`,
-            html: `
-        <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #e2e8f0; rounded: 12px;">
-          <h1 style="color: #1e293b; border-bottom: 2px solid #fbbf24; padding-bottom: 10px;">Nouveau message de contact</h1>
-          <div style="margin-top: 20px; line-height: 1.6;">
-            <p><strong>Nom :</strong> ${formData.name}</p>
-            <p><strong>Email :</strong> ${formData.email}</p>
-            <p><strong>Téléphone :</strong> ${formData.phoneNumber}</p>
-            <p><strong>WhatsApp :</strong> ${formData.whatsappNumber}</p>
-            <div style="margin-top: 20px; padding: 15px; background-color: #f8fafc; border-left: 4px solid #fbbf24;">
-              <strong>Message :</strong><br/>
-              ${formData.message.replace(/\n/g, '<br>')}
-            </div>
-          </div>
-          <footer style="margin-top: 30px; font-size: 12px; color: #64748b; text-align: center;">
-            Envoyé via le formulaire de contact - Agence Ménage
-          </footer>
-        </div>
+  try {
+    // Note: If you have a verified domain on Resend, change 'onboarding@resend.dev' to your domain email
+    const { data, error } = await resend.emails.send({
+      from: 'Agence Ménage <onboarding@resend.dev>',
+      to: ['contact@agencemenage.ma'], // Replace with actual recipient email
+      subject: `Nouveau message de contact: ${formData.name}`,
+      html: `
+<div style="font-family: Arial, sans-serif; max-width: 600px; margin: auto; border: 1px solid #ddd; padding: 20px; color: #333;">
+  <div style="text-align: center; border-bottom: 2px solid #edba54; padding-bottom: 10px; margin-bottom: 20px;">
+    <h2 style="color: #edba54; margin: 0;">
+      CONTACT
+    </h2>
+    <h3 style="color: #edba54; margin: 0;">
+      MESSAGE DEPUIS LE SITE
+    </h3>
+  </div>
+  <div style="margin-bottom: 20px;">
+    <h3 style="color: #175e5c; border-left: 4px solid #175e5c; padding-left: 10px; margin-bottom: 10px;">Informations Client</h3>
+    <table style="width: 100%; border-collapse: collapse;">
+      <tr><td style="padding: 5px 0; width: 40%;"><strong>Nom:</strong></td><td>${formData.name}</td></tr>
+      <tr><td style="padding: 5px 0;"><strong>Téléphone:</strong></td><td>${formData.phoneNumber}</td></tr>
+      <tr><td style="padding: 5px 0;"><strong>WhatsApp:</strong></td><td>${formData.whatsappNumber || "Non spécifié"}</td></tr>
+      <tr><td style="padding: 5px 0;"><strong>Email:</strong></td><td>${formData.email || "Non spécifié"}</td></tr>
+    </table>
+  </div>
+  <div style="margin-bottom: 20px;">
+    <h3 style="color: #175e5c; border-left: 4px solid #175e5c; padding-left: 10px; margin-bottom: 10px;">Message</h3>
+    <p style="background: #f9f9f9; padding: 10px; border-radius: 5px; margin: 0;">${formData.message.replace(/\n/g, '<br>')}</p>
+  </div>
+  <footer style="margin-top: 30px; font-size: 12px; color: #64748b; text-align: center; border-top: 1px solid #eee; padding-top: 10px;">
+    Envoyé via le formulaire de contact - Agence Ménage
+  </footer>
+</div>
       `,
-        });
+    });
 
-        if (error) {
-            console.error("Resend error:", error);
-            return { success: false, error };
-        }
-
-        return { success: true, data };
-    } catch (err) {
-        console.error("Action error:", err);
-        return { success: false, error: err };
+    if (error) {
+      console.error("Resend error:", error);
+      return { success: false, error };
     }
+
+    return { success: true, data };
+  } catch (err) {
+    console.error("Action error:", err);
+    return { success: false, error: err };
+  }
 }
 
 export async function sendEmployeeEmail(formData: {
-    firstName: string;
-    lastName: string;
-    phoneNumber: string;
-    whatsappNumber: string;
-    position: string;
-    experience: string;
-    languages: string[];
-    nationality: string;
-    neighborhood: string;
-    city: string;
+  firstName: string;
+  lastName: string;
+  phoneNumber: string;
+  whatsappNumber: string;
+  position: string;
+  experience: string;
+  languages: string[];
+  nationality: string;
+  neighborhood: string;
+  city: string;
 }) {
-    try {
-        const { data, error } = await resend.emails.send({
-            from: 'Agence Ménage Recrutement <onboarding@resend.dev>',
-            to: ['contact@agencemenage.ma'],
-            subject: `Nouvelle Candidature: ${formData.firstName} ${formData.lastName} - ${formData.position}`,
-            html: `
-        <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #e2e8f0; rounded: 12px;">
-          <h1 style="color: #1e293b; border-bottom: 2px solid #fbbf24; padding-bottom: 10px;">Nouvelle Candidature</h1>
-          <div style="margin-top: 20px; line-height: 1.6;">
-            <p><strong>Nom :</strong> ${formData.lastName}</p>
-            <p><strong>Prénom :</strong> ${formData.firstName}</p>
-            <p><strong>Téléphone :</strong> ${formData.phoneNumber}</p>
-            <p><strong>WhatsApp :</strong> ${formData.whatsappNumber || "Non spécifié"}</p>
-            <hr style="border: 0; border-top: 1px solid #e2e8f0; margin: 20px 0;">
-            <p><strong>Poste souhaité :</strong> ${formData.position}</p>
-            <p><strong>Expérience :</strong> ${formData.experience}</p>
-            <p><strong>Langues :</strong> ${formData.languages.join(", ")}</p>
-            <p><strong>Nationalité :</strong> ${formData.nationality}</p>
-            <p><strong>Ville :</strong> ${formData.city}</p>
-            <p><strong>Quartier :</strong> ${formData.neighborhood}</p>
-          </div>
-          <footer style="margin-top: 30px; font-size: 12px; color: #64748b; text-align: center;">
-            Envoyé via l'Espace Employé - Agence Ménage
-          </footer>
-        </div>
+  try {
+    const { data, error } = await resend.emails.send({
+      from: 'Agence Ménage Recrutement <onboarding@resend.dev>',
+      to: ['contact@agencemenage.ma'],
+      subject: `Nouvelle Candidature: ${formData.firstName} ${formData.lastName} - ${formData.position}`,
+      html: `
+<div style="font-family: Arial, sans-serif; max-width: 600px; margin: auto; border: 1px solid #ddd; padding: 20px; color: #333;">
+  <div style="text-align: center; border-bottom: 2px solid #edba54; padding-bottom: 10px; margin-bottom: 20px;">
+    <h2 style="color: #edba54; margin: 0;">
+      RECRUTEMENT
+    </h2>
+    <h3 style="color: #edba54; margin: 0;">
+      ESPACE EMPLOYE
+    </h3>
+  </div>
+  <div style="margin-bottom: 20px;">
+    <h3 style="color: #175e5c; border-left: 4px solid #175e5c; padding-left: 10px; margin-bottom: 10px;">Informations Candidat</h3>
+    <table style="width: 100%; border-collapse: collapse;">
+      <tr><td style="padding: 5px 0; width: 40%;"><strong>Nom:</strong></td><td>${formData.lastName}</td></tr>
+      <tr><td style="padding: 5px 0;"><strong>Prénom:</strong></td><td>${formData.firstName}</td></tr>
+      <tr><td style="padding: 5px 0;"><strong>Téléphone:</strong></td><td>${formData.phoneNumber}</td></tr>
+      <tr><td style="padding: 5px 0;"><strong>WhatsApp:</strong></td><td>${formData.whatsappNumber || "Non spécifié"}</td></tr>
+    </table>
+  </div>
+  <div style="margin-bottom: 20px;">
+    <h3 style="color: #175e5c; border-left: 4px solid #175e5c; padding-left: 10px; margin-bottom: 10px;">Détails de la Candidature</h3>
+    <table style="width: 100%; border-collapse: collapse;">
+      <tr><td style="padding: 5px 0; width: 40%;"><strong>Poste souhaité:</strong></td><td>${formData.position}</td></tr>
+      <tr><td style="padding: 5px 0; width: 40%;"><strong>Expérience:</strong></td><td>${formData.experience}</td></tr>
+      <tr><td style="padding: 5px 0; width: 40%;"><strong>Langues:</strong></td><td>${formData.languages.join(", ")}</td></tr>
+      <tr><td style="padding: 5px 0; width: 40%;"><strong>Nationalité:</strong></td><td>${formData.nationality}</td></tr>
+    </table>
+  </div>
+  <div style="margin-bottom: 20px;">
+    <h3 style="color: #175e5c; border-left: 4px solid #175e5c; padding-left: 10px; margin-bottom: 10px;">Localisation</h3>
+    <table style="width: 100%; border-collapse: collapse;">
+      <tr><td style="padding: 5px 0; width: 40%;"><strong>Ville:</strong></td><td>${formData.city}</td></tr>
+      <tr><td style="padding: 5px 0; width: 40%;"><strong>Quartier:</strong></td><td>${formData.neighborhood}</td></tr>
+    </table>
+  </div>
+  <footer style="margin-top: 30px; font-size: 12px; color: #64748b; text-align: center; border-top: 1px solid #eee; padding-top: 10px;">
+    Envoyé via l'Espace Employé - Agence Ménage
+  </footer>
+</div>
       `,
-        });
+    });
 
-        if (error) {
-            console.error("Resend error:", error);
-            return { success: false, error };
-        }
-
-        return { success: true, data };
-    } catch (err) {
-        console.error("Action error:", err);
-        return { success: false, error: err };
+    if (error) {
+      console.error("Resend error:", error);
+      return { success: false, error };
     }
+
+    return { success: true, data };
+  } catch (err) {
+    console.error("Action error:", err);
+    return { success: false, error: err };
+  }
+}
+
+export async function sendBookingEmailResend(serviceName: string, data: any, price: string | number, isEntreprise: boolean = false) {
+  try {
+    const optionalServices = [];
+    if (data.additionalServices?.produitsEtOutils) {
+      optionalServices.push("Produits et outils (+90 MAD)");
+    }
+    if (data.additionalServices?.torchonsEtSerpierres) {
+      optionalServices.push("Torchons et serpillères (+40 MAD)");
+    }
+    if (data.additionalServices?.nettoyageTerrasse) {
+      optionalServices.push("Nettoyage Terrasse (+500 MAD)");
+    }
+    if (data.additionalServices?.baiesVitrees) {
+      optionalServices.push("Baies Vitrées (Sur devis)");
+    }
+    if (data.intensiveOption || data.cleanlinessType === "intensif") optionalServices.push("Option Intensif");
+
+    const surfaceValue = data.officeSurface || data.surfaceArea || data.surface || "";
+    const formattedSurface = surfaceValue ? `${surfaceValue} m²` : "";
+
+    let natureLabel = "-";
+    if (serviceName === "Nettoyage d'urgence") {
+      const natureLabels: Record<string, string> = {
+        'sinistre': 'Nettoyage après sinistre',
+        'event': 'Nettoyage post/après évènement',
+        'express': 'Remise en état express',
+        'autre': 'Autre situation urgente (à préciser)'
+      };
+      natureLabel = natureLabels[data.interventionNature] || data.interventionNature || "-";
+    }
+
+    if (serviceName === "Ménage post-déménagement") {
+      natureLabel = `État: ${data.accommodationState || "-"}, Salissure: ${data.cleanlinessType || "-"}`;
+    }
+
+    const client_name = isEntreprise ? (data.contactPerson || data.entityName) : `${data.firstName} ${data.lastName}`;
+    const frequency = data.frequency === "oneshot" ? "Une fois" : `Abonnement ( ${data.frequencyLabel || data.subFrequency || ""} )`;
+    const scheduling_time = data.schedulingType === 'fixed' || !data.schedulingType ? data.fixedTime : (data.schedulingTime === 'morning' ? 'Le matin' : data.schedulingTime === 'afternoon' ? "L'après midi" : data.schedulingTime);
+
+    // Dynamic fields
+    const isGardeMalade = serviceName.toLowerCase().includes("garde malade");
+    const patientProfile = isGardeMalade && (data.patientAge || data.patientGender) ? `${data.patientAge || "-"} ans, ${data.patientGender || "-"}` : null;
+
+    // Notes consolidation
+    const rawNotes = (data.changeRepereNotes || data.careAddress || data.additionalNotes || data.notes);
+    // Avoid duplication of healthIssues in notes if it's already a specific field for Garde Malade
+    const combinedNotes = (isGardeMalade && rawNotes === data.healthIssues) ? null : rawNotes;
+
+    const { data: resData, error } = await resend.emails.send({
+      from: 'Agence Ménage <onboarding@resend.dev>',
+      to: ['contact@agencemenage.ma'],
+      subject: `Nouvelle Réservation: ${serviceName} - ${client_name}`,
+      html: `
+<div style="font-family: Arial, sans-serif; max-width: 600px; margin: auto; border: 1px solid #ddd; padding: 20px; color: #333;">
+  <div style="text-align: center; border-bottom: 2px solid #edba54; padding-bottom: 10px; margin-bottom: 20px;">
+    <h2 style="color: #edba54; margin: 0;">
+      RESERVATION
+    </h2>
+    <h3 style="color: #edba54; margin: 0;">
+      SERVICES POUR ${isEntreprise ? 'ENTREPRISE' : 'PARTICULIER'}
+    </h3>
+  </div>
+  <div style="margin-bottom: 20px;">
+    <h3 style="color: #175e5c; border-left: 4px solid #175e5c; padding-left: 10px; margin-bottom: 10px;">Informations Client</h3>
+    <table style="width: 100%; border-collapse: collapse;">
+      <tr><td style="padding: 5px 0; width: 40%;"><strong>Nom:</strong></td><td>${client_name}</td></tr>
+      <tr><td style="padding: 5px 0;"><strong>Téléphone:</strong></td><td>${data.phoneNumber}</td></tr>
+      ${data.whatsappNumber ? `<tr><td style="padding: 5px 0;"><strong>WhatsApp:</strong></td><td>${data.whatsappNumber}</td></tr>` : ""}
+      ${data.email ? `<tr><td style="padding: 5px 0;"><strong>Email:</strong></td><td>${data.email}</td></tr>` : ""}
+      ${isEntreprise && data.entityName ? `<tr><td style="padding: 5px 0;"><strong>Entreprise:</strong></td><td>${data.entityName}</td></tr>` : ""}
+    </table>
+  </div>
+  <div style="margin-bottom: 20px;">
+    <h3 style="color: #175e5c; border-left: 4px solid #175e5c; padding-left: 10px; margin-bottom: 10px;">Détails de la Prestation</h3>
+    <table style="width: 100%; border-collapse: collapse;">
+      <tr><td style="padding: 5px 0; width: 40%;"><strong>Service:</strong></td><td>${serviceName}</td></tr>
+      ${data.serviceType ? `<tr><td style="padding: 5px 0;"><strong>Offre:</strong></td><td style="text-transform: capitalize;">${data.serviceType}</td></tr>` : ""}
+      ${data.structureType ? `<tr><td style="padding: 5px 0;"><strong>Structure:</strong></td><td style="text-transform: capitalize;">${data.structureType}</td></tr>` : ""}
+      ${data.propertyType ? `<tr><td style="padding: 5px 0;"><strong>Type de bien:</strong></td><td style="text-transform: capitalize;">${data.propertyType}</td></tr>` : ""}
+      <tr><td style="padding: 5px 0;"><strong>Fréquence:</strong></td><td>${frequency}</td></tr>
+      ${data.recommendedDuration && data.recommendedDuration > 0 ? `<tr><td style="padding: 5px 0; width: 40%;"><strong>Durée recommandée:</strong></td><td>${data.recommendedDuration}h</td></tr>` : ""}
+      ${data.duration && data.duration !== "-" ? `<tr><td style="padding: 5px 0;"><strong>Durée optée:</strong></td><td>${data.duration}h</td></tr>` : ""}
+      ${data.numberOfPeople ? `<tr><td style="padding: 5px 0;"><strong>Intervenants:</strong></td><td>${data.numberOfPeople}</td></tr>` : ""}
+      ${optionalServices.length > 0 ? `<tr><td style="padding: 5px 0;"><strong>Options:</strong></td><td>${optionalServices.join(", ")}</td></tr>` : ""}
+      ${formattedSurface ? `<tr><td style="padding: 5px 0;"><strong>Surface:</strong></td><td>${formattedSurface}</td></tr>` : ""}
+      ${natureLabel !== "-" ? `<tr><td style="padding: 5px 0;"><strong>Type/État:</strong></td><td>${natureLabel}</td></tr>` : ""}
+      ${isGardeMalade ? `
+        ${patientProfile ? `<tr><td style="padding: 5px 0;"><strong>Profil Patient:</strong></td><td>${patientProfile}</td></tr>` : ""}
+        ${data.mobility ? `<tr><td style="padding: 5px 0;"><strong>Mobilité:</strong></td><td>${data.mobility}</td></tr>` : ""}
+        ${data.healthIssues ? `<tr><td style="padding: 5px 0;"><strong>Pathologie:</strong></td><td>${data.healthIssues}</td></tr>` : ""}
+      ` : ""}
+    </table>
+  </div>
+  <div style="margin-bottom: 20px;">
+    <h3 style="color: #175e5c; border-left: 4px solid #175e5c; padding-left: 10px; margin-bottom: 10px;">Lieu et Horaire</h3>
+    <table style="width: 100%; border-collapse: collapse;">
+      ${data.schedulingDate ? `<tr><td style="padding: 5px 0; width: 40%;"><strong>Date:</strong></td><td>${data.schedulingDate}</td></tr>` : ""}
+      ${scheduling_time ? `<tr><td style="padding: 5px 0; width: 40%;"><strong>Heure:</strong></td><td>${scheduling_time}</td></tr>` : ""}
+      ${isGardeMalade && data.careLocation ? `<tr><td style="padding: 5px 0; width: 40%;"><strong>Lieu de garde:</strong></td><td>${data.careLocation}</td></tr>` : ""}
+      ${data.city ? `<tr><td style="padding: 5px 0; width: 40%;"><strong>Ville:</strong></td><td>${data.city}</td></tr>` : ""}
+      ${data.neighborhood ? `<tr><td style="padding: 5px 0; width: 40%;"><strong>Quartier:</strong></td><td>${data.neighborhood}</td></tr>` : ""}
+    </table>
+  </div>
+  ${combinedNotes ? `
+  <div style="margin-bottom: 20px;">
+    <h3 style="color: #175e5c; border-left: 4px solid #175e5c; padding-left: 10px; margin-bottom: 10px;">Notes et précisions</h3>
+    <p style="background: #f9f9f9; padding: 10px; border-radius: 5px; margin: 0;">${combinedNotes.replace(/\n/g, '<br>')}</p>
+  </div>
+  ` : ""}
+  <div style="text-align: right; border-top: 2px solid #edba54; padding-top: 10px; margin-top: 20px;">
+    <h3 style="margin: 0;">Total Estimé: <span style="color: #edba54;">${typeof price === "number" ? `${price} MAD` : price}</span></h3>
+  </div>
+</div>
+      `,
+    });
+
+    if (error) {
+      console.error("Resend error:", error);
+      return { success: false, error };
+    }
+
+    return { success: true, data: resData };
+  } catch (err) {
+    console.error("Action error:", err);
+    return { success: false, error: err };
+  }
 }

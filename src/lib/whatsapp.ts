@@ -18,86 +18,88 @@ export const formatBookingMessage = (serviceName: string, data: any, price: numb
     const sectionTitle = isEntreprise ? "SERVICES POUR ENTREPRISE" : "SERVICES POUR PARTICULIER";
     const priceLabel = typeof price === "string" && price.toUpperCase().includes("DEVIS") ? "Sur DEVIS" : `${price} MAD`;
 
-    let serviceSpecificDetails = "";
+    const details: string[] = [];
 
-    const durationDetails = [];
-    if (data.recommendedDuration && data.recommendedDuration > 0) {
-        durationDetails.push(`*Durée recommandée :* ${data.recommendedDuration} heures`);
-    }
-    if (data.duration) {
-        durationDetails.push(`*Durée choisie :* ${data.duration} heures`);
-    }
+    // Client Info
+    details.push(`*Nom & prénom :* ${data.firstName} ${data.lastName}`);
+    details.push(`*Numéro de téléphone :* ${data.phoneNumber}`);
+    if (data.whatsappNumber) details.push(`*Numéro whatsapp :* ${data.whatsappNumber}`);
+    if (data.email) details.push(`*Email :* ${data.email}`);
+    if (data.entityName) details.push(`*Entreprise :* ${data.entityName}`);
+    if (data.contactPerson && data.contactPerson !== `${data.firstName} ${data.lastName}`) details.push(`*Contact :* ${data.contactPerson}`);
+    details.push("");
 
+    // Service Core
+    details.push(`*Service :* ${serviceName}`);
+    if (data.serviceType) details.push(`*Offre :* ${data.serviceType}`);
+    if (data.structureType) details.push(`*Structure :* ${data.structureType}`);
+    if (data.propertyType) details.push(`*Type de bien :* ${data.propertyType}`);
+    details.push(`*Fréquence :* ${data.frequency === "oneshot" ? "Une fois" : `Abonnement ( ${data.frequencyLabel || data.subFrequency || ""} )`}`);
+
+    // Prestation Details
+    if (data.recommendedDuration && data.recommendedDuration > 0) details.push(`*Durée recommandée :* ${data.recommendedDuration}h`);
+    if (data.duration && data.duration !== "-") details.push(`*Durée choisie :* ${data.duration}h`);
+    if (data.numberOfPeople) details.push(`*Nbre de personne :* ${data.numberOfPeople}`);
+
+    // Options
     const options = [];
-    if (serviceName === "Nettoyage d'urgence") {
-        if (data.additionalServices?.produitsEtOutils) options.push("Produits fournis (+90 MAD)");
-        if (data.additionalServices?.torchonsEtSerpierres) options.push("Torchons et serpillères (+40 MAD)");
-    } else if (serviceName === "Ménage post-déménagement") {
-        if (data.additionalServices?.nettoyageTerrasse) options.push("Nettoyage Terrasse (+500 MAD)");
-        if (data.additionalServices?.baiesVitrees) options.push("Baies Vitrées (Sur devis)");
-    } else {
-        if (data.additionalServices?.produitsEtOutils) options.push("Produits et outils (+90 MAD)");
-        if (data.additionalServices?.torchonsEtSerpierres) options.push("Torchons et serpillères (+40 MAD)");
-    }
+    if (data.additionalServices?.produitsEtOutils) options.push("Produits et outils (+90 MAD)");
+    if (data.additionalServices?.torchonsEtSerpierres) options.push("Torchons et serpillères (+40 MAD)");
+    if (data.additionalServices?.nettoyageTerrasse) options.push("Nettoyage Terrasse (+500 MAD)");
+    if (data.additionalServices?.baiesVitrees) options.push("Baies Vitrées (Sur devis)");
     if (data.intensiveOption || data.cleanlinessType === "intensif") options.push("Option Intensif");
+    if (options.length > 0) details.push(`*Services optionnels :* ${options.join(", ")}`);
 
-    const commonDetails = `${durationDetails.join('\n')}
-*Nbre de personne :* ${data.numberOfPeople || "-"}${options.length > 0 ? `\n*Services optionnels :* ${options.join(", ")}` : ""}`;
+    // Surface
+    const surface = data.officeSurface || data.surfaceArea || data.surface;
+    if (surface) details.push(`*Surface :* ${surface} m2`);
 
-    if (serviceName === "Ménage Bureaux") {
-        serviceSpecificDetails = `*Surface en m2 :* ${data.officeSurface || "-"} m2
-*Durée :* ${data.duration || "-"} heures`;
-    } else if (serviceName === "Garde Malade") {
-        serviceSpecificDetails = `*Patient :* ${data.patientGender || "-"}, ${data.patientAge || "-"} ans
-*Mobilité :* ${data.mobility || "-"}
-*Pathologie :* ${data.healthIssues || "-"}
-*Précisions :* ${data.additionalNotes || "-"}
-*Lieu :* ${data.careLocation || "-"}
-*Champs de repère :* ${data.careAddress || "-"}
-*Durée :* ${data.duration || "-"} heures`;
-    } else if (serviceName === "Nettoyage d'urgence") {
+    // Service Specific Details
+    if (serviceName === "Nettoyage d'urgence") {
         const natureLabels: Record<string, string> = {
             'sinistre': 'Nettoyage après sinistre',
             'event': 'Nettoyage post/après évènement',
             'express': 'Remise en état express',
             'autre': 'Autre situation urgente (à préciser)'
         };
-        serviceSpecificDetails = `*Type :* ${data.propertyType || "-"}
-*Nature :* ${natureLabels[data.interventionNature] || data.interventionNature || "-"}
-*Ville :* ${data.city || "Casablanca"}
-*Quartier :* ${data.neighborhood || "-"}
-*Repère/Notes :* ${data.changeRepereNotes || "-"}${options.length > 0 ? `\n*Services optionnels :* ${options.join(", ")}` : ""}`;
-    } else if (serviceName === "Ménage post-déménagement") {
-        serviceSpecificDetails = `*Type :* ${data.propertyType || "-"}
-*Surface :* ${data.surfaceArea || "-"} m2
-*État du logement :* ${data.accommodationState || "-"}
-*Salissure :* ${data.cleanlinessType || "-"}
-*Ville :* ${data.city || "-"}
-*Quartier :* ${data.neighborhood || "-"}
-*Repère/Notes :* ${data.changeRepereNotes || "-"}${options.length > 0 ? `\n*Services optionnels :* ${options.join(", ")}` : ""}`;
-    } else {
-        serviceSpecificDetails = commonDetails;
+        const nature = natureLabels[data.interventionNature] || data.interventionNature;
+        if (nature) details.push(`*Nature :* ${nature}`);
     }
 
-    const freqLabel = data.frequency === "oneshot"
-        ? "Une fois"
-        : `Abonnement ( ${data.frequencyLabel || data.subFrequency || ""} )`;
+    if (serviceName === "Ménage post-déménagement") {
+        if (data.accommodationState) details.push(`*État du logement :* ${data.accommodationState}`);
+        if (data.cleanlinessType) details.push(`*Salissure :* ${data.cleanlinessType}`);
+    }
+
+    if (serviceName.toLowerCase().includes("garde malade")) {
+        if (data.patientAge || data.patientGender) details.push(`*Patient :* ${data.patientGender || ""}${data.patientGender && data.patientAge ? ", " : ""}${data.patientAge ? data.patientAge + " ans" : ""}`);
+        if (data.mobility) details.push(`*Mobilité :* ${data.mobility}`);
+        if (data.healthIssues) details.push(`*Pathologie :* ${data.healthIssues}`);
+        if (data.careLocation) details.push(`*Lieu de garde :* ${data.careLocation}`);
+    }
+
+    details.push("");
+
+    // Planning
+    if (data.schedulingDate) details.push(`*Date :* ${data.schedulingDate}`);
+    const schedTime = data.schedulingType === 'fixed' || !data.schedulingType ? data.fixedTime : (data.schedulingTime === 'morning' ? 'Le matin' : data.schedulingTime === 'afternoon' ? "L'après midi" : data.schedulingTime);
+    if (schedTime) details.push(`*Heure :* ${schedTime}`);
+    if (data.city) details.push(`*Ville :* ${data.city}`);
+    if (data.neighborhood) details.push(`*Quartier :* ${data.neighborhood}`);
+
+    // Notes
+    const notes = data.changeRepereNotes || data.careAddress || data.additionalNotes || data.notes;
+    // For Garde Malade, healthIssues is already handled above, so we don't need to check it here if it's already in notes
+    if (notes && notes !== data.healthIssues) {
+        details.push("");
+        details.push(`*Notes et précisions :*`);
+        details.push(notes);
+    }
 
     return `*RESERVATION*
 *${sectionTitle}*
 
-*Ma Réservation*
---------------------------------
-*Nom & prénom :* ${data.firstName} ${data.lastName}
-*Numéro de téléphone :* ${data.phoneNumber}
-*Numéro whatsapp :* ${data.whatsappNumber || "-"}
-
-*Service :* ${serviceName}
-*Fréquence :* ${freqLabel}
-${serviceSpecificDetails}
-
-*Date :* ${data.schedulingDate || "Non définie"}
-*Heure :* ${data.schedulingType === 'fixed' || !data.schedulingType ? data.fixedTime : (data.schedulingTime === 'morning' ? 'Le matin' : data.schedulingTime === 'afternoon' ? "L'après midi" : data.schedulingTime || "14:00")}
+${details.join("\n")}
 --------------------------------
 *Total :* *${priceLabel}*`;
 };
