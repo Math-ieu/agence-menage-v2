@@ -58,7 +58,7 @@ const MenageFinChantier = () => {
             return;
         }
 
-        if (!formData.firstName || !formData.lastName || !formData.phoneNumber || !formData.city || !formData.neighborhood || !formData.schedulingDate) {
+        if (!formData.firstName || !formData.lastName || !formData.phoneNumber || !formData.city || !formData.neighborhood) {
             toast.error("Veuillez remplir tous les champs obligatoires");
             return;
         }

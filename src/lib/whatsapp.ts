@@ -89,8 +89,18 @@ export const formatBookingMessage = (serviceName: string, data: any, price: numb
 
     // Planning
     if (data.schedulingDate) details.push(`*Date :* ${data.schedulingDate}`);
-    const schedTime = data.schedulingType === 'fixed' || !data.schedulingType ? data.fixedTime : (data.schedulingTime === 'morning' ? 'Le matin' : data.schedulingTime === 'afternoon' ? "L'après midi" : data.schedulingTime);
-    if (schedTime) details.push(`*Heure :* ${schedTime}`);
+
+    // Services that don't have a time selection field
+    const servicesWithoutTime = [
+        "placement & gestion de propreté",
+        "nettoyage fin de chantier",
+        "nettoyage fin de chantier (entreprise)"
+    ];
+
+    if (!servicesWithoutTime.includes(serviceName.toLowerCase())) {
+        const schedTime = data.schedulingType === 'fixed' || !data.schedulingType ? data.fixedTime : (data.schedulingTime === 'morning' ? 'Le matin' : data.schedulingTime === 'afternoon' ? "L'après midi" : data.schedulingTime);
+        if (schedTime) details.push(`*Heure :* ${schedTime}`);
+    }
     if (data.city) details.push(`*Ville :* ${data.city}`);
     if (data.neighborhood) details.push(`*Quartier :* ${data.neighborhood}`);
 
