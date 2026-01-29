@@ -15,7 +15,7 @@ export async function sendContactEmail(formData: {
     // Note: If you have a verified domain on Resend, change 'onboarding@resend.dev' to your domain email
     const { data, error } = await resend.emails.send({
       from: 'Agence Ménage <onboarding@resend.dev>',
-      to: ['contact@agencemenage.ma'], // Replace with actual recipient email
+      to: ['notification@agencemenage.ma'], // Replace with actual recipient email
       subject: `Nouveau message de contact: ${formData.name}`,
       html: `
 <div style="font-family: Arial, sans-serif; max-width: 600px; margin: auto; border: 1px solid #ddd; padding: 20px; color: #333;">
@@ -74,7 +74,7 @@ export async function sendEmployeeEmail(formData: {
   try {
     const { data, error } = await resend.emails.send({
       from: 'Agence Ménage Recrutement <onboarding@resend.dev>',
-      to: ['contact@agencemenage.ma'],
+      to: ['notification@agencemenage.ma'],
       subject: `Nouvelle Candidature: ${formData.firstName} ${formData.lastName} - ${formData.position}`,
       html: `
 <div style="font-family: Arial, sans-serif; max-width: 600px; margin: auto; border: 1px solid #ddd; padding: 20px; color: #333;">
@@ -189,7 +189,7 @@ export async function sendBookingEmailResend(serviceName: string, data: any, pri
 
     const { data: resData, error } = await resend.emails.send({
       from: 'Agence Ménage <onboarding@resend.dev>',
-      to: ['contact@agencemenage.ma'],
+      to: ['notification@agencemenage.ma'],
       subject: `Nouvelle Réservation: ${serviceName} - ${client_name}`,
       html: `
 <div style="font-family: Arial, sans-serif; max-width: 600px; margin: auto; border: 1px solid #ddd; padding: 20px; color: #333;">
