@@ -95,7 +95,7 @@ const NettoyageUrgenceContent = () => {
             // Open WhatsApp
             const whatsappLink = createWhatsAppLink(DESTINATION_PHONE_NUMBER, message);
 
-            window.open(whatsappLink, "_blank");
+            // window.open(whatsappLink, "_blank");
 
             setShowConfirmation(true);
         } catch (error) {

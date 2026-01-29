@@ -49,8 +49,8 @@ const Contact = () => {
         // Send email copy via Resend (async)
         sendContactEmail(processedData).catch(console.error);
 
-        window.open(whatsappLink, "_blank");
-        toast.success("Votre message a été préparé pour WhatsApp.");
+        // window.open(whatsappLink, "_blank");
+        toast.success("Votre message a été envoyé avec succès.");
 
         // Redirect to fixed confirmation page for Google Ads tracking
         router.push('/contact/merci');

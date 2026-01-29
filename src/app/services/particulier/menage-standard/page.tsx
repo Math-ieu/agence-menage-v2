@@ -166,7 +166,7 @@ const MenageStandard = () => {
     // Send email notification (async)
     sendBookingEmail("Ménage Standard", bookingData, totalPrice, false).catch(console.error);
 
-    window.open(whatsappLink, '_blank');
+    // window.open(whatsappLink, '_blank');
     setShowConfirmation(true);
   };
 

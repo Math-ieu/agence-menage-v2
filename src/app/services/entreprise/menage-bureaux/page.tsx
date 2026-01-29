@@ -156,7 +156,7 @@ const MenageBureaux = () => {
     // Send email notification (async)
     sendBookingEmail("Ménage Bureaux", bookingData, totalPrice, true).catch(console.error);
 
-    window.open(whatsappLink, '_blank');
+    // window.open(whatsappLink, '_blank');
     setShowConfirmation(true);
   };
 

@@ -98,7 +98,7 @@ const MenageAirbnb = () => {
         // Send email notification (async)
         sendBookingEmail("Ménage Airbnb", bookingData, "Sur devis", false).catch(console.error);
 
-        window.open(whatsappLink, '_blank');
+        // window.open(whatsappLink, '_blank');
         setShowConfirmation(true);
     };
 

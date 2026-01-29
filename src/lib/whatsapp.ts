@@ -40,6 +40,13 @@ export const formatBookingMessage = (serviceName: string, data: any, price: numb
     if (data.recommendedDuration && data.recommendedDuration > 0) details.push(`*Durée recommandée :* ${data.recommendedDuration}h`);
     if (data.duration && data.duration !== "-") details.push(`*Durée choisie :* ${data.duration}h`);
     if (data.numberOfPeople) details.push(`*Nbre de personne :* ${data.numberOfPeople}`);
+    if (data.rooms) {
+        const roomDetails = Object.entries(data.rooms)
+            .filter(([_, count]) => (count as number) > 0)
+            .map(([room, count]) => `${count} ${room}`)
+            .join(", ");
+        if (roomDetails) details.push(`*Pièces :* ${roomDetails}`);
+    }
 
     // Options
     const options = [];

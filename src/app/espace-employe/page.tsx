@@ -110,8 +110,8 @@ const EspaceEmploye = () => {
         // Send email copy via Resend (async)
         sendEmployeeEmail(processedData).catch(console.error);
 
-        window.open(whatsappLink, "_blank");
-        toast.success("Votre candidature a été préparée pour WhatsApp.");
+        // window.open(whatsappLink, "_blank");
+        toast.success("Votre demande a été envoyée avec succès.");
     };
 
     return (

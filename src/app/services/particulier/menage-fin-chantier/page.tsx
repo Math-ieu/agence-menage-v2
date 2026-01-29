@@ -77,7 +77,7 @@ const MenageFinChantier = () => {
         // Send email notification (async)
         sendBookingEmail("Nettoyage Fin de chantier", bookingData, "Sur devis", false).catch(console.error);
 
-        window.open(whatsappLink, '_blank');
+        // window.open(whatsappLink, '_blank');
         setShowConfirmation(true);
     };
 

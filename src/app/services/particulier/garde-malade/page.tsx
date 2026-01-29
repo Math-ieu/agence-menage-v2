@@ -103,7 +103,7 @@ const GardeMalade = () => {
     // Send email notification (async)
     sendBookingEmail("Garde Malade", bookingData, priceValue, false).catch(console.error);
 
-    window.open(whatsappLink, '_blank');
+    // window.open(whatsappLink, '_blank');
     setShowConfirmation(true);
   };
 

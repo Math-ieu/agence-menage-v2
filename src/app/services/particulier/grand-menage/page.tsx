@@ -56,7 +56,7 @@ const GrandMenage = () => {
     fixedTime: "14:00",
     additionalServices: {
       produitsEtOutils: false,
-      torchonsEtSerpieres: false
+      torchonsEtSerpierres: false
     },
     phoneNumber: "",
     phonePrefix: "+212",
@@ -100,7 +100,7 @@ const GrandMenage = () => {
   const calculateTotal = () => {
     let price = totalServicePrice;
     if (formData.additionalServices.produitsEtOutils) price += 90;
-    if (formData.additionalServices.torchonsEtSerpieres) price += 40;
+    if (formData.additionalServices.torchonsEtSerpierres) price += 40;
     return price;
   };
 
@@ -134,7 +134,7 @@ const GrandMenage = () => {
     // Send email notification (async)
     sendBookingEmail("Grand Ménage", bookingData, totalPrice, false).catch(console.error);
 
-    window.open(whatsappLink, '_blank');
+    // window.open(whatsappLink, '_blank');
     setShowConfirmation(true);
   };
 
@@ -261,7 +261,7 @@ Il comprend le :
                             <span className="font-medium text-right text-slate-700">+90 MAD</span>
                           </div>
                         )}
-                        {formData.additionalServices.torchonsEtSerpieres && (
+                        {formData.additionalServices.torchonsEtSerpierres && (
                           <div className="flex justify-between gap-4 text-xs">
                             <span className="text-muted-foreground">Torchons:</span>
                             <span className="font-medium text-right text-slate-700">+40 MAD</span>
@@ -604,11 +604,11 @@ Il comprend le :
                             <span className="font-bold text-[#c5b89a] text-sm">Torchons et serpillères : + 40 MAD</span>
                           </div>
                           <Switch
-                            checked={formData.additionalServices.torchonsEtSerpieres}
+                            checked={formData.additionalServices.torchonsEtSerpierres}
                             onCheckedChange={(checked) =>
                               setFormData({
                                 ...formData,
-                                additionalServices: { ...formData.additionalServices, torchonsEtSerpieres: checked }
+                                additionalServices: { ...formData.additionalServices, torchonsEtSerpierres: checked }
                               })
                             }
                             className="data-[state=checked]:bg-[#c5b89a]"

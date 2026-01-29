@@ -213,7 +213,8 @@ export async function sendBookingEmailResend(serviceName: string, data: any, pri
       ${data.recommendedDuration && data.recommendedDuration > 0 ? `<tr><td style="padding: 5px 0; width: 40%;"><strong>Durée recommandée:</strong></td><td>${data.recommendedDuration}h</td></tr>` : ""}
       ${data.duration && data.duration !== "-" ? `<tr><td style="padding: 5px 0;"><strong>Durée optée:</strong></td><td>${data.duration}h</td></tr>` : ""}
       ${data.numberOfPeople ? `<tr><td style="padding: 5px 0;"><strong>Intervenants:</strong></td><td>${data.numberOfPeople}</td></tr>` : ""}
-      ${optionalServices.length > 0 ? `<tr><td style="padding: 5px 0;"><strong>Options:</strong></td><td>${optionalServices.join(", ")}</td></tr>` : ""}
+      ${data.rooms ? `<tr><td style="padding: 5px 0;"><strong>Pièces:</strong></td><td style="text-transform: capitalize;">${Object.entries(data.rooms).filter(([_, v]) => (v as number) > 0).map(([k, v]) => `${v} ${k}`).join(", ")}</td></tr>` : ""}
+      ${optionalServices.length > 0 ? `<tr><td style="padding: 5px 0;"><strong>Services optionnels:</strong></td><td>${optionalServices.join(", ")}</td></tr>` : ""}
       ${formattedSurface ? `<tr><td style="padding: 5px 0;"><strong>Surface:</strong></td><td>${formattedSurface}</td></tr>` : ""}
       ${natureLabel !== "-" ? `<tr><td style="padding: 5px 0;"><strong>Type/État:</strong></td><td>${natureLabel}</td></tr>` : ""}
       ${isGardeMalade ? `
@@ -255,5 +256,64 @@ export async function sendBookingEmailResend(serviceName: string, data: any, pri
   } catch (err) {
     console.error("Action error:", err);
     return { success: false, error: err };
+  }
+}
+
+export async function sendAutomatedWhatsAppMessage(
+  targetNumber: string,
+  templateName: string,
+  variables: string[]
+) {
+  const WHATSAPP_TOKEN = process.env.WHATSAPP_ACCESS_TOKEN;
+  const PHONE_NUMBER_ID = process.env.WHATSAPP_PHONE_NUMBER_ID;
+
+  if (!WHATSAPP_TOKEN || !PHONE_NUMBER_ID) {
+    console.error("WhatsApp credentials missing in .env");
+    return { success: false, error: "Configuration manquante" };
+  }
+
+  try {
+    const response = await fetch(
+      `https://graph.facebook.com/v18.0/${PHONE_NUMBER_ID}/messages`,
+      {
+        method: "POST",
+        headers: {
+          "Authorization": `Bearer ${WHATSAPP_TOKEN}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          messaging_product: "whatsapp",
+          to: targetNumber.replace(/\+/g, ""), // Remove + if present
+          type: "template",
+          template: {
+            name: templateName,
+            language: {
+              code: "fr"
+            },
+            components: [
+              {
+                type: "body",
+                parameters: variables.map(v => ({
+                  type: "text",
+                  text: v
+                }))
+              }
+            ]
+          }
+        }),
+      }
+    );
+
+    const result = await response.json();
+
+    if (!response.ok) {
+      console.error("WhatsApp API Error:", result);
+      return { success: false, error: result };
+    }
+
+    return { success: true, data: result };
+  } catch (error) {
+    console.error("WhatsApp Action Error:", error);
+    return { success: false, error };
   }
 }

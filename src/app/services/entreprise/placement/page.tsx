@@ -92,7 +92,7 @@ const PlacementEntreprise = () => {
         // Send email notification (async)
         sendBookingEmail("Placement & Gestion de Propreté", bookingData, "Sur devis", true).catch(console.error);
 
-        window.open(whatsappLink, '_blank');
+        // window.open(whatsappLink, '_blank');
         setShowConfirmation(true);
     };
 

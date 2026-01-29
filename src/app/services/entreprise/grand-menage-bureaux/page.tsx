@@ -109,7 +109,7 @@ const GrandMenageBureaux = () => {
         // Send email notification (async)
         sendBookingEmail("Grand Ménage Bureaux", bookingData, totalPrice, true).catch(console.error);
 
-        window.open(whatsappLink, '_blank');
+        // window.open(whatsappLink, '_blank');
         setShowConfirmation(true);
     };
 
