@@ -165,7 +165,8 @@ export async function sendBookingEmailResend(serviceName: string, data: any, pri
       natureLabel = `État: ${data.accommodationState || "-"}, Salissure: ${data.cleanlinessType || "-"}`;
     }
 
-    const client_name = isEntreprise ? (data.contactPerson || data.entityName) : `${data.firstName} ${data.lastName}`;
+    const individual_name = [data.firstName, data.lastName].filter(Boolean).join(" ");
+    const client_name = data.contactPerson || individual_name || data.entityName || "Client";
     const frequency = data.frequency === "oneshot" ? "Une fois" : `Abonnement ( ${data.frequencyLabel || data.subFrequency || ""} )`;
 
     // Services that don't have a time selection field
@@ -183,9 +184,11 @@ export async function sendBookingEmailResend(serviceName: string, data: any, pri
     const patientProfile = isGardeMalade && (data.patientAge || data.patientGender) ? `${data.patientAge || "-"} ans, ${data.patientGender || "-"}` : null;
 
     // Notes consolidation
-    const rawNotes = (data.changeRepereNotes || data.careAddress || data.additionalNotes || data.notes);
-    // Avoid duplication of healthIssues in notes if it's already a specific field for Garde Malade
-    const combinedNotes = (isGardeMalade && rawNotes === data.healthIssues) ? null : rawNotes;
+    const notesList = [data.changeRepereNotes, data.additionalNotes, data.notes];
+    if (!isGardeMalade) {
+      notesList.unshift(data.careAddress);
+    }
+    const combinedNotes = notesList.filter(Boolean).filter(n => n !== data.healthIssues).join(". ");
 
     const { data: resData, error } = await resend.emails.send({
       from: 'Agence Ménage <onboarding@resend.dev>',
@@ -209,6 +212,8 @@ export async function sendBookingEmailResend(serviceName: string, data: any, pri
       ${data.whatsappNumber ? `<tr><td style="padding: 5px 0;"><strong>WhatsApp:</strong></td><td>${data.whatsappNumber}</td></tr>` : ""}
       ${data.email ? `<tr><td style="padding: 5px 0;"><strong>Email:</strong></td><td>${data.email}</td></tr>` : ""}
       ${isEntreprise && data.entityName ? `<tr><td style="padding: 5px 0;"><strong>Entreprise:</strong></td><td>${data.entityName}</td></tr>` : ""}
+      ${isEntreprise && data.contactPerson && data.contactPerson !== client_name ? `<tr><td style="padding: 5px 0;"><strong>Contact person:</strong></td><td>${data.contactPerson}</td></tr>` : ""}
+      ${!isEntreprise && individual_name && individual_name !== client_name ? `<tr><td style="padding: 5px 0;"><strong>Nom:</strong></td><td>${individual_name}</td></tr>` : ""}
     </table>
   </div>
   <div style="margin-bottom: 20px;">
@@ -222,14 +227,35 @@ export async function sendBookingEmailResend(serviceName: string, data: any, pri
       ${data.recommendedDuration && data.recommendedDuration > 0 ? `<tr><td style="padding: 5px 0; width: 40%;"><strong>Durée recommandée:</strong></td><td>${data.recommendedDuration}h</td></tr>` : ""}
       ${data.duration && data.duration !== "-" ? `<tr><td style="padding: 5px 0;"><strong>Durée optée:</strong></td><td>${data.duration}h</td></tr>` : ""}
       ${data.numberOfPeople ? `<tr><td style="padding: 5px 0;"><strong>Intervenants:</strong></td><td>${data.numberOfPeople}</td></tr>` : ""}
-      ${data.rooms ? `<tr><td style="padding: 5px 0;"><strong>Pièces:</strong></td><td style="text-transform: capitalize;">${Object.entries(data.rooms).filter(([_, v]) => (v as number) > 0).map(([k, v]) => `${v} ${k}`).join(", ")}</td></tr>` : ""}
+      ${data.rooms ? `<tr><td style="padding: 5px 0;"><strong>Pièces:</strong></td><td style="text-transform: capitalize;">${(() => {
+          const roomLabels: Record<string, string> = {
+            cuisine: "Cuisine",
+            suiteAvecBain: "Suite avec bain",
+            suiteSansBain: "Suite sans bain",
+            salleDeBain: "Salle de bain",
+            chambre: "Chambre",
+            salonMarocain: "Salon Marocain",
+            salonEuropeen: "Salon Européen",
+            toilettesLavabo: "Toilettes/Lavabo",
+            rooftop: "Rooftop / Terrasse",
+            escalier: "Escalier"
+          };
+          return Object.entries(data.rooms)
+            .filter(([_, v]) => (v as number) > 0)
+            .map(([k, v]) => `${v} ${roomLabels[k] || k}`)
+            .join(", ");
+        })()}</td></tr>` : ""}
       ${optionalServices.length > 0 ? `<tr><td style="padding: 5px 0;"><strong>Services optionnels:</strong></td><td>${optionalServices.join(", ")}</td></tr>` : ""}
       ${formattedSurface ? `<tr><td style="padding: 5px 0;"><strong>Surface:</strong></td><td>${formattedSurface}</td></tr>` : ""}
-      ${natureLabel !== "-" ? `<tr><td style="padding: 5px 0;"><strong>Type/État:</strong></td><td>${natureLabel}</td></tr>` : ""}
+      ${serviceName === "Ménage post-déménagement" ? `
+        <tr><td style="padding: 5px 0;"><strong>État du logement:</strong></td><td>${data.accommodationState || "-"}</td></tr>
+        <tr><td style="padding: 5px 0;"><strong>Niveau de salissure:</strong></td><td>${data.cleanlinessType || "-"}</td></tr>
+      ` : natureLabel !== "-" ? `<tr><td style="padding: 5px 0;"><strong>Type/État:</strong></td><td>${natureLabel}</td></tr>` : ""}
       ${isGardeMalade ? `
         ${patientProfile ? `<tr><td style="padding: 5px 0;"><strong>Profil Patient:</strong></td><td>${patientProfile}</td></tr>` : ""}
         ${data.mobility ? `<tr><td style="padding: 5px 0;"><strong>Mobilité:</strong></td><td>${data.mobility}</td></tr>` : ""}
         ${data.healthIssues ? `<tr><td style="padding: 5px 0;"><strong>Pathologie:</strong></td><td>${data.healthIssues}</td></tr>` : ""}
+        ${data.numberOfDays ? `<tr><td style="padding: 5px 0;"><strong>Nombre de jours:</strong></td><td>${data.numberOfDays}</td></tr>` : ""}
       ` : ""}
     </table>
   </div>
@@ -239,6 +265,7 @@ export async function sendBookingEmailResend(serviceName: string, data: any, pri
       ${data.schedulingDate ? `<tr><td style="padding: 5px 0; width: 40%;"><strong>Date:</strong></td><td>${data.schedulingDate}</td></tr>` : ""}
       ${scheduling_time ? `<tr><td style="padding: 5px 0; width: 40%;"><strong>Heure:</strong></td><td>${scheduling_time}</td></tr>` : ""}
       ${isGardeMalade && data.careLocation ? `<tr><td style="padding: 5px 0; width: 40%;"><strong>Lieu de garde:</strong></td><td>${data.careLocation}</td></tr>` : ""}
+      ${isGardeMalade && data.careAddress ? `<tr><td style="padding: 5px 0; width: 40%;"><strong>Adresse de garde:</strong></td><td>${data.careAddress}</td></tr>` : ""}
       ${data.city ? `<tr><td style="padding: 5px 0; width: 40%;"><strong>Ville:</strong></td><td>${data.city}</td></tr>` : ""}
       ${data.neighborhood ? `<tr><td style="padding: 5px 0; width: 40%;"><strong>Adresse:</strong></td><td>${data.neighborhood}</td></tr>` : ""}
     </table>

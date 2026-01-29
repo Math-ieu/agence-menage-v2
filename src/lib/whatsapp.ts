@@ -21,12 +21,15 @@ export const formatBookingMessage = (serviceName: string, data: any, price: numb
     const details: string[] = [];
 
     // Client Info
-    details.push(`*Nom & prénom :* ${data.firstName} ${data.lastName}`);
+    const displayName = data.contactPerson || [data.firstName, data.lastName].filter(Boolean).join(" ");
+    details.push(`*Nom & prénom :* ${displayName}`);
     details.push(`*Numéro de téléphone :* ${data.phoneNumber}`);
     if (data.whatsappNumber) details.push(`*Numéro whatsapp :* ${data.whatsappNumber}`);
     if (data.email) details.push(`*Email :* ${data.email}`);
     if (data.entityName) details.push(`*Entreprise :* ${data.entityName}`);
-    if (data.contactPerson && data.contactPerson !== `${data.firstName} ${data.lastName}`) details.push(`*Contact :* ${data.contactPerson}`);
+    if (data.contactPerson && data.contactPerson !== displayName && (data.firstName || data.lastName)) {
+        details.push(`*Contact :* ${data.contactPerson}`);
+    }
     details.push("");
 
     // Service Core
@@ -41,9 +44,21 @@ export const formatBookingMessage = (serviceName: string, data: any, price: numb
     if (data.duration && data.duration !== "-") details.push(`*Durée choisie :* ${data.duration}h`);
     if (data.numberOfPeople) details.push(`*Nbre de personne :* ${data.numberOfPeople}`);
     if (data.rooms) {
+        const roomLabels: Record<string, string> = {
+            cuisine: "Cuisine",
+            suiteAvecBain: "Suite avec bain",
+            suiteSansBain: "Suite sans bain",
+            salleDeBain: "Salle de bain",
+            chambre: "Chambre",
+            salonMarocain: "Salon Marocain",
+            salonEuropeen: "Salon Européen",
+            toilettesLavabo: "Toilettes/Lavabo",
+            rooftop: "Rooftop / Terrasse",
+            escalier: "Escalier"
+        };
         const roomDetails = Object.entries(data.rooms)
             .filter(([_, count]) => (count as number) > 0)
-            .map(([room, count]) => `${count} ${room}`)
+            .map(([room, count]) => `${count} ${roomLabels[room] || room}`)
             .join(", ");
         if (roomDetails) details.push(`*Pièces :* ${roomDetails}`);
     }
@@ -82,7 +97,9 @@ export const formatBookingMessage = (serviceName: string, data: any, price: numb
         if (data.patientAge || data.patientGender) details.push(`*Patient :* ${data.patientGender || ""}${data.patientGender && data.patientAge ? ", " : ""}${data.patientAge ? data.patientAge + " ans" : ""}`);
         if (data.mobility) details.push(`*Mobilité :* ${data.mobility}`);
         if (data.healthIssues) details.push(`*Pathologie :* ${data.healthIssues}`);
+        if (data.numberOfDays) details.push(`*Nombre de jours :* ${data.numberOfDays}`);
         if (data.careLocation) details.push(`*Lieu de garde :* ${data.careLocation}`);
+        if (data.careAddress) details.push(`*Adresse de garde :* ${data.careAddress}`);
     }
 
     details.push("");
@@ -98,16 +115,22 @@ export const formatBookingMessage = (serviceName: string, data: any, price: numb
     ];
 
     if (!servicesWithoutTime.includes(serviceName.toLowerCase())) {
-        const schedTime = data.schedulingType === 'fixed' || !data.schedulingType ? data.fixedTime : (data.schedulingTime === 'morning' ? 'Le matin' : data.schedulingTime === 'afternoon' ? "L'après midi" : data.schedulingTime);
+        let schedTime = data.schedulingType === 'fixed' || !data.schedulingType ? data.fixedTime : (data.schedulingTime === 'morning' ? 'Le matin' : data.schedulingTime === 'afternoon' ? "L'après midi" : data.schedulingTime);
+        if (data.schedulingHours && data.schedulingType !== 'fixed') {
+            schedTime += ` (${data.schedulingHours})`;
+        }
         if (schedTime) details.push(`*Heure :* ${schedTime}`);
     }
     if (data.city) details.push(`*Ville :* ${data.city}`);
     if (data.neighborhood) details.push(`*Adresse :* ${data.neighborhood}`);
 
     // Notes
-    const notes = data.changeRepereNotes || data.careAddress || data.additionalNotes || data.notes;
-    // For Garde Malade, healthIssues is already handled above, so we don't need to check it here if it's already in notes
-    if (notes && notes !== data.healthIssues) {
+    const notesList = [data.changeRepereNotes, data.additionalNotes, data.notes];
+    if (!serviceName.toLowerCase().includes("garde malade")) {
+        notesList.unshift(data.careAddress);
+    }
+    const notes = notesList.filter(Boolean).filter(n => n !== data.healthIssues).join(". ");
+    if (notes) {
         details.push("");
         details.push(`*Notes et précisions :*`);
         details.push(notes);
