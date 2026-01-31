@@ -27,36 +27,38 @@ import {
     DialogFooter,
 } from "@/components/ui/dialog";
 
+const INITIAL_FORM_DATA = {
+    propertyType: "studio",
+    frequency: "oneshot",
+    subFrequency: "",
+    surfaceArea: 50,
+    cleanlinessType: "normal",
+    accommodationState: "vide",
+    city: "",
+    neighborhood: "",
+    schedulingTime: "morning",
+    schedulingDate: "",
+    schedulingType: "flexible",
+    fixedTime: "14:00",
+    additionalServices: {
+        nettoyageTerrasse: false,
+        baiesVitrees: false
+    },
+    phoneNumber: "",
+    phonePrefix: "+212",
+    useWhatsappForPhone: true,
+    whatsappPrefix: "+212",
+    whatsappNumber: "",
+    firstName: "",
+    lastName: "",
+    changeRepereNotes: ""
+};
+
 const MenageDemenagement = () => {
     const [wasValidated, setWasValidated] = useState(false);
     const [showConfirmation, setShowConfirmation] = useState(false);
     const [isSummaryExpanded, setIsSummaryExpanded] = useState(false);
-    const [formData, setFormData] = useState({
-        propertyType: "studio",
-        frequency: "oneshot",
-        subFrequency: "",
-        surfaceArea: 50,
-        cleanlinessType: "normal",
-        accommodationState: "vide",
-        city: "",
-        neighborhood: "",
-        schedulingTime: "morning",
-        schedulingDate: "",
-        schedulingType: "flexible",
-        fixedTime: "14:00",
-        additionalServices: {
-            nettoyageTerrasse: false,
-            baiesVitrees: false
-        },
-        phoneNumber: "",
-        phonePrefix: "+212",
-        useWhatsappForPhone: true,
-        whatsappPrefix: "+212",
-        whatsappNumber: "",
-        firstName: "",
-        lastName: "",
-        changeRepereNotes: ""
-    });
+    const [formData, setFormData] = useState(INITIAL_FORM_DATA);
 
     const calculateBasePrice = (surface: number) => {
         if (surface <= 50) return 590;
@@ -125,6 +127,14 @@ const MenageDemenagement = () => {
 
         // window.open(whatsappLink, '_blank');
         setShowConfirmation(true);
+    };
+
+    const handleCloseConfirmation = (open: boolean) => {
+        setShowConfirmation(open);
+        if (!open) {
+            setWasValidated(false);
+            setFormData(INITIAL_FORM_DATA);
+        }
     };
 
     const frequencies = [
@@ -613,7 +623,7 @@ Options possibles : vitres extérieures/grandes baies, terrasse.`}
 
             <Footer />
 
-            <Dialog open={showConfirmation} onOpenChange={setShowConfirmation}>
+            <Dialog open={showConfirmation} onOpenChange={handleCloseConfirmation}>
                 <DialogContent className="sm:max-w-md bg-[#fdfaf1] border-[#d1a246]/20">
                     <DialogHeader>
                         <DialogTitle className="text-[#8a6d2f] text-2xl font-bold">Confirmation</DialogTitle>
@@ -623,7 +633,7 @@ Options possibles : vitres extérieures/grandes baies, terrasse.`}
                     </DialogHeader>
                     <DialogFooter className="mt-6">
                         <Button
-                            onClick={() => setShowConfirmation(false)}
+                            onClick={() => handleCloseConfirmation(false)}
                             className="bg-[#d1a246] hover:bg-[#b88c3a] text-white rounded-full px-8"
                         >
                             Fermer

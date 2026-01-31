@@ -38,32 +38,34 @@ const frequencies = [
     { value: "Variable", label: "Variable selon les réservations" },
 ];
 
+const INITIAL_FORM_DATA = {
+    propertyType: "studio",
+    frequency: "oneshot",
+    subFrequency: "",
+    duration: 4,
+    numberOfPeople: 1,
+    city: "",
+    neighborhood: "",
+    schedulingTime: "morning",
+    schedulingDate: "",
+    schedulingType: "flexible",
+    fixedTime: "14:00",
+    additionalServices: {},
+    phoneNumber: "",
+    phonePrefix: "+212",
+    useWhatsappForPhone: true,
+    whatsappPrefix: "+212",
+    whatsappNumber: "",
+    firstName: "",
+    lastName: "",
+    changeRepereNotes: ""
+};
+
 const MenageAirbnb = () => {
     const [wasValidated, setWasValidated] = useState(false);
     const [showConfirmation, setShowConfirmation] = useState(false);
     const [isSummaryExpanded, setIsSummaryExpanded] = useState(false);
-    const [formData, setFormData] = useState({
-        propertyType: "studio",
-        frequency: "oneshot",
-        subFrequency: "",
-        duration: 4,
-        numberOfPeople: 1,
-        city: "",
-        neighborhood: "",
-        schedulingTime: "morning",
-        schedulingDate: "",
-        schedulingType: "flexible",
-        fixedTime: "14:00",
-        additionalServices: {},
-        phoneNumber: "",
-        phonePrefix: "+212",
-        useWhatsappForPhone: true,
-        whatsappPrefix: "+212",
-        whatsappNumber: "",
-        firstName: "",
-        lastName: "",
-        changeRepereNotes: ""
-    });
+    const [formData, setFormData] = useState(INITIAL_FORM_DATA);
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
@@ -100,6 +102,14 @@ const MenageAirbnb = () => {
 
         // window.open(whatsappLink, '_blank');
         setShowConfirmation(true);
+    };
+
+    const handleCloseConfirmation = (open: boolean) => {
+        setShowConfirmation(open);
+        if (!open) {
+            setWasValidated(false);
+            setFormData(INITIAL_FORM_DATA);
+        }
     };
 
     const incrementPeople = () => setFormData({ ...formData, numberOfPeople: formData.numberOfPeople + 1 });
@@ -518,7 +528,7 @@ Il comprend le :
 
             <Footer />
 
-            <Dialog open={showConfirmation} onOpenChange={setShowConfirmation}>
+            <Dialog open={showConfirmation} onOpenChange={handleCloseConfirmation}>
                 <DialogContent className="sm:max-w-md bg-[#f0f9f8] border-[#9ed2ce]/20">
                     <DialogHeader>
                         <DialogTitle className="text-primary text-2xl font-bold">Confirmation</DialogTitle>
@@ -528,7 +538,7 @@ Il comprend le :
                     </DialogHeader>
                     <DialogFooter className="mt-6">
                         <Button
-                            onClick={() => setShowConfirmation(false)}
+                            onClick={() => handleCloseConfirmation(false)}
                             className="bg-primary hover:bg-primary/90 text-white rounded-full px-8"
                         >
                             Fermer

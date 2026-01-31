@@ -27,34 +27,36 @@ import {
     DialogFooter,
 } from "@/components/ui/dialog";
 
+const INITIAL_FORM_DATA = {
+    officeSurface: "50",
+    frequency: "oneshot",
+    subFrequency: "",
+    duration: 6,
+    numberOfPeople: 1,
+    city: "",
+    neighborhood: "",
+    schedulingTime: "morning",
+    schedulingDate: "",
+    schedulingType: "flexible",
+    fixedTime: "14:00",
+    additionalServices: {
+        produitsEtOutils: false
+    },
+    phoneNumber: "",
+    phonePrefix: "+212",
+    useWhatsappForPhone: true,
+    whatsappPrefix: "+212",
+    whatsappNumber: "",
+    firstName: "",
+    lastName: "",
+    changeRepereNotes: ""
+};
+
 const GrandMenageBureaux = () => {
     const [wasValidated, setWasValidated] = useState(false);
     const [showConfirmation, setShowConfirmation] = useState(false);
     const [isSummaryExpanded, setIsSummaryExpanded] = useState(false);
-    const [formData, setFormData] = useState({
-        officeSurface: "50",
-        frequency: "oneshot",
-        subFrequency: "",
-        duration: 6,
-        numberOfPeople: 1,
-        city: "",
-        neighborhood: "",
-        schedulingTime: "morning",
-        schedulingDate: "",
-        schedulingType: "flexible",
-        fixedTime: "14:00",
-        additionalServices: {
-            produitsEtOutils: false
-        },
-        phoneNumber: "",
-        phonePrefix: "+212",
-        useWhatsappForPhone: true,
-        whatsappPrefix: "+212",
-        whatsappNumber: "",
-        firstName: "",
-        lastName: "",
-        changeRepereNotes: ""
-    });
+    const [formData, setFormData] = useState(INITIAL_FORM_DATA);
 
     const perVisitPrice = Number(formData.officeSurface) * 10;
     let totalPrice = 0;
@@ -106,11 +108,16 @@ const GrandMenageBureaux = () => {
         const message = formatBookingMessage("Grand Ménage Bureaux", bookingData, totalPrice, true);
         const whatsappLink = createWhatsAppLink(DESTINATION_PHONE_NUMBER, message);
 
-        // Send email notification (async)
-        sendBookingEmail("Grand Ménage Bureaux", bookingData, totalPrice, true).catch(console.error);
-
         // window.open(whatsappLink, '_blank');
         setShowConfirmation(true);
+    };
+
+    const handleCloseConfirmation = (open: boolean) => {
+        setShowConfirmation(open);
+        if (!open) {
+            setWasValidated(false);
+            setFormData(INITIAL_FORM_DATA);
+        }
     };
 
     const calculateMinResources = (surface: string) => {
@@ -640,7 +647,7 @@ const GrandMenageBureaux = () => {
 
             <Footer />
 
-            <Dialog open={showConfirmation} onOpenChange={setShowConfirmation}>
+            <Dialog open={showConfirmation} onOpenChange={handleCloseConfirmation}>
                 <DialogContent className="sm:max-w-md bg-primary/5 border-primary/20 text-center">
                     <DialogHeader>
                         <DialogTitle className="text-primary text-2xl font-bold">Confirmation</DialogTitle>
@@ -650,7 +657,7 @@ const GrandMenageBureaux = () => {
                     </DialogHeader>
                     <DialogFooter className="mt-6 flex justify-center sm:justify-center">
                         <Button
-                            onClick={() => setShowConfirmation(false)}
+                            onClick={() => handleCloseConfirmation(false)}
                             className="bg-primary hover:bg-primary/90 text-white rounded-full px-8"
                         >
                             Fermer

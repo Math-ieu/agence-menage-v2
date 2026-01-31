@@ -25,6 +25,28 @@ import {
     DialogFooter,
 } from "@/components/ui/dialog";
 
+const INITIAL_FORM_DATA = {
+    serviceType: "flexible",
+    structureType: "bureaux",
+    frequency: "oneshot",
+    subFrequency: "",
+    numberOfPeople: 1,
+    city: "",
+    neighborhood: "",
+    schedulingTime: "morning",
+    schedulingDate: "",
+    fixedTime: "14:00",
+    entityName: "",
+    contactPerson: "",
+    phoneNumber: "",
+    phonePrefix: "+212",
+    useWhatsappForPhone: true,
+    whatsappPrefix: "+212",
+    whatsappNumber: "",
+    email: "",
+    changeRepereNotes: ""
+};
+
 const PlacementEntreprise = () => {
     const [wasValidated, setWasValidated] = useState(false);
     const [showConfirmation, setShowConfirmation] = useState(false);
@@ -32,27 +54,7 @@ const PlacementEntreprise = () => {
     const [showForm, setShowForm] = useState(false);
     const formRef = useRef<HTMLDivElement>(null);
 
-    const [formData, setFormData] = useState({
-        serviceType: "flexible",
-        structureType: "bureaux",
-        frequency: "oneshot",
-        subFrequency: "",
-        numberOfPeople: 1,
-        city: "",
-        neighborhood: "",
-        schedulingTime: "morning",
-        schedulingDate: "",
-        fixedTime: "14:00",
-        entityName: "",
-        contactPerson: "",
-        phoneNumber: "",
-        phonePrefix: "+212",
-        useWhatsappForPhone: true,
-        whatsappPrefix: "+212",
-        whatsappNumber: "",
-        email: "",
-        changeRepereNotes: ""
-    });
+    const [formData, setFormData] = useState(INITIAL_FORM_DATA);
 
     const scrollToForm = () => {
         setShowForm(true);
@@ -94,6 +96,14 @@ const PlacementEntreprise = () => {
 
         // window.open(whatsappLink, '_blank');
         setShowConfirmation(true);
+    };
+
+    const handleCloseConfirmation = (open: boolean) => {
+        setShowConfirmation(open);
+        if (!open) {
+            setWasValidated(false);
+            setFormData(INITIAL_FORM_DATA);
+        }
     };
 
     const incrementPeople = () => setFormData({ ...formData, numberOfPeople: formData.numberOfPeople + 1 });
@@ -564,7 +574,7 @@ const PlacementEntreprise = () => {
 
             <Footer />
 
-            <Dialog open={showConfirmation} onOpenChange={setShowConfirmation}>
+            <Dialog open={showConfirmation} onOpenChange={handleCloseConfirmation}>
                 <DialogContent className="sm:max-w-md bg-[#fefce8] border-[#f1db08]/20">
                     <DialogHeader>
                         <DialogTitle className="text-[#b48d00] text-2xl font-bold">Confirmation</DialogTitle>
@@ -574,7 +584,7 @@ const PlacementEntreprise = () => {
                     </DialogHeader>
                     <DialogFooter className="mt-6">
                         <Button
-                            onClick={() => setShowConfirmation(false)}
+                            onClick={() => handleCloseConfirmation(false)}
                             className="bg-[#f1db08] hover:bg-[#e1cc07] text-slate-800 rounded-full px-8"
                         >
                             Fermer

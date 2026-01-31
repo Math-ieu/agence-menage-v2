@@ -37,36 +37,38 @@ const PRODUCTS_LIST = [
   "Neutralisant d’odeur"
 ];
 
+const INITIAL_FORM_DATA = {
+  propertyType: "studio",
+  frequency: "oneshot",
+  subFrequency: "",
+  surfaceArea: 70,
+  duration: 6,
+  numberOfPeople: 1,
+  city: "",
+  neighborhood: "",
+  schedulingTime: "morning",
+  schedulingDate: "",
+  schedulingType: "flexible",
+  fixedTime: "14:00",
+  additionalServices: {
+    produitsEtOutils: false,
+    torchonsEtSerpierres: false
+  },
+  phoneNumber: "",
+  phonePrefix: "+212",
+  useWhatsappForPhone: true,
+  whatsappPrefix: "+212",
+  whatsappNumber: "",
+  firstName: "",
+  lastName: "",
+  changeRepereNotes: ""
+};
+
 const GrandMenage = () => {
   const [wasValidated, setWasValidated] = useState(false);
   const [showConfirmation, setShowConfirmation] = useState(false);
   const [isSummaryExpanded, setIsSummaryExpanded] = useState(false);
-  const [formData, setFormData] = useState({
-    propertyType: "studio",
-    frequency: "oneshot",
-    subFrequency: "",
-    surfaceArea: 70,
-    duration: 6,
-    numberOfPeople: 1,
-    city: "",
-    neighborhood: "",
-    schedulingTime: "morning",
-    schedulingDate: "",
-    schedulingType: "flexible",
-    fixedTime: "14:00",
-    additionalServices: {
-      produitsEtOutils: false,
-      torchonsEtSerpierres: false
-    },
-    phoneNumber: "",
-    phonePrefix: "+212",
-    useWhatsappForPhone: true,
-    whatsappPrefix: "+212",
-    whatsappNumber: "",
-    firstName: "",
-    lastName: "",
-    changeRepereNotes: ""
-  });
+  const [formData, setFormData] = useState(INITIAL_FORM_DATA);
 
   const baseRate = 65;
   let visitsPerWeek = 1;
@@ -131,11 +133,16 @@ const GrandMenage = () => {
     const message = formatBookingMessage("Grand Ménage", bookingData, totalPrice, false);
     const whatsappLink = createWhatsAppLink(DESTINATION_PHONE_NUMBER, message);
 
-    // Send email notification (async)
-    sendBookingEmail("Grand Ménage", bookingData, totalPrice, false).catch(console.error);
-
     // window.open(whatsappLink, '_blank');
     setShowConfirmation(true);
+  };
+
+  const handleCloseConfirmation = (open: boolean) => {
+    setShowConfirmation(open);
+    if (!open) {
+      setWasValidated(false);
+      setFormData(INITIAL_FORM_DATA);
+    }
   };
 
   const calculateMinResources = (surface: number) => {
@@ -764,7 +771,7 @@ Il comprend le :
 
       <Footer />
 
-      <Dialog open={showConfirmation} onOpenChange={setShowConfirmation}>
+      <Dialog open={showConfirmation} onOpenChange={handleCloseConfirmation}>
         <DialogContent className="sm:max-w-md bg-[#fdfaf1] border-[#e2d9c2]/20">
           <DialogHeader>
             <DialogTitle className="text-[#c5b89a] text-2xl font-bold">Confirmation</DialogTitle>
@@ -774,7 +781,7 @@ Il comprend le :
           </DialogHeader>
           <DialogFooter className="mt-6">
             <Button
-              onClick={() => setShowConfirmation(false)}
+              onClick={() => handleCloseConfirmation(false)}
               className="bg-[#c5b89a] hover:bg-[#c5b89a]/90 text-white rounded-full px-8"
             >
               Fermer

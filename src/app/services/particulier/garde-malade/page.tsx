@@ -28,6 +28,34 @@ import gardeMaladeHero from "@/assets/service-garde-malade.png";
 import handsCare from "@/assets/hands-care.png";
 import caregiverVisit from "@/assets/caregiver-visit.png";
 
+const INITIAL_FORM_DATA = {
+  frequency: "oneshot",
+  subFrequency: "",
+  duration: 24,
+  numberOfPeople: 1,
+  careLocation: "domicile",
+  careAddress: "",
+  city: "",
+  neighborhood: "",
+  patientAge: "",
+  patientGender: "",
+  mobility: "",
+  healthIssues: "",
+  schedulingTime: "morning",
+  schedulingDate: "",
+  schedulingType: "flexible",
+  fixedTime: "14:00",
+  numberOfDays: 1,
+  additionalNotes: "",
+  phoneNumber: "",
+  phonePrefix: "+212",
+  useWhatsappForPhone: true,
+  whatsappPrefix: "+212",
+  whatsappNumber: "",
+  firstName: "",
+  lastName: ""
+};
+
 const GardeMalade = () => {
   const [showForm, setShowForm] = useState(false);
   const [wasValidated, setWasValidated] = useState(false);
@@ -35,33 +63,7 @@ const GardeMalade = () => {
   const [isSummaryExpanded, setIsSummaryExpanded] = useState(false);
   const formRef = useRef<HTMLDivElement>(null);
 
-  const [formData, setFormData] = useState({
-    frequency: "oneshot",
-    subFrequency: "",
-    duration: 24,
-    numberOfPeople: 1,
-    careLocation: "domicile",
-    careAddress: "",
-    city: "",
-    neighborhood: "",
-    patientAge: "",
-    patientGender: "",
-    mobility: "",
-    healthIssues: "",
-    schedulingTime: "morning",
-    schedulingDate: "",
-    schedulingType: "flexible",
-    fixedTime: "14:00",
-    numberOfDays: 1,
-    additionalNotes: "",
-    phoneNumber: "",
-    phonePrefix: "+212",
-    useWhatsappForPhone: true,
-    whatsappPrefix: "+212",
-    whatsappNumber: "",
-    firstName: "",
-    lastName: ""
-  });
+  const [formData, setFormData] = useState(INITIAL_FORM_DATA);
 
   const totalPrice = 0;
   const discountAmount = 0;
@@ -105,6 +107,14 @@ const GardeMalade = () => {
 
     // window.open(whatsappLink, '_blank');
     setShowConfirmation(true);
+  };
+
+  const handleCloseConfirmation = (open: boolean) => {
+    setShowConfirmation(open);
+    if (!open) {
+      setWasValidated(false);
+      setFormData(INITIAL_FORM_DATA);
+    }
   };
 
   const incrementPeople = () => setFormData({ ...formData, numberOfPeople: formData.numberOfPeople + 1 });
@@ -758,7 +768,7 @@ const GardeMalade = () => {
 
       <Footer />
 
-      <Dialog open={showConfirmation} onOpenChange={setShowConfirmation}>
+      <Dialog open={showConfirmation} onOpenChange={handleCloseConfirmation}>
         <DialogContent className="sm:max-w-md bg-[#fdf8f1] border-[#b46d2f]/20">
           <DialogHeader>
             <DialogTitle className="text-[#b46d2f] text-2xl font-bold">Confirmation</DialogTitle>
@@ -768,7 +778,7 @@ const GardeMalade = () => {
           </DialogHeader>
           <DialogFooter className="mt-6">
             <Button
-              onClick={() => setShowConfirmation(false)}
+              onClick={() => handleCloseConfirmation(false)}
               className="bg-[#b46d2f] hover:bg-[#9a5d28] text-white rounded-full px-8"
             >
               Fermer

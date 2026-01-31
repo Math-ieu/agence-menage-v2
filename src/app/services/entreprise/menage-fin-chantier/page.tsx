@@ -25,30 +25,32 @@ import {
     DialogFooter,
 } from "@/components/ui/dialog";
 
+const INITIAL_FORM_DATA = {
+    propertyType: "studio",
+    surfaceArea: 50,
+    city: "",
+    neighborhood: "",
+    schedulingTime: "morning",
+    schedulingHours: "09:00 - 12:00",
+    schedulingDate: "",
+    fixedTime: "14:00",
+    additionalServices: {},
+    phoneNumber: "",
+    phonePrefix: "+212",
+    useWhatsappForPhone: true,
+    whatsappPrefix: "+212",
+    whatsappNumber: "",
+    entityName: "",
+    contactPerson: "",
+    email: "",
+    changeRepereNotes: ""
+};
+
 const MenageFinChantierEntreprise = () => {
     const [wasValidated, setWasValidated] = useState(false);
     const [showConfirmation, setShowConfirmation] = useState(false);
     const [isSummaryExpanded, setIsSummaryExpanded] = useState(false);
-    const [formData, setFormData] = useState({
-        propertyType: "studio",
-        surfaceArea: 50,
-        city: "",
-        neighborhood: "",
-        schedulingTime: "morning",
-        schedulingHours: "09:00 - 12:00",
-        schedulingDate: "",
-        fixedTime: "14:00",
-        additionalServices: {},
-        phoneNumber: "",
-        phonePrefix: "+212",
-        useWhatsappForPhone: true,
-        whatsappPrefix: "+212",
-        whatsappNumber: "",
-        entityName: "",
-        contactPerson: "",
-        email: "",
-        changeRepereNotes: ""
-    });
+    const [formData, setFormData] = useState(INITIAL_FORM_DATA);
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
@@ -80,6 +82,14 @@ const MenageFinChantierEntreprise = () => {
 
         // window.open(whatsappLink, '_blank');
         setShowConfirmation(true);
+    };
+
+    const handleCloseConfirmation = (open: boolean) => {
+        setShowConfirmation(open);
+        if (!open) {
+            setWasValidated(false);
+            setFormData(INITIAL_FORM_DATA);
+        }
     };
 
     return (
@@ -354,7 +364,7 @@ La prestation comprend : L’évacuation des poussières et résidus de chantier
 
             <Footer />
 
-            <Dialog open={showConfirmation} onOpenChange={setShowConfirmation}>
+            <Dialog open={showConfirmation} onOpenChange={handleCloseConfirmation}>
                 <DialogContent className="sm:max-w-md bg-[#f0faf2] border-[#88d89d]/20">
                     <DialogHeader>
                         <DialogTitle className="text-primary text-2xl font-bold">Confirmation</DialogTitle>
@@ -364,7 +374,7 @@ La prestation comprend : L’évacuation des poussières et résidus de chantier
                     </DialogHeader>
                     <DialogFooter className="mt-6">
                         <Button
-                            onClick={() => setShowConfirmation(false)}
+                            onClick={() => handleCloseConfirmation(false)}
                             className="bg-primary hover:bg-primary/90 text-white rounded-full px-8"
                         >
                             Fermer

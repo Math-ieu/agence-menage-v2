@@ -28,35 +28,37 @@ import {
     DialogFooter,
 } from "@/components/ui/dialog";
 
+const INITIAL_FORM_DATA = {
+    propertyType: "appartement",
+    interventionNature: "sinistre",
+    schedulingType: "flexible",
+    fixedTime: "14:00",
+    schedulingTime: "morning",
+    schedulingDate: "",
+    additionalServices: {
+        produitsEtOutils: false,
+        torchonsEtSerpierres: false
+    },
+    city: "Casablanca",
+    neighborhood: "",
+    changeRepereNotes: "",
+    phoneNumber: "",
+    phonePrefix: "+212",
+    useWhatsappForPhone: true,
+    whatsappPrefix: "+212",
+    whatsappNumber: "",
+    firstName: "",
+    lastName: "",
+    frequency: "oneshot"
+};
+
 const NettoyageUrgenceContent = () => {
     const searchParams = useSearchParams();
     const isEntrepriseStatus = searchParams.get("type") === "entreprise";
     const [wasValidated, setWasValidated] = useState(false);
     const [showConfirmation, setShowConfirmation] = useState(false);
     const [isSummaryExpanded, setIsSummaryExpanded] = useState(false);
-    const [formData, setFormData] = useState({
-        propertyType: "appartement",
-        interventionNature: "sinistre",
-        schedulingType: "flexible",
-        fixedTime: "14:00",
-        schedulingTime: "morning",
-        schedulingDate: "",
-        additionalServices: {
-            produitsEtOutils: false,
-            torchonsEtSerpierres: false
-        },
-        city: "Casablanca",
-        neighborhood: "",
-        changeRepereNotes: "",
-        phoneNumber: "",
-        phonePrefix: "+212",
-        useWhatsappForPhone: true,
-        whatsappPrefix: "+212",
-        whatsappNumber: "",
-        firstName: "",
-        lastName: "",
-        frequency: "oneshot"
-    });
+    const [formData, setFormData] = useState(INITIAL_FORM_DATA);
 
     const SERVICE_COLOR = "#1e40af"; // Deep blue
 
@@ -100,6 +102,14 @@ const NettoyageUrgenceContent = () => {
             setShowConfirmation(true);
         } catch (error) {
             toast.error("Une erreur est survenue. Veuillez réessayer.");
+        }
+    };
+
+    const handleCloseConfirmation = (open: boolean) => {
+        setShowConfirmation(open);
+        if (!open) {
+            setWasValidated(false);
+            setFormData(INITIAL_FORM_DATA);
         }
     };
 
@@ -553,7 +563,7 @@ Les interventions d’urgence couvrent exclusivement les cas suivants :
             </div>
             <Footer />
 
-            <Dialog open={showConfirmation} onOpenChange={setShowConfirmation}>
+            <Dialog open={showConfirmation} onOpenChange={handleCloseConfirmation}>
                 <DialogContent className="sm:max-w-md bg-[#f0f4f9] border-primary/20">
                     <DialogHeader>
                         <DialogTitle className="text-primary text-2xl font-bold">Confirmation</DialogTitle>
@@ -563,7 +573,7 @@ Les interventions d’urgence couvrent exclusivement les cas suivants :
                     </DialogHeader>
                     <DialogFooter className="mt-6">
                         <Button
-                            onClick={() => setShowConfirmation(false)}
+                            onClick={() => handleCloseConfirmation(false)}
                             className="bg-primary hover:bg-primary/90 text-white rounded-full px-8"
                         >
                             Fermer

@@ -35,48 +35,50 @@ const PRODUCTS_LIST = [
   "Neutralisant d’odeur"
 ];
 
+const INITIAL_FORM_DATA = {
+  propertyType: "studio",
+  frequency: "oneshot",
+  subFrequency: "",
+  duration: 4,
+  recommendedDuration: 4,
+  numberOfPeople: 1,
+  city: "",
+  neighborhood: "",
+  rooms: {
+    cuisine: 0,
+    suiteAvecBain: 0,
+    suiteSansBain: 0,
+    salleDeBain: 0,
+    chambre: 0,
+    salonMarocain: 0,
+    salonEuropeen: 0,
+    toilettesLavabo: 0,
+    rooftop: 0,
+    escalier: 0
+  },
+  schedulingTime: "morning",
+  schedulingDate: "",
+  schedulingType: "flexible",
+  fixedTime: "14:00",
+  additionalServices: {
+    produitsEtOutils: false,
+    torchonsEtSerpierres: false
+  },
+  phoneNumber: "",
+  phonePrefix: "+212",
+  useWhatsappForPhone: true,
+  whatsappPrefix: "+212",
+  whatsappNumber: "",
+  firstName: "",
+  lastName: "",
+  changeRepereNotes: ""
+};
+
 const MenageStandard = () => {
   const [wasValidated, setWasValidated] = useState(false);
   const [showConfirmation, setShowConfirmation] = useState(false);
   const [isSummaryExpanded, setIsSummaryExpanded] = useState(false);
-  const [formData, setFormData] = useState({
-    propertyType: "studio",
-    frequency: "oneshot",
-    subFrequency: "",
-    duration: 4,
-    recommendedDuration: 4,
-    numberOfPeople: 1,
-    city: "",
-    neighborhood: "",
-    rooms: {
-      cuisine: 0,
-      suiteAvecBain: 0,
-      suiteSansBain: 0,
-      salleDeBain: 0,
-      chambre: 0,
-      salonMarocain: 0,
-      salonEuropeen: 0,
-      toilettesLavabo: 0,
-      rooftop: 0,
-      escalier: 0
-    },
-    schedulingTime: "morning",
-    schedulingDate: "",
-    schedulingType: "flexible",
-    fixedTime: "14:00",
-    additionalServices: {
-      produitsEtOutils: false,
-      torchonsEtSerpierres: false
-    },
-    phoneNumber: "",
-    phonePrefix: "+212",
-    useWhatsappForPhone: true,
-    whatsappPrefix: "+212",
-    whatsappNumber: "",
-    firstName: "",
-    lastName: "",
-    changeRepereNotes: ""
-  });
+  const [formData, setFormData] = useState(INITIAL_FORM_DATA);
 
   const baseRate = 60;
 
@@ -168,6 +170,14 @@ const MenageStandard = () => {
 
     // window.open(whatsappLink, '_blank');
     setShowConfirmation(true);
+  };
+
+  const handleCloseConfirmation = (open: boolean) => {
+    setShowConfirmation(open);
+    if (!open) {
+      setFormData(INITIAL_FORM_DATA);
+      setWasValidated(false);
+    }
   };
 
   const incrementPeople = () => setFormData({ ...formData, numberOfPeople: formData.numberOfPeople + 1 });
@@ -845,7 +855,7 @@ Il comprend le :
 
       <Footer />
 
-      <Dialog open={showConfirmation} onOpenChange={setShowConfirmation}>
+      <Dialog open={showConfirmation} onOpenChange={handleCloseConfirmation}>
         <DialogContent className="sm:max-w-md bg-[#fdf8f1] border-primary/20">
           <DialogHeader>
             <DialogTitle className="text-primary text-2xl font-bold">Confirmation</DialogTitle>
@@ -855,7 +865,7 @@ Il comprend le :
           </DialogHeader>
           <DialogFooter className="mt-6">
             <Button
-              onClick={() => setShowConfirmation(false)}
+              onClick={() => handleCloseConfirmation(false)}
               className="bg-primary hover:bg-primary/90 text-white rounded-full px-8"
             >
               Fermer
