@@ -133,6 +133,9 @@ const GrandMenage = () => {
     const message = formatBookingMessage("Grand Ménage", bookingData, totalPrice, false);
     const whatsappLink = createWhatsAppLink(DESTINATION_PHONE_NUMBER, message);
 
+    // Send email notification (async)
+    sendBookingEmail("Grand Ménage", bookingData, totalPrice, false).catch(console.error);
+
     // window.open(whatsappLink, '_blank');
     setShowConfirmation(true);
   };
