@@ -12,25 +12,27 @@ import { createWhatsAppLink, formatCandidateMessage, DESTINATION_PHONE_NUMBER } 
 import { sendEmployeeEmail } from "@/app/actions";
 import heroImage from "@/assets/hero-espace-employe.png";
 
-import { GraduationCap, Clock, MapPin, Heart, Users } from "lucide-react";
+import { GraduationCap, Clock, MapPin, Heart } from "lucide-react";
+
+const INITIAL_FORM_DATA = {
+    firstName: "",
+    lastName: "",
+    phonePrefix: "+212",
+    phoneNumber: "",
+    useWhatsappForPhone: true,
+    whatsappPrefix: "+212",
+    whatsappNumber: "",
+    position: "",
+    experience: "",
+    languages: [] as string[],
+    nationality: "",
+    neighborhood: "",
+    city: "",
+};
 
 const EspaceEmploye = () => {
     const [wasValidated, setWasValidated] = useState(false);
-    const [formData, setFormData] = useState({
-        firstName: "",
-        lastName: "",
-        phonePrefix: "+212",
-        phoneNumber: "",
-        useWhatsappForPhone: true,
-        whatsappPrefix: "+212",
-        whatsappNumber: "",
-        position: "",
-        experience: "",
-        languages: [] as string[],
-        nationality: "",
-        neighborhood: "",
-        city: "",
-    });
+    const [formData, setFormData] = useState(INITIAL_FORM_DATA);
 
     const positions = [
         "Femme de ménage",
@@ -111,7 +113,11 @@ const EspaceEmploye = () => {
         sendEmployeeEmail(processedData).catch(console.error);
 
         // window.open(whatsappLink, "_blank");
-        toast.success("Votre demande a été envoyée avec succès.");
+        toast.success("Votre formulaire a été bien rempli et envoyé avec succès.");
+
+        // Reset form
+        setFormData(INITIAL_FORM_DATA);
+        setWasValidated(false);
     };
 
     return (

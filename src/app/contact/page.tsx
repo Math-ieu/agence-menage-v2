@@ -12,19 +12,21 @@ import { createWhatsAppLink, formatContactMessage, DESTINATION_PHONE_NUMBER } fr
 import { Checkbox } from "@/components/ui/checkbox";
 import { sendContactEmail } from "@/app/actions";
 
+const INITIAL_FORM_DATA = {
+    name: "",
+    email: "",
+    phonePrefix: "+212",
+    phoneNumber: "",
+    useWhatsappForPhone: true,
+    whatsappPrefix: "+212",
+    whatsappNumber: "",
+    message: ""
+};
+
 const Contact = () => {
     const router = useRouter();
     const [wasValidated, setWasValidated] = useState(false);
-    const [formData, setFormData] = useState({
-        name: "",
-        email: "",
-        phonePrefix: "+212",
-        phoneNumber: "",
-        useWhatsappForPhone: true,
-        whatsappPrefix: "+212",
-        whatsappNumber: "",
-        message: ""
-    });
+    const [formData, setFormData] = useState(INITIAL_FORM_DATA);
 
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
@@ -44,13 +46,17 @@ const Contact = () => {
         };
 
         const whatsappMessage = formatContactMessage(processedData);
-        const whatsappLink = createWhatsAppLink(DESTINATION_PHONE_NUMBER, whatsappMessage);
+        // const whatsappLink = createWhatsAppLink(DESTINATION_PHONE_NUMBER, whatsappMessage);
 
         // Send email copy via Resend (async)
         sendContactEmail(processedData).catch(console.error);
 
         // window.open(whatsappLink, "_blank");
-        toast.success("Votre message a été envoyé avec succès.");
+        toast.success("Votre message a été bien envoyé. Notre équipe vous contactera sous peu.");
+
+        // Reset form
+        setFormData(INITIAL_FORM_DATA);
+        setWasValidated(false);
 
         // Redirect to fixed confirmation page for Google Ads tracking
         router.push('/contact/merci');
