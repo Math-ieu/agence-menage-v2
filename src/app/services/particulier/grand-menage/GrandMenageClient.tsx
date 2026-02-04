@@ -10,10 +10,12 @@ import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Textarea } from "@/components/ui/textarea";
 import { Switch } from "@/components/ui/switch";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Slider } from "@/components/ui/slider";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { toast } from "sonner";
 import serviceGrandMenage from "@/assets/service-grand-menage.png";
+import cleaningProduct from "@/assets/cleaning-product.png";
+import cleaningClothsMop from "@/assets/cleaning-cloths-mop.png";
 import { createWhatsAppLink, formatBookingMessage, DESTINATION_PHONE_NUMBER, getConfirmationMessage } from "@/lib/whatsapp";
 import { sendBookingEmail } from "@/lib/email";
 import "@/styles/sticky-summary.css";
@@ -27,10 +29,19 @@ import {
     DialogFooter,
 } from "@/components/ui/dialog";
 
+const PRODUCTS_LIST = [
+    "Nettoyant multi-usage",
+    "Prdt vitre, dégraissant",
+    "Prdt de vaisselle",
+    "Prdt bois et parqués",
+    "Neutralisant d’odeur"
+];
+
 const INITIAL_FORM_DATA = {
-    officeSurface: "50",
+    propertyType: "studio",
     frequency: "oneshot",
     subFrequency: "",
+    surfaceArea: 70,
     duration: 6,
     numberOfPeople: 1,
     city: "",
@@ -40,7 +51,8 @@ const INITIAL_FORM_DATA = {
     schedulingType: "flexible",
     fixedTime: "14:00",
     additionalServices: {
-        produitsEtOutils: false
+        produitsEtOutils: false,
+        torchonsEtSerpierres: false
     },
     phoneNumber: "",
     phonePrefix: "+212",
@@ -52,36 +64,48 @@ const INITIAL_FORM_DATA = {
     changeRepereNotes: ""
 };
 
-const GrandMenageBureaux = () => {
+export default function GrandMenageClient() {
     const [wasValidated, setWasValidated] = useState(false);
     const [showConfirmation, setShowConfirmation] = useState(false);
     const [isSummaryExpanded, setIsSummaryExpanded] = useState(false);
     const [formData, setFormData] = useState(INITIAL_FORM_DATA);
 
-    const perVisitPrice = Number(formData.officeSurface) * 10;
-    let totalPrice = 0;
+    const baseRate = 65;
+    let visitsPerWeek = 1;
+    let discountRate = 0;
     let discountAmount = 0;
-    const discountRate = 0.1;
+    let totalServicePrice = 0;
 
     if (formData.frequency === "subscription") {
         const visitsMap: Record<string, number> = {
             "4foisSemaine": 4,
-            "2foisMois": 0.5,
             "1foisSemaine": 1,
+            "2foisMois": 0.5,
+            "1foisMois": 0.25,
             "5foisSemaine": 5,
             "6foisSemaine": 6,
             "7foisSemaine": 7,
             "3foisSemaine": 3,
             "1semaine2": 0.5,
-            "1foisMois": 0.25
         };
-        const visitsPerWeek = visitsMap[formData.subFrequency] || 1;
-        const subtotalMonthly = perVisitPrice * visitsPerWeek * 4;
+        visitsPerWeek = visitsMap[formData.subFrequency] || 1;
+        discountRate = 0.1;
+        const monthlyHours = formData.duration * visitsPerWeek * 4;
+        const subtotalMonthly = monthlyHours * baseRate * formData.numberOfPeople;
         discountAmount = subtotalMonthly * discountRate;
-        totalPrice = subtotalMonthly - discountAmount;
+        totalServicePrice = subtotalMonthly - discountAmount;
     } else {
-        totalPrice = perVisitPrice;
+        totalServicePrice = formData.duration * baseRate * formData.numberOfPeople;
     }
+
+    const calculateTotal = () => {
+        let price = totalServicePrice;
+        if (formData.additionalServices.produitsEtOutils) price += 90;
+        if (formData.additionalServices.torchonsEtSerpierres) price += 40;
+        return price;
+    };
+
+    const totalPrice = calculateTotal();
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
@@ -105,13 +129,9 @@ const GrandMenageBureaux = () => {
                 : `${formData.whatsappPrefix} ${formData.whatsappNumber}`
         };
 
-        const message = formatBookingMessage("Grand Ménage Bureaux", bookingData, totalPrice, true);
-        const whatsappLink = createWhatsAppLink(DESTINATION_PHONE_NUMBER, message);
-
         // Send email notification (async)
-        sendBookingEmail("Grand Ménage Bureaux", bookingData, totalPrice, true).catch(console.error);
+        sendBookingEmail("Grand Ménage", bookingData, totalPrice, false).catch(console.error);
 
-        // window.open(whatsappLink, '_blank');
         setShowConfirmation(true);
     };
 
@@ -123,17 +143,16 @@ const GrandMenageBureaux = () => {
         }
     };
 
-    const calculateMinResources = (surface: string) => {
-        const numericSurface = Number(surface);
-        if (numericSurface <= 70) return { duration: 6, people: 1 };
-        if (numericSurface <= 150) return { duration: 4, people: 2 };
-        if (numericSurface < 300) return { duration: 8, people: 2 };
+    const calculateMinResources = (surface: number) => {
+        if (surface <= 70) return { duration: 6, people: 1 };
+        if (surface <= 150) return { duration: 4, people: 2 };
+        if (surface < 300) return { duration: 8, people: 2 };
         return { duration: 8, people: 3 };
     };
 
     const incrementPeople = () => setFormData({ ...formData, numberOfPeople: formData.numberOfPeople + 1 });
     const decrementPeople = () => {
-        const minResources = calculateMinResources(formData.officeSurface);
+        const minResources = calculateMinResources(formData.surfaceArea);
         if (formData.numberOfPeople > minResources.people) {
             setFormData({ ...formData, numberOfPeople: formData.numberOfPeople - 1 });
         }
@@ -141,32 +160,33 @@ const GrandMenageBureaux = () => {
 
     const incrementDuration = () => setFormData({ ...formData, duration: formData.duration + 1 });
     const decrementDuration = () => {
-        const minResources = calculateMinResources(formData.officeSurface);
+        const minResources = calculateMinResources(formData.surfaceArea);
         if (formData.duration > minResources.duration) {
             setFormData({ ...formData, duration: formData.duration - 1 });
         }
     };
 
-    const handleSurfaceChange = (surface: string) => {
+    const calculateEstimation = (surface: number) => {
         const { duration: finalDuration, people: finalPeople } = calculateMinResources(surface);
-        setFormData({
-            ...formData,
-            officeSurface: surface,
+
+        setFormData(prev => ({
+            ...prev,
+            surfaceArea: surface,
             duration: finalDuration,
             numberOfPeople: finalPeople
-        });
+        }));
     };
 
     const frequencies = [
         { value: "4foisSemaine", label: "4 fois par semaine" },
-        { value: "2foisMois", label: "2 fois par mois" },
         { value: "1foisSemaine", label: "Une fois par semaine" },
+        { value: "2foisMois", label: "2 fois par mois" },
+        { value: "1foisMois", label: "Une fois par mois - Recommandé" },
         { value: "5foisSemaine", label: "5 fois par semaine" },
         { value: "6foisSemaine", label: "6 fois par semaine" },
         { value: "7foisSemaine", label: "7 fois par semaine" },
         { value: "3foisSemaine", label: "3 fois par semaine" },
         { value: "1semaine2", label: "Une semaine sur deux" },
-        { value: "1foisMois", label: "1 fois par mois" }
     ];
 
     const getFrequencyLabel = (value: string, subValue: string) => {
@@ -179,46 +199,60 @@ const GrandMenageBureaux = () => {
         <div className="min-h-screen flex flex-col">
             <Header />
 
-            {/* Theme color: #52bc7e -> HSL: 145 45% 53% approx */}
-            <div style={{ "--primary": "145 45% 53%" } as React.CSSProperties}>
+            <div style={{ "--primary": "45 30% 35%", "--secondary": "45 30% 90%" } as React.CSSProperties}>
                 <ServiceHeroSection
-                    title="Grand Ménage Bureaux"
-                    description="Un nettoyage en profondeur pour vos locaux professionnels. Notre service spécialisé garantit un assainissement complet de vos bureaux, salles de réunion et espaces communs, réalisé par des experts avec des équipements adaptés."
+                    title="Grand Ménage"
+                    description={`Le grand ménage a pour objectif d’assurer la propreté et l’entretien courant des espaces attribués.
+Il comprend le :
+- Nettoyage de cuisine
+- Lavage de vaisselle
+- Balayage du sol et des tapis
+- Nettoyage du sol
+- Nettoyage des portes de placard
+- Nettoyage des chambres
+- Nettoyages des salles de bains et toilettes
+- Depoussierage des meubles
+- Nettoyage de vitres intérieures accessibles
+- Changement des draps
+- Rangement de la vaisselle
+- Vidage et nettoyage de la poubelle
+- Lessivage murs
+- Nettoyage des dessous de lits et canapés
+- Nettoyage des placards de cuisine
+- Organisation du dressing
+- Nettoyage du frigo`}
                     image={serviceGrandMenage.src}
-                    primaryColor="#52bc7e"
+                    primaryColor="#e2d9c2"
                 />
 
                 <main className="flex-1 bg-background py-12">
                     <div className="container max-w-5xl">
-                        <div className="bg-primary/10 rounded-lg p-6 text-center mb-8">
-                            <h2 className="text-2xl font-bold text-primary mb-2">
+                        <div className="bg-[#f3efdf] rounded-lg p-6 text-center mb-8 border border-[#e2d9c2]">
+                            <h2 className="text-2xl font-bold text-[#4a4a4a] mb-2 uppercase tracking-wide">
                                 FORMULAIRE DE RESERVATION
                             </h2>
                         </div>
                         <form id="booking-form" onSubmit={handleSubmit} noValidate className={`flex flex-col lg:grid lg:grid-cols-3 gap-8 ${wasValidated ? 'was-validated' : ''}`}>
                             <div className="lg:col-span-1 lg:order-last sticky-reservation-summary-container">
                                 <div className="lg:sticky lg:top-24 space-y-6">
-                                    <div className="bg-primary/5 rounded-lg border shadow-sm p-6 space-y-4 relative">
-                                        <h3 className="text-xl font-bold text-primary border-b pb-2 text-center">
+                                    <div className="bg-[#fdfcf9] rounded-lg border border-[#e2d9c2]/30 shadow-sm p-6 space-y-4 relative">
+                                        <h3 className="text-xl font-bold text-[#c5b89a] border-b border-[#e2d9c2]/30 pb-2 text-center">
                                             Ma Réservation
                                         </h3>
                                         <div className="space-y-3">
-                                            <div className="flex justify-between gap-4 border-b border-primary/10 pb-2">
+                                            <div className="flex justify-between gap-4 border-b border-[#e2d9c2]/20 pb-2">
                                                 <span className="text-muted-foreground">Service:</span>
-                                                <span className="font-medium text-right text-slate-700">Grand Ménage Bureaux</span>
+                                                <span className="font-medium text-right text-slate-700">Grand Ménage</span>
                                             </div>
 
-                                            {/* Detailed info - hidden on mobile when collapsed */}
                                             <div className={`space-y-3 ${!isSummaryExpanded ? 'max-lg:hidden' : ''}`}>
                                                 <div className="flex justify-between gap-4">
                                                     <span className="text-muted-foreground">Fréquence:</span>
-                                                    <span className="font-medium text-right text-slate-700">{getFrequencyLabel(formData.frequency, formData.subFrequency)}</span>
+                                                    <span className="font-medium text-right text-sm text-slate-700">{getFrequencyLabel(formData.frequency, formData.subFrequency)}</span>
                                                 </div>
                                                 <div className="flex justify-between gap-4">
-                                                    <span className="text-muted-foreground">Superficie:</span>
-                                                    <span className="font-medium text-right text-slate-700">
-                                                        {formData.officeSurface === "300" ? "300 m² et plus" : `${formData.officeSurface} m²`}
-                                                    </span>
+                                                    <span className="text-muted-foreground">Durée:</span>
+                                                    <span className="font-medium text-right text-slate-700">{formData.duration} heures</span>
                                                 </div>
                                                 <div className="flex justify-between gap-4">
                                                     <span className="text-muted-foreground">Personnes:</span>
@@ -226,11 +260,23 @@ const GrandMenageBureaux = () => {
                                                 </div>
                                                 {formData.additionalServices.produitsEtOutils && (
                                                     <div className="flex justify-between gap-4 text-xs">
-                                                        <span className="text-muted-foreground">Produits & Outils:</span>
-                                                        <span className="font-medium text-right text-slate-700 italic text-[10px]">Sur devis</span>
+                                                        <span className="text-muted-foreground">Produits:</span>
+                                                        <span className="font-medium text-right text-slate-700">+90 MAD</span>
                                                     </div>
                                                 )}
-                                                <div className="flex justify-between gap-4 border-t border-primary/10 pt-2">
+                                                {formData.additionalServices.torchonsEtSerpierres && (
+                                                    <div className="flex justify-between gap-4 text-xs">
+                                                        <span className="text-muted-foreground">Torchons:</span>
+                                                        <span className="font-medium text-right text-slate-700">+40 MAD</span>
+                                                    </div>
+                                                )}
+                                                {discountRate > 0 && (
+                                                    <div className="flex justify-between gap-4 text-red-600 font-bold bg-red-50 p-2 rounded">
+                                                        <span>Réduction (10%):</span>
+                                                        <span>-{discountAmount} MAD</span>
+                                                    </div>
+                                                )}
+                                                <div className="flex justify-between gap-4 border-t border-[#e2d9c2]/20 pt-2">
                                                     <span className="text-muted-foreground">Date:</span>
                                                     <span className="font-medium text-right text-slate-700">{formData.schedulingDate || "Non définie"}</span>
                                                 </div>
@@ -244,25 +290,18 @@ const GrandMenageBureaux = () => {
                                         </div>
 
                                         <div className="pt-4 border-t">
-                                            {formData.frequency === "subscription" && discountAmount > 0 && (
-                                                <div className="flex justify-between gap-4 text-red-600 font-bold bg-red-50 p-2 rounded mb-4 text-xs">
-                                                    <span>Réduction (10%):</span>
-                                                    <span>-{Math.round(discountAmount)} MAD</span>
-                                                </div>
-                                            )}
                                             <div className="flex justify-between items-center">
                                                 <span className="text-lg font-bold">
-                                                    {formData.frequency === "subscription" ? "Total Mensuel HT" : "Total HT"}
+                                                    {formData.frequency === "subscription" ? "Total Mensuel" : "Total"}
                                                 </span>
-                                                <span className="text-2xl font-bold text-primary">{Math.round(totalPrice)} MAD</span>
+                                                <span className="text-2xl font-bold text-[#c5b89a]">{Math.round(totalPrice)} MAD</span>
                                             </div>
                                         </div>
 
-                                        {/* Toggle Button for Mobile */}
                                         <button
                                             type="button"
                                             onClick={() => setIsSummaryExpanded(!isSummaryExpanded)}
-                                            className="lg:hidden absolute -bottom-3 left-1/2 -translate-x-1/2 w-8 h-8 rounded-full bg-primary text-white flex items-center justify-center shadow-lg border-2 border-white z-20 hover:bg-primary/90 transition-transform active:scale-90"
+                                            className="lg:hidden absolute -bottom-3 left-1/2 -translate-x-1/2 w-8 h-8 rounded-full bg-[#c5b89a] text-white flex items-center justify-center shadow-lg border-2 border-white z-20 hover:bg-[#c5b89a]/90 transition-transform active:scale-90"
                                         >
                                             {isSummaryExpanded ? <ChevronUp size={20} /> : <ChevronDown size={20} />}
                                         </button>
@@ -271,22 +310,39 @@ const GrandMenageBureaux = () => {
                             </div>
 
                             <div className="lg:col-span-2 space-y-8">
-
-                                <div className="bg-card rounded-lg p-4 md:p-6 border shadow-sm space-y-6">
+                                <div className="bg-card rounded-lg p-4 md:p-8 border shadow-sm space-y-10">
                                     <div>
-                                        <h3 className="text-xl font-bold bg-primary text-white p-3 rounded-lg text-center mb-4">
+                                        <h3 className="text-xl font-bold bg-[#e2d9c2] text-[#4a4a4a] p-3 rounded-lg text-center mb-4 uppercase">
+                                            Type d'habitation
+                                        </h3>
+                                        <RadioGroup
+                                            value={formData.propertyType}
+                                            onValueChange={(value) => setFormData({ ...formData, propertyType: value })}
+                                            className="flex flex-wrap items-center justify-center gap-8 p-4"
+                                        >
+                                            {["Studio", "Appartement", "Duplex", "Villa", "Maison"].map((type) => (
+                                                <div key={type} className="flex items-center space-x-3">
+                                                    <RadioGroupItem value={type.toLowerCase()} id={`gm-${type}`} className="border-[#e2d9c2] text-[#e2d9c2]" />
+                                                    <Label htmlFor={`gm-${type}`} className="font-bold text-slate-700">{type}</Label>
+                                                </div>
+                                            ))}
+                                        </RadioGroup>
+                                    </div>
+
+                                    <div>
+                                        <h3 className="text-xl font-bold bg-[#e2d9c2] text-[#4a4a4a] p-3 rounded-lg text-center mb-4">
                                             Indiquez la superficie de votre espace en m².
                                         </h3>
                                         <div className="px-8 py-10 border rounded-xl bg-white shadow-sm space-y-8">
                                             <div className="relative pt-6">
-                                                <div className="absolute -top-4 left-0 transition-all duration-200" style={{ left: `${(Number(formData.officeSurface) / 300) * 100}%`, transform: 'translateX(-50%)' }}>
+                                                <div className="absolute -top-4 left-0 transition-all duration-200" style={{ left: `${(formData.surfaceArea / 300) * 100}%`, transform: 'translateX(-50%)' }}>
                                                     <span className="bg-primary/10 text-primary font-bold px-3 py-1 rounded-full text-sm border border-primary/20 whitespace-nowrap">
-                                                        {formData.officeSurface === "300" ? "300m² et plus" : `${formData.officeSurface}m²`}
+                                                        {formData.surfaceArea === 300 ? "300m² et plus" : `${formData.surfaceArea}m²`}
                                                     </span>
                                                 </div>
                                                 <Slider
-                                                    value={[Number(formData.officeSurface)]}
-                                                    onValueChange={(value) => handleSurfaceChange(value[0].toString())}
+                                                    value={[formData.surfaceArea]}
+                                                    onValueChange={(value) => calculateEstimation(value[0])}
                                                     max={300}
                                                     min={0}
                                                     step={1}
@@ -297,11 +353,15 @@ const GrandMenageBureaux = () => {
                                                     <span>300m² et plus</span>
                                                 </div>
                                             </div>
+                                            <p className="text-[10px] text-red-500 text-center font-medium leading-tight px-10">
+                                                Selon la superficie indiquée, le système détermine automatiquement la durée et
+                                                l’effectif minimum requis ; ces minimums ne peuvent pas être réduits.
+                                            </p>
                                         </div>
                                     </div>
 
                                     <div>
-                                        <h3 className="text-xl font-bold bg-primary text-white p-3 rounded-lg mb-4">
+                                        <h3 className="text-xl font-bold bg-[#e2d9c2] text-[#4a4a4a] p-3 rounded-lg text-center mb-4">
                                             Choisissez la fréquence
                                         </h3>
                                         <div className="p-4 space-y-4">
@@ -330,13 +390,18 @@ const GrandMenageBureaux = () => {
                                                 </div>
 
                                                 {formData.frequency === "subscription" && (
-                                                    <div className="w-full animate-in fade-in slide-in-from-top-2 duration-300">
+                                                    <div className="w-full space-y-4 animate-in fade-in slide-in-from-top-2 duration-300">
+                                                        <div className="flex justify-center">
+                                                            <span className="text-red-600 font-bold px-3 py-1 bg-red-50 rounded-full text-xs animate-pulse">
+                                                                -10 % de réduction sur l'abonnement
+                                                            </span>
+                                                        </div>
                                                         <Select
                                                             value={formData.subFrequency}
                                                             onValueChange={(value) => setFormData({ ...formData, subFrequency: value })}
                                                         >
                                                             <SelectTrigger className="w-full border-primary/20">
-                                                                <SelectValue placeholder="Sélectionnez un abonnement" />
+                                                                <SelectValue placeholder="Sélectionnez une fréquence" />
                                                             </SelectTrigger>
                                                             <SelectContent>
                                                                 {frequencies.map((freq) => (
@@ -353,137 +418,105 @@ const GrandMenageBureaux = () => {
                                     </div>
 
                                     <div>
-                                        <h3 className="text-xl font-bold bg-primary text-white p-3 rounded-lg mb-4">
-                                            Durée estimée
+                                        <h3 className="text-xl font-bold bg-[#e2d9c2] text-[#4a4a4a] p-3 rounded-lg text-center mb-4">
+                                            Durée de prestation
                                         </h3>
-                                        <div className="flex items-center justify-center gap-4 p-4 bg-muted/30 rounded">
+                                        <div className="flex items-center justify-center gap-8 p-4 bg-white border rounded-xl">
                                             <Button
                                                 type="button"
-                                                variant="outline"
+                                                variant="ghost"
                                                 size="icon"
-                                                className="rounded-full disabled:opacity-30"
+                                                className="h-10 w-10 rounded-full bg-slate-100 text-[#c5b89a] hover:bg-slate-200 border border-slate-200 shadow-sm disabled:opacity-30"
                                                 onClick={decrementDuration}
-                                                disabled={formData.duration <= calculateMinResources(formData.officeSurface).duration}
+                                                disabled={formData.duration <= calculateMinResources(formData.surfaceArea).duration}
                                             >
-                                                -
+                                                <span className="text-2xl">-</span>
                                             </Button>
-                                            <span className="text-xl font-semibold min-w-[60px] text-center">
+                                            <span className="text-3xl font-extrabold text-[#c5b89a] min-w-[60px] text-center">
                                                 {formData.duration}
                                             </span>
                                             <Button
                                                 type="button"
-                                                variant="outline"
+                                                variant="ghost"
                                                 size="icon"
-                                                className="rounded-full"
+                                                className="h-10 w-10 rounded-full bg-slate-100 text-[#c5b89a] hover:bg-slate-200 border border-slate-200 shadow-sm"
                                                 onClick={incrementDuration}
                                             >
-                                                +
+                                                <span className="text-2xl">+</span>
                                             </Button>
                                         </div>
                                     </div>
 
                                     <div>
-                                        <h3 className="text-xl font-bold bg-primary text-white p-3 rounded-lg mb-4">
+                                        <h3 className="text-xl font-bold bg-[#e2d9c2] text-[#4a4a4a] p-3 rounded-lg text-center mb-4">
                                             Nombre de personne
                                         </h3>
-                                        <div className="flex items-center justify-center gap-4 p-4 bg-muted/30 rounded">
+                                        <div className="flex items-center justify-center gap-8 p-4 bg-white border rounded-xl">
                                             <Button
                                                 type="button"
-                                                variant="outline"
+                                                variant="ghost"
                                                 size="icon"
-                                                className="rounded-full disabled:opacity-30"
+                                                className="h-10 w-10 rounded-full bg-slate-100 text-[#c5b89a] hover:bg-slate-200 border border-slate-200 shadow-sm disabled:opacity-30"
                                                 onClick={decrementPeople}
-                                                disabled={formData.numberOfPeople <= calculateMinResources(formData.officeSurface).people}
+                                                disabled={formData.numberOfPeople <= calculateMinResources(formData.surfaceArea).people}
                                             >
-                                                -
+                                                <span className="text-2xl">-</span>
                                             </Button>
-                                            <span className="text-xl font-semibold min-w-[60px] text-center">
+                                            <span className="text-3xl font-extrabold text-[#c5b89a] min-w-[60px] text-center">
                                                 {formData.numberOfPeople}
                                             </span>
                                             <Button
                                                 type="button"
-                                                variant="outline"
+                                                variant="ghost"
                                                 size="icon"
-                                                className="rounded-full"
+                                                className="h-10 w-10 rounded-full bg-slate-100 text-[#c5b89a] hover:bg-slate-200 border border-slate-200 shadow-sm"
                                                 onClick={incrementPeople}
                                             >
-                                                +
+                                                <span className="text-2xl">+</span>
                                             </Button>
                                         </div>
                                     </div>
 
                                     <div>
-                                        <h3 className="text-xl font-bold bg-primary text-white p-3 rounded-lg mb-4">
-                                            Où aura lieu votre ménage ?
-                                        </h3>
-                                        <div className="grid md:grid-cols-2 gap-4 p-4 bg-muted/30 rounded">
-                                            <Input
-                                                placeholder="Ville , Casablanca"
-                                                required
-                                                value={formData.city}
-                                                onChange={(e) => setFormData({ ...formData, city: e.target.value })}
-                                            />
-                                            <Input
-                                                placeholder="Adresse"
-                                                required
-                                                value={formData.neighborhood}
-                                                onChange={(e) => setFormData({ ...formData, neighborhood: e.target.value })}
-                                            />
-                                        </div>
-                                        <div className="mt-4 p-4 bg-muted/20 rounded">
-                                            <Label className="font-semibold">Champs de repère</Label>
-                                            <Textarea
-                                                placeholder="Donnez-nous des repères pour faciliter le travail de ménage"
-                                                required
-                                                value={formData.changeRepereNotes}
-                                                onChange={(e) => setFormData({ ...formData, changeRepereNotes: e.target.value })}
-                                                className="mt-2"
-                                            />
-                                        </div>
-                                    </div>
-
-                                    <div>
-                                        <h3 className="text-xl font-bold bg-primary text-white p-3 rounded-lg mb-4">
+                                        <h3 className="text-xl font-bold bg-[#e2d9c2] text-[#4a4a4a] p-3 rounded-lg text-center mb-4">
                                             Planning pour votre demande
                                         </h3>
                                         <div className="grid md:grid-cols-3 gap-6 p-4 border rounded-xl bg-white shadow-sm">
-                                            {/* Heure fixe */}
                                             <div className="text-center space-y-3">
                                                 <div className="flex items-center justify-center space-x-2">
                                                     <input
                                                         type="radio"
-                                                        id="gm-bureau-fixed"
+                                                        id="fixed"
                                                         name="schedulingType"
                                                         checked={formData.schedulingType === "fixed"}
                                                         onChange={() => setFormData({ ...formData, schedulingType: "fixed" })}
-                                                        className="w-4 h-4 text-[#c7dd54]"
+                                                        className="w-4 h-4 text-[#c5b89a]"
                                                     />
-                                                    <Label htmlFor="gm-bureau-fixed" className="font-bold text-[#c7dd54] text-sm cursor-pointer text-center">Je souhaite une heure fixe</Label>
+                                                    <Label htmlFor="fixed" className="font-bold text-[#c5b89a] text-sm cursor-pointer text-center">Je souhaite une heure fixe</Label>
                                                 </div>
                                                 <div className="flex justify-center">
-                                                    <Input
+                                                    <input
                                                         type="time"
                                                         required
                                                         value={formData.fixedTime}
                                                         onChange={(e) => setFormData({ ...formData, fixedTime: e.target.value })}
                                                         disabled={formData.schedulingType !== "fixed"}
-                                                        className="w-32 text-center text-xl font-bold h-12 border-[#c7dd54]/30"
+                                                        className="w-32 text-center text-xl font-bold h-12 border-[#c5b89a]/30 rounded-md border"
                                                     />
                                                 </div>
                                             </div>
 
-                                            {/* Flexible */}
                                             <div className="text-center space-y-3">
                                                 <div className="flex items-center justify-center space-x-2">
                                                     <input
                                                         type="radio"
-                                                        id="gm-bureau-flexible"
+                                                        id="flexible"
                                                         name="schedulingType"
                                                         checked={formData.schedulingType === "flexible"}
                                                         onChange={() => setFormData({ ...formData, schedulingType: "flexible" })}
-                                                        className="w-4 h-4 text-[#c7dd54]"
+                                                        className="w-4 h-4 text-[#c5b89a]"
                                                     />
-                                                    <Label htmlFor="gm-bureau-flexible" className="font-bold text-[#c7dd54] text-sm cursor-pointer text-center">Je suis flexible</Label>
+                                                    <Label htmlFor="flexible" className="font-bold text-[#c5b89a] text-sm cursor-pointer text-center">Je suis flexible</Label>
                                                 </div>
                                                 <RadioGroup
                                                     value={formData.schedulingTime}
@@ -492,19 +525,18 @@ const GrandMenageBureaux = () => {
                                                     className="space-y-2 text-left inline-block"
                                                 >
                                                     <div className="flex items-center space-x-2">
-                                                        <RadioGroupItem value="morning" id="gm-bureau-morning" />
-                                                        <Label htmlFor="gm-bureau-morning">Le matin</Label>
+                                                        <RadioGroupItem value="morning" id="morning" className="border-[#e2d9c2] text-[#c5b89a]" />
+                                                        <Label htmlFor="morning" className="text-sm font-medium">Le matin</Label>
                                                     </div>
                                                     <div className="flex items-center space-x-2">
-                                                        <RadioGroupItem value="afternoon" id="gm-bureau-afternoon" />
-                                                        <Label htmlFor="gm-bureau-afternoon">L'après midi</Label>
+                                                        <RadioGroupItem value="afternoon" id="afternoon" className="border-[#e2d9c2] text-[#c5b89a]" />
+                                                        <Label htmlFor="afternoon" className="text-sm font-medium">L'après midi</Label>
                                                     </div>
                                                 </RadioGroup>
                                             </div>
 
-                                            {/* Date */}
                                             <div className="text-center space-y-3">
-                                                <div className="font-bold text-[#c7dd54] text-sm">Date</div>
+                                                <div className="font-bold text-[#c5b89a] text-sm">Date</div>
                                                 <Input
                                                     type="date"
                                                     required
@@ -517,43 +549,119 @@ const GrandMenageBureaux = () => {
                                     </div>
 
                                     <div>
-                                        <h3 className="text-xl font-bold bg-primary text-white p-3 rounded-lg mb-4">
-                                            Services optionnels
+                                        <h3 className="text-xl font-bold bg-[#e2d9c2] text-[#4a4a4a] p-3 rounded-lg text-center mb-4">
+                                            Service Optionnels
                                         </h3>
-                                        <div className="flex items-center justify-between p-4 bg-muted/30 rounded">
-                                            <div className="flex items-center gap-3">
-                                                <span className="text-4xl">🧴</span>
-                                                <span className="font-medium">Produits et outils + 90 MAD</span>
+                                        <div className="p-6 border rounded-xl bg-slate-50/50 space-y-6">
+                                            <div className="text-center font-bold text-[#c5b89a] mb-2 uppercase text-xs tracking-wider">
+                                                Produit fournis par l'agence ménage :
                                             </div>
-                                            <Switch
-                                                checked={formData.additionalServices.produitsEtOutils}
-                                                onCheckedChange={(checked) =>
-                                                    setFormData({
-                                                        ...formData,
-                                                        additionalServices: { ...formData.additionalServices, produitsEtOutils: checked }
-                                                    })
-                                                }
+                                            <div className="grid grid-cols-1 md:grid-cols-3 gap-y-2 gap-x-4 max-w-2xl mx-auto mb-6 text-center">
+                                                {[
+                                                    ...PRODUCTS_LIST
+                                                ].map((item) => (
+                                                    <div key={item} className="flex items-center justify-center gap-2">
+                                                        <div className="w-1.5 h-1.5 rounded-full bg-[#c5b89a]" />
+                                                        <span className="text-[11px] font-bold text-slate-600">{item}</span>
+                                                    </div>
+                                                ))}
+                                            </div>
+
+                                            <div className="space-y-4 max-w-lg mx-auto">
+                                                <div className="flex items-center justify-between p-4 bg-white border border-[#e2d9c2]/20 rounded-xl shadow-sm">
+                                                    <div className="flex items-center gap-4">
+                                                        <img
+                                                            src={cleaningProduct.src}
+                                                            alt="Produits"
+                                                            className="w-10 h-10 object-contain"
+                                                        />
+                                                        <div className="flex flex-col">
+                                                            <span className="font-bold text-[#c5b89a] text-sm">Produits : + 90 MAD</span>
+                                                        </div>
+                                                    </div>
+                                                    <Switch
+                                                        checked={formData.additionalServices.produitsEtOutils}
+                                                        onCheckedChange={(checked) =>
+                                                            setFormData({
+                                                                ...formData,
+                                                                additionalServices: { ...formData.additionalServices, produitsEtOutils: checked }
+                                                            })
+                                                        }
+                                                        className="data-[state=checked]:bg-[#c5b89a]"
+                                                    />
+                                                </div>
+
+                                                <div className="flex items-center justify-between p-4 bg-white border border-[#e2d9c2]/20 rounded-xl shadow-sm">
+                                                    <div className="flex items-center gap-3">
+                                                        <div className="w-10 h-10 bg-slate-50 border border-slate-100 rounded-lg flex items-center justify-center overflow-hidden">
+                                                            <img
+                                                                src={cleaningClothsMop.src}
+                                                                alt="Torchons"
+                                                                className="w-full h-full object-cover"
+                                                            />
+                                                        </div>
+                                                        <span className="font-bold text-[#c5b89a] text-sm">Torchons et serpillères : + 40 MAD</span>
+                                                    </div>
+                                                    <Switch
+                                                        checked={formData.additionalServices.torchonsEtSerpierres}
+                                                        onCheckedChange={(checked) =>
+                                                            setFormData({
+                                                                ...formData,
+                                                                additionalServices: { ...formData.additionalServices, torchonsEtSerpierres: checked }
+                                                            })
+                                                        }
+                                                        className="data-[state=checked]:bg-[#c5b89a]"
+                                                    />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div>
+                                        <h3 className="text-xl font-bold bg-[#e2d9c2] text-[#4a4a4a] p-3 rounded-lg mb-4 text-center">
+                                            où aura lieu votre ménage ?
+                                        </h3>
+                                        <div className="grid md:grid-cols-2 gap-4 p-4 border rounded-xl bg-white mb-4 shadow-sm">
+                                            <Input
+                                                placeholder="Ville , Casablanca"
+                                                required
+                                                value={formData.city}
+                                                onChange={(e) => setFormData({ ...formData, city: e.target.value })}
+                                                className="border-slate-300 h-11"
+                                            />
+                                            <Input
+                                                placeholder="Adresse"
+                                                required
+                                                value={formData.neighborhood}
+                                                onChange={(e) => setFormData({ ...formData, neighborhood: e.target.value })}
+                                                className="border-slate-300 h-11"
+                                            />
+                                        </div>
+                                        <div className="p-4 border rounded-xl bg-white shadow-sm">
+                                            <Label className="font-bold text-[#c5b89a] text-xs uppercase mb-2 block">Champs de repère</Label>
+                                            <Textarea
+                                                placeholder="Donnez-nous des repères pour faciliter le travail de ménage"
+                                                required
+                                                value={formData.changeRepereNotes}
+                                                onChange={(e) => setFormData({ ...formData, changeRepereNotes: e.target.value })}
+                                                className="mt-2 border-slate-300 min-h-[100px]"
                                             />
                                         </div>
                                     </div>
 
-                                    <div className="bg-muted/30 rounded-lg p-6">
-                                        <h3 className="text-xl font-bold bg-primary text-white p-3 rounded-lg mb-4 -m-6 mb-4">
-                                            Mes informations
+                                    <div className="bg-white border border-[#e2d9c2]/40 rounded-xl overflow-hidden shadow-sm">
+                                        <h3 className="text-xl font-bold bg-[#e2d9c2] text-[#4a4a4a] p-3 text-center">
+                                            Mes Informations
                                         </h3>
-                                        <div className="grid md:grid-cols-2 gap-4">
-                                            <div>
-                                                <Label>Numéro de téléphone*</Label>
-                                                <div className="space-y-3 mt-1">
+                                        <div className="p-6 grid md:grid-cols-2 gap-6">
+                                            <div className="space-y-2">
+                                                <Label className="font-bold text-[#c5b89a] text-xs uppercase">Numéro de téléphone*</Label>
+                                                <div className="space-y-3">
                                                     <div className="flex gap-2">
                                                         <Input
                                                             value={formData.phonePrefix}
-                                                            onChange={(e) => setFormData(prev => ({
-                                                                ...prev,
-                                                                phonePrefix: e.target.value,
-                                                                whatsappPrefix: prev.useWhatsappForPhone ? e.target.value : prev.whatsappPrefix
-                                                            }))}
-                                                            className="w-24 text-center font-bold text-primary"
+                                                            onChange={(e) => setFormData({ ...formData, phonePrefix: e.target.value })}
+                                                            className="w-24 border-slate-300 font-bold text-[#1c6664] text-center"
                                                             placeholder="+212"
                                                         />
                                                         <Input
@@ -568,7 +676,7 @@ const GrandMenageBureaux = () => {
                                                                 }));
                                                             }}
                                                             required
-                                                            className="flex-1"
+                                                            className="border-slate-300 h-11 flex-1"
                                                         />
                                                     </div>
                                                     <div className="flex items-center space-x-2">
@@ -583,7 +691,7 @@ const GrandMenageBureaux = () => {
                                                                     whatsappPrefix: checked ? prev.phonePrefix : prev.whatsappPrefix
                                                                 }));
                                                             }}
-                                                            className="data-[state=checked]:bg-primary border-primary"
+                                                            className="data-[state=checked]:bg-[#c5b89a] border-[#c5b89a]"
                                                         />
                                                         <label
                                                             htmlFor="useWhatsapp"
@@ -594,13 +702,13 @@ const GrandMenageBureaux = () => {
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div>
-                                                <Label>Numéro whatsapp*</Label>
-                                                <div className="flex gap-2 mt-1">
+                                            <div className="space-y-2">
+                                                <Label className="font-bold text-[#c5b89a] text-xs uppercase">Numéro whatsapp</Label>
+                                                <div className="flex gap-2">
                                                     <Input
                                                         value={formData.whatsappPrefix}
                                                         onChange={(e) => setFormData({ ...formData, whatsappPrefix: e.target.value })}
-                                                        className="w-20 text-center font-bold text-primary"
+                                                        className="w-20 border-slate-300 font-bold text-[#1c6664] text-center"
                                                         placeholder="+212"
                                                         disabled={formData.useWhatsappForPhone}
                                                     />
@@ -608,35 +716,38 @@ const GrandMenageBureaux = () => {
                                                         placeholder="6 12 00 00 00"
                                                         value={formData.whatsappNumber}
                                                         onChange={(e) => setFormData({ ...formData, whatsappNumber: e.target.value })}
+                                                        className="border-slate-300 h-11"
                                                         disabled={formData.useWhatsappForPhone}
                                                     />
                                                 </div>
                                             </div>
-                                            <div>
-                                                <Label>Nom*</Label>
+                                            <div className="space-y-2">
+                                                <Label className="font-bold text-[#c5b89a] text-xs uppercase">Nom*</Label>
                                                 <Input
                                                     value={formData.lastName}
                                                     onChange={(e) => setFormData({ ...formData, lastName: e.target.value })}
                                                     required
-                                                    className="mt-1"
+                                                    className="border-slate-300 h-11"
+                                                    placeholder="Votre nom"
                                                 />
                                             </div>
-                                            <div>
-                                                <Label>Prénom*</Label>
+                                            <div className="space-y-2">
+                                                <Label className="font-bold text-[#c5b89a] text-xs uppercase">Prénom*</Label>
                                                 <Input
                                                     value={formData.firstName}
                                                     onChange={(e) => setFormData({ ...formData, firstName: e.target.value })}
                                                     required
-                                                    className="mt-1"
+                                                    className="border-slate-300 h-11"
+                                                    placeholder="Votre prénom"
                                                 />
                                             </div>
                                         </div>
                                     </div>
 
-                                    <div className="flex justify-center pt-8">
+                                    <div className="flex justify-center">
                                         <Button
                                             type="submit"
-                                            className="bg-primary hover:bg-primary/90 text-white px-8 py-4 text-base font-bold shadow-lg shadow-primary/20 h-auto rounded-full w-full md:w-auto md:min-w-[260px] transition-all hover:scale-105 active:scale-95"
+                                            className="bg-[#f3d299] hover:bg-[#f2ca85] text-slate-800 px-8 py-4 text-base font-bold shadow-lg shadow-[#f3d299]/20 h-auto rounded-full w-full md:w-auto md:min-w-[260px] transition-all hover:scale-105 active:scale-95"
                                         >
                                             Confirmer ma réservation
                                         </Button>
@@ -651,17 +762,17 @@ const GrandMenageBureaux = () => {
             <Footer />
 
             <Dialog open={showConfirmation} onOpenChange={handleCloseConfirmation}>
-                <DialogContent className="sm:max-w-md bg-primary/5 border-primary/20 text-center">
+                <DialogContent className="sm:max-w-md bg-[#fdfaf1] border-[#e2d9c2]/20">
                     <DialogHeader>
-                        <DialogTitle className="text-primary text-2xl font-bold">Confirmation</DialogTitle>
+                        <DialogTitle className="text-[#c5b89a] text-2xl font-bold">Confirmation</DialogTitle>
                         <DialogDescription className="text-slate-700 text-lg mt-4 leading-relaxed">
                             {getConfirmationMessage(`${formData.firstName} ${formData.lastName}`, false)}
                         </DialogDescription>
                     </DialogHeader>
-                    <DialogFooter className="mt-6 flex justify-center sm:justify-center">
+                    <DialogFooter className="mt-6">
                         <Button
                             onClick={() => handleCloseConfirmation(false)}
-                            className="bg-primary hover:bg-primary/90 text-white rounded-full px-8"
+                            className="bg-[#c5b89a] hover:bg-[#c5b89a]/90 text-white rounded-full px-8"
                         >
                             Fermer
                         </Button>
@@ -670,6 +781,4 @@ const GrandMenageBureaux = () => {
             </Dialog>
         </div>
     );
-};
-
-export default GrandMenageBureaux;
+}

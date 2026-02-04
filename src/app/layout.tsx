@@ -18,13 +18,25 @@ const workSans = Work_Sans({
 });
 
 export const metadata: Metadata = {
-    title: "Agence de Ménage - Services de nettoyage professionnels",
-    description: "Services de ménage et nettoyage pour particuliers et entreprises. Professionnalisme et satisfaction garantis.",
+    title: {
+        default: "Agence de Ménage Casablanca | Services de Nettoyage Professionnel",
+        template: "%s | Agence de Ménage",
+    },
+    description: "Services de ménage et nettoyage pour particuliers et entreprises à Casablanca. Professionnalisme et satisfaction garantis.",
     openGraph: {
         title: "Agence de Ménage - Services de nettoyage professionnels",
-        description: "Services de ménage et nettoyage pour particuliers et entreprises.",
+        description: "Services de ménage et nettoyage pour particuliers et entreprises à Casablanca.",
         type: "website",
+        images: [
+            {
+                url: "/og-image.png", // Fallback OG image
+                width: 1200,
+                height: 630,
+                alt: "Agence de Ménage Casablanca",
+            },
+        ],
     },
+    metadataBase: new URL("https://agencemenage.ma"),
 };
 
 export default function RootLayout({

@@ -1,7 +1,7 @@
 import { MetadataRoute } from 'next'
 
 export default function sitemap(): MetadataRoute.Sitemap {
-    const baseUrl = 'https://agencemenage.ma'
+    const baseUrl = 'https://www.agencemenage.ma'
 
     const routes = [
         '',
@@ -15,7 +15,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
         '/services/particulier/menage-fin-chantier',
         '/services/particulier/garde-malade',
         '/services/entreprise/menage-bureaux',
-        '/services/entreprise/grand-menage-bureaux',
         '/services/entreprise/menage-fin-chantier',
         '/services/entreprise/placement',
     ]

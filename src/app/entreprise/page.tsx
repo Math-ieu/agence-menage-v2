@@ -10,8 +10,20 @@ import Footer from "@/components/Footer";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Services de Ménage pour Entreprises - Agence Ménage",
-  description: "Solutions de nettoyage professionnelles pour bureaux et entreprises à Casablanca. Nettoyage régulier, grand ménage et placement de personnel.",
+  title: "Nettoyage pour Entreprises à Casablanca | Agence de Ménage",
+  description: "Solutions de nettoyage sur mesure pour bureaux, locaux commerciaux et chantiers à Casablanca. Expertise et professionnalisme pour votre entreprise.",
+  openGraph: {
+    title: "Nettoyage pour Entreprises à Casablanca | Agence de Ménage",
+    description: "Solutions de nettoyage sur mesure pour bureaux, locaux commerciaux et chantiers à Casablanca.",
+    images: [
+      {
+        url: "/og-entreprise.png",
+        width: 1200,
+        height: 630,
+        alt: "Services Entreprise Agence de Ménage Casablanca",
+      },
+    ],
+  },
 };
 
 const Entreprise = () => {

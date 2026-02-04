@@ -1,28 +1,23 @@
-"use client";
-import Header from "@/components/Header";
-import HeroSection from "@/components/HeroSection";
-import ServicesGrid from "@/components/ServicesGrid";
-import AboutSectionParticulier from "@/components/AboutSectionParliculier";
-import PresentationSection from "@/components/PresentationSection";
-import WhyChooseUs from "@/components/WhyChooseUs";
-import TeamReviews from "@/components/TeamReviews";
-import PartnersSection from "@/components/PartnersSection";
-import Footer from "@/components/Footer";
+import { Metadata } from "next";
+import HomeClient from "./HomeClient";
+
+export const metadata: Metadata = {
+    title: "Agence de Ménage Casablanca | Services de Nettoyage Professionnel",
+    description: "Agence de ménage de référence à Casablanca. Nous offrons des services de nettoyage professionnels pour particuliers et entreprises.",
+    openGraph: {
+        title: "Agence de Ménage Casablanca | Services de Nettoyage Professionnel",
+        description: "Agence de ménage de référence à Casablanca. Nous offrons des services de nettoyage professionnels pour particuliers et entreprises.",
+        images: [
+            {
+                url: "/og-home.png", // I'll assume this image exists or will be created
+                width: 1200,
+                height: 630,
+                alt: "Agence de Ménage Casablanca",
+            },
+        ],
+    },
+};
 
 export default function Home() {
-    return (
-        <div className="min-h-screen flex flex-col">
-            <Header />
-            <main className="flex-1">
-                <HeroSection />
-                <ServicesGrid type="particulier" />
-                <AboutSectionParticulier />
-                <PresentationSection />
-                <WhyChooseUs />
-                <TeamReviews />
-                <PartnersSection />
-                <Footer />
-            </main>
-        </div>
-    );
+    return <HomeClient />;
 }
