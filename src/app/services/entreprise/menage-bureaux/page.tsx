@@ -2,11 +2,11 @@ import { Metadata } from "next";
 import MenageBureauxClient from "./MenageBureauxClient";
 
 export const metadata: Metadata = {
-  title: "Ménage de Bureaux à Casablanca | Nettoyage Professionnel",
-  description: "Service de ménage de bureaux à Casablanca. Nettoyage professionnel et régulier de vos espaces de travail, bureaux et locaux commerciaux pour un environnement sain.",
+  title: "Nettoyage de Bureaux Casablanca | Maintenance & Entretien Locaux",
+  description: "Entretien régulier de vos bureaux et locaux professionnels à Casablanca. Environnement de travail propre et productif pour vos collaborateurs.",
   openGraph: {
-    title: "Ménage de Bureaux à Casablanca | Nettoyage Professionnel",
-    description: "Nettoyage professionnel de vos espaces de travail à Casablanca.",
+    title: "Nettoyage de Bureaux Casablanca | Maintenance & Entretien Locaux",
+    description: "Entretien régulier de vos bureaux et locaux professionnels à Casablanca. Environnement de travail propre et productif pour vos collaborateurs.",
     images: [
       {
         url: "/og-menage-bureaux.png",

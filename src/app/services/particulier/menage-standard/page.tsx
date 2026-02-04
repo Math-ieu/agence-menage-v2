@@ -2,11 +2,11 @@ import { Metadata } from "next";
 import MenageStandardClient from "./MenageStandardClient";
 
 export const metadata: Metadata = {
-  title: "Ménage Standard à Casablanca | Agence de Ménage",
-  description: "Service de ménage standard professionnel à Casablanca. Entretien courant, nettoyage de cuisine, chambres et salles de bain. Qualité et discrétion garanties.",
+  title: "Ménage à Domicile Casablanca | Femme de Ménage Qualifiée",
+  description: "Service de ménage régulier à Casablanca. Profitez d'une maison propre sans effort avec nos femmes de ménage expérimentées et de confiance.",
   openGraph: {
-    title: "Ménage Standard à Casablanca | Agence de Ménage",
-    description: "Entretien courant et ménage professionnel pour votre domicile à Casablanca.",
+    title: "Ménage à Domicile Casablanca | Femme de Ménage Qualifiée",
+    description: "Service de ménage régulier à Casablanca. Profitez d'une maison propre sans effort avec nos femmes de ménage expérimentées et de confiance.",
     images: [
       {
         url: "/og-menage-standard.png",

@@ -2,11 +2,11 @@ import { Metadata } from "next";
 import PlacementClient from "./PlacementClient";
 
 export const metadata: Metadata = {
-    title: "Placement & Gestion de Propreté à Casablanca | Solutions Entreprises",
-    description: "Solutions sur mesure de placement et gestion de propreté à Casablanca pour entreprises. Offres flexibles ou premium pour l'entretien de vos bureaux et locaux.",
+    title: "Placement de Personnel de Maison & Employés Casablanca",
+    description: "Trouvez le personnel idéal pour votre foyer or entreprise à Casablanca. Recrutement rigoureux de profils qualifiés (nanny, chauffeur, ménage).",
     openGraph: {
-        title: "Placement & Gestion de Propreté à Casablanca | Solutions Entreprises",
-        description: "Gestion professionnelle de la propreté pour entreprises à Casablanca.",
+        title: "Placement de Personnel de Maison & Employés Casablanca",
+        description: "Trouvez le personnel idéal pour votre foyer or entreprise à Casablanca. Recrutement rigoureux de profils qualifiés (nanny, chauffeur, ménage).",
         images: [
             {
                 url: "/og-placement.png",

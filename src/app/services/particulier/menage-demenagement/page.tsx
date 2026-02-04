@@ -2,11 +2,11 @@ import { Metadata } from "next";
 import MenageDemenagementClient from "./MenageDemenagementClient";
 
 export const metadata: Metadata = {
-    title: "Ménage après Déménagement à Casablanca | Nettoyage Post-Déménagement",
-    description: "Service de ménage complet après déménagement à Casablanca. Dépoussiérage, désinfection et nettoyage en profondeur pour votre nouveau logement. Rapide et efficace.",
+    title: "Ménage après Déménagement Casablanca | Nettoyage Post-Déménagement",
+    description: "Préparez votre emménagement ou libérez votre ancien logement avec notre service de nettoyage post-déménagement à Casablanca. Propreté garantie.",
     openGraph: {
-        title: "Ménage après Déménagement à Casablanca | Nettoyage Post-Déménagement",
-        description: "Nettoyage en profondeur pour votre nouveau logement à Casablanca.",
+        title: "Ménage après Déménagement Casablanca | Nettoyage Post-Déménagement",
+        description: "Préparez votre emménagement ou libérez votre ancien logement avec notre service de nettoyage post-déménagement à Casablanca. Propreté garantie.",
         images: [
             {
                 url: "/og-menage-demenagement.png",

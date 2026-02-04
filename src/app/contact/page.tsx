@@ -2,11 +2,11 @@ import { Metadata } from "next";
 import ContactClient from "./ContactClient";
 
 export const metadata: Metadata = {
-    title: "Contactez Votre Agence de Ménage à Casablanca",
-    description: "Besoin d'un service de ménage ? Contactez-nous pour un devis gratuit ou pour réserver votre prestation de nettoyage à Casablanca. Nous sommes à votre écoute.",
+    title: "Contactez Votre Agence de Ménage à Casablanca | Devis Gratuit",
+    description: "Besoin d'un service de nettoyage ? Contactez-nous pour un devis gratuit et personnalisé à Casablanca. Équipe réactive et à votre écoute.",
     openGraph: {
-        title: "Contactez Votre Agence de Ménage à Casablanca",
-        description: "Besoin d'un service de ménage ? Contactez-nous pour un devis gratuit ou pour réserver votre prestation de nettoyage à Casablanca.",
+        title: "Contactez Votre Agence de Ménage à Casablanca | Devis Gratuit",
+        description: "Besoin d'un service de nettoyage ? Contactez-nous pour un devis gratuit et personnalisé à Casablanca.",
         images: [
             {
                 url: "/og-contact.png",

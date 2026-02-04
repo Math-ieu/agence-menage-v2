@@ -3,7 +3,7 @@ import EspaceEmployeClient from "./EspaceEmployeClient";
 
 export const metadata: Metadata = {
     title: "Espace Employé | Agence de Ménage Casablanca",
-    description: "Espace réservé aux collaborateurs de l'Agence de Ménage. Accédez à vos informations et plannings. Rejoignez une équipe qui vous accompagne.",
+    description: "Espace dédié aux collaborateurs de l'Agence de Ménage. Accédez à vos outils et informations professionnelles en toute sécurité.",
     openGraph: {
         title: "Espace Employé | Agence de Ménage Casablanca",
         description: "Rejoignez une équipe qui vous accompagne et vous forme. Espace réservé aux collaborateurs.",

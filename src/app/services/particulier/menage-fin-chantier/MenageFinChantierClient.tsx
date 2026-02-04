@@ -1,6 +1,5 @@
 "use client";
-
-import { useState } from "react";
+import { useState, Suspense } from "react";
 import { ChevronDown, ChevronUp } from "lucide-react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
@@ -12,7 +11,7 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
 import serviceChantier from "@/assets/service-fin-chantier-particulier.png";
-import { getConfirmationMessage } from "@/lib/whatsapp";
+import { createWhatsAppLink, formatBookingMessage, DESTINATION_PHONE_NUMBER, getConfirmationMessage } from "@/lib/whatsapp";
 import { sendBookingEmail } from "@/lib/email";
 import "@/styles/sticky-summary.css";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -28,7 +27,7 @@ import {
 const INITIAL_FORM_DATA = {
     propertyType: "studio",
     surfaceArea: 50,
-    city: "Casablanca",
+    city: "",
     neighborhood: "",
     schedulingTime: "morning",
     schedulingHours: "09:00 - 12:00",
@@ -45,7 +44,7 @@ const INITIAL_FORM_DATA = {
     changeRepereNotes: ""
 };
 
-export default function MenageFinChantierClient() {
+const MenageFinChantierContent = () => {
     const [wasValidated, setWasValidated] = useState(false);
     const [showConfirmation, setShowConfirmation] = useState(false);
     const [isSummaryExpanded, setIsSummaryExpanded] = useState(false);
@@ -73,12 +72,14 @@ export default function MenageFinChantierClient() {
                 : `${formData.whatsappPrefix} ${formData.whatsappNumber}`
         };
 
-        try {
-            await sendBookingEmail("Nettoyage Fin de chantier", bookingData, "Sur devis", false);
-            setShowConfirmation(true);
-        } catch (error) {
-            toast.error("Une erreur est survenue lors de l'envoi de votre demande.");
-        }
+        const message = formatBookingMessage("Nettoyage Fin de chantier", bookingData, "Sur devis", false);
+        const whatsappLink = createWhatsAppLink(DESTINATION_PHONE_NUMBER, message);
+
+        // Send email notification (async)
+        sendBookingEmail("Nettoyage Fin de chantier", bookingData, "Sur devis", false).catch(console.error);
+
+        // window.open(whatsappLink, '_blank');
+        setShowConfirmation(true);
     };
 
     const handleCloseConfirmation = (open: boolean) => {
@@ -348,7 +349,7 @@ La prestation comprend : L’évacuation des poussières et résidus de chantier
                 <DialogContent className="sm:max-w-md bg-[#f0f9f0] border-[#c2e5c2]/20">
                     <DialogHeader>
                         <DialogTitle className="text-primary text-2xl font-bold">Confirmation</DialogTitle>
-                        <DialogDescription className="text-slate-700 text-lg mt-4 leading-relaxed whitespace-pre-line">
+                        <DialogDescription className="text-slate-700 text-lg mt-4 leading-relaxed">
                             {getConfirmationMessage(`${formData.firstName} ${formData.lastName}`, true)}
                         </DialogDescription>
                     </DialogHeader>
@@ -363,5 +364,13 @@ La prestation comprend : L’évacuation des poussières et résidus de chantier
                 </DialogContent>
             </Dialog>
         </div>
+    );
+};
+
+export default function MenageFinChantierClient() {
+    return (
+        <Suspense fallback={<div className="min-h-screen flex items-center justify-center font-bold text-2xl text-primary animate-pulse">Chargement...</div>}>
+            <MenageFinChantierContent />
+        </Suspense>
     );
 }
