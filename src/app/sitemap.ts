@@ -16,6 +16,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
         '/services/particulier/garde-malade',
         '/services/entreprise/menage-bureaux',
         '/services/entreprise/menage-fin-chantier',
+        '/services/entreprise/placement',
         '/services/particulier/nettoyage-urgence',
     ]
 

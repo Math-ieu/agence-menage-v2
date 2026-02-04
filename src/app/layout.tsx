@@ -37,6 +37,9 @@ export const metadata: Metadata = {
         ],
     },
     metadataBase: new URL("https://agencemenage.ma"),
+    verification: {
+        google: "XlhIPJ8VqqCVLwwxTxrfm5aLsAt0N4PPgFu7U1apY_0",
+    },
 };
 
 export default function RootLayout({
