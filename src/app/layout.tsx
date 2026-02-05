@@ -27,9 +27,10 @@ export const metadata: Metadata = {
         title: "Agence de Ménage - Services de nettoyage professionnels",
         description: "Services de ménage et nettoyage pour particuliers et entreprises à Casablanca.",
         type: "website",
+        url: "https://agencemenage.ma",
         images: [
             {
-                url: "/og-image.png", // Fallback OG image
+                url: "/og-main.png",
                 width: 1200,
                 height: 630,
                 alt: "Agence de Ménage Casablanca",

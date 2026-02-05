@@ -25,6 +25,7 @@ const Footer = () => {
                 <li><Link href="/services/particulier/menage-airbnb" className="text-primary-foreground hover:text-white transition-colors font-bold text-sm lg:text-base">Ménage Airbnb</Link></li>
                 <li><Link href="/services/particulier/menage-demenagement" className="text-primary-foreground hover:text-white transition-colors font-bold text-sm lg:text-base">Ménage post déménagement</Link></li>
                 <li><Link href="/services/particulier/menage-fin-chantier" className="text-primary-foreground hover:text-white transition-colors font-bold text-sm lg:text-base">Nettoyage Fin de chantier</Link></li>
+                <li><Link href="/services/particulier/nettoyage-urgence" className="text-primary-foreground hover:text-white transition-colors font-bold text-sm lg:text-base">Nettoyage d'urgence</Link></li>
                 <li><Link href="/services/particulier/garde-malade" className="text-primary-foreground hover:text-white transition-colors font-bold text-sm lg:text-base">Auxiliaire de vie / garde malade</Link></li>
               </ul>
             </div>

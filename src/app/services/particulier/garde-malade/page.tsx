@@ -5,11 +5,13 @@ export const metadata: Metadata = {
   title: "Auxiliaire de vie / Garde malade à Casablanca | Accompagnement à Domicile",
   description: "Service d'auxiliaire de vie et garde malade à domicile à Casablanca. Accompagnement professionnel, bienveillant et sécurisé pour personnes âgées ou dépendantes 24h/24.",
   openGraph: {
-    title: "Auxiliaire de vie / Garde malade à Casablanca | Accompagnement à domicile",
-    description: "Accompagnement professionnel et bienveillant à domicile à Casablanca.",
+    title: "Auxiliaire de vie / Garde malade à Casablanca | Accompagnement à Domicile",
+    description: "Service d'auxiliaire de vie et garde malade à domicile à Casablanca. Accompagnement professionnel, bienveillant et sécurisé for personnes âgées ou dépendantes 24h/24.",
+    url: "https://agencemenage.ma/services/particulier/garde-malade",
+    type: "website",
     images: [
       {
-        url: "/og-garde-malade.png",
+        url: "/og-main.png",
         width: 1200,
         height: 630,
         alt: "Garde Malade Agence de Ménage Casablanca",

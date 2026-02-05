@@ -15,6 +15,8 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Services de Nettoyage pour Entreprises à Casablanca | Agence de Ménage",
     description: "Solutions de nettoyage sur mesure pour bureaux, commerces et copropriétés à Casablanca. Nettoyage professionnel pour booster votre image de marque.",
+    url: "https://agencemenage.ma/entreprise",
+    type: "website",
     images: [
       {
         url: "/og-entreprise.png",

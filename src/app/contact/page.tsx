@@ -7,9 +7,11 @@ export const metadata: Metadata = {
     openGraph: {
         title: "Contactez Votre Agence de Ménage à Casablanca | Devis Gratuit",
         description: "Besoin d'un service de nettoyage ? Contactez-nous pour un devis gratuit et personnalisé à Casablanca.",
+        url: "https://agencemenage.ma/contact",
+        type: "website",
         images: [
             {
-                url: "/og-contact.png",
+                url: "/og-main.png",
                 width: 1200,
                 height: 630,
                 alt: "Contactez Agence de Ménage Casablanca",

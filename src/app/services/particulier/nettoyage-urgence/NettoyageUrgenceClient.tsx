@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, Suspense } from "react";
+import Link from "next/link";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import ServiceHeroSection from "@/components/ServiceHeroSection";
@@ -555,6 +556,26 @@ Les interventions d’urgence couvrent exclusivement les cas suivants :
                                     </div>
                                 </div>
                             </form>
+                        </div>
+                    </section>
+
+                    <section className="py-12 bg-slate-50 border-t">
+                        <div className="container max-w-5xl mx-auto px-4 text-center">
+                            <h2 className="text-2xl font-bold text-primary mb-8">Voir d'autres services</h2>
+                            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                                <Link href="/services/particulier/menage-standard" className="bg-white p-6 rounded-xl shadow-sm border hover:shadow-md transition-shadow group">
+                                    <h3 className="font-bold text-lg text-primary group-hover:text-primary/80 mb-2">Ménage Standard</h3>
+                                    <p className="text-sm text-slate-600">Entretien régulier de votre domicile.</p>
+                                </Link>
+                                <Link href="/services/particulier/grand-menage" className="bg-white p-6 rounded-xl shadow-sm border hover:shadow-md transition-shadow group">
+                                    <h3 className="font-bold text-lg text-primary group-hover:text-primary/80 mb-2">Grand Ménage</h3>
+                                    <p className="text-sm text-slate-600">Nettoyage en profondeur pour une hygiène totale.</p>
+                                </Link>
+                                <Link href="/" className="bg-white p-6 rounded-xl shadow-sm border hover:shadow-md transition-shadow group">
+                                    <h3 className="font-bold text-lg text-primary group-hover:text-primary/80 mb-2">Tous nos services</h3>
+                                    <p className="text-sm text-slate-600">Découvrez l'ensemble de nos prestations.</p>
+                                </Link>
+                            </div>
                         </div>
                     </section>
                 </main>

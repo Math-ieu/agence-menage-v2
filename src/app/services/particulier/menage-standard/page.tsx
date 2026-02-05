@@ -7,9 +7,11 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Ménage à Domicile Casablanca | Femme de Ménage Qualifiée",
     description: "Service de ménage régulier à Casablanca. Profitez d'une maison propre sans effort avec nos femmes de ménage expérimentées et de confiance.",
+    url: "https://agencemenage.ma/services/particulier/menage-standard",
+    type: "website",
     images: [
       {
-        url: "/og-menage-standard.png",
+        url: "/og-main.png",
         width: 1200,
         height: 630,
         alt: "Ménage Standard Agence de Ménage Casablanca",

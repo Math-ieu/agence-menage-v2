@@ -7,9 +7,11 @@ export const metadata: Metadata = {
     openGraph: {
         title: "Espace Employé | Agence de Ménage Casablanca",
         description: "Rejoignez une équipe qui vous accompagne et vous forme. Espace réservé aux collaborateurs.",
+        url: "https://agencemenage.ma/espace-employe",
+        type: "website",
         images: [
             {
-                url: "/og-employee.png",
+                url: "/og-main.png",
                 width: 1200,
                 height: 630,
                 alt: "Espace Employé Agence de Ménage",

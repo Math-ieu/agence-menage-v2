@@ -6,10 +6,12 @@ export const metadata: Metadata = {
     description: "Intervention de nettoyage rapide à Casablanca pour situations urgentes : sinistre, inondation ou événements imprévus. Réactivité maximale.",
     openGraph: {
         title: "Nettoyage d'Urgence Casablanca | Intervention Rapide 24/7",
-        description: "Intervention de nettoyage rapide à Casablanca pour situations urgentes : sinistre, inondation ou événements imprévus. Réactivité maximale.",
+        description: "Intervention de nettoyage rapide à Casablanca for situations urgentes : sinistre, inondation ou événements imprévus. Réactivité maximale.",
+        url: "https://agencemenage.ma/services/particulier/nettoyage-urgence",
+        type: "website",
         images: [
             {
-                url: "/og-nettoyage-urgence.png",
+                url: "/og-main.png",
                 width: 1200,
                 height: 630,
                 alt: "Nettoyage d'Urgence Agence de Ménage Casablanca",
