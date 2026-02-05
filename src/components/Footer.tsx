@@ -11,7 +11,7 @@ const Footer = () => {
           <div className="flex flex-col items-start">
             <img src={logoPlaceholder.src} alt="Agence Ménage" className="h-16 w-auto mb-6 brightness-0 invert" />
             <p className="text-primary-foreground font-bold text-lg leading-relaxed max-w-xs">
-              Votre partenaire de confiance pour un espace propre et serein.
+              Premium, tout simplement.
             </p>
           </div>
 
@@ -25,7 +25,6 @@ const Footer = () => {
                 <li><Link href="/services/particulier/menage-airbnb" className="text-primary-foreground hover:text-white transition-colors font-bold text-sm lg:text-base">Ménage Airbnb</Link></li>
                 <li><Link href="/services/particulier/menage-demenagement" className="text-primary-foreground hover:text-white transition-colors font-bold text-sm lg:text-base">Ménage post déménagement</Link></li>
                 <li><Link href="/services/particulier/menage-fin-chantier" className="text-primary-foreground hover:text-white transition-colors font-bold text-sm lg:text-base">Nettoyage Fin de chantier</Link></li>
-                <li><Link href="/services/particulier/nettoyage-urgence" className="text-primary-foreground hover:text-white transition-colors font-bold text-sm lg:text-base">Nettoyage d'urgence</Link></li>
                 <li><Link href="/services/particulier/garde-malade" className="text-primary-foreground hover:text-white transition-colors font-bold text-sm lg:text-base">Auxiliaire de vie / garde malade</Link></li>
               </ul>
             </div>

@@ -17,7 +17,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
         '/services/entreprise/menage-bureaux',
         '/services/entreprise/menage-fin-chantier',
         '/services/entreprise/placement',
-        '/services/particulier/nettoyage-urgence',
     ]
 
     return routes.map((route) => ({
