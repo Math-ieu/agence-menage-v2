@@ -2,10 +2,10 @@ import { Metadata } from "next";
 import PlacementClient from "./PlacementClient";
 
 export const metadata: Metadata = {
-    title: "Placement de Personnel de Maison & Employés Casablanca",
+    title: "Placement personnel de maison Casablanca | Agence",
     description: "Trouvez le personnel idéal pour votre foyer or entreprise à Casablanca. Recrutement rigoureux de profils qualifiés (nanny, chauffeur, ménage).",
     openGraph: {
-        title: "Placement de Personnel de Maison & Employés Casablanca",
+        title: "Placement personnel de maison Casablanca | Agence",
         description: "Trouvez le personnel idéal for votre foyer or entreprise à Casablanca. Recrutement rigoureux de profils qualifiés (nanny, chauffeur, ménage).",
         url: "https://agencemenage.ma/services/entreprise/placement",
         type: "website",

@@ -2,10 +2,10 @@ import { Metadata } from "next";
 import MenageAirbnbClient from "./MenageAirbnbClient";
 
 export const metadata: Metadata = {
-    title: "Ménage Airbnb & Locations Courte Durée Casablanca | Nettoyage Pro",
+    title: "Ménage Airbnb Casablanca | Nettoyage Professionnel",
     description: "Service de ménage spécialisé pour Airbnb et locations saisonnières à Casablanca. Nettoyage complet, changement de linge et accueil impeccable pour vos voyageurs.",
     openGraph: {
-        title: "Ménage Airbnb & Locations Courte Durée Casablanca | Nettoyage Pro",
+        title: "Ménage Airbnb Casablanca | Nettoyage Professionnel",
         description: "Service de ménage spécialisé pour Airbnb et locations saisonnières à Casablanca. Nettoyage complet, changement de linge et accueil impeccable pour vos voyageurs.",
         url: "https://agencemenage.ma/services/particulier/menage-airbnb",
         type: "website",

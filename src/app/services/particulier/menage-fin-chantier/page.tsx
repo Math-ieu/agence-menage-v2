@@ -2,10 +2,10 @@ import { Metadata } from "next";
 import MenageFinChantierClient from "./MenageFinChantierClient";
 
 export const metadata: Metadata = {
-    title: "Nettoyage Fin de Chantier Casablanca | Remise en État après Travaux",
+    title: "Nettoyage Fin de Chantier Casablanca | Remise en État",
     description: "Nettoyage complet après travaux à Casablanca. Élimination de poussière et résidus de chantier pour emménager dans un espace propre et sain.",
     openGraph: {
-        title: "Nettoyage Fin de Chantier Casablanca | Remise en État après Travaux",
+        title: "Nettoyage Fin de Chantier Casablanca | Remise en État",
         description: "Nettoyage complet après travaux à Casablanca. Élimination de poussière et résidus de chantier pour emménager dans un espace propre et sain.",
         url: "https://agencemenage.ma/services/particulier/menage-fin-chantier",
         type: "website",
