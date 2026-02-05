@@ -7,7 +7,7 @@ export const metadata: Metadata = {
     openGraph: {
         title: "Nettoyage Fin de Chantier Entreprise Casablanca | Pro",
         description: "Service de nettoyage après construction for professionnels à Casablanca. Livraison de locaux impeccables et prêts à l'exploitation.",
-        url: "https://agencemenage.ma/services/entreprise/menage-fin-chantier",
+        url: "https://www.agencemenage.ma/services/entreprise/menage-fin-chantier",
         type: "website",
         images: [
             {

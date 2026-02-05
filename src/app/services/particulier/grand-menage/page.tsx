@@ -7,7 +7,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Grand Ménage Casablanca | Nettoyage en Profondeur",
     description: "Offrez à votre intérieur un nettoyage intégral à Casablanca. Grand ménage approfondi de chaque pièce for une hygiène irréprochable.",
-    url: "https://agencemenage.ma/services/particulier/grand-menage",
+    url: "https://www.agencemenage.ma/services/particulier/grand-menage",
     type: "website",
     images: [
       {

@@ -7,7 +7,7 @@ export const metadata: Metadata = {
     openGraph: {
         title: "Placement personnel de maison Casablanca | Agence",
         description: "Trouvez le personnel idéal for votre foyer or entreprise à Casablanca. Recrutement rigoureux de profils qualifiés (nanny, chauffeur, ménage).",
-        url: "https://agencemenage.ma/services/entreprise/placement",
+        url: "https://www.agencemenage.ma/services/entreprise/placement",
         type: "website",
         images: [
             {

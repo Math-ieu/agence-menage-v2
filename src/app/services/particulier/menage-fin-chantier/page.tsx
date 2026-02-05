@@ -7,7 +7,7 @@ export const metadata: Metadata = {
     openGraph: {
         title: "Nettoyage Fin de Chantier Casablanca | Remise en État",
         description: "Nettoyage complet après travaux à Casablanca. Élimination de poussière et résidus de chantier pour emménager dans un espace propre et sain.",
-        url: "https://agencemenage.ma/services/particulier/menage-fin-chantier",
+        url: "https://www.agencemenage.ma/services/particulier/menage-fin-chantier",
         type: "website",
         images: [
             {

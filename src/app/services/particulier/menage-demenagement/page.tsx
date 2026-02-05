@@ -7,7 +7,7 @@ export const metadata: Metadata = {
     openGraph: {
         title: "Ménage Post-Déménagement Casablanca | Nettoyage Pro",
         description: "Préparez votre emménagement ou libérez votre ancien logement avec notre service de nettoyage post-déménagement à Casablanca. Propreté garantie.",
-        url: "https://agencemenage.ma/services/particulier/menage-demenagement",
+        url: "https://www.agencemenage.ma/services/particulier/menage-demenagement",
         type: "website",
         images: [
             {

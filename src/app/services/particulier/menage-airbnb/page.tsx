@@ -3,11 +3,11 @@ import MenageAirbnbClient from "./MenageAirbnbClient";
 
 export const metadata: Metadata = {
     title: "Ménage Airbnb Casablanca | Nettoyage Professionnel",
-    description: "Service de ménage spécialisé pour Airbnb et locations saisonnières à Casablanca. Nettoyage complet, changement de linge et accueil impeccable pour vos voyageurs.",
+    description: "Ménage spécialisé pour Airbnb et locations à Casablanca. Nettoyage complet, linge et accueil impeccable pour garantir la satisfaction de vos voyageurs.",
     openGraph: {
         title: "Ménage Airbnb Casablanca | Nettoyage Professionnel",
-        description: "Service de ménage spécialisé pour Airbnb et locations saisonnières à Casablanca. Nettoyage complet, changement de linge et accueil impeccable pour vos voyageurs.",
-        url: "https://agencemenage.ma/services/particulier/menage-airbnb",
+        description: "Ménage spécialisé pour Airbnb et locations à Casablanca. Nettoyage complet, linge et accueil impeccable pour garantir la satisfaction de vos voyageurs.",
+        url: "https://www.agencemenage.ma/services/particulier/menage-airbnb",
         type: "website",
         images: [
             {

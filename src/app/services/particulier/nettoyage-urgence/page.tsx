@@ -7,7 +7,7 @@ export const metadata: Metadata = {
     openGraph: {
         title: "Nettoyage d'Urgence Casablanca | Intervention Rapide 24/7",
         description: "Intervention de nettoyage rapide à Casablanca for situations urgentes : sinistre, inondation ou événements imprévus. Réactivité maximale.",
-        url: "https://agencemenage.ma/services/particulier/nettoyage-urgence",
+        url: "https://www.agencemenage.ma/services/particulier/nettoyage-urgence",
         type: "website",
         images: [
             {

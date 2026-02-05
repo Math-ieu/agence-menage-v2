@@ -7,7 +7,7 @@ export const metadata: Metadata = {
     openGraph: {
         title: "Agence de Ménage Casablanca | Nettoyage Pro & Fiable",
         description: "Découvrez notre agence de ménage à Casablanca. Services de nettoyage professionnels pour particuliers et entreprises : femme de ménage, grand ménage, et plus.",
-        url: "https://agencemenage.ma",
+        url: "https://www.agencemenage.ma",
         type: "website",
         images: [
             {

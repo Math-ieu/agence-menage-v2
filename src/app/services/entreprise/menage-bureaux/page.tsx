@@ -7,7 +7,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Nettoyage de Bureaux Casablanca | Service Propreté",
     description: "Entretien régulier de vos bureaux et locaux professionnels à Casablanca. Environnement de travail propre et productif for vos collaborateurs.",
-    url: "https://agencemenage.ma/services/entreprise/menage-bureaux",
+    url: "https://www.agencemenage.ma/services/entreprise/menage-bureaux",
     type: "website",
     images: [
       {
