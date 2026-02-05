@@ -42,10 +42,7 @@ const HeroSection = () => {
         {/* Toggle centré en bas */}
         <div className="mt-auto flex justify-center animate-fade-in" style={{ animationDelay: "0.2s" }}>
           <div className="flex flex-col items-center">
-
-            <p className="text-primary font-bold text-xl md:text-2xl mb-4 bg-white rounded-lg px-4 py-2 inline-block shadow-md text-center">
-              Zone de couverture actuelle : Grand Casablanca
-            </p>
+              <h1 className="text-primary font-bold text-xl md:text-2xl mb-4 bg-white rounded-lg px-4 py-2 inline-block shadow-md text-center">Zone de couverture actuelle : Grand Casablanca</h1>
             <div className="inline-flex rounded-full overflow-hidden bg-background/95 p-1 shadow-xl">
               <Link href="/">
                 <button
@@ -70,7 +67,7 @@ const HeroSection = () => {
             </div>
 
             <div className="mt-6 md:mt-8 animate-fade-in" style={{ animationDelay: "0.4s" }}>
-              <Link href={`/services/particulier/nettoyage-urgence${isEntreprise ? '?type=entreprise' : ''}`}>
+              <Link href={`/services/particulier/nettoyage-urgence`}>
                 <button
                   className="bg-gradient-to-r from-[#149AFE] via-[#0047AB] to-[#001529] hover:brightness-110 text-white px-10 py-3 rounded-full font-bold text-lg md:text-xl shadow-[0_0_20px_rgba(20,154,254,0.3)] animate-blink transition-all hover:scale-105 active:scale-95 flex items-center gap-2 text-center"
                 >
