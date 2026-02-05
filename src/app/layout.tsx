@@ -20,7 +20,7 @@ const workSans = Work_Sans({
 export const metadata: Metadata = {
     title: {
         default: "Agence de Ménage Casablanca | Nettoyage Professionnel & Fiable",
-        template: "%s | Agence de Ménage Casablanca",
+        template: "%s",
     },
     description: "Services de ménage et nettoyage pour particuliers et entreprises à Casablanca. Professionnalisme, discrétion et satisfaction garantis.",
     openGraph: {
