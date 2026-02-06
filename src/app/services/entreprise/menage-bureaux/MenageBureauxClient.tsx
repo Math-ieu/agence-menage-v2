@@ -17,6 +17,7 @@ import serviceBureaux from "@/assets/service-menage-bureaux.png";
 import { getConfirmationMessage } from "@/lib/whatsapp";
 import { sendBookingEmail } from "@/lib/email";
 import "@/styles/sticky-summary.css";
+import { FREQUENCES } from "@/app/frequences";
 import { Checkbox } from "@/components/ui/checkbox";
 import {
     Dialog,
@@ -113,15 +114,17 @@ export default function MenageBureauxClient() {
 
     if (formData.frequency === "subscription") {
         const visitsMap: Record<string, number> = {
-            "4foisSemaine": 4,
-            "2foisMois": 0.5,
-            "1foisSemaine": 1,
-            "5foisSemaine": 5,
-            "6foisSemaine": 6,
-            "7foisSemaine": 7,
-            "3foisSemaine": 3,
-            "1semaine2": 0.5,
-            "1foisMois": 0.25
+           "1foisParSemaine": 1,
+            "2foisParSemaine": 2,
+            "3foisParSemaine": 3,
+            "4foisParSemaine": 4,
+            "5foisParSemaine": 5,
+            "6foisParSemaine": 6,
+            "7foisParSemaine": 7,
+            "3foisParMois": 3 / 4,
+            "2foisParMois": 0.5,
+            "1foisParMois": 0.25,
+            "4foisParMois": 1,
         };
         const visitsPerWeek = visitsMap[formData.subFrequency] || 1;
         const subtotalMonthly = perVisitTotal * visitsPerWeek * 4;
@@ -169,17 +172,7 @@ export default function MenageBureauxClient() {
         }
     };
 
-    const frequencies = [
-        { value: "4foisSemaine", label: "4 fois par semaine" },
-        { value: "2foisMois", label: "2 fois par mois" },
-        { value: "1foisSemaine", label: "Une fois par semaine" },
-        { value: "5foisSemaine", label: "5 fois par semaine" },
-        { value: "6foisSemaine", label: "6 fois par semaine" },
-        { value: "7foisSemaine", label: "7 fois par semaine" },
-        { value: "3foisSemaine", label: "3 fois par semaine" },
-        { value: "1semaine2", label: "Une semaine sur deux" },
-        { value: "1foisMois", label: "1 fois par mois" }
-    ];
+    const frequencies = FREQUENCES;
 
     const getFrequencyLabel = (value: string, subValue: string) => {
         if (value === "oneshot") return "Une fois";

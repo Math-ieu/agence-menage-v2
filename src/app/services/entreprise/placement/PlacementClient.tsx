@@ -17,6 +17,7 @@ import { sendBookingEmail } from "@/lib/email";
 import { Checkbox } from "@/components/ui/checkbox";
 import serviceMenagePonctuel from "@/assets/service-placement-gestion.png";
 import "@/styles/sticky-summary.css";
+import { FREQUENCES } from "@/app/frequences";
 import {
     Dialog,
     DialogContent,
@@ -48,17 +49,7 @@ const INITIAL_FORM_DATA = {
     changeRepereNotes: ""
 };
 
-const frequencies = [
-    { value: "4foisSemaine", label: "4 fois par semaine" },
-    { value: "2foisMois", label: "2 fois par mois" },
-    { value: "1foisSemaine", label: "Une fois par semaine" },
-    { value: "5foisSemaine", label: "5 fois par semaine" },
-    { value: "6foisSemaine", label: "6 fois par semaine" },
-    { value: "7foisSemaine", label: "7 fois par semaine" },
-    { value: "3foisSemaine", label: "3 fois par semaine" },
-    { value: "1semaine2", label: "Une semaine sur deux" },
-    { value: "1foisMois", label: "1 fois par mois" }
-];
+const frequencies = FREQUENCES;
 
 const getFrequencyLabel = (value: string, subValue: string) => {
     if (value === "oneshot") return "Une fois";

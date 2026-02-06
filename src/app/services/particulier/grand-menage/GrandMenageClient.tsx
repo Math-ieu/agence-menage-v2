@@ -28,6 +28,7 @@ import {
     DialogDescription,
     DialogFooter,
 } from "@/components/ui/dialog";
+import { FREQUENCES } from "@/app/frequences";
 
 const PRODUCTS_LIST = [
     "Nettoyant multi-usage",
@@ -78,15 +79,18 @@ export default function GrandMenageClient() {
 
     if (formData.frequency === "subscription") {
         const visitsMap: Record<string, number> = {
-            "4foisSemaine": 4,
-            "1foisSemaine": 1,
-            "2foisMois": 0.5,
-            "1foisMois": 0.25,
-            "5foisSemaine": 5,
-            "6foisSemaine": 6,
-            "7foisSemaine": 7,
-            "3foisSemaine": 3,
-            "1semaine2": 0.5,
+            "1foisParSemaine": 1,
+            "2foisParSemaine": 2,
+            "3foisParSemaine": 3,
+            "4foisParSemaine": 4,
+            "5foisParSemaine": 5,
+            "6foisParSemaine": 6,
+            "7foisParSemaine": 7,
+            "3foisParMois": 3 / 4,
+            "2foisParMois": 0.5,
+            "1foisParMois": 0.25,
+            "4foisParMois": 1,
+
         };
         visitsPerWeek = visitsMap[formData.subFrequency] || 1;
         discountRate = 0.1;
@@ -177,17 +181,7 @@ export default function GrandMenageClient() {
         }));
     };
 
-    const frequencies = [
-        { value: "4foisSemaine", label: "4 fois par semaine" },
-        { value: "1foisSemaine", label: "Une fois par semaine" },
-        { value: "2foisMois", label: "2 fois par mois" },
-        { value: "1foisMois", label: "Une fois par mois - Recommandé" },
-        { value: "5foisSemaine", label: "5 fois par semaine" },
-        { value: "6foisSemaine", label: "6 fois par semaine" },
-        { value: "7foisSemaine", label: "7 fois par semaine" },
-        { value: "3foisSemaine", label: "3 fois par semaine" },
-        { value: "1semaine2", label: "Une semaine sur deux" },
-    ];
+    const frequencies = FREQUENCES;
 
     const getFrequencyLabel = (value: string, subValue: string) => {
         if (value === "oneshot") return "Une fois";

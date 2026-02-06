@@ -18,6 +18,7 @@ import cleaningProduct from "@/assets/cleaning-product.png";
 import { createWhatsAppLink, formatBookingMessage, DESTINATION_PHONE_NUMBER, getConfirmationMessage } from "@/lib/whatsapp";
 import { sendBookingEmail } from "@/lib/email";
 import "@/styles/sticky-summary.css";
+import { FREQUENCES } from "@/app/frequences";
 import {
     Dialog,
     DialogContent,
@@ -90,16 +91,17 @@ export default function MenageStandardClient() {
 
     if (formData.frequency === "subscription") {
         const visitsMap: Record<string, number> = {
-            "1fois": 1,
-            "2fois": 2,
-            "3fois": 3,
-            "4fois": 4,
-            "5fois": 5,
-            "6fois": 6,
-            "7fois": 7,
-            "3foisMois": 3 / 4,
-            "1semaine2": 0.5,
-            "1foisMois": 0.25
+            "1foisParSemaine": 1,
+            "2foisParSemaine": 2,
+            "3foisParSemaine": 3,
+            "4foisParSemaine": 4,
+            "5foisParSemaine": 5,
+            "6foisParSemaine": 6,
+            "7foisParSemaine": 7,
+            "3foisParMois": 3 / 4,
+            "2foisParMois": 0.5,
+            "1foisParMois": 0.25,
+            "4foisParMois": 1,
         };
         visitsPerWeek = visitsMap[formData.subFrequency] || 1;
         discountRate = 0.1;
@@ -120,18 +122,7 @@ export default function MenageStandardClient() {
 
     const totalPrice = calculateTotal();
 
-    const frequencies = [
-        { value: "1fois", label: "Une fois par semaine" },
-        { value: "2fois", label: "2 fois par semaine" },
-        { value: "3fois", label: "3 fois par semaine - Recommandé" },
-        { value: "4fois", label: "4 fois par semaine" },
-        { value: "5fois", label: "5 fois par semaine" },
-        { value: "6fois", label: "6 fois par semaine" },
-        { value: "7fois", label: "7 fois par semaine" },
-        { value: "3foisMois", label: "3 fois par mois" },
-        { value: "1semaine2", label: "Une semaine sur deux" },
-        { value: "1foisMois", label: "1 fois par mois" }
-    ];
+    const frequencies = FREQUENCES;
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();

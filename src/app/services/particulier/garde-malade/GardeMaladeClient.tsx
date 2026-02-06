@@ -14,6 +14,7 @@ import { toast } from "sonner";
 import { getConfirmationMessage } from "@/lib/whatsapp";
 import { sendBookingEmail } from "@/lib/email";
 import "@/styles/sticky-summary.css";
+import { FREQUENCES } from "@/app/frequences";
 import { Checkbox } from "@/components/ui/checkbox";
 import {
     Dialog,
@@ -121,17 +122,7 @@ export default function GardeMaladeClient() {
     const incrementDays = () => setFormData({ ...formData, numberOfDays: formData.numberOfDays + 1 });
     const decrementDays = () => setFormData({ ...formData, numberOfDays: Math.max(1, formData.numberOfDays - 1) });
 
-    const frequencies = [
-        { value: "4foisSemaine", label: "4 fois par semaine" },
-        { value: "3foisSemaine", label: "3 fois par semaine" },
-        { value: "1foisSemaine", label: "Une fois par semaine" },
-        { value: "5foisSemaine", label: "5 fois par semaine" },
-        { value: "6foisSemaine", label: "6 fois par semaine" },
-        { value: "7foisSemaine", label: "7 fois par semaine" },
-        { value: "2foisSemaine", label: "2 fois par semaine" },
-        { value: "1semaine2", label: "Une semaine sur deux" },
-        { value: "1foisMois", label: "1 fois par mois" }
-    ];
+    const frequencies = FREQUENCES;
 
     const getFrequencyLabel = (value: string, subValue: string) => {
         if (value === "oneshot") return "Une fois - Tranche de 24h";
