@@ -10,11 +10,11 @@ import Footer from "@/components/Footer";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Nettoyage Entreprise Casablanca | Agence de Ménage",
-  description: "Solutions de nettoyage sur mesure pour bureaux, commerces et copropriétés à Casablanca. Nettoyage professionnel pour booster votre image de marque.",
+  title: "Nettoyage Entreprise Casablanca | Agence Ménage Pro",
+  description: "Solutions de nettoyage entreprise à Casablanca. Notre agence de ménage propose des services professionnels de femmes de ménage pour bureaux et commerces.",
   openGraph: {
-    title: "Nettoyage Entreprise Casablanca | Agence de Ménage",
-    description: "Solutions de nettoyage sur mesure pour bureaux, commerces et copropriétés à Casablanca. Nettoyage professionnel pour booster votre image de marque.",
+    title: "Nettoyage Entreprise Casablanca | Agence Ménage Pro",
+    description: "Solutions de nettoyage entreprise à Casablanca. Notre agence de ménage propose des services professionnels de femmes de ménage pour bureaux et commerces.",
     url: "https://www.agencemenage.ma/entreprise",
     type: "website",
     images: [

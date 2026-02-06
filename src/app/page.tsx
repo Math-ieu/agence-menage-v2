@@ -2,11 +2,11 @@ import { Metadata } from "next";
 import HomeClient from "./HomeClient";
 
 export const metadata: Metadata = {
-    title: "Agence de Ménage Casablanca | Nettoyage Pro & Fiable",
-    description: "Découvrez notre agence de ménage à Casablanca. Services de nettoyage professionnels pour particuliers et entreprises : femme de ménage, grand ménage, et plus.",
+    title: "Agence Ménage Casablanca | Femme de Ménage & Nettoyage",
+    description: "Agence de ménage à Casablanca. Nous proposons des services de femmes de ménage qualifiées pour particuliers et entreprises. Agence ménage premium et fiable.",
     openGraph: {
-        title: "Agence de Ménage Casablanca | Nettoyage Pro & Fiable",
-        description: "Découvrez notre agence de ménage à Casablanca. Services de nettoyage professionnels pour particuliers et entreprises : femme de ménage, grand ménage, et plus.",
+        title: "Agence Ménage Casablanca | Femme de Ménage & Nettoyage",
+        description: "Agence de ménage à Casablanca. Nous proposons des services de femmes de ménage qualifiées pour particuliers et entreprises. Agence ménage premium et fiable.",
         url: "https://www.agencemenage.ma",
         type: "website",
         images: [

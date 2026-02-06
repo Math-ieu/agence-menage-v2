@@ -2,11 +2,11 @@ import { Metadata } from "next";
 import GrandMenageClient from "./GrandMenageClient";
 
 export const metadata: Metadata = {
-  title: "Grand Ménage Casablanca | Nettoyage en Profondeur",
-  description: "Offrez à votre intérieur un nettoyage intégral à Casablanca. Grand ménage approfondi de chaque pièce pour une hygiène irréprochable.",
+  title: "Grand Ménage Casablanca | Agence de Ménage & Nettoyage",
+  description: "Grand ménage à Casablanca par une agence de ménage experte. Nettoyage en profondeur par nos femmes de ménage pour une hygiène irréprochable de votre foyer.",
   openGraph: {
-    title: "Grand Ménage Casablanca | Nettoyage en Profondeur",
-    description: "Offrez à votre intérieur un nettoyage intégral à Casablanca. Grand ménage approfondi de chaque pièce pour une hygiène irréprochable.",
+    title: "Grand Ménage Casablanca | Agence de Ménage & Nettoyage",
+    description: "Grand ménage à Casablanca par une agence de ménage experte. Nettoyage en profondeur par nos femmes de ménage pour une hygiène irréprochable de votre foyer.",
     url: "https://www.agencemenage.ma/services/particulier/grand-menage",
     type: "website",
     images: [
