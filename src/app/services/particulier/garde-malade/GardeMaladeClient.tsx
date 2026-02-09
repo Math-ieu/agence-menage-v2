@@ -4,6 +4,7 @@ import React, { useState, useRef } from "react";
 import { ChevronDown, ChevronUp, ArrowLeft } from "lucide-react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import ServiceHeroSection from "@/components/ServiceHeroSection";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -135,8 +136,34 @@ export default function GardeMaladeClient() {
             <Header />
 
             <main className="flex-1 flex flex-col" style={{ "--primary": "28 59% 45%" } as React.CSSProperties}>
-                {/* Landing Sections */}
-                <section className="bg-[#f0e4d4] py-16">
+                <ServiceHeroSection
+                    title="Auxiliaires de vie / Garde malade"
+                    description={`Le service d'auxiliaires de vie / garde malade à domicile à Casablanca, proposé par Agence Ménage, met à votre disposition des auxiliaires de vie à domicile expérimentées pour accompagner les patients dans leur quotidien, avec sérieux, discrétion et bienveillance.
+
+Nos auxiliaires de vie assurent une présence 24h/24, 7j/7, selon les besoins en journée, la nuit, ou en continu. Elles interviennent auprès des personnes âgées ou en situation de dépendance.`}
+                    image={gardeMaladeHero.src}
+                    primaryColor="#b46d2f"
+                    faqs={[
+                        {
+                            question: "Quelle est la formation de vos auxiliaires de vie ?",
+                            answer: "Nos intervenants sont sélectionnés pour leur expérience et formés aux gestes de premiers secours ainsi qu'à l'accompagnement des personnes dépendantes."
+                        },
+                        {
+                            question: "Proposez-vous une présence de nuit ?",
+                            answer: "Oui, nous proposons des gardes de nuit ainsi que des forfaits de présence 24h/24 pour assurer une surveillance constante et rassurer la famille."
+                        },
+                        {
+                            question: "L'auxiliaire de vie peut-elle préparer les repas ?",
+                            answer: "Absolument. La préparation des repas adaptés au régime alimentaire et l'aide à la prise des repas font partie des missions principales."
+                        },
+                        {
+                            question: "Comment se passe le remplacement en cas d'absence ?",
+                            answer: "Nous garantissons la continuité du service. En cas d'imprévu ou de congé, nous mobilisons immédiatement une remplaçante qualifiée déjà briefée sur le dossier."
+                        }
+                    ]}
+                />
+
+                <section className="bg-[#f0e4d4] py-8">
                     <div className="container px-6 relative">
                         <button
                             onClick={() => window.history.back()}
@@ -145,35 +172,6 @@ export default function GardeMaladeClient() {
                         >
                             <ArrowLeft size={24} />
                         </button>
-                        <div className="grid md:grid-cols-2 gap-12 items-center mb-16">
-                            <div className="space-y-8 text-left">
-                                <div className="space-y-4">
-                                    <h1 className="text-3xl md:text-4xl lg:text-5xl font-black text-[#b46d2f] leading-[1.1]">
-                                        Auxiliaires de vie /<br />Garde malade
-                                    </h1>
-                                    <p className="text-xl md:text-2xl font-bold text-[#4a4a4a]">
-                                        à domicile à Casablanca – Service 24h/24
-                                    </p>
-                                </div>
-
-                                <div className="bg-white/60 backdrop-blur-sm p-8 rounded-[2rem] shadow-xl border border-[#e2d9c2] text-lg text-[#4a4a4a] leading-relaxed font-bold">
-                                    Le service d'auxiliaires de vie / garde malade à domicile à Casablanca, proposé par Agence Ménage, met à votre disposition des auxiliaires de vie à domicile expérimentées pour accompagner les patients dans leur quotidien, avec sérieux, discrétion et bienveillance.
-                                </div>
-
-                                <div className="flex justify-start">
-                                    <Button
-                                        onClick={scrollToForm}
-                                        className="bg-[#b46d2f] hover:bg-[#9a5d28] text-white px-8 py-4 text-base font-bold rounded-full shadow-lg shadow-[#b46d2f]/20 transition-all hover:scale-105 active:scale-95 h-auto text-center"
-                                    >
-                                        Contactez-nous
-                                    </Button>
-                                </div>
-                            </div>
-
-                            <div className="rounded-[2.5rem] overflow-hidden shadow-2xl border-4 border-white h-[400px] md:h-[500px]">
-                                <img src={gardeMaladeHero.src} alt="Garde Malade Hero" className="w-full h-full object-cover" />
-                            </div>
-                        </div>
 
                         <div className="grid md:grid-cols-2 gap-16 items-center text-left py-12">
                             <div className="space-y-6">

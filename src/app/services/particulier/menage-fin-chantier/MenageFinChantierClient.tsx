@@ -101,7 +101,25 @@ const MenageFinChantierContent = () => {
 
 La prestation comprend : L’évacuation des poussières et résidus de chantier, Le nettoyage des sols (balayage, aspiration et lavage),Le dépoussiérage et le nettoyage des surfaces, murs et plinthes accessibles, Le nettoyage des vitres accessibles et encadrements, La désinfection des sanitaires, Le nettoyage de la cuisine, L’entretien des escaliers, balcons, terrasses et autres espaces accessibles.`}
                     image={serviceChantier.src}
-                    primaryColor="#c2e5c2"
+                    primaryColor="#88d89d"
+                    faqs={[
+                        {
+                            question: "Qu'est-ce qui est inclus dans le nettoyage fin de chantier ?",
+                            answer: "Nous procédons au retrait de la poussière fine partout, au grattage des traces de peinture/ciment sur les sols et vitres, au dégraissage complet et à la désinfection."
+                        },
+                        {
+                            question: "À quel moment faut-il programmer l'intervention ?",
+                            answer: "Il est préférable d'intervenir une fois que tous les corps de métier ont terminé leurs travaux et quitté les lieux, pour éviter que de la nouvelle poussière ne se dépose."
+                        },
+                        {
+                            question: "Gérez-vous l'évacuation des gravats ?",
+                            answer: "Notre service se concentre sur le nettoyage. L'évacuation des gros gravats de chantier doit être effectuée au préalable par l'entreprise de travaux."
+                        },
+                        {
+                            question: "Le matériel spécifique est-il prévu ?",
+                            answer: "Oui, nous utilisons des aspirateurs industriels haute puissance et des monobrosses si nécessaire pour retirer les résidus tenaces sur les sols."
+                        }
+                    ]}
                 />
 
                 <main className="flex-1 bg-background py-12">

@@ -132,6 +132,24 @@ Les interventions d’urgence couvrent exclusivement les cas suivants :
                         description={serviceDescription}
                         image={serviceUrgence.src}
                         primaryColor={SERVICE_COLOR}
+                        faqs={[
+                            {
+                                question: "En combien de temps pouvez-vous intervenir ?",
+                                answer: "Nous nous efforçons de dépêcher une équipe dans les 2 à 4 heures suivant votre demande pour les situations les plus critiques à Casablanca."
+                            },
+                            {
+                                question: "Intervenez-vous la nuit ou les week-ends ?",
+                                answer: "Oui, notre service d'urgence est disponible 24h/24 et 7j/7. Nous comprenons qu'un sinistre n'attend pas les heures de bureau."
+                            },
+                            {
+                                question: "Quels types d'urgences traitez-vous ?",
+                                answer: "Nous intervenons principalement après des inondations, incendies, ou pour des remises en état express avant des événements imprévus."
+                            },
+                            {
+                                question: "Le matériel est-il adapté aux sinistres ?",
+                                answer: "Absolûtement. Nous disposons d'aspirateurs à eau haute performance, de déshumidificateurs et de produits professionnels de décontamination."
+                            }
+                        ]}
                     />
 
                     <section id="booking-form" className="py-12 bg-background">

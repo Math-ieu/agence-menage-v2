@@ -128,6 +128,24 @@ export default function PlacementClient() {
                     description="Des solutions sur mesure pour l'entretien de vos locaux. Choisissez entre notre offre flexible pour garder le contrôle ou notre offre premium pour une gestion à 360° sans soucis."
                     image={serviceMenagePonctuel.src}
                     primaryColor="#f1db08"
+                    faqs={[
+                        {
+                            question: "Quel est l'avantage du placement par rapport à l'embauche directe ?",
+                            answer: "Vous vous libérez de toute la gestion RH (contrats, CNSS, mutuelle) et des risques juridiques, tout en garantissant la continuité du service en cas d'absence."
+                        },
+                        {
+                            question: "Comment sélectionnez-vous le personnel placé ?",
+                            answer: "Chaque candidat passe par un recrutement rigoureux : tests de compétences, vérification des références professionnelles et enquête d'intégrité."
+                        },
+                        {
+                            question: "Peut-on demander le remplacement d'un agent s'il ne convient pas ?",
+                            answer: "Absolument. Si le profil ne correspond pas à vos attentes, nous procédons à son remplacement sous 48h sans frais supplémentaires."
+                        },
+                        {
+                            question: "Gérez-vous également les équipements de nettoyage ?",
+                            answer: "Dans notre offre Premium 360, nous fournissons et entretenons tout le matériel professionnel ainsi que les produits éco-responsables nécessaires."
+                        }
+                    ]}
                 />
 
                 <section className="py-16 container px-6">

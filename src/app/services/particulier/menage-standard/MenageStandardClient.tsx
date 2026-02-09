@@ -248,7 +248,25 @@ Il comprend le :
 - Rangement de la vaisselle
 - Vidage et nettoyage de la poubelle`}
                     image={serviceRegulier.src}
-                    primaryColor="#287271"
+                    primaryColor="#1c6664"
+                    faqs={[
+                        {
+                            question: "Quelle est la durée minimale d'une prestation ?",
+                            answer: "La durée minimale pour une session de ménage standard est de 4 heures pour garantir un travail de qualité et une attention aux détails."
+                        },
+                        {
+                            question: "Dois-je fournir les produits de nettoyage ?",
+                            answer: "C'est comme vous préférez ! Vous pouvez fournir vos propres produits ou choisir notre option 'Produits fournis' (+90 MAD) lors de la réservation."
+                        },
+                        {
+                            question: "Est-ce que c'est toujours la même personne qui intervient ?",
+                            answer: "Pour les abonnements réguliers, nous nous efforçons d'envoyer la même intervenante pour assurer une continuité et une parfaite connaissance de votre domicile."
+                        },
+                        {
+                            question: "Quelles sont les zones d'intervention ?",
+                            answer: "Nous intervenons dans tout le grand Casablanca. Si vous avez un doute sur votre quartier, n'hésitez pas à nous contacter."
+                        }
+                    ]}
                 />
 
                 <main className="flex-1 bg-background py-12">

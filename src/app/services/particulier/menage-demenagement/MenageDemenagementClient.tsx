@@ -171,6 +171,24 @@ Produits + matériel + main-d'œuvre inclus.
 Options possibles : vitres extérieures/grandes baies, terrasse.`}
                     image={serviceDemenagement.src}
                     primaryColor="#d1a246"
+                    faqs={[
+                        {
+                            question: "Le matériel et les produits sont-ils inclus ?",
+                            answer: "Oui, notre équipe arrive avec tout le nécessaire : aspirateurs, produits dégraissants, nettoyeurs vapeur et consommables de nettoyage."
+                        },
+                        {
+                            question: "Combien de temps à l'avance dois-je réserver ?",
+                            answer: "Nous recommandons de réserver au moins 48h à 72h à l'avance, particulièrement en fin de mois, période très sollicitée pour les déménagements."
+                        },
+                        {
+                            question: "Le nettoyage de l'électroménager est-il prévu ?",
+                            answer: "Oui, nous nettoyons l'intérieur et l'extérieur du four et du réfrigérateur, à condition qu'ils soient vides au moment de notre intervention."
+                        },
+                        {
+                            question: "Réintervenez-vous en cas de souci lors de l'état des lieux ?",
+                            answer: "Notre objectif est votre satisfaction et la récupération de votre caution. Si le propriétaire émet une réserve sur le nettoyage, nous revenons corriger le tir sans frais."
+                        }
+                    ]}
                 />
 
                 <main className="flex-1 bg-background py-12">

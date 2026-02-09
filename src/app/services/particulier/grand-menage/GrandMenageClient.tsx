@@ -216,7 +216,25 @@ Il comprend le :
 - Organisation du dressing
 - Nettoyage du frigo`}
                     image={serviceGrandMenage.src}
-                    primaryColor="#e2d9c2"
+                    primaryColor="#c5b89a"
+                    faqs={[
+                        {
+                            question: "Quelle est la différence entre un ménage standard et un grand ménage ?",
+                            answer: "Le grand ménage est une prestation plus approfondie. Il inclut des tâches supplémentaires comme le lessivage des murs, le nettoyage intérieur des placards, du réfrigérateur, et des zones souvent négligées (dessous de meubles, etc.)."
+                        },
+                        {
+                            question: "Combien de temps dure un grand ménage ?",
+                            answer: "La durée est calculée selon la superficie de votre logement. Par exemple, nous recommandons un minimum de 6 heures pour un studio afin de garantir un résultat impeccable."
+                        },
+                        {
+                            question: "L'équipement est-il fourni ?",
+                            answer: "Par défaut, non. Cependant, vous pouvez souscrire à l'option 'Produits et outils' (+90 MAD) lors de votre réservation pour que notre équipe apporte tout le nécessaire."
+                        },
+                        {
+                            question: "Dois-je être présent lors de la prestation ?",
+                            answer: "Votre présence n'est pas obligatoire mais fortement conseillée en début de mission pour orienter l'équipe, et en fin de mission pour valider la qualité du travail effectué."
+                        }
+                    ]}
                 />
 
                 <main className="flex-1 bg-background py-12">

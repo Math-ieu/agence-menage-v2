@@ -102,6 +102,24 @@ export default function MenageFinChantierEntrepriseClient() {
 La prestation comprend : L’évacuation des poussières et résidus de chantier, Le nettoyage des sols (balayage, aspiration et lavage),Le dépoussiérage et le nettoyage des surfaces, murs et plinthes accessibles, Le nettoyage des vitres accessibles et encadrements, La désinfection des sanitaires, Le nettoyage de la cuisine, L’entretien des escaliers, balcons, terrasses et autres espaces accessibles.`}
                     image={serviceChantier.src}
                     primaryColor="#88d89d"
+                    faqs={[
+                        {
+                            question: "Proposez-vous le nettoyage de grandes surfaces vitrées ?",
+                            answer: "Oui, nous disposons du matériel nécessaire pour le nettoyage des vitrines, baies vitrées et verrières, même en hauteur."
+                        },
+                        {
+                            question: "Le retrait des gravats est-il inclus ?",
+                            answer: "Nous incluons le retrait des petits débris. Pour les gravats plus volumineux, nous pouvons prévoir une benne en option additionnelle."
+                        },
+                        {
+                            question: "Quels délais pour une intervention de fin de chantier ?",
+                            answer: "Nous recommandons de nous contacter 3 à 5 jours avant la fin prévue des travaux pour bloquer une équipe aux dates souhaitées."
+                        },
+                        {
+                            question: "Effectuez-vous la remise en état des sols spécifiques ?",
+                            answer: "Oui, nous traitons tous types de sols : décapage de carrelage, cristallisation de marbre ou nettoyage vapeur de moquettes si nécessaire."
+                        }
+                    ]}
                 />
 
                 <main className="flex-1 bg-background py-12">

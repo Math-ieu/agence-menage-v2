@@ -114,7 +114,7 @@ export default function MenageBureauxClient() {
 
     if (formData.frequency === "subscription") {
         const visitsMap: Record<string, number> = {
-           "1foisParSemaine": 1,
+            "1foisParSemaine": 1,
             "2foisParSemaine": 2,
             "3foisParSemaine": 3,
             "4foisParSemaine": 4,
@@ -190,6 +190,24 @@ export default function MenageBureauxClient() {
                     description="Nettoyage des espaces de travail afin de garantir un environnement propre, sain et agréable pour les employés et les visiteurs. La prestation comprend : Le dépoussiérage des bureaux, plans de travail et surfaces accessibles, Le nettoyage des sols (balayage, serpière…), Le vidage des poubelles, Le nettoyage des vitres accessibles, L’entretien des espaces communs (salles de réunion, couloirs, cuisine, escaliers), nettoyage des bureaux, chaises, sols, toilettes… ainsi que les balcons, escaliers lorsqu’ils sont accessibles."
                     image={serviceBureaux.src}
                     primaryColor="#c7dd54"
+                    faqs={[
+                        {
+                            question: "Intervenez-vous en dehors des heures de bureau ?",
+                            answer: "Oui, nous pouvons planifier les passages tôt le matin ou en soirée pour ne pas gêner le travail de vos collaborateurs."
+                        },
+                        {
+                            question: "Le personnel est-il formé à la discrétion ?",
+                            answer: "Absolument. Nos agents sont formés au respect de la confidentialité et à la discrétion nécessaire dans un environnement professionnel."
+                        },
+                        {
+                            question: "Fournissez-vous les consommables (savon, papier) ?",
+                            answer: "Nous pouvons intégrer la gestion des stocks et la recharge de vos consommables sanitaires dans notre forfait sur simple demande."
+                        },
+                        {
+                            question: "Comment gérez-vous les clés de nos bureaux ?",
+                            answer: "Nous avons une procédure rigoureuse de gestion des clés. Elles sont tracées et conservées en sécurité dans un coffre-fort au sein de notre agence."
+                        }
+                    ]}
                 />
 
                 <main className="flex-1 bg-background py-12">

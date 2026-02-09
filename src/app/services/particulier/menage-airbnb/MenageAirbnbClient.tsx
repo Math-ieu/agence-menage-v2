@@ -128,7 +128,25 @@ Il comprend le :
 - Rangement de la vaisselle
 - Vidage et nettoyage de la poubelle`}
                     image={serviceAirbnb.src}
-                    primaryColor="#9ed2ce"
+                    primaryColor="#9ccfcf"
+                    faqs={[
+                        {
+                            question: "Proposez-vous le service de blanchisserie ?",
+                            answer: "Oui, nous pouvons intégrer le lavage et le repassage du linge de maison (draps, serviettes) dans notre prestation pour que votre logement soit prêt pour les prochains voyageurs."
+                        },
+                        {
+                            question: "Pouvez-vous gérer les remises de clés ?",
+                            answer: "Notre service principal est axé sur le nettoyage haute performance. Pour la gestion des clés ou le check-in, nous pouvons étudier des solutions sur mesure avec nos partenaires."
+                        },
+                        {
+                            question: "Intervenez-vous le dimanche et les jours fériés ?",
+                            answer: "Absolument. Nous savons que les rotations Airbnb n'attendent pas. Nous proposons des interventions 7j/7 pour assurer la continuité de vos locations."
+                        },
+                        {
+                            question: "Comment garantissez-vous la qualité pour mes voyageurs ?",
+                            answer: "Chaque prestation suit une procédure stricte de désinfection et de mise en place, garantissant un accueil irréprochable et des commentaires positifs sur la propreté."
+                        }
+                    ]}
                 />
 
                 <main className="flex-1 bg-background py-12">
