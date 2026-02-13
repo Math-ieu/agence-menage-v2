@@ -18,6 +18,7 @@ import cleaningProduct from "@/assets/cleaning-product.png";
 import cleaningClothsMop from "@/assets/cleaning-cloths-mop.png";
 import { createWhatsAppLink, formatBookingMessage, DESTINATION_PHONE_NUMBER, getConfirmationMessage } from "@/lib/whatsapp";
 import { sendBookingEmail } from "@/lib/email";
+import { calculateSurchargeMultiplier } from "@/lib/pricing";
 import "@/styles/sticky-summary.css";
 import { Checkbox } from "@/components/ui/checkbox";
 import {
@@ -77,6 +78,13 @@ export default function GrandMenageClient() {
     let discountAmount = 0;
     let totalServicePrice = 0;
 
+    const multiplier = calculateSurchargeMultiplier(
+        formData.schedulingDate,
+        formData.schedulingType,
+        formData.fixedTime,
+        formData.schedulingTime
+    );
+
     if (formData.frequency === "subscription") {
         const visitsMap: Record<string, number> = {
             "1foisParSemaine": 1,
@@ -97,9 +105,9 @@ export default function GrandMenageClient() {
         const monthlyHours = formData.duration * visitsPerWeek * 4;
         const subtotalMonthly = monthlyHours * baseRate * formData.numberOfPeople;
         discountAmount = subtotalMonthly * discountRate;
-        totalServicePrice = subtotalMonthly - discountAmount;
+        totalServicePrice = (subtotalMonthly - discountAmount) * multiplier;
     } else {
-        totalServicePrice = formData.duration * baseRate * formData.numberOfPeople;
+        totalServicePrice = formData.duration * baseRate * formData.numberOfPeople * multiplier;
     }
 
     const calculateTotal = () => {

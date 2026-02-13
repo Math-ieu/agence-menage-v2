@@ -16,6 +16,7 @@ import { toast } from "sonner";
 import serviceBureaux from "@/assets/service-menage-bureaux.png";
 import { getConfirmationMessage } from "@/lib/whatsapp";
 import { sendBookingEmail } from "@/lib/email";
+import { calculateSurchargeMultiplier } from "@/lib/pricing";
 import "@/styles/sticky-summary.css";
 import { FREQUENCES } from "@/app/frequences";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -103,7 +104,14 @@ export default function MenageBureauxClient() {
         }
     };
 
-    const perVisitBasePrice = formData.duration * formData.numberOfPeople * 60;
+    const multiplier = calculateSurchargeMultiplier(
+        formData.schedulingDate,
+        formData.schedulingType,
+        formData.fixedTime,
+        formData.schedulingTime
+    );
+
+    const perVisitBasePrice = formData.duration * formData.numberOfPeople * 60 * multiplier;
     const productsPrice = formData.additionalServices.produitsEtOutils ? 90 : 0;
     const torchonsPrice = formData.additionalServices.torchonsEtSerpierres ? 40 : 0;
     const perVisitTotal = perVisitBasePrice + productsPrice + torchonsPrice;

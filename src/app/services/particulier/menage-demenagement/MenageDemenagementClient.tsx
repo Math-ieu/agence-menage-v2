@@ -17,6 +17,7 @@ import { toast } from "sonner";
 import serviceDemenagement from "@/assets/service-menage-demenagement.png";
 import { createWhatsAppLink, formatBookingMessage, DESTINATION_PHONE_NUMBER, getConfirmationMessage } from "@/lib/whatsapp";
 import { sendBookingEmail } from "@/lib/email";
+import { calculateSurchargeMultiplier } from "@/lib/pricing";
 import "@/styles/sticky-summary.css";
 import { Checkbox } from "@/components/ui/checkbox";
 import {
@@ -80,6 +81,15 @@ const MenageDemenagementContent = () => {
     let discountAmount = 0;
     const discountRate = 0.1;
 
+    const multiplier = calculateSurchargeMultiplier(
+        formData.schedulingDate,
+        formData.schedulingType,
+        formData.fixedTime,
+        formData.schedulingTime
+    );
+
+    const corePrice = (basePrice + intensivePrice) * multiplier;
+
     if (formData.frequency === "subscription") {
         const visitsMap: Record<string, number> = {
             "4foisSemaine": 4,
@@ -90,12 +100,12 @@ const MenageDemenagementContent = () => {
             "1foisAn": 1 / 52 // Very low frequency, but following the pattern
         };
         const visitsPerWeek = visitsMap[formData.subFrequency] || 1;
-        const perVisitPrice = basePrice + intensivePrice + additionalCosts;
+        const perVisitPrice = corePrice + additionalCosts;
         const subtotalMonthly = perVisitPrice * visitsPerWeek * 4;
         discountAmount = subtotalMonthly * discountRate;
         totalPrice = subtotalMonthly - discountAmount;
     } else {
-        totalPrice = basePrice > 0 ? basePrice + intensivePrice + additionalCosts : 0;
+        totalPrice = corePrice > 0 ? corePrice + additionalCosts : 0;
     }
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {

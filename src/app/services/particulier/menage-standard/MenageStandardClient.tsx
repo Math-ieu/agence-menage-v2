@@ -17,6 +17,7 @@ import serviceRegulier from "@/assets/service-menage-standard.png";
 import cleaningProduct from "@/assets/cleaning-product.png";
 import { createWhatsAppLink, formatBookingMessage, DESTINATION_PHONE_NUMBER, getConfirmationMessage } from "@/lib/whatsapp";
 import { sendBookingEmail } from "@/lib/email";
+import { calculateSurchargeMultiplier } from "@/lib/pricing";
 import "@/styles/sticky-summary.css";
 import { FREQUENCES } from "@/app/frequences";
 import {
@@ -89,6 +90,13 @@ export default function MenageStandardClient() {
     let discountRate = 0;
     let discountAmount = 0;
 
+    const multiplier = calculateSurchargeMultiplier(
+        formData.schedulingDate,
+        formData.schedulingType,
+        formData.fixedTime,
+        formData.schedulingTime
+    );
+
     if (formData.frequency === "subscription") {
         const visitsMap: Record<string, number> = {
             "1foisParSemaine": 1,
@@ -108,9 +116,9 @@ export default function MenageStandardClient() {
         const monthlyHours = formData.duration * visitsPerWeek * 4;
         const subtotalMonthly = monthlyHours * baseRate * formData.numberOfPeople;
         discountAmount = subtotalMonthly * discountRate;
-        totalServicePrice = subtotalMonthly - discountAmount;
+        totalServicePrice = (subtotalMonthly - discountAmount) * multiplier;
     } else {
-        totalServicePrice = formData.duration * baseRate * formData.numberOfPeople;
+        totalServicePrice = formData.duration * baseRate * formData.numberOfPeople * multiplier;
     }
 
     const calculateTotal = () => {

@@ -131,8 +131,8 @@ const ServiceHeroSection = ({ title, description, image, primaryColor, isCollaps
                                 Description {title.toLowerCase()}
                             </button>
                             <button
-                                onClick={() => setActiveTab("faqs")}
-                                className={`flex-1 py-4 px-6 rounded-lg font-medium transition-all text-center text-lg ${activeTab === "faqs"
+                                onClick={() => { }}
+                                className={`flex-1 py-4 px-6 rounded-lg font-medium transition-all text-center text-lg cursor-default ${activeTab === "faqs"
                                     ? "text-white shadow-md"
                                     : "bg-opacity-20 hover:bg-opacity-30"
                                     }`}
@@ -169,8 +169,8 @@ const ServiceHeroSection = ({ title, description, image, primaryColor, isCollaps
                             {/* FAQs Accordion */}
                             <div className="rounded-2xl overflow-hidden shadow-md">
                                 <button
-                                    onClick={() => toggleAccordion("faqs")}
-                                    className="w-full py-5 px-8 flex items-center justify-between font-bold text-white transition-all outline-none text-xl"
+                                    onClick={() => { }}
+                                    className="w-full py-5 px-8 flex items-center justify-between font-bold text-white transition-all outline-none text-xl cursor-default"
                                     style={{ backgroundColor: primaryColor || "#287271" }}
                                 >
                                     <span>Questions les plus fréquentes</span>
@@ -188,7 +188,7 @@ const ServiceHeroSection = ({ title, description, image, primaryColor, isCollaps
                                                             className={`w-full py-3 px-4 flex items-center justify-between text-left transition-all duration-300 outline-none ${isActive ? "text-white" : "text-slate-800 bg-white"}`}
                                                             style={isActive ? { backgroundColor: primaryColor || "#287271" } : {}}
                                                         >
-                                                            <span className="text-[11px] truncate pr-4">{faq.question}</span>
+                                                            <span className="text-[11px] pr-4">{faq.question}</span>
                                                             {isActive ? (
                                                                 <ChevronUp size={16} className="flex-shrink-0" />
                                                             ) : (
