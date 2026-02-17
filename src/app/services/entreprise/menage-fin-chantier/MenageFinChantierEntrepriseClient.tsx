@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { ChevronDown, ChevronUp } from "lucide-react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
@@ -51,6 +52,7 @@ export default function MenageFinChantierEntrepriseClient() {
     const [showConfirmation, setShowConfirmation] = useState(false);
     const [isSummaryExpanded, setIsSummaryExpanded] = useState(false);
     const [formData, setFormData] = useState(INITIAL_FORM_DATA);
+    const router = useRouter();
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
@@ -76,7 +78,7 @@ export default function MenageFinChantierEntrepriseClient() {
 
         try {
             await sendBookingEmail("Nettoyage Fin de chantier (Entreprise)", bookingData, "Sur devis", true);
-            setShowConfirmation(true);
+            router.push("/merci");
         } catch (error) {
             toast.error("Une erreur est survenue lors de l'envoi de votre demande.");
         }

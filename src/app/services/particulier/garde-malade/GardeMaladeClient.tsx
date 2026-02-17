@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useRef } from "react";
+import { useRouter } from "next/navigation";
 import { ChevronDown, ChevronUp, ArrowLeft } from "lucide-react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
@@ -67,6 +68,7 @@ export default function GardeMaladeClient() {
     const formRef = useRef<HTMLDivElement>(null);
 
     const [formData, setFormData] = useState(INITIAL_FORM_DATA);
+    const router = useRouter();
 
     const totalPrice = 0;
 
@@ -103,7 +105,7 @@ export default function GardeMaladeClient() {
 
         try {
             await sendBookingEmail("Garde Malade", bookingData, priceValue, false);
-            setShowConfirmation(true);
+            router.push("/merci");
         } catch (error) {
             toast.error("Une erreur est survenue lors de l'envoi de votre demande.");
         }

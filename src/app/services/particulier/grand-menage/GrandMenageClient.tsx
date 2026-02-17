@@ -1,5 +1,6 @@
 "use client";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { ChevronDown, ChevronUp } from "lucide-react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
@@ -71,6 +72,7 @@ export default function GrandMenageClient() {
     const [showConfirmation, setShowConfirmation] = useState(false);
     const [isSummaryExpanded, setIsSummaryExpanded] = useState(false);
     const [formData, setFormData] = useState(INITIAL_FORM_DATA);
+    const router = useRouter();
 
     const baseRate = 65;
     let visitsPerWeek = 1;
@@ -144,7 +146,7 @@ export default function GrandMenageClient() {
         // Send email notification (async)
         sendBookingEmail("Grand Ménage", bookingData, totalPrice, false).catch(console.error);
 
-        setShowConfirmation(true);
+        router.push("/merci");
     };
 
     const handleCloseConfirmation = (open: boolean) => {

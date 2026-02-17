@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, Suspense } from "react";
+import { useRouter } from "next/navigation";
 import { ChevronDown, ChevronUp } from "lucide-react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
@@ -61,6 +62,7 @@ const MenageDemenagementContent = () => {
     const [showConfirmation, setShowConfirmation] = useState(false);
     const [isSummaryExpanded, setIsSummaryExpanded] = useState(false);
     const [formData, setFormData] = useState(INITIAL_FORM_DATA);
+    const router = useRouter();
 
     const calculateBasePrice = (surface: number) => {
         if (surface <= 50) return 590;
@@ -136,8 +138,7 @@ const MenageDemenagementContent = () => {
         // Send email notification (async)
         sendBookingEmail("Ménage post-déménagement", bookingData, totalPrice || "Sur devis", false).catch(console.error);
 
-        // window.open(whatsappLink, '_blank');
-        setShowConfirmation(true);
+        router.push("/merci");
     };
 
     const handleCloseConfirmation = (open: boolean) => {

@@ -1,5 +1,6 @@
 "use client";
 import { useState, Suspense } from "react";
+import { useRouter } from "next/navigation";
 import { ChevronDown, ChevronUp } from "lucide-react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
@@ -49,6 +50,7 @@ const MenageFinChantierContent = () => {
     const [showConfirmation, setShowConfirmation] = useState(false);
     const [isSummaryExpanded, setIsSummaryExpanded] = useState(false);
     const [formData, setFormData] = useState(INITIAL_FORM_DATA);
+    const router = useRouter();
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
@@ -78,8 +80,7 @@ const MenageFinChantierContent = () => {
         // Send email notification (async)
         sendBookingEmail("Nettoyage Fin de chantier", bookingData, "Sur devis", false).catch(console.error);
 
-        // window.open(whatsappLink, '_blank');
-        setShowConfirmation(true);
+        router.push("/merci");
     };
 
     const handleCloseConfirmation = (open: boolean) => {

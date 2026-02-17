@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, Suspense } from "react";
+import { useRouter } from "next/navigation";
 import Link from "next/link";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
@@ -59,6 +60,7 @@ const NettoyageUrgenceContent = () => {
     const [showConfirmation, setShowConfirmation] = useState(false);
     const [isSummaryExpanded, setIsSummaryExpanded] = useState(false);
     const [formData, setFormData] = useState(INITIAL_FORM_DATA);
+    const router = useRouter();
 
     const SERVICE_COLOR = "#1e40af"; // Deep blue
 
@@ -97,9 +99,7 @@ const NettoyageUrgenceContent = () => {
             // Open WhatsApp
             const whatsappLink = createWhatsAppLink(DESTINATION_PHONE_NUMBER, message);
 
-            // window.open(whatsappLink, "_blank");
-
-            setShowConfirmation(true);
+            router.push("/merci");
         } catch (error) {
             toast.error("Une erreur est survenue. Veuillez réessayer.");
         }

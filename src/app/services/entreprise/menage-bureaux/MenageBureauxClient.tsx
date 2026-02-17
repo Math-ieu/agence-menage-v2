@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { ChevronDown, ChevronUp } from "lucide-react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
@@ -61,6 +62,7 @@ export default function MenageBureauxClient() {
     const [showConfirmation, setShowConfirmation] = useState(false);
     const [isSummaryExpanded, setIsSummaryExpanded] = useState(false);
     const [formData, setFormData] = useState(INITIAL_FORM_DATA);
+    const router = useRouter();
 
     const calculateResources = (range: string) => {
         switch (range) {
@@ -166,7 +168,7 @@ export default function MenageBureauxClient() {
 
         try {
             await sendBookingEmail("Ménage Bureaux", bookingData, totalPrice, true);
-            setShowConfirmation(true);
+            router.push("/merci");
         } catch (error) {
             toast.error("Une erreur est survenue lors de l'envoi de votre demande.");
         }

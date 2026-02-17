@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useRef } from "react";
+import { useRouter } from "next/navigation";
 import { ChevronDown, ChevronUp } from "lucide-react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
@@ -65,6 +66,7 @@ export default function PlacementClient() {
     const formRef = useRef<HTMLDivElement>(null);
 
     const [formData, setFormData] = useState(INITIAL_FORM_DATA);
+    const router = useRouter();
 
     const scrollToForm = () => {
         setShowForm(true);
@@ -100,7 +102,7 @@ export default function PlacementClient() {
 
         try {
             await sendBookingEmail("Placement & Gestion de Propreté", bookingData, "Sur devis", true);
-            setShowConfirmation(true);
+            router.push("/merci");
         } catch (error) {
             toast.error("Une erreur est survenue lors de l'envoi de votre demande.");
         }

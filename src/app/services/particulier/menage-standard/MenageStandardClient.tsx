@@ -1,5 +1,7 @@
 "use client";
+
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { ChevronDown, ChevronUp } from "lucide-react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
@@ -81,6 +83,7 @@ export default function MenageStandardClient() {
     const [showConfirmation, setShowConfirmation] = useState(false);
     const [isSummaryExpanded, setIsSummaryExpanded] = useState(false);
     const [formData, setFormData] = useState(INITIAL_FORM_DATA);
+    const router = useRouter();
 
     const baseRate = 60;
 
@@ -172,7 +175,7 @@ export default function MenageStandardClient() {
         // Send email notification (async)
         sendBookingEmail("Ménage Standard", bookingData, totalPrice, false).catch(console.error);
 
-        setShowConfirmation(true);
+        router.push("/merci");
     };
 
     const handleCloseConfirmation = (open: boolean) => {

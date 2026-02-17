@@ -1,5 +1,6 @@
 "use client";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { ChevronDown, ChevronUp } from "lucide-react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
@@ -56,6 +57,7 @@ export default function MenageAirbnbClient() {
     const [showConfirmation, setShowConfirmation] = useState(false);
     const [isSummaryExpanded, setIsSummaryExpanded] = useState(false);
     const [formData, setFormData] = useState(INITIAL_FORM_DATA);
+    const router = useRouter();
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
@@ -90,8 +92,7 @@ export default function MenageAirbnbClient() {
         // Send email notification (async)
         sendBookingEmail("Ménage Airbnb", bookingData, "Sur devis", false).catch(console.error);
 
-        // window.open(whatsappLink, '_blank');
-        setShowConfirmation(true);
+        router.push("/merci");
     };
 
     const handleCloseConfirmation = (open: boolean) => {
