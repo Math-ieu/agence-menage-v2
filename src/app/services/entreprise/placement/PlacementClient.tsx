@@ -172,7 +172,7 @@ export default function PlacementClient() {
                             </div>
                             <div className="mt-auto pt-8">
                                 <div className="bg-primary/20 p-6 rounded-2xl shadow-sm text-center">
-                                    <p className="text-[13px] font-bold text-white leading-relaxed">
+                                    <p className="text-base font-bold text-black leading-relaxed">
                                         Idéal pour les entreprises qui veulent garder le contrôle opérationnel, tout en externalisant la gestion du personnel.
                                     </p>
                                 </div>
@@ -207,7 +207,7 @@ export default function PlacementClient() {
                             </div>
                             <div className="mt-auto pt-8">
                                 <div className="bg-primary/40 p-6 rounded-2xl shadow-sm text-center">
-                                    <p className="text-[13px] font-bold text-white leading-relaxed">
+                                    <p className="text-base font-bold text-black leading-relaxed">
                                         Idéal pour les entreprises qui veulent un service premium, sans gestion interne, avec une obligation de résultat.
                                     </p>
                                 </div>

@@ -66,7 +66,7 @@ const particulierServices = [
         description: "Remise en état et nettoyage approfondi après un sinistre pour retrouver un espace sain.",
         image: imgUrgence.src,
         color: "#4f8130",
-        url: "/services/particulier/nettoyage-urgence"
+        url: "/services/particulier/menage-post-sinistre"
     },
 ];
 
@@ -96,8 +96,8 @@ const entrepriseServices = [
         title: "Ménage Post-sinistre",
         description: "Remise en état et nettoyage approfondi après un sinistre ou pour un besoin immédiat en entreprise.",
         image: imgUrgence.src,
-        color: "#4f8130",
-        url: "/services/particulier/nettoyage-urgence"
+        color: "#74a12d",
+        url: "/services/entreprise/menage-post-sinistre"
     },
 ];
 

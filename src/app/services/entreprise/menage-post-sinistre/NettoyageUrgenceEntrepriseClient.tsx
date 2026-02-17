@@ -30,7 +30,7 @@ import {
 } from "@/components/ui/dialog";
 
 const INITIAL_FORM_DATA = {
-    propertyType: "appartement",
+    propertyType: "bureau",
     interventionNature: "sinistre",
     schedulingType: "flexible",
     fixedTime: "14:00",
@@ -55,14 +55,14 @@ const INITIAL_FORM_DATA = {
 
 const NettoyageUrgenceContent = () => {
     const searchParams = useSearchParams();
-    const isEntrepriseStatus = searchParams.get("type") === "entreprise";
+    const isEntrepriseStatus = true;
     const [wasValidated, setWasValidated] = useState(false);
     const [showConfirmation, setShowConfirmation] = useState(false);
     const [isSummaryExpanded, setIsSummaryExpanded] = useState(false);
     const [formData, setFormData] = useState(INITIAL_FORM_DATA);
     const router = useRouter();
 
-    const SERVICE_COLOR = "#4f8130"; // New green
+    const SERVICE_COLOR = "#74a12d"; // Enterprise urgency color
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
@@ -91,10 +91,10 @@ const NettoyageUrgenceContent = () => {
             };
 
             const price = "Sur DEVIS";
-            const message = formatBookingMessage("Ménage Post-sinistre", bookingData, price, isEntrepriseStatus);
+            const message = formatBookingMessage("Ménage Post-sinistre (Entreprise)", bookingData, price, true);
 
             // Send Email
-            await sendBookingEmail("Ménage Post-sinistre", bookingData, price, isEntrepriseStatus);
+            await sendBookingEmail("Ménage Post-sinistre (Entreprise)", bookingData, price, true);
 
             // Open WhatsApp
             const whatsappLink = createWhatsAppLink(DESTINATION_PHONE_NUMBER, message);
@@ -113,19 +113,19 @@ const NettoyageUrgenceContent = () => {
         }
     };
 
-    const serviceDescription = `Le service de ménage post-sinistre vise à rétablir rapidement la propreté des espaces. Assurer une intervention rapide et ciblée en cas de situation nécessitant une remise en état immédiate des lieux.
+    const serviceDescription = `Le service de ménage post-sinistre en entreprise vise à rétablir la continuité de vos activités. Nous assurons une intervention rapide et professionnelle pour la remise en état de vos bureaux, locaux commerciaux ou entrepôts.
 
-Les interventions d’urgence couvrent exclusivement les cas suivants :
-- Incendie
-- Inondation ou dégât des eaux
-- Post/Après événement (fête, réception, rassemblement professionnel ou privé)
-- Remise en état express des espaces avant ou après une occupation urgente`;
+Nos équipes interviennent en urgence pour :
+- Incendie ou départ de feu
+- Dégâts des eaux et inondations
+- Nettoyage expert après un événement professionnel
+- Remise en état express avant inauguration ou visite importante`;
 
     return (
         <div className="min-h-screen flex flex-col">
             <Header />
 
-            <div className="bg-[hsl(var(--primary)/0.05)]" style={{ "--primary": "97 46% 35%" } as React.CSSProperties}>
+            <div className="bg-[hsl(var(--primary)/0.05)]" style={{ "--primary": "84 56% 41%" } as React.CSSProperties}>
                 <main className="flex-1">
                     <ServiceHeroSection
                         title="Ménage Post-sinistre"
@@ -134,20 +134,16 @@ Les interventions d’urgence couvrent exclusivement les cas suivants :
                         primaryColor={SERVICE_COLOR}
                         faqs={[
                             {
-                                question: "Quels types d'urgences et de sinistres prenez-vous en charge ?",
-                                answer: "Nos équipes spécialisées interviennent pour toutes les situations critiques nécessitant une remise en état express : dégâts des eaux (fuites, inondations), nettoyage après un départ de feu ou un accident domestique, mais également pour des urgences non catastrophiques comme un grand nettoyage extrême après une fête, une réception ou un événement ayant laissé vos espaces très salis."
+                                question: "Quelle est votre réactivité pour une intervention en entreprise ?",
+                                answer: "Pour un sinistre en milieu professionnel, chaque heure compte. Nous mobilisons nos équipes en priorité pour Casablanca afin de minimiser l'arrêt de votre activité. Notre objectif est une intervention dans les plus brefs délais après validation du devis."
                             },
                             {
-                                question: "Avez-vous le matériel nécessaire pour aspirer l'eau ou nettoyer la suie ?",
-                                answer: "Oui, un sinistre ne se nettoie pas avec un simple balai. Nous déployons immédiatement un équipement industriel adapté à la situation : aspirateurs à eau haute puissance pour assécher vos sols après une inondation, monobrosses, et produits professionnels capables d'éliminer les traces de suie, les odeurs tenaces ou les résidus d'accidents domestiques."
+                                question: "Disposez-vous d'équipements adaptés aux grands volumes ?",
+                                answer: "Oui, nous sommes équipés de matériel industriel : aspirateurs de grande capacité, monobrosses professionnelles et agents nettoyants spécifiques pour traiter les locaux professionnels après un sinistre ou un événement de grande ampleur."
                             },
                             {
-                                question: "Délivrez-vous des devis valables pour les déclarations d'assurance ?",
-                                answer: "Absolument. Lors d'un dégât des eaux ou d'un incendie, votre assurance habitation prend souvent en charge les frais de remise en état. Agence Ménage vous fournit rapidement un devis détaillé et officiel, conforme aux exigences des compagnies d'assurance marocaines, pour faciliter vos démarches de remboursement."
-                            },
-                            {
-                                question: "Pouvez-vous intervenir très rapidement pour un nettoyage après une fête ?",
-                                answer: "La réactivité est au cœur de ce service. Que ce soit pour masquer les traces d'un dégât des eaux ou pour remettre à neuf votre villa après une grande réception, nous mobilisons nos équipes en urgence sur tout Casablanca. Nous agissons avec une totale discrétion et une efficacité redoutable pour que vous retrouviez un intérieur impeccable dans les plus brefs délais."
+                                question: "Le devis est-il accepté par les assurances pro ?",
+                                answer: "Tout à fait. Nous fournissons une facture et un devis détaillés conformes aux exigences des assurances professionnelles au Maroc pour faciliter la prise en charge de la remise en état de vos locaux."
                             }
                         ]}
                     />
@@ -171,22 +167,13 @@ Les interventions d’urgence couvrent exclusivement les cas suivants :
                                             <div className="space-y-3">
                                                 <div className="flex justify-between gap-4 border-b border-primary/10 pb-2">
                                                     <span className="text-muted-foreground text-sm">Service:</span>
-                                                    <span className="font-bold text-right text-slate-700 text-sm">Ménage Post-sinistre</span>
+                                                    <span className="font-bold text-right text-slate-700 text-sm">Ménage Post-sinistre Pro</span>
                                                 </div>
 
-                                                {/* Detailed info - hidden on mobile when collapsed */}
                                                 <div className={`space-y-3 ${!isSummaryExpanded ? 'max-lg:hidden' : ''}`}>
                                                     <div className="flex justify-between gap-4 border-b border-primary/10 pb-2">
                                                         <span className="text-muted-foreground text-sm">Type:</span>
                                                         <span className="font-medium text-right text-sm capitalize">{formData.propertyType}</span>
-                                                    </div>
-                                                    <div className="flex justify-between gap-4 border-b border-primary/10 pb-2">
-                                                        <span className="text-muted-foreground text-sm">Nature:</span>
-                                                        <span className="font-medium text-right text-sm">
-                                                            {formData.interventionNature === 'sinistre' ? 'Après sinistre' :
-                                                                formData.interventionNature === 'event' ? 'Post évènement' :
-                                                                    formData.interventionNature === 'express' ? 'Remise en état' : 'Autre situation'}
-                                                        </span>
                                                     </div>
                                                     <div className="flex justify-between gap-4 border-b border-primary/10 pb-2">
                                                         <span className="text-muted-foreground text-sm">Date:</span>
@@ -198,24 +185,6 @@ Les interventions d’urgence couvrent exclusivement les cas suivants :
                                                             {formData.schedulingType === "fixed" ? formData.fixedTime : (formData.schedulingTime === "morning" ? "Le matin" : "L'après midi")}
                                                         </span>
                                                     </div>
-
-                                                    {(formData.additionalServices.produitsEtOutils || formData.additionalServices.torchonsEtSerpierres) && (
-                                                        <div className="space-y-2 pt-2">
-                                                            <span className="text-muted-foreground text-xs font-bold uppercase">Options:</span>
-                                                            {formData.additionalServices.produitsEtOutils && (
-                                                                <div className="flex justify-between gap-4 text-xs">
-                                                                    <span>Produits:</span>
-                                                                    <span className="font-medium">+90 MAD</span>
-                                                                </div>
-                                                            )}
-                                                            {formData.additionalServices.torchonsEtSerpierres && (
-                                                                <div className="flex justify-between gap-4 text-xs">
-                                                                    <span>Torchons:</span>
-                                                                    <span className="font-medium">+40 MAD</span>
-                                                                </div>
-                                                            )}
-                                                        </div>
-                                                    )}
                                                 </div>
                                             </div>
 
@@ -224,10 +193,9 @@ Les interventions d’urgence couvrent exclusivement les cas suivants :
                                                     <span className="text-lg font-bold">Total</span>
                                                     <span className="text-xl font-black text-primary italic">SUR DEVIS</span>
                                                 </div>
-                                                <p className="text-[10px] text-gray-400 mt-1 italic text-center">Estimation finale après visite</p>
+                                                <p className="text-[10px] text-gray-400 mt-1 italic text-center">Estimation pro après visite</p>
                                             </div>
 
-                                            {/* Toggle Button for Mobile */}
                                             <button
                                                 type="button"
                                                 onClick={() => setIsSummaryExpanded(!isSummaryExpanded)}
@@ -242,17 +210,17 @@ Les interventions d’urgence couvrent exclusivement les cas suivants :
                                 {/* Form Column (Left) */}
                                 <div className="lg:col-span-2 space-y-8">
                                     <div className="bg-card rounded-lg p-4 md:p-6 border shadow-sm space-y-8">
-                                        {/* Type d'habitation */}
+                                        {/* Type de local */}
                                         <div>
                                             <h3 className="text-xl font-bold bg-primary text-white p-3 rounded-lg mb-4 text-center">
-                                                Type d'habitation
+                                                Type de local professionnel
                                             </h3>
                                             <RadioGroup
                                                 value={formData.propertyType}
                                                 onValueChange={(val) => setFormData({ ...formData, propertyType: val })}
                                                 className="flex flex-wrap gap-8 p-4"
                                             >
-                                                {["Studio", "Appartement", "Duplex", "Villa", "Bureau"].map((type) => (
+                                                {["Bureaux", "Commerce", "Showroom", "Entrepôt", "Autre"].map((type) => (
                                                     <div key={type} className="flex items-center space-x-3">
                                                         <RadioGroupItem value={type.toLowerCase()} id={`type-${type}`} className="border-primary text-primary" />
                                                         <Label htmlFor={`type-${type}`} className="font-medium text-slate-700 capitalize cursor-pointer">{type}</Label>
@@ -261,10 +229,10 @@ Les interventions d’urgence couvrent exclusivement les cas suivants :
                                             </RadioGroup>
                                         </div>
 
-                                        {/* Nature de l'intervention */}
+                                        {/* Nature de l'urgence */}
                                         <div>
                                             <h3 className="text-xl font-bold bg-primary text-white p-3 rounded-lg mb-4 text-center">
-                                                Nature de l'intervention
+                                                Nature de l'urgence pro
                                             </h3>
                                             <RadioGroup
                                                 value={formData.interventionNature}
@@ -272,30 +240,27 @@ Les interventions d’urgence couvrent exclusivement les cas suivants :
                                                 className="grid grid-cols-1 md:grid-cols-2 gap-4 p-4"
                                             >
                                                 <div className="flex flex-col p-6 border-2 rounded-xl cursor-pointer hover:border-primary/20 hover:bg-primary/5 transition-all duration-300 bg-white shadow-sm relative min-h-[120px] justify-center text-center">
-                                                    <div className="flex flex-col items-center gap-2">
-                                                        <div className="flex items-center space-x-3">
-                                                            <RadioGroupItem value="sinistre" id="sinistre" className="border-primary text-primary" />
-                                                            <Label htmlFor="sinistre" className="font-bold text-lg cursor-pointer text-primary">Nettoyage après sinistre</Label>
-                                                        </div>
-                                                        <p className="text-sm text-red-600 font-semibold">(incendie, inondation...)</p>
+                                                    <div className="flex items-center justify-center space-x-3">
+                                                        <RadioGroupItem value="sinistre" id="sinistre" className="border-primary text-primary" />
+                                                        <Label htmlFor="sinistre" className="font-bold text-lg cursor-pointer text-primary leading-tight">Dégât des eaux / Incendie</Label>
                                                     </div>
                                                 </div>
                                                 <div className="flex flex-col p-6 border-2 rounded-xl cursor-pointer hover:border-primary/20 hover:bg-primary/5 transition-all duration-300 bg-white shadow-sm relative min-h-[120px] justify-center text-center">
                                                     <div className="flex items-center justify-center space-x-3">
                                                         <RadioGroupItem value="event" id="event" className="border-primary text-primary" />
-                                                        <Label htmlFor="event" className="font-bold text-lg cursor-pointer text-primary leading-tight">Nettoyage post/après évènement</Label>
+                                                        <Label htmlFor="event" className="font-bold text-lg cursor-pointer text-primary leading-tight">Post-événement pro</Label>
                                                     </div>
                                                 </div>
                                                 <div className="flex flex-col p-6 border-2 rounded-xl cursor-pointer hover:border-primary/20 hover:bg-primary/5 transition-all duration-300 bg-white shadow-sm relative min-h-[120px] justify-center text-center">
                                                     <div className="flex items-center justify-center space-x-3">
                                                         <RadioGroupItem value="express" id="express" className="border-primary text-primary" />
-                                                        <Label htmlFor="express" className="font-bold text-lg cursor-pointer text-primary">Remise en état express</Label>
+                                                        <Label htmlFor="express" className="font-bold text-lg cursor-pointer text-primary leading-tight">Remise en état inaugurale</Label>
                                                     </div>
                                                 </div>
                                                 <div className="flex flex-col p-6 border-2 rounded-xl cursor-pointer hover:border-primary/20 hover:bg-primary/5 transition-all duration-300 bg-white shadow-sm relative min-h-[120px] justify-center text-center">
                                                     <div className="flex items-center justify-center space-x-3">
                                                         <RadioGroupItem value="autre" id="autre" className="border-primary text-primary" />
-                                                        <Label htmlFor="autre" className="font-bold text-lg cursor-pointer text-primary leading-tight">Autre situation urgente (à préciser)</Label>
+                                                        <Label htmlFor="autre" className="font-bold text-lg cursor-pointer text-primary leading-tight">Autre besoin immédiat</Label>
                                                     </div>
                                                 </div>
                                             </RadioGroup>
@@ -304,10 +269,9 @@ Les interventions d’urgence couvrent exclusivement les cas suivants :
                                         {/* Planning */}
                                         <div>
                                             <h3 className="text-xl font-bold bg-primary text-white p-3 rounded-lg mb-4 text-center">
-                                                Planning pour votre demande
+                                                Planning d'intervention pro
                                             </h3>
                                             <div className="grid md:grid-cols-3 gap-6 p-4 border rounded-xl bg-white">
-                                                {/* Heure fixe */}
                                                 <div className="text-center space-y-3">
                                                     <div className="flex items-center justify-center space-x-2">
                                                         <input
@@ -318,7 +282,7 @@ Les interventions d’urgence couvrent exclusivement les cas suivants :
                                                             onChange={() => setFormData({ ...formData, schedulingType: "fixed" })}
                                                             className="w-4 h-4 text-primary"
                                                         />
-                                                        <Label htmlFor="fixed" className="font-bold text-primary text-sm cursor-pointer text-center">Je souhaite une heure fixe</Label>
+                                                        <Label htmlFor="fixed" className="font-bold text-primary text-sm cursor-pointer text-center">Heure fixe souhaitée</Label>
                                                     </div>
                                                     <div className="flex justify-center">
                                                         <Input
@@ -331,7 +295,6 @@ Les interventions d’urgence couvrent exclusivement les cas suivants :
                                                     </div>
                                                 </div>
 
-                                                {/* Flexible */}
                                                 <div className="text-center space-y-3">
                                                     <div className="flex items-center justify-center space-x-2">
                                                         <input
@@ -342,7 +305,7 @@ Les interventions d’urgence couvrent exclusivement les cas suivants :
                                                             onChange={() => setFormData({ ...formData, schedulingType: "flexible" })}
                                                             className="w-4 h-4 text-primary"
                                                         />
-                                                        <Label htmlFor="flexible" className="font-bold text-primary text-sm cursor-pointer text-center">Je suis flexible</Label>
+                                                        <Label htmlFor="flexible" className="font-bold text-primary text-sm cursor-pointer text-center">Flexible (Matin/AM)</Label>
                                                     </div>
                                                     <RadioGroup
                                                         value={formData.schedulingTime}
@@ -352,18 +315,17 @@ Les interventions d’urgence couvrent exclusivement les cas suivants :
                                                     >
                                                         <div className="flex items-center space-x-2">
                                                             <RadioGroupItem value="morning" id="morning" className="border-primary text-primary" />
-                                                            <Label htmlFor="morning" className="text-sm font-medium">Le matin</Label>
+                                                            <Label htmlFor="morning" className="text-sm font-medium">Matinée</Label>
                                                         </div>
                                                         <div className="flex items-center space-x-2">
                                                             <RadioGroupItem value="afternoon" id="afternoon" className="border-primary text-primary" />
-                                                            <Label htmlFor="afternoon" className="text-sm font-medium">L'après midi</Label>
+                                                            <Label htmlFor="afternoon" className="text-sm font-medium">Après-midi</Label>
                                                         </div>
                                                     </RadioGroup>
                                                 </div>
 
-                                                {/* Date */}
                                                 <div className="text-center space-y-3">
-                                                    <div className="font-bold text-primary text-sm">Date d'intervention</div>
+                                                    <div className="font-bold text-primary text-sm">Date souhaitée</div>
                                                     <Input
                                                         type="date"
                                                         required
@@ -375,60 +337,10 @@ Les interventions d’urgence couvrent exclusivement les cas suivants :
                                             </div>
                                         </div>
 
-                                        {/* Service Optionnels */}
+                                        {/* Localisation */}
                                         <div>
                                             <h3 className="text-xl font-bold bg-primary text-white p-3 rounded-lg mb-4 text-center">
-                                                Service Optionnels
-                                            </h3>
-                                            <div className="bg-primary/5 border-2 border-dashed rounded-xl p-8 space-y-6">
-                                                <p className="text-center text-sm font-bold text-slate-600 uppercase tracking-widest">Produits fournis par l'agence :</p>
-                                                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                                                    <div className="flex items-center justify-between p-4 bg-white rounded-xl border-2 shadow-sm transition-all hover:border-primary/20">
-                                                        <div className="flex items-center gap-4">
-                                                            <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center text-2xl">
-                                                                🧴
-                                                            </div>
-                                                            <div>
-                                                                <p className="font-black text-sm text-primary">Produits : 90 MAD</p>
-                                                                <p className="text-[10px] text-muted-foreground uppercase font-bold">Kit complet</p>
-                                                            </div>
-                                                        </div>
-                                                        <Switch
-                                                            checked={formData.additionalServices.produitsEtOutils}
-                                                            onCheckedChange={(val) => setFormData({
-                                                                ...formData,
-                                                                additionalServices: { ...formData.additionalServices, produitsEtOutils: val }
-                                                            })}
-                                                            className="data-[state=checked]:bg-primary"
-                                                        />
-                                                    </div>
-                                                    <div className="flex items-center justify-between p-4 bg-white rounded-xl border-2 shadow-sm transition-all hover:border-primary/20">
-                                                        <div className="flex items-center gap-4">
-                                                            <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center text-2xl">
-                                                                🧹
-                                                            </div>
-                                                            <div>
-                                                                <p className="font-black text-sm text-primary">Chiffons : 40 MAD</p>
-                                                                <p className="text-[10px] text-muted-foreground uppercase font-bold">Torchons et serpillères</p>
-                                                            </div>
-                                                        </div>
-                                                        <Switch
-                                                            checked={formData.additionalServices.torchonsEtSerpierres}
-                                                            onCheckedChange={(val) => setFormData({
-                                                                ...formData,
-                                                                additionalServices: { ...formData.additionalServices, torchonsEtSerpierres: val }
-                                                            })}
-                                                            className="data-[state=checked]:bg-primary"
-                                                        />
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        {/* Où aura lieu votre ménage */}
-                                        <div>
-                                            <h3 className="text-xl font-bold bg-primary text-white p-3 rounded-lg mb-4 text-center">
-                                                Où aura lieu votre ménage ?
+                                                Où se situe votre entreprise ?
                                             </h3>
                                             <div className="grid md:grid-cols-2 gap-4 p-4 border rounded-xl bg-white mb-4">
                                                 <div className="space-y-1">
@@ -442,10 +354,10 @@ Les interventions d’urgence couvrent exclusivement les cas suivants :
                                                     />
                                                 </div>
                                                 <div className="space-y-1">
-                                                    <Label className="text-[10px] font-bold text-primary uppercase ml-1 underline">Adresse (précisez la votre)*</Label>
+                                                    <Label className="text-[10px] font-bold text-primary uppercase ml-1 underline">Adresse professionnelle*</Label>
                                                     <Input
                                                         required
-                                                        placeholder="Adresse"
+                                                        placeholder="Adresse complète"
                                                         value={formData.neighborhood}
                                                         onChange={(e) => setFormData({ ...formData, neighborhood: e.target.value })}
                                                         className="h-12 font-medium border-primary/20"
@@ -453,9 +365,9 @@ Les interventions d’urgence couvrent exclusivement les cas suivants :
                                                 </div>
                                             </div>
                                             <div className="p-4 border rounded-xl bg-white shadow-sm">
-                                                <Label className="font-bold text-primary text-sm mb-2 block">Champs de repère</Label>
+                                                <Label className="font-bold text-primary text-sm mb-2 block">Notes spécifiques pour l'intervention</Label>
                                                 <Textarea
-                                                    placeholder="Précisez-nous des repères pour faciliter le travail de notre équipe (Ex: En face de l'école ou à côté de la boulangerie) ainsi que les particularités de l'espace..."
+                                                    placeholder="Précisez ici les accès, les contraintes horaires professionnelles ou toute information utile pour notre équipe d'intervention..."
                                                     value={formData.changeRepereNotes}
                                                     onChange={(e) => setFormData({ ...formData, changeRepereNotes: e.target.value })}
                                                     className="min-h-[120px] font-medium leading-relaxed border-slate-200"
@@ -466,11 +378,11 @@ Les interventions d’urgence couvrent exclusivement les cas suivants :
                                         {/* Mes Informations */}
                                         <div className="bg-white border rounded-xl overflow-hidden shadow-sm">
                                             <h3 className="text-xl font-bold bg-primary text-white p-3 text-center">
-                                                Mes informations
+                                                Informations de contact entreprise
                                             </h3>
                                             <div className="p-6 grid md:grid-cols-2 gap-6">
                                                 <div className="space-y-2">
-                                                    <Label className="font-bold text-primary text-sm">Numéro de téléphone*</Label>
+                                                    <Label className="font-bold text-primary text-sm">Téléphone mobile direct*</Label>
                                                     <div className="space-y-3">
                                                         <div className="flex gap-2">
                                                             <Input
@@ -522,7 +434,7 @@ Les interventions d’urgence couvrent exclusivement les cas suivants :
                                                     </div>
                                                 </div>
                                                 <div className="space-y-2">
-                                                    <Label className="font-bold text-primary text-sm">Numéro whatsapp</Label>
+                                                    <Label className="font-bold text-primary text-sm"> WhatsApp professionnel</Label>
                                                     <div className="flex gap-2">
                                                         <Input
                                                             value={formData.whatsappPrefix}
@@ -541,23 +453,23 @@ Les interventions d’urgence couvrent exclusivement les cas suivants :
                                                     </div>
                                                 </div>
                                                 <div className="space-y-2">
-                                                    <Label className="font-bold text-primary text-sm">Nom*</Label>
+                                                    <Label className="font-bold text-primary text-sm">Nom du contact*</Label>
                                                     <Input
                                                         value={formData.lastName}
                                                         onChange={(e) => setFormData({ ...formData, lastName: e.target.value })}
                                                         required
                                                         className="h-11 border-slate-300 font-bold"
-                                                        placeholder="Votre nom"
+                                                        placeholder="Nom"
                                                     />
                                                 </div>
                                                 <div className="space-y-2">
-                                                    <Label className="font-bold text-primary text-sm">Prénom*</Label>
+                                                    <Label className="font-bold text-primary text-sm">Prénom du contact*</Label>
                                                     <Input
                                                         value={formData.firstName}
                                                         onChange={(e) => setFormData({ ...formData, firstName: e.target.value })}
                                                         required
                                                         className="h-11 border-slate-300 capitalize font-bold"
-                                                        placeholder="Votre prénom"
+                                                        placeholder="Prénom"
                                                     />
                                                 </div>
                                             </div>
@@ -568,32 +480,12 @@ Les interventions d’urgence couvrent exclusivement les cas suivants :
                                                 type="submit"
                                                 className="bg-primary hover:bg-primary/90 text-white px-8 py-4 text-base font-bold shadow-lg shadow-primary/20 h-auto rounded-full w-full md:w-auto md:min-w-[260px] transition-all hover:scale-105 active:scale-95 tracking-widest"
                                             >
-                                                Confirmer ma réservation
+                                                Demander un devis
                                             </Button>
                                         </div>
                                     </div>
                                 </div>
                             </form>
-                        </div>
-                    </section>
-
-                    <section className="py-12 bg-slate-50 border-t">
-                        <div className="container max-w-5xl mx-auto px-4 text-center">
-                            <h2 className="text-2xl font-bold text-primary mb-8">Voir d'autres services</h2>
-                            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                                <Link href="/services/particulier/menage-standard" className="bg-white p-6 rounded-xl shadow-sm border hover:shadow-md transition-shadow group">
-                                    <h3 className="font-bold text-lg text-primary group-hover:text-primary/80 mb-2">Ménage Standard</h3>
-                                    <p className="text-sm text-slate-600">Entretien régulier de votre domicile.</p>
-                                </Link>
-                                <Link href="/services/particulier/grand-menage" className="bg-white p-6 rounded-xl shadow-sm border hover:shadow-md transition-shadow group">
-                                    <h3 className="font-bold text-lg text-primary group-hover:text-primary/80 mb-2">Grand Ménage</h3>
-                                    <p className="text-sm text-slate-600">Nettoyage en profondeur pour une hygiène totale.</p>
-                                </Link>
-                                <Link href="/" className="bg-white p-6 rounded-xl shadow-sm border hover:shadow-md transition-shadow group">
-                                    <h3 className="font-bold text-lg text-primary group-hover:text-primary/80 mb-2">Tous nos services</h3>
-                                    <p className="text-sm text-slate-600">Découvrez l'ensemble de nos prestations.</p>
-                                </Link>
-                            </div>
                         </div>
                     </section>
                 </main>
@@ -622,7 +514,7 @@ Les interventions d’urgence couvrent exclusivement les cas suivants :
     );
 };
 
-export default function NettoyageUrgenceClient() {
+export default function NettoyageUrgenceEntrepriseClient() {
     return (
         <Suspense fallback={<div className="min-h-screen flex items-center justify-center font-bold text-2xl text-primary animate-pulse">Chargement...</div>}>
             <NettoyageUrgenceContent />
