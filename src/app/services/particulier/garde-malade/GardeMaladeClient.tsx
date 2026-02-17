@@ -105,7 +105,7 @@ export default function GardeMaladeClient() {
 
         try {
             await sendBookingEmail("Garde Malade", bookingData, priceValue, false);
-            router.push("/merci");
+            router.push(window.location.pathname + "/merci");
         } catch (error) {
             toast.error("Une erreur est survenue lors de l'envoi de votre demande.");
         }
@@ -134,17 +134,17 @@ export default function GardeMaladeClient() {
     };
 
     return (
-        <div className="min-h-screen flex flex-col bg-[#fdf8f1]">
+        <div className="min-h-screen flex flex-col bg-white">
             <Header />
 
-            <main className="flex-1 flex flex-col" style={{ "--primary": "28 59% 45%" } as React.CSSProperties}>
+            <main className="flex-1 flex flex-col bg-[hsl(var(--primary)/0.05)]" style={{ "--primary": "186 52% 55%" } as React.CSSProperties}>
                 <ServiceHeroSection
                     title="Auxiliaires de vie / Garde malade"
                     description={`Le service d'auxiliaires de vie / garde malade à domicile à Casablanca, proposé par Agence Ménage, met à votre disposition des auxiliaires de vie à domicile expérimentées pour accompagner les patients dans leur quotidien, avec sérieux, discrétion et bienveillance.
 
 Nos auxiliaires de vie assurent une présence 24h/24, 7j/7, selon les besoins en journée, la nuit, ou en continu. Elles interviennent auprès des personnes âgées ou en situation de dépendance.`}
                     image={gardeMaladeHero.src}
-                    primaryColor="#b46d2f"
+                    primaryColor="#50bfcb"
                     faqs={[
                         {
                             question: "Quelles sont l'expérience et les qualifications de vos auxiliaires de vie ?",
@@ -165,11 +165,11 @@ Nos auxiliaires de vie assurent une présence 24h/24, 7j/7, selon les besoins en
                     ]}
                 />
 
-                <section className="bg-[#f0e4d4] py-8">
+                <section className="bg-primary/5 py-8">
                     <div className="container px-6 relative">
                         <button
                             onClick={() => window.history.back()}
-                            className="absolute -top-4 md:-top-8 left-0 xl:-left-4 p-2 hover:bg-[#b46d2f]/10 rounded-full transition-colors text-[#b46d2f]"
+                            className="absolute -top-4 md:-top-8 left-0 xl:-left-4 p-2 hover:bg-primary/10 rounded-full transition-colors text-primary"
                             aria-label="Retour"
                         >
                             <ArrowLeft size={24} />
@@ -177,12 +177,12 @@ Nos auxiliaires de vie assurent une présence 24h/24, 7j/7, selon les besoins en
 
                         <div className="grid md:grid-cols-2 gap-16 items-center text-left py-12">
                             <div className="space-y-6">
-                                <p className="text-xl text-[#4a4a4a] leading-relaxed font-bold">
+                                <p className="text-xl text-slate-700 leading-relaxed font-bold">
                                     Nos auxiliaires de vie assurent une présence 24h/24, 7j/7, selon les besoins en journée, la nuit, ou en continu. Elles interviennent auprès des personnes âgées, des personnes en situation de dépendance, qu'elles en soient venues suite à une hospitalisation ou nécessitant simplement une présence rassurante à domicile.
                                 </p>
                             </div>
                             <div className="flex justify-center">
-                                <div className="w-80 h-80 rounded-full overflow-hidden border-[12px] border-white shadow-2xl ring-1 ring-[#e2d9c2]">
+                                <div className="w-80 h-80 rounded-full overflow-hidden border-[12px] border-white shadow-2xl ring-1 ring-primary/20">
                                     <img src={handsCare.src} alt="Mains soin" className="w-full h-full object-cover" />
                                 </div>
                             </div>
@@ -190,29 +190,29 @@ Nos auxiliaires de vie assurent une présence 24h/24, 7j/7, selon les besoins en
 
                         <div className="grid md:grid-cols-2 gap-16 items-center text-right py-12">
                             <div className="flex justify-center md:order-first order-last text-left">
-                                <div className="w-80 h-80 rounded-[3rem] rotate-6 overflow-hidden border-[12px] border-white shadow-2xl ring-1 ring-[#e2d9c2]">
+                                <div className="w-80 h-80 rounded-[3rem] rotate-6 overflow-hidden border-[12px] border-white shadow-2xl ring-1 ring-primary/20">
                                     <img src={caregiverVisit.src} alt="Visite soin" className="w-full h-full object-cover -rotate-6 scale-125" />
                                 </div>
                             </div>
                             <div className="space-y-6">
-                                <p className="text-xl text-[#4a4a4a] leading-relaxed font-bold">
+                                <p className="text-xl text-slate-700 leading-relaxed font-bold">
                                     L'objectif est de garantir un cadre de vie confortable et sécurisant, tout en soutenant la famille au quotidien. Nos garde-malades / auxiliaires de vie veillent notamment à l'hygiène au confort, à l'aide à la mobilité et aux soins du corps, ainsi qu'à l'accompagnement dans les gestes de la vie courante. Elles contribuent également au bien-être moral de la personne aidée en créant un climat serein et une écoute active avec les proches.
                                 </p>
                             </div>
                         </div>
 
-                        <div className="bg-white/90 p-12 rounded-[3.5rem] shadow-2xl border-4 border-[#b46d2f]/10 max-w-3xl mx-auto relative overflow-hidden group">
-                            <div className="absolute top-0 left-0 w-2 h-full bg-[#b46d2f]" />
-                            <p className="text-2xl font-black text-[#b46d2f] leading-snug italic mb-4">
+                        <div className="bg-white/90 p-12 rounded-[3.5rem] shadow-2xl border-4 border-primary/10 max-w-3xl mx-auto relative overflow-hidden group">
+                            <div className="absolute top-0 left-0 w-2 h-full bg-primary" />
+                            <p className="text-2xl font-black text-primary leading-snug italic mb-4">
                                 "Avec Agence Ménage, vous bénéficiez d'un service fiable et humain, dans un environnement familial afin de préserver la qualité de vie du patient et d'apporter de la sérénité à toute la famille."
                             </p>
-                            <p className="text-[#8a6d2f] font-bold text-lg">Un assistant social et garde-malade vous rappelleront pour valider les points essentiels.</p>
+                            <p className="text-primary/80 font-bold text-lg">Un assistant social et garde-malade vous rappelleront pour valider les points essentiels.</p>
                         </div>
 
                         <div className="pt-12 text-center">
                             <Button
                                 onClick={scrollToForm}
-                                className="bg-[#b46d2f] hover:bg-[#9a5d28] text-white px-8 py-4 text-xl font-bold rounded-full shadow-lg transition-all hover:scale-105 active:scale-95 h-auto uppercase"
+                                className="bg-primary hover:bg-primary/90 text-white px-8 py-4 text-xl font-bold rounded-full shadow-lg transition-all hover:scale-105 active:scale-95 h-auto uppercase"
                             >
                                 Contactez-nous
                             </Button>
@@ -227,8 +227,8 @@ Nos auxiliaires de vie assurent une présence 24h/24, 7j/7, selon les besoins en
                         className="py-12 animate-in fade-in slide-in-from-bottom-8 duration-1000 ease-out fill-mode-both"
                     >
                         <div className="container max-w-5xl px-6">
-                            <div className="bg-[#f0e4d4] rounded-lg p-6 text-center mb-8 border border-[#e2d9c2]">
-                                <h2 className="text-2xl font-bold text-[#b46d2f] mb-2 uppercase tracking-wide">
+                            <div className="bg-primary/5 rounded-lg p-6 text-center mb-8 border border-primary/20">
+                                <h2 className="text-2xl font-bold text-primary mb-2 uppercase tracking-wide">
                                     FORMULAIRE DE RESERVATION
                                 </h2>
                             </div>
@@ -236,14 +236,14 @@ Nos auxiliaires de vie assurent une présence 24h/24, 7j/7, selon les besoins en
                             <form onSubmit={handleSubmit} noValidate className={`flex flex-col lg:grid lg:grid-cols-3 gap-8 ${wasValidated ? 'was-validated' : ''}`}>
                                 <div className="lg:col-span-1 lg:order-last sticky-reservation-summary-container">
                                     <div className="lg:sticky lg:top-24 space-y-6">
-                                        <div className="bg-[#b46d2f]/5 rounded-lg border border-[#b46d2f]/20 shadow-sm p-6 space-y-4">
-                                            <h3 className="text-xl font-bold text-[#b46d2f] border-b border-[#b46d2f]/10 pb-2 text-center">
+                                        <div className="bg-primary/5 rounded-lg border border-primary/20 shadow-sm p-6 space-y-4">
+                                            <h3 className="text-xl font-bold text-primary border-b border-primary/10 pb-2 text-center">
                                                 Ma Réservation
                                             </h3>
                                             <div className="space-y-3">
-                                                <div className="flex justify-between gap-4 border-b border-[#b46d2f]/5 pb-2">
+                                                <div className="flex justify-between gap-4 border-b border-primary/5 pb-2">
                                                     <span className="text-muted-foreground transition-all duration-300">Service:</span>
-                                                    <span className="font-medium text-right text-slate-700">Garde Malade</span>
+                                                    <span className="font-medium text-right text-primary">Garde Malade</span>
                                                 </div>
 
                                                 {/* Detailed info - hidden on mobile when collapsed */}
@@ -262,11 +262,11 @@ Nos auxiliaires de vie assurent une présence 24h/24, 7j/7, selon les besoins en
                                                         <span className="text-muted-foreground">Personnes:</span>
                                                         <span className="font-medium text-right text-slate-700">{formData.numberOfPeople}</span>
                                                     </div>
-                                                    <div className="flex justify-between gap-4 border-t border-[#b46d2f]/5 pt-2">
+                                                    <div className="flex justify-between gap-4 border-t border-primary/5 pt-2">
                                                         <span className="text-muted-foreground text-sm">Date début:</span>
                                                         <span className="font-medium text-right text-slate-700 text-sm">{formData.schedulingDate || "Non définie"}</span>
                                                     </div>
-                                                    <div className="flex justify-between gap-4 border-b border-[#b46d2f]/5 pb-2">
+                                                    <div className="flex justify-between gap-4 border-b border-primary/5 pb-2">
                                                         <span className="text-muted-foreground text-sm">Heure:</span>
                                                         <span className="font-medium text-right text-slate-700 text-sm">
                                                             {formData.schedulingType === "fixed" ? formData.fixedTime : (formData.schedulingTime === "morning" ? "Le matin" : "L'après midi")}
@@ -275,12 +275,12 @@ Nos auxiliaires de vie assurent une présence 24h/24, 7j/7, selon les besoins en
                                                 </div>
                                             </div>
 
-                                            <div className="pt-4 border-t border-[#b46d2f]/20">
-                                                <div className="flex justify-between items-center bg-[#b46d2f]/5 p-3 rounded-lg border border-[#b46d2f]/10">
-                                                    <span className="text-xs font-bold text-[#b46d2f] uppercase tracking-wider">
+                                            <div className="pt-4 border-t border-primary/20">
+                                                <div className="flex justify-between items-center bg-primary/5 p-3 rounded-lg border border-primary/10">
+                                                    <span className="text-xs font-bold text-primary uppercase tracking-wider">
                                                         Estimation
                                                     </span>
-                                                    <span className="text-lg font-black text-[#b46d2f]">
+                                                    <span className="text-lg font-black text-primary">
                                                         SUR DEVIS
                                                     </span>
                                                 </div>
@@ -290,7 +290,7 @@ Nos auxiliaires de vie assurent une présence 24h/24, 7j/7, selon les besoins en
                                         <button
                                             type="button"
                                             onClick={() => setIsSummaryExpanded(!isSummaryExpanded)}
-                                            className="lg:hidden absolute -bottom-3 left-1/2 -translate-x-1/2 w-8 h-8 rounded-full bg-[#b46d2f] text-white flex items-center justify-center shadow-lg border-2 border-white z-20 hover:bg-[#b46d2f]/90 transition-transform active:scale-90"
+                                            className="lg:hidden absolute -bottom-3 left-1/2 -translate-x-1/2 w-8 h-8 rounded-full bg-primary text-white flex items-center justify-center shadow-lg border-2 border-white z-20 hover:bg-primary/90 transition-transform active:scale-90"
                                         >
                                             {isSummaryExpanded ? <ChevronUp size={20} /> : <ChevronDown size={20} />}
                                         </button>
@@ -301,7 +301,7 @@ Nos auxiliaires de vie assurent une présence 24h/24, 7j/7, selon les besoins en
                                     <div className="bg-white rounded-lg p-4 md:p-6 border shadow-sm space-y-10">
                                         {/* Frequency Section */}
                                         <div className="space-y-6">
-                                            <h3 className="text-xl font-bold bg-[#b46d2f] text-white p-3 rounded-lg text-center mb-4 uppercase">
+                                            <h3 className="text-xl font-bold bg-primary text-white p-3 rounded-lg text-center mb-4 uppercase">
                                                 Choisissez la fréquence
                                             </h3>
                                             <div className="p-4 bg-slate-50/50 rounded-xl border border-slate-100">
@@ -310,8 +310,8 @@ Nos auxiliaires de vie assurent une présence 24h/24, 7j/7, selon les besoins en
                                                         <button
                                                             type="button"
                                                             className={`flex-1 py-3 px-6 rounded-full font-bold transition-all ${formData.frequency === "oneshot"
-                                                                ? "bg-[#b46d2f] text-white shadow-sm"
-                                                                : "text-slate-500 hover:text-[#b46d2f]"
+                                                                ? "bg-primary text-white shadow-sm"
+                                                                : "text-slate-500 hover:text-primary"
                                                                 }`}
                                                             onClick={() => setFormData({ ...formData, frequency: "oneshot", subFrequency: "" })}
                                                         >
@@ -320,8 +320,8 @@ Nos auxiliaires de vie assurent une présence 24h/24, 7j/7, selon les besoins en
                                                         <button
                                                             type="button"
                                                             className={`flex-1 py-3 px-6 rounded-full font-bold transition-all ${formData.frequency === "subscription"
-                                                                ? "bg-[#b46d2f] text-white shadow-sm"
-                                                                : "text-slate-500 hover:text-[#b46d2f]"
+                                                                ? "bg-primary text-white shadow-sm"
+                                                                : "text-slate-500 hover:text-primary"
                                                                 }`}
                                                             onClick={() => setFormData({ ...formData, frequency: "subscription" })}
                                                         >
@@ -354,7 +354,7 @@ Nos auxiliaires de vie assurent une présence 24h/24, 7j/7, selon les besoins en
 
                                         {/* People Section */}
                                         <div className="space-y-6">
-                                            <h3 className="text-xl font-bold bg-[#b46d2f] text-white p-3 rounded-lg text-center mb-4 uppercase">
+                                            <h3 className="text-xl font-bold bg-primary text-white p-3 rounded-lg text-center mb-4 uppercase">
                                                 Nombre de personne
                                             </h3>
                                             <div className="flex items-center justify-center gap-8 p-6 bg-slate-50/50 rounded-xl border border-slate-100">
@@ -362,19 +362,19 @@ Nos auxiliaires de vie assurent une présence 24h/24, 7j/7, selon les besoins en
                                                     type="button"
                                                     variant="ghost"
                                                     size="icon"
-                                                    className="h-10 w-10 rounded-full bg-slate-200 text-[#b46d2f] hover:bg-slate-300"
+                                                    className="h-10 w-10 rounded-full bg-slate-200 text-primary hover:bg-slate-300"
                                                     onClick={decrementPeople}
                                                 >
                                                     <span className="text-2xl">-</span>
                                                 </Button>
-                                                <span className="text-2xl font-bold text-[#b46d2f] min-w-[40px] text-center">
+                                                <span className="text-2xl font-bold text-primary min-w-[40px] text-center">
                                                     {formData.numberOfPeople}
                                                 </span>
                                                 <Button
                                                     type="button"
                                                     variant="ghost"
                                                     size="icon"
-                                                    className="h-10 w-10 rounded-full bg-slate-200 text-[#b46d2f] hover:bg-slate-300"
+                                                    className="h-10 w-10 rounded-full bg-slate-200 text-primary hover:bg-slate-300"
                                                     onClick={incrementPeople}
                                                 >
                                                     <span className="text-2xl">+</span>
@@ -384,7 +384,7 @@ Nos auxiliaires de vie assurent une présence 24h/24, 7j/7, selon les besoins en
 
                                         {/* Planning Section */}
                                         <div className="space-y-6">
-                                            <h3 className="text-xl font-bold bg-[#b46d2f] text-white p-3 rounded-lg text-center mb-4 uppercase">
+                                            <h3 className="text-xl font-bold bg-primary text-white p-3 rounded-lg text-center mb-4 uppercase">
                                                 Planning de la demande
                                             </h3>
                                             <div className="p-6 bg-slate-50/50 rounded-xl border border-slate-100 space-y-8">
@@ -398,9 +398,9 @@ Nos auxiliaires de vie assurent une présence 24h/24, 7j/7, selon les besoins en
                                                                 name="schedulingType"
                                                                 checked={formData.schedulingType === "fixed"}
                                                                 onChange={() => setFormData({ ...formData, schedulingType: "fixed" })}
-                                                                className="w-4 h-4 text-[#b46d2f]"
+                                                                className="w-4 h-4 text-primary"
                                                             />
-                                                            <Label htmlFor="garde-fixed" className="font-bold text-[#b46d2f] text-sm cursor-pointer text-center">Je souhaite une heure fixe</Label>
+                                                            <Label htmlFor="garde-fixed" className="font-bold text-primary text-sm cursor-pointer text-center">Je souhaite une heure fixe</Label>
                                                         </div>
                                                         <div className="flex justify-center">
                                                             <input
@@ -409,7 +409,7 @@ Nos auxiliaires de vie assurent une présence 24h/24, 7j/7, selon les besoins en
                                                                 value={formData.fixedTime}
                                                                 onChange={(e) => setFormData({ ...formData, fixedTime: e.target.value })}
                                                                 disabled={formData.schedulingType !== "fixed"}
-                                                                className="w-32 text-center text-xl font-bold h-12 border-[#b46d2f]/30 rounded-md border"
+                                                                className="w-32 text-center text-xl font-bold h-12 border-primary/30 rounded-md border"
                                                             />
                                                         </div>
                                                     </div>
@@ -423,9 +423,9 @@ Nos auxiliaires de vie assurent une présence 24h/24, 7j/7, selon les besoins en
                                                                 name="schedulingType"
                                                                 checked={formData.schedulingType === "flexible"}
                                                                 onChange={() => setFormData({ ...formData, schedulingType: "flexible" })}
-                                                                className="w-4 h-4 text-[#b46d2f]"
+                                                                className="w-4 h-4 text-primary"
                                                             />
-                                                            <Label htmlFor="garde-flexible" className="font-bold text-[#b46d2f] text-sm cursor-pointer text-center">Je suis flexible</Label>
+                                                            <Label htmlFor="garde-flexible" className="font-bold text-primary text-sm cursor-pointer text-center">Je suis flexible</Label>
                                                         </div>
                                                         <RadioGroup
                                                             value={formData.schedulingTime}
@@ -434,11 +434,11 @@ Nos auxiliaires de vie assurent une présence 24h/24, 7j/7, selon les besoins en
                                                             className="space-y-2 text-left inline-block"
                                                         >
                                                             <div className="flex items-center space-x-2">
-                                                                <RadioGroupItem value="morning" id="garde-morning" className="border-[#b46d2f] text-[#b46d2f]" />
+                                                                <RadioGroupItem value="morning" id="garde-morning" className="border-primary text-primary" />
                                                                 <Label htmlFor="garde-morning" className="text-sm font-medium">Le matin</Label>
                                                             </div>
                                                             <div className="flex items-center space-x-2">
-                                                                <RadioGroupItem value="afternoon" id="garde-afternoon" className="border-[#b46d2f] text-[#b46d2f]" />
+                                                                <RadioGroupItem value="afternoon" id="garde-afternoon" className="border-primary text-primary" />
                                                                 <Label htmlFor="garde-afternoon" className="text-sm font-medium">L'après midi</Label>
                                                             </div>
                                                         </RadioGroup>
@@ -446,7 +446,7 @@ Nos auxiliaires de vie assurent une présence 24h/24, 7j/7, selon les besoins en
 
                                                     {/* Date */}
                                                     <div className="text-center space-y-3">
-                                                        <div className="font-bold text-[#b46d2f] text-sm">Date</div>
+                                                        <div className="font-bold text-primary text-sm">Date</div>
                                                         <Input
                                                             type="date"
                                                             required
@@ -464,7 +464,7 @@ Nos auxiliaires de vie assurent une présence 24h/24, 7j/7, selon les besoins en
                                                             type="button"
                                                             variant="ghost"
                                                             size="icon"
-                                                            className="h-8 w-8 rounded-full bg-slate-100 text-[#b46d2f] hover:bg-slate-200"
+                                                            className="h-8 w-8 rounded-full bg-slate-100 text-primary hover:bg-slate-200"
                                                             onClick={decrementDays}
                                                         >-</Button>
                                                         <span className="font-bold text-slate-700 uppercase text-sm">
@@ -474,7 +474,7 @@ Nos auxiliaires de vie assurent une présence 24h/24, 7j/7, selon les besoins en
                                                             type="button"
                                                             variant="ghost"
                                                             size="icon"
-                                                            className="h-8 w-8 rounded-full bg-slate-100 text-[#b46d2f] hover:bg-slate-200"
+                                                            className="h-8 w-8 rounded-full bg-slate-100 text-primary hover:bg-slate-200"
                                                             onClick={incrementDays}
                                                         >+</Button>
                                                     </div>
@@ -484,7 +484,7 @@ Nos auxiliaires de vie assurent une présence 24h/24, 7j/7, selon les besoins en
 
                                         {/* Patient Profile Section */}
                                         <div className="space-y-6">
-                                            <h3 className="text-xl font-bold bg-[#b46d2f] text-white p-3 rounded-lg text-center mb-4 uppercase">
+                                            <h3 className="text-xl font-bold bg-primary text-white p-3 rounded-lg text-center mb-4 uppercase">
                                                 Profil de la personne aidée
                                             </h3>
                                             <div className="p-6 bg-slate-50/50 rounded-xl border border-slate-100 space-y-8">
@@ -509,11 +509,11 @@ Nos auxiliaires de vie assurent une présence 24h/24, 7j/7, selon les besoins en
                                                             className="flex gap-6 pt-2"
                                                         >
                                                             <div className="flex items-center space-x-2">
-                                                                <RadioGroupItem value="femme" id="patient-femme" className="border-[#b46d2f] text-[#b46d2f]" />
+                                                                <RadioGroupItem value="femme" id="patient-femme" className="border-primary text-primary" />
                                                                 <Label htmlFor="patient-femme" className="text-sm font-medium">Femme</Label>
                                                             </div>
                                                             <div className="flex items-center space-x-2">
-                                                                <RadioGroupItem value="homme" id="patient-homme" className="border-[#b46d2f] text-[#b46d2f]" />
+                                                                <RadioGroupItem value="homme" id="patient-homme" className="border-primary text-primary" />
                                                                 <Label htmlFor="patient-homme" className="text-sm font-medium">Homme</Label>
                                                             </div>
                                                         </RadioGroup>
@@ -534,7 +534,7 @@ Nos auxiliaires de vie assurent une présence 24h/24, 7j/7, selon les besoins en
                                                                         <RadioGroupItem
                                                                             value={mob}
                                                                             id={`mob-${mob}`}
-                                                                            className="border-[#b46d2f] text-[#b46d2f]"
+                                                                            className="border-primary text-primary"
                                                                         />
                                                                         <Label htmlFor={`mob-${mob}`} className="text-xs font-medium text-slate-700">{mob}</Label>
                                                                     </div>
@@ -558,7 +558,7 @@ Nos auxiliaires de vie assurent une présence 24h/24, 7j/7, selon les besoins en
 
                                         {/* Additional Notes */}
                                         <div className="space-y-6">
-                                            <h3 className="text-xl font-bold bg-[#b46d2f] text-white p-3 rounded-lg text-center mb-4 uppercase">
+                                            <h3 className="text-xl font-bold bg-primary text-white p-3 rounded-lg text-center mb-4 uppercase">
                                                 Autre précision
                                             </h3>
                                             <div className="p-4 bg-slate-50/50 rounded-xl border border-slate-100">
@@ -574,7 +574,7 @@ Nos auxiliaires de vie assurent une présence 24h/24, 7j/7, selon les besoins en
 
                                         {/* Location Section */}
                                         <div className="space-y-6">
-                                            <h3 className="text-xl font-bold bg-[#b46d2f] text-white p-3 rounded-lg text-center mb-4 uppercase">
+                                            <h3 className="text-xl font-bold bg-primary text-white p-3 rounded-lg text-center mb-4 uppercase">
                                                 Lieu de la garde
                                             </h3>
                                             <div className="p-4 bg-slate-50/50 rounded-xl border border-slate-100">
@@ -584,8 +584,8 @@ Nos auxiliaires de vie assurent une présence 24h/24, 7j/7, selon les besoins en
                                                     className="grid grid-cols-3 gap-4"
                                                 >
                                                     {["Domicile", "Clinique", "Hôpital"].map((location) => (
-                                                        <div key={location} className={`flex flex-col items-center p-3 rounded-xl border-2 transition-all cursor-pointer group ${formData.careLocation === location.toLowerCase() ? 'border-[#b46d2f] bg-white' : 'border-transparent bg-white/50 hover:bg-white'}`}>
-                                                            <RadioGroupItem value={location.toLowerCase()} id={`garde-${location}`} className="mb-2 border-[#b46d2f] text-[#b46d2f]" />
+                                                        <div key={location} className={`flex flex-col items-center p-3 rounded-xl border-2 transition-all cursor-pointer group ${formData.careLocation === location.toLowerCase() ? 'border-primary bg-white' : 'border-transparent bg-white/50 hover:bg-white'}`}>
+                                                            <RadioGroupItem value={location.toLowerCase()} id={`garde-${location}`} className="mb-2 border-primary text-primary" />
                                                             <Label htmlFor={`garde-${location}`} className="font-bold text-xs text-slate-700 cursor-pointer">{location}</Label>
                                                         </div>
                                                     ))}
@@ -595,7 +595,7 @@ Nos auxiliaires de vie assurent une présence 24h/24, 7j/7, selon les besoins en
 
                                         {/* Address Section */}
                                         <div className="space-y-6">
-                                            <h3 className="text-xl font-bold bg-[#b46d2f] text-white p-3 rounded-lg text-center mb-4 uppercase">
+                                            <h3 className="text-xl font-bold bg-primary text-white p-3 rounded-lg text-center mb-4 uppercase">
                                                 Adresse du lieu de la garde
                                             </h3>
                                             <div className="p-6 bg-slate-50/50 rounded-xl border border-slate-100 space-y-6">
@@ -636,12 +636,12 @@ Nos auxiliaires de vie assurent une présence 24h/24, 7j/7, selon les besoins en
 
                                         {/* Personal Info Section */}
                                         <div className="space-y-6">
-                                            <h3 className="text-xl font-bold bg-[#b46d2f] text-white p-3 rounded-lg text-center mb-4 uppercase">
+                                            <h3 className="text-xl font-bold bg-primary text-white p-3 rounded-lg text-center mb-4 uppercase">
                                                 Mes coordonnées
                                             </h3>
                                             <div className="p-6 bg-slate-50/50 rounded-xl border border-slate-100 space-y-6">
-                                                <div className="bg-[#b46d2f]/5 p-4 rounded-lg text-center border border-[#b46d2f]/10">
-                                                    <p className="text-[#b46d2f] text-xs font-bold italic">"Un chargé de clientèle prendra contact avec vous dans les plus brefs delais."</p>
+                                                <div className="bg-primary/5 p-4 rounded-lg text-center border border-primary/10">
+                                                    <p className="text-primary text-xs font-bold italic">"Un chargé de clientèle prendra contact avec vous dans les plus brefs delais."</p>
                                                 </div>
                                                 <div className="grid md:grid-cols-2 gap-6">
                                                     <div className="space-y-2">
@@ -655,7 +655,7 @@ Nos auxiliaires de vie assurent une présence 24h/24, 7j/7, selon les besoins en
                                                                         phonePrefix: e.target.value,
                                                                         whatsappPrefix: prev.useWhatsappForPhone ? e.target.value : prev.whatsappPrefix
                                                                     }))}
-                                                                    className="w-20 font-bold text-[#b46d2f] text-xs text-center"
+                                                                    className="w-20 font-bold text-primary text-xs text-center"
                                                                     placeholder="+212"
                                                                 />
                                                                 <Input
@@ -685,7 +685,7 @@ Nos auxiliaires de vie assurent une présence 24h/24, 7j/7, selon les besoins en
                                                                             whatsappPrefix: checked ? prev.phonePrefix : prev.whatsappPrefix
                                                                         }));
                                                                     }}
-                                                                    className="data-[state=checked]:bg-[#b46d2f] border-[#b46d2f]"
+                                                                    className="data-[state=checked]:bg-primary border-primary"
                                                                 />
                                                                 <label
                                                                     htmlFor="useWhatsapp"
@@ -702,7 +702,7 @@ Nos auxiliaires de vie assurent une présence 24h/24, 7j/7, selon les besoins en
                                                             <Input
                                                                 value={formData.whatsappPrefix}
                                                                 onChange={(e) => setFormData({ ...formData, whatsappPrefix: e.target.value })}
-                                                                className="bg-slate-100 border rounded-lg w-20 text-center font-bold text-[#b46d2f] text-xs"
+                                                                className="bg-slate-100 border rounded-lg w-20 text-center font-bold text-primary text-xs"
                                                                 placeholder="+212"
                                                                 disabled={formData.useWhatsappForPhone}
                                                             />
@@ -742,7 +742,7 @@ Nos auxiliaires de vie assurent une présence 24h/24, 7j/7, selon les besoins en
                                         <div className="flex justify-center pt-8">
                                             <Button
                                                 type="submit"
-                                                className="bg-[#b46d2f] hover:bg-[#9a5d28] text-white px-8 py-4 text-base font-bold shadow-lg shadow-[#b46d2f]/20 h-auto rounded-full w-full md:w-auto md:min-w-[260px] transition-all hover:scale-105 active:scale-95"
+                                                className="bg-primary hover:bg-primary/90 text-white px-8 py-4 text-base font-bold shadow-lg shadow-primary/20 h-auto rounded-full w-full md:w-auto md:min-w-[260px] transition-all hover:scale-105 active:scale-95"
                                             >
                                                 Demander un devis
                                             </Button>
@@ -758,9 +758,9 @@ Nos auxiliaires de vie assurent une présence 24h/24, 7j/7, selon les besoins en
             <Footer />
 
             <Dialog open={showConfirmation} onOpenChange={handleCloseConfirmation}>
-                <DialogContent className="sm:max-w-md bg-[#fdf8f1] border-[#b46d2f]/20">
+                <DialogContent className="sm:max-w-md bg-white border-primary/20">
                     <DialogHeader>
-                        <DialogTitle className="text-[#b46d2f] text-2xl font-bold">Confirmation</DialogTitle>
+                        <DialogTitle className="text-primary text-2xl font-bold">Confirmation</DialogTitle>
                         <DialogDescription className="text-slate-700 text-lg mt-4 leading-relaxed whitespace-pre-line">
                             {getConfirmationMessage(`${formData.firstName} ${formData.lastName}`, totalPrice === 0)}
                         </DialogDescription>
@@ -768,7 +768,7 @@ Nos auxiliaires de vie assurent une présence 24h/24, 7j/7, selon les besoins en
                     <DialogFooter className="mt-6">
                         <Button
                             onClick={() => handleCloseConfirmation(false)}
-                            className="bg-[#b46d2f] hover:bg-[#9a5d28] text-white rounded-full px-8"
+                            className="bg-primary hover:bg-primary/90 text-white rounded-full px-8"
                         >
                             Fermer
                         </Button>

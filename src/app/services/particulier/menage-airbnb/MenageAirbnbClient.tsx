@@ -92,7 +92,7 @@ export default function MenageAirbnbClient() {
         // Send email notification (async)
         sendBookingEmail("Ménage Airbnb", bookingData, "Sur devis", false).catch(console.error);
 
-        router.push("/merci");
+        router.push(window.location.pathname + "/merci");
     };
 
     const handleCloseConfirmation = (open: boolean) => {
@@ -110,7 +110,7 @@ export default function MenageAirbnbClient() {
         <div className="min-h-screen flex flex-col">
             <Header />
 
-            <div style={{ "--primary": "175 35% 72%" } as React.CSSProperties}>
+            <div className="bg-[hsl(var(--primary)/0.05)]" style={{ "--primary": "17 91% 66%" } as React.CSSProperties}>
                 <ServiceHeroSection
                     title="Ménage Airbnb"
                     description={`Le ménage Airbnb a pour objectif d’assurer la propreté et l’entretien courant des espaces attribués.
@@ -129,7 +129,7 @@ Il comprend le :
 - Rangement de la vaisselle
 - Vidage et nettoyage de la poubelle`}
                     image={serviceAirbnb.src}
-                    primaryColor="#9ccfcf"
+                    primaryColor="#f78458"
                     faqs={[
                         {
                             question: "Gérez-vous le séchage et le repassage du linge de maison (draps, serviettes) ?",
@@ -150,9 +150,9 @@ Il comprend le :
                     ]}
                 />
 
-                <main className="flex-1 bg-background py-12">
+                <main className="flex-1 bg-transparent py-12">
                     <div className="container max-w-5xl">
-                        <div className="bg-[#f0f9f8] rounded-lg p-6 text-center mb-8 border border-[#9ed2ce]/30">
+                        <div className="bg-primary/5 rounded-lg p-6 text-center mb-8 border border-primary/20">
                             <h2 className="text-2xl font-bold text-primary mb-2 uppercase tracking-wide">
                                 FORMULAIRE DE RESERVATION
                             </h2>
@@ -538,7 +538,7 @@ Il comprend le :
             <Footer />
 
             <Dialog open={showConfirmation} onOpenChange={handleCloseConfirmation}>
-                <DialogContent className="sm:max-w-md bg-[#f0f9f8] border-[#9ed2ce]/20">
+                <DialogContent className="sm:max-w-md bg-white border-primary/20">
                     <DialogHeader>
                         <DialogTitle className="text-primary text-2xl font-bold">Confirmation</DialogTitle>
                         <DialogDescription className="text-slate-700 text-lg mt-4 leading-relaxed">

@@ -62,7 +62,7 @@ const NettoyageUrgenceContent = () => {
     const [formData, setFormData] = useState(INITIAL_FORM_DATA);
     const router = useRouter();
 
-    const SERVICE_COLOR = "#1e40af"; // Deep blue
+    const SERVICE_COLOR = "#4f8130"; // New green
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
@@ -91,15 +91,15 @@ const NettoyageUrgenceContent = () => {
             };
 
             const price = "Sur DEVIS";
-            const message = formatBookingMessage("Nettoyage d'urgence", bookingData, price, isEntrepriseStatus);
+            const message = formatBookingMessage("Ménage Post-sinistre", bookingData, price, isEntrepriseStatus);
 
             // Send Email
-            await sendBookingEmail("Nettoyage d'urgence", bookingData, price, isEntrepriseStatus);
+            await sendBookingEmail("Ménage Post-sinistre", bookingData, price, isEntrepriseStatus);
 
             // Open WhatsApp
             const whatsappLink = createWhatsAppLink(DESTINATION_PHONE_NUMBER, message);
 
-            router.push("/merci");
+            router.push(window.location.pathname + "/merci");
         } catch (error) {
             toast.error("Une erreur est survenue. Veuillez réessayer.");
         }
@@ -113,7 +113,7 @@ const NettoyageUrgenceContent = () => {
         }
     };
 
-    const serviceDescription = `Le service de nettoyage d’urgence vise à rétablir rapidement la propreté des espaces. Assurer une intervention rapide et ciblée en cas de situation nécessitant une remise en état immédiate des lieux.
+    const serviceDescription = `Le service de ménage post-sinistre vise à rétablir rapidement la propreté des espaces. Assurer une intervention rapide et ciblée en cas de situation nécessitant une remise en état immédiate des lieux.
 
 Les interventions d’urgence couvrent exclusivement les cas suivants :
 - Incendie
@@ -125,10 +125,10 @@ Les interventions d’urgence couvrent exclusivement les cas suivants :
         <div className="min-h-screen flex flex-col">
             <Header />
 
-            <div style={{ "--primary": "224 71% 40%" } as React.CSSProperties}>
+            <div className="bg-[hsl(var(--primary)/0.05)]" style={{ "--primary": "97 46% 35%" } as React.CSSProperties}>
                 <main className="flex-1">
                     <ServiceHeroSection
-                        title="Nettoyage d'urgence"
+                        title="Ménage Post-sinistre"
                         description={serviceDescription}
                         image={serviceUrgence.src}
                         primaryColor={SERVICE_COLOR}
@@ -152,9 +152,9 @@ Les interventions d’urgence couvrent exclusivement les cas suivants :
                         ]}
                     />
 
-                    <section id="booking-form" className="py-12 bg-background">
+                    <section id="booking-form" className="py-12 bg-transparent">
                         <div className="container max-w-5xl mx-auto px-4">
-                            <div className="bg-[#f0f4f9] rounded-lg p-6 text-center mb-8 border border-[#1e40af]/20">
+                            <div className="bg-primary/5 rounded-lg p-6 text-center mb-8 border border-primary/20">
                                 <h2 className="text-2xl font-bold text-primary mb-2 uppercase tracking-wide">
                                     FORMULAIRE DE RESERVATION
                                 </h2>
@@ -171,7 +171,7 @@ Les interventions d’urgence couvrent exclusivement les cas suivants :
                                             <div className="space-y-3">
                                                 <div className="flex justify-between gap-4 border-b border-primary/10 pb-2">
                                                     <span className="text-muted-foreground text-sm">Service:</span>
-                                                    <span className="font-bold text-right text-slate-700 text-sm">Nettoyage d'urgence</span>
+                                                    <span className="font-bold text-right text-slate-700 text-sm">Ménage Post-sinistre</span>
                                                 </div>
 
                                                 {/* Detailed info - hidden on mobile when collapsed */}
@@ -601,7 +601,7 @@ Les interventions d’urgence couvrent exclusivement les cas suivants :
             <Footer />
 
             <Dialog open={showConfirmation} onOpenChange={handleCloseConfirmation}>
-                <DialogContent className="sm:max-w-md bg-[#f0f4f9] border-primary/20">
+                <DialogContent className="sm:max-w-md bg-white border-primary/20">
                     <DialogHeader>
                         <DialogTitle className="text-primary text-2xl font-bold">Confirmation</DialogTitle>
                         <DialogDescription className="text-slate-700 text-lg mt-4 leading-relaxed">

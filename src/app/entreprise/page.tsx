@@ -1,6 +1,6 @@
 import Header from "@/components/Header";
 import HeroSection from "@/components/HeroSection";
-import ServicesGrid from "@/components/ServicesGrid";
+import ServicesSection from "@/components/ServicesSection";
 import AboutSectionEntreprise from "@/components/AboutSectionEntreprise";
 import PresentationSection from "@/components/PresentationSection";
 import TeamReviews from "@/components/TeamReviews";
@@ -34,7 +34,7 @@ const Entreprise = () => {
       <Header />
       <main className="flex-1">
         <HeroSection />
-        <ServicesGrid type="entreprise" />
+        <ServicesSection type="entreprise" />
         <AboutSectionEntreprise />
         <PresentationSection />
         <WhyChooseUs />

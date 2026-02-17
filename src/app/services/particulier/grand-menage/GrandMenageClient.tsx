@@ -146,7 +146,7 @@ export default function GrandMenageClient() {
         // Send email notification (async)
         sendBookingEmail("Grand Ménage", bookingData, totalPrice, false).catch(console.error);
 
-        router.push("/merci");
+        router.push(window.location.pathname + "/merci");
     };
 
     const handleCloseConfirmation = (open: boolean) => {
@@ -203,7 +203,7 @@ export default function GrandMenageClient() {
         <div className="min-h-screen flex flex-col">
             <Header />
 
-            <div style={{ "--primary": "45 30% 35%", "--secondary": "45 30% 90%" } as React.CSSProperties}>
+            <div className="bg-[hsl(var(--primary)/0.05)]" style={{ "--primary": "183 95% 32%", "--secondary": "183 95% 90%" } as React.CSSProperties}>
                 <ServiceHeroSection
                     title="Grand Ménage"
                     description={`Le grand ménage a pour objectif d’assurer la propreté et l’entretien courant des espaces attribués.
@@ -226,7 +226,7 @@ Il comprend le :
 - Organisation du dressing
 - Nettoyage du frigo`}
                     image={serviceGrandMenage.src}
-                    primaryColor="#c5b89a"
+                    primaryColor="#04969e"
                     faqs={[
                         {
                             question: "Quelle est la différence exacte entre un ménage standard et un \"Grand ménage\" ?",
@@ -251,24 +251,24 @@ Il comprend le :
                     ]}
                 />
 
-                <main className="flex-1 bg-background py-12">
+                <main className="flex-1 bg-transparent py-12">
                     <div className="container max-w-5xl">
-                        <div className="bg-[#f3efdf] rounded-lg p-6 text-center mb-8 border border-[#e2d9c2]">
-                            <h2 className="text-2xl font-bold text-[#4a4a4a] mb-2 uppercase tracking-wide">
+                        <div className="bg-primary/5 rounded-lg p-6 text-center mb-8 border border-primary/20">
+                            <h2 className="text-2xl font-bold text-primary mb-2 uppercase tracking-wide">
                                 FORMULAIRE DE RESERVATION
                             </h2>
                         </div>
                         <form id="booking-form" onSubmit={handleSubmit} noValidate className={`flex flex-col lg:grid lg:grid-cols-3 gap-8 ${wasValidated ? 'was-validated' : ''}`}>
                             <div className="lg:col-span-1 lg:order-last sticky-reservation-summary-container">
                                 <div className="lg:sticky lg:top-24 space-y-6">
-                                    <div className="bg-[#fdfcf9] rounded-lg border border-[#e2d9c2]/30 shadow-sm p-6 space-y-4 relative">
-                                        <h3 className="text-xl font-bold text-[#c5b89a] border-b border-[#e2d9c2]/30 pb-2 text-center">
+                                    <div className="bg-primary/5 rounded-lg border border-primary/20 shadow-sm p-6 space-y-4 relative">
+                                        <h3 className="text-xl font-bold text-primary border-b border-primary/20 pb-2 text-center">
                                             Ma Réservation
                                         </h3>
                                         <div className="space-y-3">
-                                            <div className="flex justify-between gap-4 border-b border-[#e2d9c2]/20 pb-2">
+                                            <div className="flex justify-between gap-4 border-b border-primary/10 pb-2">
                                                 <span className="text-muted-foreground">Service:</span>
-                                                <span className="font-medium text-right text-slate-700">Grand Ménage</span>
+                                                <span className="font-medium text-right text-primary">Grand Ménage</span>
                                             </div>
 
                                             <div className={`space-y-3 ${!isSummaryExpanded ? 'max-lg:hidden' : ''}`}>
@@ -302,7 +302,7 @@ Il comprend le :
                                                         <span>-{discountAmount} MAD</span>
                                                     </div>
                                                 )}
-                                                <div className="flex justify-between gap-4 border-t border-[#e2d9c2]/20 pt-2">
+                                                <div className="flex justify-between gap-4 border-t border-primary/10 pt-2">
                                                     <span className="text-muted-foreground">Date:</span>
                                                     <span className="font-medium text-right text-slate-700">{formData.schedulingDate || "Non définie"}</span>
                                                 </div>
@@ -320,14 +320,14 @@ Il comprend le :
                                                 <span className="text-lg font-bold">
                                                     {formData.frequency === "subscription" ? "Total Mensuel" : "Total"}
                                                 </span>
-                                                <span className="text-2xl font-bold text-[#c5b89a]">{Math.round(totalPrice)} MAD</span>
+                                                <span className="text-2xl font-bold text-primary">{Math.round(totalPrice)} MAD</span>
                                             </div>
                                         </div>
 
                                         <button
                                             type="button"
                                             onClick={() => setIsSummaryExpanded(!isSummaryExpanded)}
-                                            className="lg:hidden absolute -bottom-3 left-1/2 -translate-x-1/2 w-8 h-8 rounded-full bg-[#c5b89a] text-white flex items-center justify-center shadow-lg border-2 border-white z-20 hover:bg-[#c5b89a]/90 transition-transform active:scale-90"
+                                            className="lg:hidden absolute -bottom-3 left-1/2 -translate-x-1/2 w-8 h-8 rounded-full bg-primary text-white flex items-center justify-center shadow-lg border-2 border-white z-20 hover:bg-primary/90 transition-transform active:scale-90"
                                         >
                                             {isSummaryExpanded ? <ChevronUp size={20} /> : <ChevronDown size={20} />}
                                         </button>
@@ -338,7 +338,7 @@ Il comprend le :
                             <div className="lg:col-span-2 space-y-8">
                                 <div className="bg-card rounded-lg p-4 md:p-8 border shadow-sm space-y-10">
                                     <div>
-                                        <h3 className="text-xl font-bold bg-[#e2d9c2] text-[#4a4a4a] p-3 rounded-lg text-center mb-4 uppercase">
+                                        <h3 className="text-xl font-bold bg-primary/10 text-primary p-3 rounded-lg text-center mb-4 uppercase">
                                             Type d'habitation
                                         </h3>
                                         <RadioGroup
@@ -348,7 +348,7 @@ Il comprend le :
                                         >
                                             {["Studio", "Appartement", "Duplex", "Villa", "Maison"].map((type) => (
                                                 <div key={type} className="flex items-center space-x-3">
-                                                    <RadioGroupItem value={type.toLowerCase()} id={`gm-${type}`} className="border-[#e2d9c2] text-[#e2d9c2]" />
+                                                    <RadioGroupItem value={type.toLowerCase()} id={`gm-${type}`} className="border-primary text-primary" />
                                                     <Label htmlFor={`gm-${type}`} className="font-bold text-slate-700">{type}</Label>
                                                 </div>
                                             ))}
@@ -356,7 +356,7 @@ Il comprend le :
                                     </div>
 
                                     <div>
-                                        <h3 className="text-xl font-bold bg-[#e2d9c2] text-[#4a4a4a] p-3 rounded-lg text-center mb-4">
+                                        <h3 className="text-xl font-bold bg-primary/10 text-primary p-3 rounded-lg text-center mb-4">
                                             Indiquez la superficie de votre espace en m².
                                         </h3>
                                         <div className="px-8 py-10 border rounded-xl bg-white shadow-sm space-y-8">
@@ -387,7 +387,7 @@ Il comprend le :
                                     </div>
 
                                     <div>
-                                        <h3 className="text-xl font-bold bg-[#e2d9c2] text-[#4a4a4a] p-3 rounded-lg text-center mb-4">
+                                        <h3 className="text-xl font-bold bg-primary/10 text-primary p-3 rounded-lg text-center mb-4">
                                             Choisissez la fréquence
                                         </h3>
                                         <div className="p-4 space-y-4">
@@ -444,7 +444,7 @@ Il comprend le :
                                     </div>
 
                                     <div>
-                                        <h3 className="text-xl font-bold bg-[#e2d9c2] text-[#4a4a4a] p-3 rounded-lg text-center mb-4">
+                                        <h3 className="text-xl font-bold bg-primary/10 text-primary p-3 rounded-lg text-center mb-4">
                                             Durée de prestation
                                         </h3>
                                         <div className="flex items-center justify-center gap-8 p-4 bg-white border rounded-xl">
@@ -452,20 +452,20 @@ Il comprend le :
                                                 type="button"
                                                 variant="ghost"
                                                 size="icon"
-                                                className="h-10 w-10 rounded-full bg-slate-100 text-[#c5b89a] hover:bg-slate-200 border border-slate-200 shadow-sm disabled:opacity-30"
+                                                className="h-10 w-10 rounded-full bg-slate-100 text-primary hover:bg-slate-200 border border-slate-200 shadow-sm disabled:opacity-30"
                                                 onClick={decrementDuration}
                                                 disabled={formData.duration <= calculateMinResources(formData.surfaceArea).duration}
                                             >
                                                 <span className="text-2xl">-</span>
                                             </Button>
-                                            <span className="text-3xl font-extrabold text-[#c5b89a] min-w-[60px] text-center">
+                                            <span className="text-3xl font-extrabold text-primary min-w-[60px] text-center">
                                                 {formData.duration}
                                             </span>
                                             <Button
                                                 type="button"
                                                 variant="ghost"
                                                 size="icon"
-                                                className="h-10 w-10 rounded-full bg-slate-100 text-[#c5b89a] hover:bg-slate-200 border border-slate-200 shadow-sm"
+                                                className="h-10 w-10 rounded-full bg-slate-100 text-primary hover:bg-slate-200 border border-slate-200 shadow-sm"
                                                 onClick={incrementDuration}
                                             >
                                                 <span className="text-2xl">+</span>
@@ -474,7 +474,7 @@ Il comprend le :
                                     </div>
 
                                     <div>
-                                        <h3 className="text-xl font-bold bg-[#e2d9c2] text-[#4a4a4a] p-3 rounded-lg text-center mb-4">
+                                        <h3 className="text-xl font-bold bg-primary/10 text-primary p-3 rounded-lg text-center mb-4">
                                             Nombre de personne
                                         </h3>
                                         <div className="flex items-center justify-center gap-8 p-4 bg-white border rounded-xl">
@@ -482,20 +482,20 @@ Il comprend le :
                                                 type="button"
                                                 variant="ghost"
                                                 size="icon"
-                                                className="h-10 w-10 rounded-full bg-slate-100 text-[#c5b89a] hover:bg-slate-200 border border-slate-200 shadow-sm disabled:opacity-30"
+                                                className="h-10 w-10 rounded-full bg-slate-100 text-primary hover:bg-slate-200 border border-slate-200 shadow-sm disabled:opacity-30"
                                                 onClick={decrementPeople}
                                                 disabled={formData.numberOfPeople <= calculateMinResources(formData.surfaceArea).people}
                                             >
                                                 <span className="text-2xl">-</span>
                                             </Button>
-                                            <span className="text-3xl font-extrabold text-[#c5b89a] min-w-[60px] text-center">
+                                            <span className="text-3xl font-extrabold text-primary min-w-[60px] text-center">
                                                 {formData.numberOfPeople}
                                             </span>
                                             <Button
                                                 type="button"
                                                 variant="ghost"
                                                 size="icon"
-                                                className="h-10 w-10 rounded-full bg-slate-100 text-[#c5b89a] hover:bg-slate-200 border border-slate-200 shadow-sm"
+                                                className="h-10 w-10 rounded-full bg-slate-100 text-primary hover:bg-slate-200 border border-slate-200 shadow-sm"
                                                 onClick={incrementPeople}
                                             >
                                                 <span className="text-2xl">+</span>
@@ -504,7 +504,7 @@ Il comprend le :
                                     </div>
 
                                     <div>
-                                        <h3 className="text-xl font-bold bg-[#e2d9c2] text-[#4a4a4a] p-3 rounded-lg text-center mb-4">
+                                        <h3 className="text-xl font-bold bg-primary/10 text-primary p-3 rounded-lg text-center mb-4">
                                             Planning pour votre demande
                                         </h3>
                                         <div className="grid md:grid-cols-3 gap-6 p-4 border rounded-xl bg-white shadow-sm">
@@ -516,9 +516,9 @@ Il comprend le :
                                                         name="schedulingType"
                                                         checked={formData.schedulingType === "fixed"}
                                                         onChange={() => setFormData({ ...formData, schedulingType: "fixed" })}
-                                                        className="w-4 h-4 text-[#c5b89a]"
+                                                        className="w-4 h-4 text-primary"
                                                     />
-                                                    <Label htmlFor="fixed" className="font-bold text-[#c5b89a] text-sm cursor-pointer text-center">Je souhaite une heure fixe</Label>
+                                                    <Label htmlFor="fixed" className="font-bold text-primary text-sm cursor-pointer text-center">Je souhaite une heure fixe</Label>
                                                 </div>
                                                 <div className="flex justify-center">
                                                     <input
@@ -527,7 +527,7 @@ Il comprend le :
                                                         value={formData.fixedTime}
                                                         onChange={(e) => setFormData({ ...formData, fixedTime: e.target.value })}
                                                         disabled={formData.schedulingType !== "fixed"}
-                                                        className="w-32 text-center text-xl font-bold h-12 border-[#c5b89a]/30 rounded-md border"
+                                                        className="w-32 text-center text-xl font-bold h-12 border-primary/30 rounded-md border"
                                                     />
                                                 </div>
                                             </div>
@@ -540,9 +540,9 @@ Il comprend le :
                                                         name="schedulingType"
                                                         checked={formData.schedulingType === "flexible"}
                                                         onChange={() => setFormData({ ...formData, schedulingType: "flexible" })}
-                                                        className="w-4 h-4 text-[#c5b89a]"
+                                                        className="w-4 h-4 text-primary"
                                                     />
-                                                    <Label htmlFor="flexible" className="font-bold text-[#c5b89a] text-sm cursor-pointer text-center">Je suis flexible</Label>
+                                                    <Label htmlFor="flexible" className="font-bold text-primary text-sm cursor-pointer text-center">Je suis flexible</Label>
                                                 </div>
                                                 <RadioGroup
                                                     value={formData.schedulingTime}
@@ -551,18 +551,18 @@ Il comprend le :
                                                     className="space-y-2 text-left inline-block"
                                                 >
                                                     <div className="flex items-center space-x-2">
-                                                        <RadioGroupItem value="morning" id="morning" className="border-[#e2d9c2] text-[#c5b89a]" />
+                                                        <RadioGroupItem value="morning" id="morning" className="border-primary/20 text-primary" />
                                                         <Label htmlFor="morning" className="text-sm font-medium">Le matin</Label>
                                                     </div>
                                                     <div className="flex items-center space-x-2">
-                                                        <RadioGroupItem value="afternoon" id="afternoon" className="border-[#e2d9c2] text-[#c5b89a]" />
+                                                        <RadioGroupItem value="afternoon" id="afternoon" className="border-primary/20 text-primary" />
                                                         <Label htmlFor="afternoon" className="text-sm font-medium">L'après midi</Label>
                                                     </div>
                                                 </RadioGroup>
                                             </div>
 
                                             <div className="text-center space-y-3">
-                                                <div className="font-bold text-[#c5b89a] text-sm">Date</div>
+                                                <div className="font-bold text-primary text-sm">Date</div>
                                                 <Input
                                                     type="date"
                                                     required
@@ -575,11 +575,11 @@ Il comprend le :
                                     </div>
 
                                     <div>
-                                        <h3 className="text-xl font-bold bg-[#e2d9c2] text-[#4a4a4a] p-3 rounded-lg text-center mb-4">
+                                        <h3 className="text-xl font-bold bg-primary/10 text-primary p-3 rounded-lg text-center mb-4">
                                             Service Optionnels
                                         </h3>
                                         <div className="p-6 border rounded-xl bg-slate-50/50 space-y-6">
-                                            <div className="text-center font-bold text-[#c5b89a] mb-2 uppercase text-xs tracking-wider">
+                                            <div className="text-center font-bold text-primary mb-2 uppercase text-xs tracking-wider">
                                                 Produit fournis par l'agence ménage :
                                             </div>
                                             <div className="grid grid-cols-1 md:grid-cols-3 gap-y-2 gap-x-4 max-w-2xl mx-auto mb-6 text-center">
@@ -587,14 +587,14 @@ Il comprend le :
                                                     ...PRODUCTS_LIST
                                                 ].map((item) => (
                                                     <div key={item} className="flex items-center justify-center gap-2">
-                                                        <div className="w-1.5 h-1.5 rounded-full bg-[#c5b89a]" />
+                                                        <div className="w-1.5 h-1.5 rounded-full bg-primary" />
                                                         <span className="text-[11px] font-bold text-slate-600">{item}</span>
                                                     </div>
                                                 ))}
                                             </div>
 
                                             <div className="space-y-4 max-w-lg mx-auto">
-                                                <div className="flex items-center justify-between p-4 bg-white border border-[#e2d9c2]/20 rounded-xl shadow-sm">
+                                                <div className="flex items-center justify-between p-4 bg-white border border-primary/10 rounded-xl shadow-sm">
                                                     <div className="flex items-center gap-4">
                                                         <img
                                                             src={cleaningProduct.src}
@@ -602,7 +602,7 @@ Il comprend le :
                                                             className="w-10 h-10 object-contain"
                                                         />
                                                         <div className="flex flex-col">
-                                                            <span className="font-bold text-[#c5b89a] text-sm">Produits : + 90 MAD</span>
+                                                            <span className="font-bold text-primary text-sm">Produits : + 90 MAD</span>
                                                         </div>
                                                     </div>
                                                     <Switch
@@ -613,11 +613,11 @@ Il comprend le :
                                                                 additionalServices: { ...formData.additionalServices, produitsEtOutils: checked }
                                                             })
                                                         }
-                                                        className="data-[state=checked]:bg-[#c5b89a]"
+                                                        className="data-[state=checked]:bg-primary"
                                                     />
                                                 </div>
 
-                                                <div className="flex items-center justify-between p-4 bg-white border border-[#e2d9c2]/20 rounded-xl shadow-sm">
+                                                <div className="flex items-center justify-between p-4 bg-white border border-primary/10 rounded-xl shadow-sm">
                                                     <div className="flex items-center gap-3">
                                                         <div className="w-10 h-10 bg-slate-50 border border-slate-100 rounded-lg flex items-center justify-center overflow-hidden">
                                                             <img
@@ -626,7 +626,7 @@ Il comprend le :
                                                                 className="w-full h-full object-cover"
                                                             />
                                                         </div>
-                                                        <span className="font-bold text-[#c5b89a] text-sm">Torchons et serpillères : + 40 MAD</span>
+                                                        <span className="font-bold text-primary text-sm">Torchons et serpillères : + 40 MAD</span>
                                                     </div>
                                                     <Switch
                                                         checked={formData.additionalServices.torchonsEtSerpierres}
@@ -636,7 +636,7 @@ Il comprend le :
                                                                 additionalServices: { ...formData.additionalServices, torchonsEtSerpierres: checked }
                                                             })
                                                         }
-                                                        className="data-[state=checked]:bg-[#c5b89a]"
+                                                        className="data-[state=checked]:bg-primary"
                                                     />
                                                 </div>
                                             </div>
@@ -644,7 +644,7 @@ Il comprend le :
                                     </div>
 
                                     <div>
-                                        <h3 className="text-xl font-bold bg-[#e2d9c2] text-[#4a4a4a] p-3 rounded-lg mb-4 text-center">
+                                        <h3 className="text-xl font-bold bg-primary/10 text-primary p-3 rounded-lg mb-4 text-center">
                                             où aura lieu votre ménage ?
                                         </h3>
                                         <div className="grid md:grid-cols-2 gap-4 p-4 border rounded-xl bg-white mb-4 shadow-sm">
@@ -664,7 +664,7 @@ Il comprend le :
                                             />
                                         </div>
                                         <div className="p-4 border rounded-xl bg-white shadow-sm">
-                                            <Label className="font-bold text-[#c5b89a] text-xs uppercase mb-2 block">Champs de repère</Label>
+                                            <Label className="font-bold text-primary text-xs uppercase mb-2 block">Champs de repère</Label>
                                             <Textarea
                                                 placeholder="Donnez-nous des repères pour faciliter le travail de ménage"
                                                 required
@@ -675,19 +675,19 @@ Il comprend le :
                                         </div>
                                     </div>
 
-                                    <div className="bg-white border border-[#e2d9c2]/40 rounded-xl overflow-hidden shadow-sm">
-                                        <h3 className="text-xl font-bold bg-[#e2d9c2] text-[#4a4a4a] p-3 text-center">
+                                    <div className="bg-white border border-primary/10 rounded-xl overflow-hidden shadow-sm">
+                                        <h3 className="text-xl font-bold bg-primary/10 text-primary p-3 text-center">
                                             Mes Informations
                                         </h3>
                                         <div className="p-6 grid md:grid-cols-2 gap-6">
                                             <div className="space-y-2">
-                                                <Label className="font-bold text-[#c5b89a] text-xs uppercase">Numéro de téléphone*</Label>
+                                                <Label className="font-bold text-primary text-xs uppercase">Numéro de téléphone*</Label>
                                                 <div className="space-y-3">
                                                     <div className="flex gap-2">
                                                         <Input
                                                             value={formData.phonePrefix}
                                                             onChange={(e) => setFormData({ ...formData, phonePrefix: e.target.value })}
-                                                            className="w-24 border-slate-300 font-bold text-[#1c6664] text-center"
+                                                            className="w-24 border-slate-300 font-bold text-primary text-center"
                                                             placeholder="+212"
                                                         />
                                                         <Input
@@ -717,7 +717,7 @@ Il comprend le :
                                                                     whatsappPrefix: checked ? prev.phonePrefix : prev.whatsappPrefix
                                                                 }));
                                                             }}
-                                                            className="data-[state=checked]:bg-[#c5b89a] border-[#c5b89a]"
+                                                            className="data-[state=checked]:bg-primary border-primary"
                                                         />
                                                         <label
                                                             htmlFor="useWhatsapp"
@@ -729,12 +729,12 @@ Il comprend le :
                                                 </div>
                                             </div>
                                             <div className="space-y-2">
-                                                <Label className="font-bold text-[#c5b89a] text-xs uppercase">Numéro whatsapp</Label>
+                                                <Label className="font-bold text-primary text-xs uppercase">Numéro whatsapp</Label>
                                                 <div className="flex gap-2">
                                                     <Input
                                                         value={formData.whatsappPrefix}
                                                         onChange={(e) => setFormData({ ...formData, whatsappPrefix: e.target.value })}
-                                                        className="w-20 border-slate-300 font-bold text-[#1c6664] text-center"
+                                                        className="w-20 border-slate-300 font-bold text-primary text-center"
                                                         placeholder="+212"
                                                         disabled={formData.useWhatsappForPhone}
                                                     />
@@ -748,7 +748,7 @@ Il comprend le :
                                                 </div>
                                             </div>
                                             <div className="space-y-2">
-                                                <Label className="font-bold text-[#c5b89a] text-xs uppercase">Nom*</Label>
+                                                <Label className="font-bold text-primary text-xs uppercase">Nom*</Label>
                                                 <Input
                                                     value={formData.lastName}
                                                     onChange={(e) => setFormData({ ...formData, lastName: e.target.value })}
@@ -758,7 +758,7 @@ Il comprend le :
                                                 />
                                             </div>
                                             <div className="space-y-2">
-                                                <Label className="font-bold text-[#c5b89a] text-xs uppercase">Prénom*</Label>
+                                                <Label className="font-bold text-primary text-xs uppercase">Prénom*</Label>
                                                 <Input
                                                     value={formData.firstName}
                                                     onChange={(e) => setFormData({ ...formData, firstName: e.target.value })}
@@ -773,7 +773,7 @@ Il comprend le :
                                     <div className="flex justify-center">
                                         <Button
                                             type="submit"
-                                            className="bg-[#f3d299] hover:bg-[#f2ca85] text-slate-800 px-8 py-4 text-base font-bold shadow-lg shadow-[#f3d299]/20 h-auto rounded-full w-full md:w-auto md:min-w-[260px] transition-all hover:scale-105 active:scale-95"
+                                            className="bg-primary hover:bg-primary/90 text-white px-8 py-4 text-base font-bold shadow-lg shadow-primary/20 h-auto rounded-full w-full md:w-auto md:min-w-[260px] transition-all hover:scale-105 active:scale-95"
                                         >
                                             Confirmer ma réservation
                                         </Button>
@@ -788,9 +788,9 @@ Il comprend le :
             <Footer />
 
             <Dialog open={showConfirmation} onOpenChange={handleCloseConfirmation}>
-                <DialogContent className="sm:max-w-md bg-[#fdfaf1] border-[#e2d9c2]/20">
+                <DialogContent className="sm:max-w-md bg-white border-primary/20">
                     <DialogHeader>
-                        <DialogTitle className="text-[#c5b89a] text-2xl font-bold">Confirmation</DialogTitle>
+                        <DialogTitle className="text-primary text-2xl font-bold">Confirmation</DialogTitle>
                         <DialogDescription className="text-slate-700 text-lg mt-4 leading-relaxed">
                             {getConfirmationMessage(`${formData.firstName} ${formData.lastName}`, false)}
                         </DialogDescription>
@@ -798,7 +798,7 @@ Il comprend le :
                     <DialogFooter className="mt-6">
                         <Button
                             onClick={() => handleCloseConfirmation(false)}
-                            className="bg-[#c5b89a] hover:bg-[#c5b89a]/90 text-white rounded-full px-8"
+                            className="bg-primary hover:bg-primary/90 text-white rounded-full px-8"
                         >
                             Fermer
                         </Button>

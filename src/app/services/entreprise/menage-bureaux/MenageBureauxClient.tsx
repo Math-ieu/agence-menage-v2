@@ -168,7 +168,7 @@ export default function MenageBureauxClient() {
 
         try {
             await sendBookingEmail("Ménage Bureaux", bookingData, totalPrice, true);
-            router.push("/merci");
+            router.push(window.location.pathname + "/merci");
         } catch (error) {
             toast.error("Une erreur est survenue lors de l'envoi de votre demande.");
         }
@@ -194,7 +194,7 @@ export default function MenageBureauxClient() {
         <div className="min-h-screen flex flex-col">
             <Header />
 
-            <div style={{ "--primary": "69 66% 51%" } as React.CSSProperties}>
+            <div className="bg-[hsl(var(--primary)/0.05)]" style={{ "--primary": "70 66% 60%" } as React.CSSProperties}>
                 <ServiceHeroSection
                     title="Ménage Bureaux"
                     description="Nettoyage des espaces de travail afin de garantir un environnement propre, sain et agréable pour les employés et les visiteurs. La prestation comprend : Le dépoussiérage des bureaux, plans de travail et surfaces accessibles, Le nettoyage des sols (balayage, serpière…), Le vidage des poubelles, Le nettoyage des vitres accessibles, L’entretien des espaces communs (salles de réunion, couloirs, cuisine, escaliers), nettoyage des bureaux, chaises, sols, toilettes… ainsi que les balcons, escaliers lorsqu’ils sont accessibles."
@@ -220,9 +220,9 @@ export default function MenageBureauxClient() {
                     ]}
                 />
 
-                <main className="flex-1 bg-background py-12">
+                <main className="flex-1 bg-transparent py-12">
                     <div className="container max-w-5xl">
-                        <div className="bg-[#f2f8d9] rounded-lg p-6 text-center mb-8 border border-[#d6e792]">
+                        <div className="bg-primary/5 rounded-lg p-6 text-center mb-8 border border-primary/20">
                             <h2 className="text-2xl font-bold text-primary mb-2 uppercase tracking-wide">
                                 FORMULAIRE DE RESERVATION
                             </h2>
@@ -597,7 +597,7 @@ export default function MenageBureauxClient() {
                                                 </div>
                                                 <div className="flex items-center justify-between w-full pt-4 border-t">
                                                     <div className="flex items-center gap-4">
-                                                        <div className="w-12 h-12 rounded-lg bg-pink-50 flex items-center justify-center">
+                                                        <div className="w-12 h-12 rounded-lg bg-pink-50/50 border border-pink-100 flex items-center justify-center">
                                                             <span className="text-2xl">🧴</span>
                                                         </div>
                                                         <div className="text-left">
@@ -616,7 +616,7 @@ export default function MenageBureauxClient() {
                                                 </div>
                                             </div>
 
-                                            <div className="bg-[#f0f9ff] p-4 rounded-xl border border-blue-100 flex items-center justify-between">
+                                            <div className="bg-primary/5 p-4 rounded-xl border border-primary/20 flex items-center justify-between">
                                                 <div className="flex items-center gap-4">
                                                     <div className="w-12 h-12 rounded-lg bg-blue-100 flex items-center justify-center">
                                                         <span className="text-2xl">🧹</span>
@@ -768,7 +768,7 @@ export default function MenageBureauxClient() {
             <Footer />
 
             <Dialog open={showConfirmation} onOpenChange={handleCloseConfirmation}>
-                <DialogContent className="sm:max-w-md bg-[#fdf8f1] border-primary/20">
+                <DialogContent className="sm:max-w-md bg-white border-primary/20">
                     <DialogHeader>
                         <DialogTitle className="text-primary text-2xl font-bold">Confirmation</DialogTitle>
                         <DialogDescription className="text-slate-700 text-lg mt-4 leading-relaxed whitespace-pre-line">

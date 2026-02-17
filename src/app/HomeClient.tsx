@@ -1,7 +1,7 @@
 "use client";
 import Header from "@/components/Header";
 import HeroSection from "@/components/HeroSection";
-import ServicesGrid from "@/components/ServicesGrid";
+import ServicesSection from "@/components/ServicesSection";
 import AboutSectionParticulier from "@/components/AboutSectionParliculier";
 import PresentationSection from "@/components/PresentationSection";
 import WhyChooseUs from "@/components/WhyChooseUs";
@@ -15,7 +15,7 @@ export default function HomeClient() {
             <Header />
             <main className="flex-1">
                 <HeroSection />
-                <ServicesGrid type="particulier" />
+                <ServicesSection />
                 <AboutSectionParticulier />
                 <PresentationSection />
                 <WhyChooseUs />

@@ -138,7 +138,7 @@ const MenageDemenagementContent = () => {
         // Send email notification (async)
         sendBookingEmail("Ménage post-déménagement", bookingData, totalPrice || "Sur devis", false).catch(console.error);
 
-        router.push("/merci");
+        router.push(window.location.pathname + "/merci");
     };
 
     const handleCloseConfirmation = (open: boolean) => {
@@ -168,7 +168,7 @@ const MenageDemenagementContent = () => {
         <div className="min-h-screen flex flex-col">
             <Header />
 
-            <div style={{ "--primary": "39 63% 35%", "--secondary": "39 63% 90%" } as React.CSSProperties}>
+            <div className="bg-[hsl(var(--primary)/0.05)]" style={{ "--primary": "36 92% 70%", "--secondary": "36 92% 95%" } as React.CSSProperties}>
                 <ServiceHeroSection
                     title="Ménage post - déménagement"
                     description={`Ménage post-déménagement : – tout inclus :
@@ -181,7 +181,7 @@ const MenageDemenagementContent = () => {
 Produits + matériel + main-d'œuvre inclus.
 Options possibles : vitres extérieures/grandes baies, terrasse.`}
                     image={serviceDemenagement.src}
-                    primaryColor="#d1a246"
+                    primaryColor="#f8c170"
                     faqs={[
                         {
                             question: "Fournissez-vous le matériel et les produits pour ce type de ménage ?",
@@ -202,10 +202,10 @@ Options possibles : vitres extérieures/grandes baies, terrasse.`}
                     ]}
                 />
 
-                <main className="flex-1 bg-background py-12">
+                <main className="flex-1 bg-transparent py-12">
                     <div className="container max-w-5xl px-4 mx-auto">
-                        <div className="bg-[#f3efdf] rounded-lg p-6 text-center mb-8 border border-[#d1a246]">
-                            <h2 className="text-2xl font-bold text-[#8a6d2f] mb-2 uppercase tracking-wide">
+                        <div className="bg-primary/5 rounded-lg p-6 text-center mb-8 border border-primary/20">
+                            <h2 className="text-2xl font-bold text-primary mb-2 uppercase tracking-wide">
                                 FORMULAIRE DE RESERVATION
                             </h2>
                         </div>
@@ -294,7 +294,7 @@ Options possibles : vitres extérieures/grandes baies, terrasse.`}
                             <div className="lg:col-span-2 space-y-8">
                                 <div className="bg-card rounded-lg p-4 md:p-8 border shadow-sm space-y-10">
                                     <div>
-                                        <h3 className="text-xl font-bold bg-[#d1a246] text-white p-3 rounded-lg text-center mb-4 uppercase">
+                                        <h3 className="text-xl font-bold bg-primary/10 text-primary p-3 rounded-lg text-center mb-4 uppercase">
                                             Type d'habitation
                                         </h3>
                                         <RadioGroup
@@ -304,7 +304,7 @@ Options possibles : vitres extérieures/grandes baies, terrasse.`}
                                         >
                                             {["Studio", "Appartement", "Duplex", "Villa", "Maison"].map((type) => (
                                                 <div key={type} className="flex items-center space-x-3">
-                                                    <RadioGroupItem value={type.toLowerCase()} id={`pd-${type}`} className="border-[#d1a246] text-[#d1a246]" />
+                                                    <RadioGroupItem value={type.toLowerCase()} id={`pd-${type}`} className="border-primary text-primary" />
                                                     <Label htmlFor={`pd-${type}`} className="font-bold text-slate-700">{type}</Label>
                                                 </div>
                                             ))}
@@ -312,7 +312,7 @@ Options possibles : vitres extérieures/grandes baies, terrasse.`}
                                     </div>
 
                                     <div>
-                                        <h3 className="text-xl font-bold bg-[#d1a246] text-white p-3 rounded-lg text-center mb-4">
+                                        <h3 className="text-xl font-bold bg-primary/10 text-primary p-3 rounded-lg text-center mb-4">
                                             Indiquez la superficie de votre espace en m².
                                         </h3>
                                         <div className="px-8 py-10 border rounded-xl bg-white shadow-sm space-y-8">
@@ -339,7 +339,7 @@ Options possibles : vitres extérieures/grandes baies, terrasse.`}
                                     </div>
 
                                     <div>
-                                        <h3 className="text-xl font-bold bg-[#d1a246] text-white p-3 rounded-lg text-center mb-4 uppercase">
+                                        <h3 className="text-xl font-bold bg-primary/10 text-primary p-3 rounded-lg text-center mb-4 uppercase">
                                             Le logement sera
                                         </h3>
                                         <RadioGroup
@@ -348,15 +348,15 @@ Options possibles : vitres extérieures/grandes baies, terrasse.`}
                                             className="flex flex-wrap items-center justify-center gap-12 p-4"
                                         >
                                             <div className="flex items-center space-x-3">
-                                                <RadioGroupItem value="vide" id="vide" className="border-[#d1a246] text-[#d1a246]" />
+                                                <RadioGroupItem value="vide" id="vide" className="border-primary text-primary" />
                                                 <Label htmlFor="vide" className="font-bold text-slate-700">Vide</Label>
                                             </div>
                                             <div className="flex items-center space-x-3">
-                                                <RadioGroupItem value="semi-meuble" id="semi-meuble" className="border-[#d1a246] text-[#d1a246]" />
+                                                <RadioGroupItem value="semi-meuble" id="semi-meuble" className="border-primary text-primary" />
                                                 <Label htmlFor="semi-meuble" className="font-bold text-slate-700">Semi meublé</Label>
                                             </div>
                                             <div className="flex items-center space-x-3">
-                                                <RadioGroupItem value="meuble" id="meuble" className="border-[#d1a246] text-[#d1a246]" />
+                                                <RadioGroupItem value="meuble" id="meuble" className="border-primary text-primary" />
                                                 <Label htmlFor="meuble" className="font-bold text-slate-700">Meublé</Label>
                                             </div>
                                         </RadioGroup>
@@ -364,7 +364,7 @@ Options possibles : vitres extérieures/grandes baies, terrasse.`}
 
 
                                     <div>
-                                        <h3 className="text-xl font-bold bg-[#d1a246] text-white p-3 rounded-lg text-center mb-4 uppercase">
+                                        <h3 className="text-xl font-bold bg-primary/10 text-primary p-3 rounded-lg text-center mb-4 uppercase">
                                             Type de salissure
                                         </h3>
                                         <div className="bg-white border rounded-xl p-4">
@@ -374,11 +374,11 @@ Options possibles : vitres extérieures/grandes baies, terrasse.`}
                                                 className="flex items-center justify-center gap-12 p-4"
                                             >
                                                 <div className="flex items-center space-x-3">
-                                                    <RadioGroupItem value="normal" id="normal" className="border-[#d1a246] text-[#d1a246]" />
+                                                    <RadioGroupItem value="normal" id="normal" className="border-primary text-primary" />
                                                     <Label htmlFor="normal" className="font-bold text-slate-700">Normal</Label>
                                                 </div>
                                                 <div className="flex items-center space-x-3">
-                                                    <RadioGroupItem value="intensif" id="intensif" className="border-[#d1a246] text-[#d1a246]" />
+                                                    <RadioGroupItem value="intensif" id="intensif" className="border-primary text-primary" />
                                                     <Label htmlFor="intensif" className="font-bold text-slate-700 flex flex-col items-start gap-1">
                                                         <span>Intensif</span>
                                                         {formData.cleanlinessType === "intensif" && (
@@ -393,12 +393,12 @@ Options possibles : vitres extérieures/grandes baies, terrasse.`}
                                     </div>
 
                                     <div>
-                                        <h3 className="text-xl font-bold bg-[#d1a246] text-white p-3 rounded-lg mb-4 text-center uppercase">
+                                        <h3 className="text-xl font-bold bg-primary/10 text-primary p-3 rounded-lg mb-4 text-center uppercase">
                                             Services Optionnels
                                         </h3>
                                         <div className="p-6 border rounded-xl bg-slate-50/50 space-y-4">
-                                            <div className="flex items-center justify-between p-4 bg-white border border-[#d1a246]/20 rounded-xl shadow-sm">
-                                                <span className="font-bold text-[#8a6d2f] text-sm">Nettoyage Terrasse : 500 MAD</span>
+                                            <div className="flex items-center justify-between p-4 bg-white border border-primary/10 rounded-xl shadow-sm">
+                                                <span className="font-bold text-primary text-sm">Nettoyage Terrasse : 500 MAD</span>
                                                 <Switch
                                                     checked={formData.additionalServices.nettoyageTerrasse}
                                                     onCheckedChange={(checked) =>
@@ -407,12 +407,12 @@ Options possibles : vitres extérieures/grandes baies, terrasse.`}
                                                             additionalServices: { ...formData.additionalServices, nettoyageTerrasse: checked }
                                                         })
                                                     }
-                                                    className="data-[state=checked]:bg-[#d1a246]"
+                                                    className="data-[state=checked]:bg-primary"
                                                 />
                                             </div>
-                                            <div className="flex items-center justify-between p-4 bg-white border border-[#d1a246]/20 rounded-xl shadow-sm">
+                                            <div className="flex items-center justify-between p-4 bg-white border border-primary/10 rounded-xl shadow-sm">
                                                 <div className="flex flex-col">
-                                                    <span className="font-bold text-[#8a6d2f] text-sm">Baies Vitrées : à partir de 30 MAD/m2</span>
+                                                    <span className="font-bold text-primary text-sm">Baies Vitrées : à partir de 30 MAD/m2</span>
                                                     <span className="text-[10px] text-slate-400">(max 3 mètre de hauteur)</span>
                                                 </div>
                                                 <Switch
@@ -423,14 +423,14 @@ Options possibles : vitres extérieures/grandes baies, terrasse.`}
                                                             additionalServices: { ...formData.additionalServices, baiesVitrees: checked }
                                                         })
                                                     }
-                                                    className="data-[state=checked]:bg-[#d1a246]"
+                                                    className="data-[state=checked]:bg-primary"
                                                 />
                                             </div>
                                         </div>
                                     </div>
 
                                     <div>
-                                        <h3 className="text-xl font-bold bg-[#d1a246] text-white p-3 rounded-lg mb-4 text-center">
+                                        <h3 className="text-xl font-bold bg-primary/10 text-primary p-3 rounded-lg mb-4 text-center">
                                             Planning pour votre demande
                                         </h3>
                                         <div className="grid md:grid-cols-3 gap-6 p-4 border rounded-xl bg-white shadow-sm">
@@ -443,9 +443,9 @@ Options possibles : vitres extérieures/grandes baies, terrasse.`}
                                                         name="schedulingType"
                                                         checked={formData.schedulingType === "fixed"}
                                                         onChange={() => setFormData({ ...formData, schedulingType: "fixed" })}
-                                                        className="w-4 h-4 text-[#d1a246]"
+                                                        className="w-4 h-4 text-primary"
                                                     />
-                                                    <Label htmlFor="pd-fixed" className="font-bold text-[#d1a246] text-sm cursor-pointer text-center">Je souhaite une heure fixe</Label>
+                                                    <Label htmlFor="pd-fixed" className="font-bold text-primary text-sm cursor-pointer text-center">Je souhaite une heure fixe</Label>
                                                 </div>
                                                 <div className="flex justify-center">
                                                     <Input
@@ -454,7 +454,7 @@ Options possibles : vitres extérieures/grandes baies, terrasse.`}
                                                         value={formData.fixedTime}
                                                         onChange={(e) => setFormData({ ...formData, fixedTime: e.target.value })}
                                                         disabled={formData.schedulingType !== "fixed"}
-                                                        className="w-32 text-center text-xl font-bold h-12 border-[#d1a246]/30"
+                                                        className="w-32 text-center text-xl font-bold h-12 border-primary/30"
                                                     />
                                                 </div>
                                             </div>
@@ -468,9 +468,9 @@ Options possibles : vitres extérieures/grandes baies, terrasse.`}
                                                         name="schedulingType"
                                                         checked={formData.schedulingType === "flexible"}
                                                         onChange={() => setFormData({ ...formData, schedulingType: "flexible" })}
-                                                        className="w-4 h-4 text-[#d1a246]"
+                                                        className="w-4 h-4 text-primary"
                                                     />
-                                                    <Label htmlFor="pd-flexible" className="font-bold text-[#d1a246] text-sm cursor-pointer text-center">Je suis flexible</Label>
+                                                    <Label htmlFor="pd-flexible" className="font-bold text-primary text-sm cursor-pointer text-center">Je suis flexible</Label>
                                                 </div>
                                                 <RadioGroup
                                                     value={formData.schedulingTime}
@@ -479,11 +479,11 @@ Options possibles : vitres extérieures/grandes baies, terrasse.`}
                                                     className="space-y-2 text-left inline-block"
                                                 >
                                                     <div className="flex items-center space-x-2">
-                                                        <RadioGroupItem value="morning" id="pd-morning" className="border-[#d1a246] text-[#d1a246]" />
+                                                        <RadioGroupItem value="morning" id="pd-morning" className="border-primary text-primary" />
                                                         <Label htmlFor="pd-morning" className="text-sm font-medium">Le matin</Label>
                                                     </div>
                                                     <div className="flex items-center space-x-2">
-                                                        <RadioGroupItem value="afternoon" id="pd-afternoon" className="border-[#d1a246] text-[#d1a246]" />
+                                                        <RadioGroupItem value="afternoon" id="pd-afternoon" className="border-primary text-primary" />
                                                         <Label htmlFor="pd-afternoon" className="text-sm font-medium">L'après midi</Label>
                                                     </div>
                                                 </RadioGroup>
@@ -491,7 +491,7 @@ Options possibles : vitres extérieures/grandes baies, terrasse.`}
 
                                             {/* Date */}
                                             <div className="text-center space-y-3">
-                                                <div className="font-bold text-[#d1a246] text-sm">Date</div>
+                                                <div className="font-bold text-primary text-sm">Date</div>
                                                 <Input
                                                     type="date"
                                                     required
@@ -504,7 +504,7 @@ Options possibles : vitres extérieures/grandes baies, terrasse.`}
                                     </div>
 
                                     <div>
-                                        <h3 className="text-xl font-bold bg-[#d1a246] text-white p-3 rounded-lg mb-4 text-center uppercase">
+                                        <h3 className="text-xl font-bold bg-primary/10 text-primary p-3 rounded-lg mb-4 text-center uppercase">
                                             Où aura lieu votre ménage ?
                                         </h3>
                                         <div className="grid md:grid-cols-2 gap-4 p-4 border rounded-xl bg-white mb-4 shadow-sm">
@@ -524,7 +524,7 @@ Options possibles : vitres extérieures/grandes baies, terrasse.`}
                                             />
                                         </div>
                                         <div className="p-4 border rounded-xl bg-white shadow-sm">
-                                            <Label className="font-bold text-[#8a6d2f] text-xs uppercase mb-2 block">Champs de repère</Label>
+                                            <Label className="font-bold text-primary text-xs uppercase mb-2 block">Champs de repère</Label>
                                             <Textarea
                                                 placeholder="Donnez-nous des repères pour faciliter le travail de ménage"
                                                 required
@@ -535,13 +535,13 @@ Options possibles : vitres extérieures/grandes baies, terrasse.`}
                                         </div>
                                     </div>
 
-                                    <div className="bg-white border border-[#d1a246]/40 rounded-xl overflow-hidden shadow-sm">
-                                        <h3 className="text-xl font-bold bg-[#d1a246] text-white p-3 text-center uppercase">
+                                    <div className="bg-white border border-primary/10 rounded-xl overflow-hidden shadow-sm">
+                                        <h3 className="text-xl font-bold bg-primary/10 text-primary p-3 text-center uppercase">
                                             Mes Informations
                                         </h3>
                                         <div className="p-6 grid md:grid-cols-2 gap-6">
                                             <div className="space-y-2">
-                                                <Label className="font-bold text-[#8a6d2f] text-xs uppercase">Numéro de téléphone*</Label>
+                                                <Label className="font-bold text-primary text-xs uppercase">Numéro de téléphone*</Label>
                                                 <div className="space-y-3">
                                                     <div className="flex gap-2">
                                                         <Input
@@ -551,7 +551,7 @@ Options possibles : vitres extérieures/grandes baies, terrasse.`}
                                                                 phonePrefix: e.target.value,
                                                                 whatsappPrefix: prev.useWhatsappForPhone ? e.target.value : prev.whatsappPrefix
                                                             }))}
-                                                            className="w-24 border-slate-300 font-bold text-[#8a6d2f] text-center"
+                                                            className="w-24 border-slate-300 font-bold text-primary text-center"
                                                             placeholder="+212"
                                                         />
                                                         <Input
@@ -581,7 +581,7 @@ Options possibles : vitres extérieures/grandes baies, terrasse.`}
                                                                     whatsappPrefix: checked ? prev.phonePrefix : prev.whatsappPrefix
                                                                 }));
                                                             }}
-                                                            className="data-[state=checked]:bg-[#8a6d2f] border-[#8a6d2f]"
+                                                            className="data-[state=checked]:bg-primary border-primary"
                                                         />
                                                         <label
                                                             htmlFor="useWhatsapp"
@@ -593,12 +593,12 @@ Options possibles : vitres extérieures/grandes baies, terrasse.`}
                                                 </div>
                                             </div>
                                             <div className="space-y-2">
-                                                <Label className="font-bold text-[#8a6d2f] text-xs uppercase">Numéro whatsapp</Label>
+                                                <Label className="font-bold text-primary text-xs uppercase">Numéro whatsapp</Label>
                                                 <div className="flex gap-2">
                                                     <Input
                                                         value={formData.whatsappPrefix}
                                                         onChange={(e) => setFormData({ ...formData, whatsappPrefix: e.target.value })}
-                                                        className="w-20 border-slate-300 font-bold text-[#8a6d2f] text-center"
+                                                        className="w-20 border-slate-300 font-bold text-primary text-center"
                                                         placeholder="+212"
                                                         disabled={formData.useWhatsappForPhone}
                                                     />
@@ -612,7 +612,7 @@ Options possibles : vitres extérieures/grandes baies, terrasse.`}
                                                 </div>
                                             </div>
                                             <div className="space-y-2">
-                                                <Label className="font-bold text-[#8a6d2f] text-xs uppercase">Nom*</Label>
+                                                <Label className="font-bold text-primary text-xs uppercase">Nom*</Label>
                                                 <Input
                                                     value={formData.lastName}
                                                     onChange={(e) => setFormData({ ...formData, lastName: e.target.value })}
@@ -622,7 +622,7 @@ Options possibles : vitres extérieures/grandes baies, terrasse.`}
                                                 />
                                             </div>
                                             <div className="space-y-2">
-                                                <Label className="font-bold text-[#8a6d2f] text-xs uppercase">Prénom*</Label>
+                                                <Label className="font-bold text-primary text-xs uppercase">Prénom*</Label>
                                                 <Input
                                                     value={formData.firstName}
                                                     onChange={(e) => setFormData({ ...formData, firstName: e.target.value })}
@@ -637,7 +637,7 @@ Options possibles : vitres extérieures/grandes baies, terrasse.`}
                                     <div className="flex justify-center pt-8">
                                         <Button
                                             type="submit"
-                                            className="bg-[#d1a246] hover:bg-[#b88c3a] text-white px-8 py-4 text-base font-bold shadow-lg shadow-[#d1a246]/20 h-auto rounded-full w-full md:w-auto md:min-w-[260px] transition-all hover:scale-105 active:scale-95"
+                                            className="bg-primary hover:bg-primary/90 text-white px-8 py-4 text-base font-bold shadow-lg shadow-primary/20 h-auto rounded-full w-full md:w-auto md:min-w-[260px] transition-all hover:scale-105 active:scale-95"
                                         >
                                             Confirmer ma réservation
                                         </Button>
@@ -654,9 +654,9 @@ Options possibles : vitres extérieures/grandes baies, terrasse.`}
             <Footer />
 
             <Dialog open={showConfirmation} onOpenChange={handleCloseConfirmation}>
-                <DialogContent className="sm:max-w-md bg-[#fdfaf1] border-[#d1a246]/20">
+                <DialogContent className="sm:max-w-md bg-white border-primary/20">
                     <DialogHeader>
-                        <DialogTitle className="text-[#8a6d2f] text-2xl font-bold">Confirmation</DialogTitle>
+                        <DialogTitle className="text-primary text-2xl font-bold">Confirmation</DialogTitle>
                         <DialogDescription className="text-slate-700 text-lg mt-4 leading-relaxed">
                             {getConfirmationMessage(`${formData.firstName} ${formData.lastName}`, totalPrice === 0)}
                         </DialogDescription>
@@ -664,7 +664,7 @@ Options possibles : vitres extérieures/grandes baies, terrasse.`}
                     <DialogFooter className="mt-6">
                         <Button
                             onClick={() => handleCloseConfirmation(false)}
-                            className="bg-[#d1a246] hover:bg-[#b88c3a] text-white rounded-full px-8"
+                            className="bg-primary hover:bg-primary/90 text-white rounded-full px-8"
                         >
                             Fermer
                         </Button>

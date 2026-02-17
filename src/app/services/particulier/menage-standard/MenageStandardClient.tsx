@@ -175,7 +175,7 @@ export default function MenageStandardClient() {
         // Send email notification (async)
         sendBookingEmail("Ménage Standard", bookingData, totalPrice, false).catch(console.error);
 
-        router.push("/merci");
+        router.push(window.location.pathname + "/merci");
     };
 
     const handleCloseConfirmation = (open: boolean) => {
@@ -240,7 +240,7 @@ export default function MenageStandardClient() {
         <div className="min-h-screen flex flex-col">
             <Header />
 
-            <div style={{ "--primary": "179 48% 30%" } as React.CSSProperties}>
+            <div className="bg-[hsl(var(--primary)/0.05)]" style={{ "--primary": "178 84% 27%" } as React.CSSProperties}>
                 <ServiceHeroSection
                     title="Ménage standard"
                     description={`Le ménage standard a pour objectif d’assurer la propreté et l’entretien courant des espaces attribués.
@@ -259,7 +259,7 @@ Il comprend le :
 - Rangement de la vaisselle
 - Vidage et nettoyage de la poubelle`}
                     image={serviceRegulier.src}
-                    primaryColor="#1c6664"
+                    primaryColor="#0B7F7A"
                     faqs={[
                         {
                             question: "Fournissez-vous le matériel et les produits de nettoyage ?",
@@ -288,10 +288,10 @@ Il comprend le :
                     ]}
                 />
 
-                <main className="flex-1 bg-background py-12">
+                <main className="flex-1 bg-transparent py-12">
                     <div className="container max-w-5xl">
-                        <div className="bg-[#e9f2f2] rounded-lg p-6 text-center mb-8 border border-[#d1e0e0]">
-                            <h2 className="text-2xl font-bold text-[#1c6664] mb-2 uppercase tracking-wide">
+                        <div className="bg-primary/5 rounded-lg p-6 text-center mb-8 border border-primary/20">
+                            <h2 className="text-2xl font-bold text-primary mb-2 uppercase tracking-wide">
                                 FORMULAIRE DE RESERVATION
                             </h2>
                         </div>
@@ -377,7 +377,7 @@ Il comprend le :
                             <div className="lg:col-span-2 space-y-8">
                                 <div className="bg-card rounded-lg p-4 md:p-6 border shadow-sm space-y-6">
                                     <div>
-                                        <h3 className="text-xl font-bold bg-[#1c6664] text-white p-3 rounded-lg mb-4 text-center">
+                                        <h3 className="text-xl font-bold bg-primary text-white p-3 rounded-lg mb-4 text-center">
                                             Type d'habitation
                                         </h3>
                                         <RadioGroup
@@ -387,7 +387,7 @@ Il comprend le :
                                         >
                                             {["Studio", "Appartement", "Duplex", "Villa", "Maison"].map((type) => (
                                                 <div key={type} className="flex items-center space-x-3">
-                                                    <RadioGroupItem value={type.toLowerCase()} id={type} className="border-[#1c6664] text-[#1c6664]" />
+                                                    <RadioGroupItem value={type.toLowerCase()} id={type} className="border-primary text-primary" />
                                                     <Label htmlFor={type} className="font-medium text-slate-700">{type}</Label>
                                                 </div>
                                             ))}
@@ -395,7 +395,7 @@ Il comprend le :
                                     </div>
 
                                     <div>
-                                        <h3 className="text-xl font-bold bg-[#1c6664] text-white p-3 rounded-lg mb-4 text-center">
+                                        <h3 className="text-xl font-bold bg-primary text-white p-3 rounded-lg mb-4 text-center">
                                             Choisissez la fréquence
                                         </h3>
                                         <div className="p-4 space-y-4">
@@ -452,7 +452,7 @@ Il comprend le :
                                     </div>
 
                                     <div id="rooms-section">
-                                        <h3 className="text-xl font-bold bg-[#1c6664] text-white p-3 rounded-lg text-center mb-2">
+                                        <h3 className="text-xl font-bold bg-primary text-white p-3 rounded-lg text-center mb-2">
                                             Merci de nous décrire votre domicile ainsi que les différentes pièces qui le composent
                                         </h3>
                                         <p className="text-red-500 text-xs text-right mb-4 font-bold">
@@ -483,27 +483,27 @@ Il comprend le :
                                                                 onCheckedChange={(checked) => {
                                                                     updateRoomCount(room.key, !!checked);
                                                                 }}
-                                                                className="h-6 w-6 rounded border-slate-300 data-[state=checked]:bg-[#1c6664] data-[state=checked]:border-[#1c6664]"
+                                                                className="h-6 w-6 rounded border-slate-300 data-[state=checked]:bg-primary data-[state=checked]:border-primary"
                                                             />
                                                         ) : (
-                                                            <div className="flex items-center gap-3 bg-[#f0f7f7] rounded-full p-1">
+                                                            <div className="flex items-center gap-3 bg-primary/5 rounded-full p-1">
                                                                 <Button
                                                                     type="button"
                                                                     variant="ghost"
                                                                     size="icon"
-                                                                    className="h-6 w-6 rounded-full bg-slate-200 text-[#1c6664] hover:bg-slate-300"
+                                                                    className="h-6 w-6 rounded-full bg-slate-200 text-primary hover:bg-slate-300"
                                                                     onClick={() => updateRoomCount(room.key, false)}
                                                                 >
                                                                     -
                                                                 </Button>
-                                                                <span className="w-4 text-center font-bold text-[#1c6664] text-sm">
+                                                                <span className="w-4 text-center font-bold text-primary text-sm">
                                                                     {formData.rooms[room.key]}
                                                                 </span>
                                                                 <Button
                                                                     type="button"
                                                                     variant="ghost"
                                                                     size="icon"
-                                                                    className="h-6 w-6 rounded-full bg-slate-200 text-[#1c6664] hover:bg-slate-300"
+                                                                    className="h-6 w-6 rounded-full bg-slate-200 text-primary hover:bg-slate-300"
                                                                     onClick={() => updateRoomCount(room.key, true)}
                                                                 >
                                                                     +
@@ -521,12 +521,12 @@ Il comprend le :
                                             <p className="text-red-500 text-xs text-center font-bold italic">
                                                 D'après les options choisies, nous recommandons {formData.recommendedDuration} heures pour un ménage optimal.
                                             </p>
-                                            <div className="bg-[#94a3a3] text-white text-3xl font-bold px-10 py-3 rounded-full shadow-lg">
+                                            <div className="bg-primary/40 text-white text-3xl font-bold px-10 py-3 rounded-full shadow-lg">
                                                 {formData.recommendedDuration}H : 00
                                             </div>
                                         </div>
 
-                                        <h3 className="text-xl font-bold bg-[#1c6664] text-white p-3 rounded-lg text-center mb-2">
+                                        <h3 className="text-xl font-bold bg-primary text-white p-3 rounded-lg text-center mb-2">
                                             Précisez le temps qui vous convient le mieux.
                                         </h3>
                                         <p className="text-red-500 text-[10px] text-center mb-4">
@@ -537,20 +537,20 @@ Il comprend le :
                                                 type="button"
                                                 variant="ghost"
                                                 size="icon"
-                                                className="h-10 w-10 rounded-full bg-[#f0f7f7] text-[#1c6664] hover:bg-[#e0eded] shadow-sm border border-slate-100"
+                                                className="h-10 w-10 rounded-full bg-primary/5 text-primary hover:bg-primary/10 shadow-sm border border-slate-100"
                                                 onClick={decrementDuration}
                                                 disabled={formData.duration <= 4}
                                             >
                                                 <span className="text-2xl">-</span>
                                             </Button>
-                                            <span className="text-2xl font-bold text-[#1c6664] min-w-[40px] text-center">
+                                            <span className="text-2xl font-bold text-primary min-w-[40px] text-center">
                                                 {formData.duration}
                                             </span>
                                             <Button
                                                 type="button"
                                                 variant="ghost"
                                                 size="icon"
-                                                className="h-10 w-10 rounded-full bg-[#f0f7f7] text-[#1c6664] hover:bg-[#e0eded] shadow-sm border border-slate-100"
+                                                className="h-10 w-10 rounded-full bg-primary/5 text-primary hover:bg-primary/10 shadow-sm border border-slate-100"
                                                 onClick={incrementDuration}
                                             >
                                                 <span className="text-2xl">+</span>
@@ -559,7 +559,7 @@ Il comprend le :
                                     </div>
 
                                     <div>
-                                        <h3 className="text-xl font-bold bg-[#1c6664] text-white p-3 rounded-lg mb-4 text-center">
+                                        <h3 className="text-xl font-bold bg-primary text-white p-3 rounded-lg mb-4 text-center">
                                             Nombre de personne
                                         </h3>
                                         <div className="flex items-center justify-center gap-8 p-4">
@@ -567,19 +567,19 @@ Il comprend le :
                                                 type="button"
                                                 variant="ghost"
                                                 size="icon"
-                                                className="h-10 w-10 rounded-full bg-[#f0f7f7] text-[#1c6664] hover:bg-[#e0eded] shadow-sm border border-slate-100"
+                                                className="h-10 w-10 rounded-full bg-primary/5 text-primary hover:bg-primary/10 shadow-sm border border-slate-100"
                                                 onClick={decrementPeople}
                                             >
                                                 <span className="text-2xl">-</span>
                                             </Button>
-                                            <span className="text-2xl font-bold text-[#1c6664] min-w-[40px] text-center">
+                                            <span className="text-2xl font-bold text-primary min-w-[40px] text-center">
                                                 {formData.numberOfPeople}
                                             </span>
                                             <Button
                                                 type="button"
                                                 variant="ghost"
                                                 size="icon"
-                                                className="h-10 w-10 rounded-full bg-[#f0f7f7] text-[#1c6664] hover:bg-[#e0eded] shadow-sm border border-slate-100"
+                                                className="h-10 w-10 rounded-full bg-primary/5 text-primary hover:bg-primary/10 shadow-sm border border-slate-100"
                                                 onClick={incrementPeople}
                                             >
                                                 <span className="text-2xl">+</span>
@@ -588,7 +588,7 @@ Il comprend le :
                                     </div>
 
                                     <div>
-                                        <h3 className="text-xl font-bold bg-[#1c6664] text-white p-3 rounded-lg mb-4 text-center">
+                                        <h3 className="text-xl font-bold bg-primary text-white p-3 rounded-lg mb-4 text-center">
                                             Planning pour votre demande
                                         </h3>
                                         <div className="grid md:grid-cols-3 gap-6 p-4 border rounded-xl bg-white shadow-sm">
@@ -600,9 +600,9 @@ Il comprend le :
                                                         name="schedulingType"
                                                         checked={formData.schedulingType === "fixed"}
                                                         onChange={() => setFormData({ ...formData, schedulingType: "fixed" })}
-                                                        className="w-4 h-4 text-[#1c6664]"
+                                                        className="w-4 h-4 text-primary"
                                                     />
-                                                    <Label htmlFor="fixed" className="font-bold text-[#1c6664] text-sm cursor-pointer text-center">Je souhaite une heure fixe</Label>
+                                                    <Label htmlFor="fixed" className="font-bold text-primary text-sm cursor-pointer text-center">Je souhaite une heure fixe</Label>
                                                 </div>
                                                 <div className="flex justify-center">
                                                     <Input
@@ -611,7 +611,7 @@ Il comprend le :
                                                         value={formData.fixedTime}
                                                         onChange={(e) => setFormData({ ...formData, fixedTime: e.target.value })}
                                                         disabled={formData.schedulingType !== "fixed"}
-                                                        className="w-32 text-center text-xl font-bold h-12 border-[#1c6664]/30"
+                                                        className="w-32 text-center text-xl font-bold h-12 border-primary/30"
                                                     />
                                                 </div>
                                             </div>
@@ -624,9 +624,9 @@ Il comprend le :
                                                         name="schedulingType"
                                                         checked={formData.schedulingType === "flexible"}
                                                         onChange={() => setFormData({ ...formData, schedulingType: "flexible" })}
-                                                        className="w-4 h-4 text-[#1c6664]"
+                                                        className="w-4 h-4 text-primary"
                                                     />
-                                                    <Label htmlFor="flexible" className="font-bold text-[#1c6664] text-sm cursor-pointer text-center">Je suis flexible</Label>
+                                                    <Label htmlFor="flexible" className="font-bold text-primary text-sm cursor-pointer text-center">Je suis flexible</Label>
                                                 </div>
                                                 <RadioGroup
                                                     value={formData.schedulingTime}
@@ -635,18 +635,18 @@ Il comprend le :
                                                     className="space-y-2 text-left inline-block"
                                                 >
                                                     <div className="flex items-center space-x-2">
-                                                        <RadioGroupItem value="morning" id="morning" className="border-[#1c6664] text-[#1c6664]" />
+                                                        <RadioGroupItem value="morning" id="morning" className="border-primary text-primary" />
                                                         <Label htmlFor="morning" className="text-sm font-medium">Le matin</Label>
                                                     </div>
                                                     <div className="flex items-center space-x-2">
-                                                        <RadioGroupItem value="afternoon" id="afternoon" className="border-[#1c6664] text-[#1c6664]" />
+                                                        <RadioGroupItem value="afternoon" id="afternoon" className="border-primary text-primary" />
                                                         <Label htmlFor="afternoon" className="text-sm font-medium">L'après midi</Label>
                                                     </div>
                                                 </RadioGroup>
                                             </div>
 
                                             <div className="text-center space-y-3">
-                                                <div className="font-bold text-[#1c6664] text-sm">Date</div>
+                                                <div className="font-bold text-primary text-sm">Date</div>
                                                 <Input
                                                     type="date"
                                                     required
@@ -659,11 +659,11 @@ Il comprend le :
                                     </div>
 
                                     <div>
-                                        <h3 className="text-xl font-bold bg-[#1c6664] text-white p-3 rounded-lg mb-4 text-center">
+                                        <h3 className="text-xl font-bold bg-primary text-white p-3 rounded-lg mb-4 text-center">
                                             Services optionnels
                                         </h3>
                                         <div className="p-6 border rounded-xl bg-slate-50/50 space-y-4">
-                                            <div className="text-center font-bold text-[#1c6664] mb-4">
+                                            <div className="text-center font-bold text-primary mb-4">
                                                 Produit fournis par l'agence ménage :
                                             </div>
                                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 max-w-lg mx-auto mb-6">
@@ -671,7 +671,7 @@ Il comprend le :
                                                     ...PRODUCTS_LIST
                                                 ].map((item) => (
                                                     <div key={item} className="flex items-center gap-2">
-                                                        <div className="w-1.5 h-1.5 rounded-full bg-[#1c6664]" />
+                                                        <div className="w-1.5 h-1.5 rounded-full bg-primary" />
                                                         <span className="text-sm font-medium text-slate-700">{item}</span>
                                                     </div>
                                                 ))}
@@ -683,7 +683,7 @@ Il comprend le :
                                                         alt="Produits"
                                                         className="w-12 h-12 object-contain"
                                                     />
-                                                    <span className="font-bold text-[#1c6664]">Produit : + 90 MAD</span>
+                                                    <span className="font-bold text-primary">Produit : + 90 MAD</span>
                                                 </div>
                                                 <Switch
                                                     checked={formData.additionalServices.produitsEtOutils}
@@ -693,7 +693,7 @@ Il comprend le :
                                                             additionalServices: { ...formData.additionalServices, produitsEtOutils: checked }
                                                         })
                                                     }
-                                                    className="data-[state=checked]:bg-[#1c6664]"
+                                                    className="data-[state=checked]:bg-primary"
                                                 />
                                             </div>
                                             <div className="flex items-center justify-between p-4 bg-white border border-slate-100 rounded-xl shadow-sm">
@@ -701,7 +701,7 @@ Il comprend le :
                                                     <div className="w-12 h-12 rounded-lg bg-blue-50 flex items-center justify-center text-2xl">
                                                         🧹
                                                     </div>
-                                                    <span className="font-bold text-[#1c6664]">Torchons et serpillères : + 40 MAD</span>
+                                                    <span className="font-bold text-primary">Torchons et serpillères : + 40 MAD</span>
                                                 </div>
                                                 <Switch
                                                     checked={formData.additionalServices.torchonsEtSerpierres}
@@ -711,14 +711,14 @@ Il comprend le :
                                                             additionalServices: { ...formData.additionalServices, torchonsEtSerpierres: checked }
                                                         })
                                                     }
-                                                    className="data-[state=checked]:bg-[#1c6664]"
+                                                    className="data-[state=checked]:bg-primary"
                                                 />
                                             </div>
                                         </div>
                                     </div>
 
                                     <div>
-                                        <h3 className="text-xl font-bold bg-[#1c6664] text-white p-3 rounded-lg mb-4 text-center">
+                                        <h3 className="text-xl font-bold bg-primary text-white p-3 rounded-lg mb-4 text-center">
                                             Où aura lieu votre ménage ?
                                         </h3>
                                         <div className="grid md:grid-cols-2 gap-4 p-4 border rounded-xl bg-white mb-4">
@@ -738,7 +738,7 @@ Il comprend le :
                                             />
                                         </div>
                                         <div className="p-4 border rounded-xl bg-white">
-                                            <Label className="font-bold text-[#1c6664]">Champs de repère</Label>
+                                            <Label className="font-bold text-primary">Champs de repère</Label>
                                             <Textarea
                                                 placeholder="Donnez-nous des repères pour faciliter le travail de ménage (points de référence pour la tournée du nettoyeur) après les points de repère"
                                                 required
@@ -750,12 +750,12 @@ Il comprend le :
                                     </div>
 
                                     <div className="bg-white border border-slate-200 rounded-xl overflow-hidden shadow-sm">
-                                        <h3 className="text-xl font-bold bg-[#1c6664] text-white p-3 text-center">
+                                        <h3 className="text-xl font-bold bg-primary text-white p-3 text-center">
                                             Mes informations
                                         </h3>
                                         <div className="p-6 grid md:grid-cols-2 gap-4">
                                             <div className="space-y-2">
-                                                <Label className="font-bold text-[#1c6664] text-sm">Numéro de téléphone*</Label>
+                                                <Label className="font-bold text-primary text-sm">Numéro de téléphone*</Label>
                                                 <div className="space-y-3">
                                                     <div className="flex gap-2">
                                                         <Input
@@ -765,7 +765,7 @@ Il comprend le :
                                                                 phonePrefix: e.target.value,
                                                                 whatsappPrefix: prev.useWhatsappForPhone ? e.target.value : prev.whatsappPrefix
                                                             }))}
-                                                            className="w-24 border-slate-300 font-bold text-[#1c6664] text-center"
+                                                            className="w-24 border-slate-300 font-bold text-primary text-center"
                                                             placeholder="+212"
                                                         />
                                                         <Input
@@ -795,7 +795,7 @@ Il comprend le :
                                                                     whatsappPrefix: checked ? prev.phonePrefix : prev.whatsappPrefix
                                                                 }));
                                                             }}
-                                                            className="data-[state=checked]:bg-[#1c6664] border-[#1c6664]"
+                                                            className="data-[state=checked]:bg-primary border-primary"
                                                         />
                                                         <label
                                                             htmlFor="useWhatsapp"
@@ -807,12 +807,12 @@ Il comprend le :
                                                 </div>
                                             </div>
                                             <div className="space-y-2">
-                                                <Label className="font-bold text-[#1c6664] text-sm">Numéro whatsapp</Label>
+                                                <Label className="font-bold text-primary text-sm">Numéro whatsapp</Label>
                                                 <div className="flex gap-2">
                                                     <Input
                                                         value={formData.whatsappPrefix}
                                                         onChange={(e) => setFormData({ ...formData, whatsappPrefix: e.target.value })}
-                                                        className="w-20 border-slate-300 font-bold text-[#1c6664] text-center"
+                                                        className="w-20 border-slate-300 font-bold text-primary text-center"
                                                         placeholder="+212"
                                                         disabled={formData.useWhatsappForPhone}
                                                     />
@@ -826,7 +826,7 @@ Il comprend le :
                                                 </div>
                                             </div>
                                             <div className="space-y-2">
-                                                <Label className="font-bold text-[#1c6664] text-sm">Nom*</Label>
+                                                <Label className="font-bold text-primary text-sm">Nom*</Label>
                                                 <Input
                                                     value={formData.lastName}
                                                     onChange={(e) => setFormData({ ...formData, lastName: e.target.value })}
@@ -836,7 +836,7 @@ Il comprend le :
                                                 />
                                             </div>
                                             <div className="space-y-2">
-                                                <Label className="font-bold text-[#1c6664] text-sm">Prénom*</Label>
+                                                <Label className="font-bold text-primary text-sm">Prénom*</Label>
                                                 <Input
                                                     value={formData.firstName}
                                                     onChange={(e) => setFormData({ ...formData, firstName: e.target.value })}
@@ -866,7 +866,7 @@ Il comprend le :
             <Footer />
 
             <Dialog open={showConfirmation} onOpenChange={handleCloseConfirmation}>
-                <DialogContent className="sm:max-w-md bg-[#fdf8f1] border-primary/20">
+                <DialogContent className="sm:max-w-md bg-white border-primary/20">
                     <DialogHeader>
                         <DialogTitle className="text-primary text-2xl font-bold">Confirmation</DialogTitle>
                         <DialogDescription className="text-slate-700 text-lg mt-4 leading-relaxed">

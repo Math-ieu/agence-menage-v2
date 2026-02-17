@@ -102,7 +102,7 @@ export default function PlacementClient() {
 
         try {
             await sendBookingEmail("Placement & Gestion de Propreté", bookingData, "Sur devis", true);
-            router.push("/merci");
+            router.push(window.location.pathname + "/merci");
         } catch (error) {
             toast.error("Une erreur est survenue lors de l'envoi de votre demande.");
         }
@@ -120,10 +120,10 @@ export default function PlacementClient() {
     const decrementPeople = () => setFormData({ ...formData, numberOfPeople: Math.max(1, formData.numberOfPeople - 1) });
 
     return (
-        <div className="min-h-screen flex flex-col bg-[#f0f4f0]">
+        <div className="min-h-screen flex flex-col bg-slate-50">
             <Header />
 
-            <main className="flex-1 flex flex-col" style={{ "--primary": "54 95% 49%" } as React.CSSProperties}>
+            <main className="flex-1 flex flex-col bg-[hsl(var(--primary)/0.05)]" style={{ "--primary": "54 94% 49%" } as React.CSSProperties}>
                 <ServiceHeroSection
                     title="Placement & Gestion de Propreté pour Entreprises"
                     isCollapsible={false}
@@ -154,14 +154,14 @@ export default function PlacementClient() {
                     <div className="grid md:grid-cols-2 gap-12 mb-16 px-4">
                         {/* Flexible Service */}
                         <div className="bg-white p-8 rounded-[2rem] shadow-xl border border-yellow-100 flex flex-col h-full">
-                            <h2 className="text-2xl font-black text-[#2d5a3f] mb-6 uppercase border-b pb-4">Service ménage flexible :</h2>
+                            <h2 className="text-2xl font-black text-primary mb-6 uppercase border-b pb-4">Service ménage flexible :</h2>
                             <div className="space-y-4 text-slate-700 flex-1">
                                 <p className="font-bold">Vous gardez la main sur l’organisation. Nous sécurisons toute la partie RH.</p>
                                 <p className="text-sm leading-relaxed">
                                     Nous mettons à votre disposition une intervenante de ménage dédiée, aux horaires et au rythme qui conviennent à votre activité. Vos équipes pilotent les priorités sur site (zones, tâches, horaires), tandis qu’Agence Ménage prend en charge l’ensemble du “back-office” : administratif, paie, suivi et gestion des imprévus.
                                 </p>
                                 <div className="space-y-2 pt-4">
-                                    <p className="font-bold text-sm uppercase text-[#2d5a3f]">Ce que vous obtenez :</p>
+                                    <p className="font-bold text-sm uppercase text-primary">Ce que vous obtenez :</p>
                                     <ul className="list-disc pl-5 text-sm space-y-1">
                                         <li>Zéro gestion RH (contrats, paie, suivi administratif)</li>
                                         <li>Stabilité & continuité : remplacement organisé en cas de départ ou d’insatisfaction</li>
@@ -171,7 +171,7 @@ export default function PlacementClient() {
                                 </div>
                             </div>
                             <div className="mt-auto pt-8">
-                                <div className="bg-[#8b9d77] p-6 rounded-2xl shadow-sm text-center">
+                                <div className="bg-primary/20 p-6 rounded-2xl shadow-sm text-center">
                                     <p className="text-[13px] font-bold text-white leading-relaxed">
                                         Idéal pour les entreprises qui veulent garder le contrôle opérationnel, tout en externalisant la gestion du personnel.
                                     </p>
@@ -180,15 +180,15 @@ export default function PlacementClient() {
                         </div>
 
                         {/* Premium Service */}
-                        <div className="bg-white p-8 rounded-[2rem] shadow-xl border border-yellow-100 flex flex-col h-full ring-2 ring-[#f1db08]/20">
-                            <h2 className="text-2xl font-black text-[#2d5a3f] mb-6 uppercase border-b pb-4">Service ménage Premium - gestion 360</h2>
+                        <div className="bg-white p-8 rounded-[2rem] shadow-xl border border-primary/20 flex flex-col h-full ring-2 ring-primary/20">
+                            <h2 className="text-2xl font-black text-primary mb-6 uppercase border-b pb-4">Service ménage Premium - gestion 360</h2>
                             <div className="space-y-4 text-slate-700 flex-1">
                                 <p className="font-bold">Vous n’achetez pas “du ménage”. Vous achetez un standard de propreté garanti.</p>
                                 <p className="text-sm leading-relaxed">
                                     Avec notre offre clé en main, nous pilotons la prestation de A à Z : dimensionnement des équipes, organisation, méthodes, produits, matériel et, selon la taille du dispositif, supervision sur place. Votre entreprise n’a rien à gérer : vous bénéficiez d’un service encadré, mesuré, et stable.
                                 </p>
                                 <div className="space-y-2 pt-4">
-                                    <p className="font-bold text-sm uppercase text-[#2d5a3f]">Nos engagements (SLA) :</p>
+                                    <p className="font-bold text-sm uppercase text-primary">Nos engagements (SLA) :</p>
                                     <ul className="list-disc pl-5 text-sm space-y-1">
                                         <li>Continuité garantie : en cas d’absence, remplacement le jour même</li>
                                         <li>Contrôle qualité : check-lists, inspections et plan d'actions correctives</li>
@@ -196,7 +196,7 @@ export default function PlacementClient() {
                                     </ul>
                                 </div>
                                 <div className="space-y-2 pt-4">
-                                    <p className="font-bold text-sm uppercase text-[#2d5a3f]">Ce que vous obtenez :</p>
+                                    <p className="font-bold text-sm uppercase text-primary">Ce que vous obtenez :</p>
                                     <ul className="list-disc pl-5 text-sm space-y-1">
                                         <li>Un plan de nettoyage sur mesure (zones critiques, sanitaires, open space...)</li>
                                         <li>Équipes dédiées + supervision (selon volumes)</li>
@@ -206,7 +206,7 @@ export default function PlacementClient() {
                                 </div>
                             </div>
                             <div className="mt-auto pt-8">
-                                <div className="bg-[#b48d43] p-6 rounded-2xl shadow-sm text-center">
+                                <div className="bg-primary/40 p-6 rounded-2xl shadow-sm text-center">
                                     <p className="text-[13px] font-bold text-white leading-relaxed">
                                         Idéal pour les entreprises qui veulent un service premium, sans gestion interne, avec une obligation de résultat.
                                     </p>
@@ -218,7 +218,7 @@ export default function PlacementClient() {
                     <div className="flex justify-center mb-16">
                         <Button
                             onClick={scrollToForm}
-                            className="bg-[#b46d2f] hover:bg-[#9a5d28] text-white px-8 py-4 text-base font-bold rounded-full shadow-lg shadow-[#b46d2f]/20 transition-all hover:scale-105 active:scale-95 h-auto"
+                            className="bg-primary hover:bg-primary/90 text-slate-900 px-8 py-4 text-base font-bold rounded-full shadow-lg shadow-primary/20 transition-all hover:scale-105 active:scale-95 h-auto"
                         >
                             Contactez-nous
                         </Button>
@@ -230,8 +230,8 @@ export default function PlacementClient() {
                             className="py-12 animate-in fade-in slide-in-from-bottom-8 duration-1000 ease-out fill-mode-both"
                         >
                             <div className="max-w-5xl mx-auto">
-                                <div className="bg-[#fefce8] rounded-lg p-6 text-center mb-8 border border-[#fef08a]">
-                                    <h2 className="text-2xl font-bold text-[#2d5a3f] mb-2 uppercase tracking-wide">
+                                <div className="bg-primary/5 rounded-lg p-6 text-center mb-8 border border-primary/20">
+                                    <h2 className="text-2xl font-bold text-primary mb-2 uppercase tracking-wide">
                                         FORMULAIRE DE RESERVATION
                                     </h2>
                                 </div>
@@ -240,14 +240,14 @@ export default function PlacementClient() {
                                     {/* Summary Column */}
                                     <div className="lg:col-span-1 lg:order-last sticky-reservation-summary-container">
                                         <div className="lg:sticky lg:top-24 space-y-6">
-                                            <div className="bg-white rounded-lg border border-[#f1db08]/20 shadow-sm p-6 space-y-4 relative">
-                                                <h3 className="text-xl font-bold text-[#b48d00] border-b border-[#f1db08]/10 pb-2 text-center">
+                                            <div className="bg-white rounded-lg border border-primary/20 shadow-sm p-6 space-y-4 relative">
+                                                <h3 className="text-xl font-bold text-primary border-b border-primary/10 pb-2 text-center">
                                                     Ma Réservation
                                                 </h3>
                                                 <div className="space-y-3">
                                                     <div className="flex justify-between gap-4 border-b border-slate-50 pb-2">
                                                         <span className="text-muted-foreground text-sm">Service:</span>
-                                                        <span className="font-bold text-right text-[#b48d00] text-sm">Placement & Gestion</span>
+                                                        <span className="font-bold text-right text-primary text-sm">Placement & Gestion</span>
                                                     </div>
 
                                                     {/* Detailed info - hidden on mobile when collapsed */}
@@ -273,10 +273,10 @@ export default function PlacementClient() {
                                                     </div>
                                                 </div>
 
-                                                <div className="pt-4 border-t border-[#5bbd82]/20">
-                                                    <div className="flex justify-between items-center bg-[#f1db08]/5 p-3 rounded-lg border border-[#f1db08]/10">
-                                                        <span className="text-xs font-bold text-[#b48d00] uppercase tracking-wider">Prix HT</span>
-                                                        <span className="text-lg font-black text-[#b48d00]">SUR DEVIS</span>
+                                                <div className="pt-4 border-t border-primary/20">
+                                                    <div className="flex justify-between items-center bg-primary/5 p-3 rounded-lg border border-primary/10">
+                                                        <span className="text-xs font-bold text-primary uppercase tracking-wider">Prix HT</span>
+                                                        <span className="text-lg font-black text-primary">SUR DEVIS</span>
                                                     </div>
                                                 </div>
 
@@ -284,7 +284,7 @@ export default function PlacementClient() {
                                                 <button
                                                     type="button"
                                                     onClick={() => setIsSummaryExpanded(!isSummaryExpanded)}
-                                                    className="lg:hidden absolute -bottom-3 left-1/2 -translate-x-1/2 w-8 h-8 rounded-full bg-[#b48d00] text-white flex items-center justify-center shadow-lg border-2 border-white z-20 hover:bg-[#b48d00]/90 transition-transform active:scale-90"
+                                                    className="lg:hidden absolute -bottom-3 left-1/2 -translate-x-1/2 w-8 h-8 rounded-full bg-primary text-slate-800 flex items-center justify-center shadow-lg border-2 border-white z-20 hover:bg-primary/90 transition-transform active:scale-90"
                                                 >
                                                     {isSummaryExpanded ? <ChevronUp size={20} /> : <ChevronDown size={20} />}
                                                 </button>
@@ -298,7 +298,7 @@ export default function PlacementClient() {
 
                                             {/* Service Type Selection */}
                                             <div className="space-y-4">
-                                                <h3 className="text-lg font-bold bg-[#5bbd82]/10 text-[#2d5a3f] p-3 rounded-lg text-center uppercase border border-[#5bbd82]/20">
+                                                <h3 className="text-lg font-bold bg-primary/10 text-primary p-3 rounded-lg text-center uppercase border border-primary/20">
                                                     Type de service
                                                 </h3>
                                                 <RadioGroup
@@ -306,12 +306,12 @@ export default function PlacementClient() {
                                                     onValueChange={(value) => setFormData({ ...formData, serviceType: value })}
                                                     className="grid grid-cols-1 md:grid-cols-2 gap-4"
                                                 >
-                                                    <div className={`p-4 rounded-xl border-2 transition-all cursor-pointer flex items-center gap-3 ${formData.serviceType === "flexible" ? 'border-[#f1db08] bg-[#fefce8]' : 'border-slate-100 hover:border-yellow-200'}`}>
-                                                        <RadioGroupItem value="flexible" id="serv-flexible" className="border-[#f1db08] text-[#f1db08]" />
+                                                    <div className={`p-4 rounded-xl border-2 transition-all cursor-pointer flex items-center gap-3 ${formData.serviceType === "flexible" ? 'border-primary bg-primary/5' : 'border-slate-100 hover:border-primary/20'}`}>
+                                                        <RadioGroupItem value="flexible" id="serv-flexible" className="border-primary text-primary" />
                                                         <Label htmlFor="serv-flexible" className="font-bold text-sm text-slate-700 cursor-pointer">Service ménage flexible</Label>
                                                     </div>
-                                                    <div className={`p-4 rounded-xl border-2 transition-all cursor-pointer flex items-center gap-3 ${formData.serviceType === "premium" ? 'border-[#f1db08] bg-[#fefce8]' : 'border-slate-100 hover:border-yellow-200'}`}>
-                                                        <RadioGroupItem value="premium" id="serv-premium" className="border-[#f1db08] text-[#f1db08]" />
+                                                    <div className={`p-4 rounded-xl border-2 transition-all cursor-pointer flex items-center gap-3 ${formData.serviceType === "premium" ? 'border-primary bg-primary/5' : 'border-slate-100 hover:border-primary/20'}`}>
+                                                        <RadioGroupItem value="premium" id="serv-premium" className="border-primary text-primary" />
                                                         <Label htmlFor={`serv-premium`} className="font-bold text-sm text-slate-700 cursor-pointer">Service ménage Premium</Label>
                                                     </div>
                                                 </RadioGroup>
@@ -319,7 +319,7 @@ export default function PlacementClient() {
 
                                             {/* Structure Type Selection */}
                                             <div className="space-y-4">
-                                                <h3 className="text-lg font-bold bg-[#f1db08]/10 text-[#b48d00] p-3 rounded-lg text-center uppercase border border-[#f1db08]/20">
+                                                <h3 className="text-lg font-bold bg-primary/10 text-primary p-3 rounded-lg text-center uppercase border border-primary/20">
                                                     Type de structure
                                                 </h3>
                                                 <div className="p-4 bg-muted/20 rounded-xl border border-muted">
@@ -332,8 +332,8 @@ export default function PlacementClient() {
                                                             "Bureaux", "Magasin/Boutique", "Restaurant/Café", "Clinique",
                                                             "Hôpital", "Hôtel", "Riad", "Immeuble/Résidence/Luxe", "Entrepôt"
                                                         ].map((type) => (
-                                                            <div key={type} className={`flex flex-col items-center p-3 rounded-xl border-2 transition-all cursor-pointer group ${formData.structureType === type.toLowerCase() ? 'border-[#f1db08] bg-white ring-2 ring-[#f1db08]/10' : 'border-transparent bg-white/50 hover:bg-white'}`}>
-                                                                <RadioGroupItem value={type.toLowerCase()} id={`struct-${type}`} className="mb-2 border-[#f1db08] text-[#f1db08]" />
+                                                            <div key={type} className={`flex flex-col items-center p-3 rounded-xl border-2 transition-all cursor-pointer group ${formData.structureType === type.toLowerCase() ? 'border-primary bg-white ring-2 ring-primary/10' : 'border-transparent bg-white/50 hover:bg-white'}`}>
+                                                                <RadioGroupItem value={type.toLowerCase()} id={`struct-${type}`} className="mb-2 border-primary text-primary" />
                                                                 <Label htmlFor={`struct-${type}`} className="font-bold text-[10px] text-slate-700 text-center leading-tight cursor-pointer">{type}</Label>
                                                             </div>
                                                         ))}
@@ -343,15 +343,15 @@ export default function PlacementClient() {
 
                                             {/* Frequency Section */}
                                             <div className="space-y-4">
-                                                <h3 className="text-lg font-bold bg-[#f1db08]/10 text-[#b48d00] p-3 rounded-lg text-center uppercase border border-[#f1db08]/20">
+                                                <h3 className="text-lg font-bold bg-primary/10 text-primary p-3 rounded-lg text-center uppercase border border-primary/20">
                                                     Choisissez la fréquence
                                                 </h3>
                                                 <div className="flex bg-slate-100 p-1 rounded-full w-full max-w-md mx-auto">
                                                     <button
                                                         type="button"
                                                         className={`flex-1 py-2 px-4 rounded-full text-sm font-bold transition-all ${formData.frequency === "oneshot"
-                                                            ? "bg-[#f1db08] text-slate-800 shadow-sm"
-                                                            : "text-slate-500 hover:text-[#b48d00]"
+                                                            ? "bg-primary text-slate-800 shadow-sm"
+                                                            : "text-slate-500 hover:text-primary"
                                                             }`}
                                                         onClick={() => setFormData({ ...formData, frequency: "oneshot", subFrequency: "" })}
                                                     >
@@ -360,8 +360,8 @@ export default function PlacementClient() {
                                                     <button
                                                         type="button"
                                                         className={`flex-1 py-2 px-4 rounded-full text-sm font-bold transition-all ${formData.frequency === "subscription"
-                                                            ? "bg-[#f1db08] text-slate-800 shadow-sm"
-                                                            : "text-slate-500 hover:text-[#b48d00]"
+                                                            ? "bg-primary text-slate-800 shadow-sm"
+                                                            : "text-slate-500 hover:text-primary"
                                                             }`}
                                                         onClick={() => setFormData({ ...formData, frequency: "subscription" })}
                                                     >
@@ -391,7 +391,7 @@ export default function PlacementClient() {
 
                                             {/* Resources Section */}
                                             <div className="space-y-4">
-                                                <h3 className="text-lg font-bold bg-[#f1db08]/10 text-[#b48d00] p-3 rounded-lg text-center uppercase border border-[#f1db08]/20">
+                                                <h3 className="text-lg font-bold bg-primary/10 text-primary p-3 rounded-lg text-center uppercase border border-primary/20">
                                                     Nombre de personne
                                                 </h3>
                                                 <div className="flex items-center justify-center gap-10 p-4 bg-slate-50 rounded-xl">
@@ -399,13 +399,13 @@ export default function PlacementClient() {
                                                         type="button"
                                                         variant="ghost"
                                                         size="icon"
-                                                        className="h-10 w-10 rounded-full bg-slate-200 text-[#b48d00] hover:bg-slate-300 shadow-sm"
+                                                        className="h-10 w-10 rounded-full bg-slate-200 text-primary hover:bg-slate-300 shadow-sm"
                                                         onClick={decrementPeople}
                                                     >
                                                         <span className="text-2xl">-</span>
                                                     </Button>
                                                     <div className="flex flex-col items-center">
-                                                        <span className="text-3xl font-black text-[#b48d00] leading-none">
+                                                        <span className="text-3xl font-black text-primary leading-none">
                                                             {formData.numberOfPeople}
                                                         </span>
                                                     </div>
@@ -413,7 +413,7 @@ export default function PlacementClient() {
                                                         type="button"
                                                         variant="ghost"
                                                         size="icon"
-                                                        className="h-10 w-10 rounded-full bg-slate-200 text-[#b48d00] hover:bg-slate-300 shadow-sm"
+                                                        className="h-10 w-10 rounded-full bg-slate-200 text-primary hover:bg-slate-300 shadow-sm"
                                                         onClick={incrementPeople}
                                                     >
                                                         <span className="text-2xl">+</span>
@@ -423,7 +423,7 @@ export default function PlacementClient() {
 
                                             {/* Business Info Section */}
                                             <div className="space-y-6">
-                                                <h3 className="text-lg font-bold bg-[#5bbd82]/10 text-[#2d5a3f] p-3 rounded-lg text-center uppercase border border-[#5bbd82]/20">
+                                                <h3 className="text-lg font-bold bg-primary/10 text-primary p-3 rounded-lg text-center uppercase border border-primary/20">
                                                     Les informations
                                                 </h3>
                                                 <p className="text-xs font-bold text-center text-slate-500 uppercase tracking-wider">
@@ -437,7 +437,7 @@ export default function PlacementClient() {
                                                             value={formData.entityName}
                                                             onChange={(e) => setFormData({ ...formData, entityName: e.target.value })}
                                                             required
-                                                            className="bg-white border-slate-200 focus:border-[#5bbd82] h-10"
+                                                            className="bg-white border-slate-200 focus:border-primary h-10"
                                                         />
                                                     </div>
                                                     <div className="space-y-2">
@@ -447,7 +447,7 @@ export default function PlacementClient() {
                                                             value={formData.contactPerson}
                                                             onChange={(e) => setFormData({ ...formData, contactPerson: e.target.value })}
                                                             required
-                                                            className="bg-white border-slate-200 focus:border-[#5bbd82] h-10"
+                                                            className="bg-white border-slate-200 focus:border-primary h-10"
                                                         />
                                                     </div>
                                                     <div className="space-y-2">
@@ -461,7 +461,7 @@ export default function PlacementClient() {
                                                                         phonePrefix: e.target.value,
                                                                         whatsappPrefix: prev.useWhatsappForPhone ? e.target.value : prev.whatsappPrefix
                                                                     }))}
-                                                                    className="w-24 border-slate-300 font-bold text-[#1c6664] text-center"
+                                                                    className="w-24 border-slate-300 font-bold text-primary text-center"
                                                                     placeholder="+212"
                                                                 />
                                                                 <Input
@@ -491,7 +491,7 @@ export default function PlacementClient() {
                                                                             whatsappPrefix: checked ? prev.phonePrefix : prev.whatsappPrefix
                                                                         }));
                                                                     }}
-                                                                    className="data-[state=checked]:bg-[#f1db08] border-[#f1db08]"
+                                                                    className="data-[state=checked]:bg-primary border-primary"
                                                                 />
                                                                 <label
                                                                     htmlFor="useWhatsapp"
@@ -508,7 +508,7 @@ export default function PlacementClient() {
                                                             <Input
                                                                 value={formData.whatsappPrefix}
                                                                 onChange={(e) => setFormData({ ...formData, whatsappPrefix: e.target.value })}
-                                                                className="bg-slate-50 border rounded-lg w-20 text-center font-bold text-[#b48d00] text-xs"
+                                                                className="bg-slate-50 border rounded-lg w-20 text-center font-bold text-primary text-xs"
                                                                 placeholder="+212"
                                                                 disabled={formData.useWhatsappForPhone}
                                                             />
@@ -529,7 +529,7 @@ export default function PlacementClient() {
                                                             value={formData.email}
                                                             onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                                                             required
-                                                            className="bg-white border-slate-200 focus:border-[#5bbd82] h-10"
+                                                            className="bg-white border-slate-200 focus:border-primary h-10"
                                                         />
                                                     </div>
                                                 </div>
@@ -537,7 +537,7 @@ export default function PlacementClient() {
 
                                             {/* Location Section */}
                                             <div className="space-y-4">
-                                                <h3 className="text-lg font-bold bg-[#f1db08]/10 text-[#b48d00] p-3 rounded-lg text-center uppercase border border-[#f1db08]/20">
+                                                <h3 className="text-lg font-bold bg-primary/10 text-primary p-3 rounded-lg text-center uppercase border border-primary/20">
                                                     Où aura lieu votre ménage ?
                                                 </h3>
                                                 <div className="grid md:grid-cols-2 gap-4">
@@ -568,7 +568,7 @@ export default function PlacementClient() {
                                             <div className="flex justify-center pt-8">
                                                 <Button
                                                     type="submit"
-                                                    className="bg-[#f1db08] hover:bg-[#e1cc07] text-slate-800 px-8 py-4 text-base font-bold shadow-lg shadow-[#f1db08]/20 h-auto rounded-full w-full md:w-auto md:min-w-[260px] transition-all hover:scale-105 active:scale-95"
+                                                    className="bg-primary hover:bg-primary/90 text-slate-800 px-8 py-4 text-base font-bold shadow-lg shadow-primary/20 h-auto rounded-full w-full md:w-auto md:min-w-[260px] transition-all hover:scale-105 active:scale-95"
                                                 >
                                                     Demander un devis
                                                 </Button>
@@ -585,9 +585,9 @@ export default function PlacementClient() {
             <Footer />
 
             <Dialog open={showConfirmation} onOpenChange={handleCloseConfirmation}>
-                <DialogContent className="sm:max-w-md bg-[#fefce8] border-[#f1db08]/20">
+                <DialogContent className="sm:max-w-md bg-white border-primary/20">
                     <DialogHeader>
-                        <DialogTitle className="text-[#b48d00] text-2xl font-bold">Confirmation</DialogTitle>
+                        <DialogTitle className="text-primary text-2xl font-bold">Confirmation</DialogTitle>
                         <DialogDescription className="text-slate-700 text-lg mt-4 leading-relaxed whitespace-pre-line">
                             {getConfirmationMessage(formData.contactPerson, true)}
                         </DialogDescription>
@@ -595,7 +595,7 @@ export default function PlacementClient() {
                     <DialogFooter className="mt-6">
                         <Button
                             onClick={() => handleCloseConfirmation(false)}
-                            className="bg-[#f1db08] hover:bg-[#e1cc07] text-slate-800 rounded-full px-8"
+                            className="bg-primary hover:bg-primary/90 text-slate-800 rounded-full px-8"
                         >
                             Fermer
                         </Button>
