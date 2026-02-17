@@ -227,20 +227,24 @@ Il comprend le :
                     primaryColor="#c5b89a"
                     faqs={[
                         {
-                            question: "Quelle est la différence entre un ménage standard et un grand ménage ?",
-                            answer: "Le grand ménage est une prestation plus approfondie. Il inclut des tâches supplémentaires comme le lessivage des murs, le nettoyage intérieur des placards, du réfrigérateur, et des zones souvent négligées (dessous de meubles, etc.)."
+                            question: "Quelle est la différence exacte entre un ménage standard et un \"Grand ménage\" ?",
+                            answer: "Le grand ménage est une véritable remise à neuf de votre intérieur. En plus des prestations du ménage standard, nos équipes réalisent un nettoyage en profondeur incluant : le lessivage des murs, le dépoussiérage minutieux sous les lits et canapés, le nettoyage complet de l'intérieur de votre électroménager (réfrigérateur, four), le lavage des vitres accessibles (jusqu'à 2 mètres de hauteur), le nettoyage intérieur de vos placards de cuisine, et même l'organisation soignée de votre dressing."
                         },
                         {
-                            question: "Combien de temps dure un grand ménage ?",
-                            answer: "La durée est calculée selon la superficie de votre logement. Par exemple, nous recommandons un minimum de 6 heures pour un studio afin de garantir un résultat impeccable."
+                            question: "Combien de temps dure la prestation et combien de personnes interviennent ?",
+                            answer: "Un nettoyage en profondeur exige de la minutie, c'est pourquoi cette prestation démarre à partir de 6 heures d'intervention. La grande force d'Agence Ménage réside dans notre système de réservation intelligent : il vous suffit de renseigner la superficie de votre domicile, et notre algorithme vous proposera automatiquement la combinaison idéale (nombre d'heures + taille de l'équipe) pour vous garantir un résultat impeccable."
                         },
                         {
-                            question: "L'équipement est-il fourni ?",
-                            answer: "Par défaut, non. Cependant, vous pouvez souscrire à l'option 'Produits et outils' (+90 MAD) lors de votre réservation pour que notre équipe apporte tout le nécessaire."
+                            question: "Fournissez-vous les produits spécifiques pour ce nettoyage en profondeur ?",
+                            answer: "Nos équipes travaillent avec votre matériel de base. Toutefois, pour garantir une efficacité maximale lors d'un grand nettoyage, nous vous proposons d'ajouter notre Pack Entretien en option lors de votre réservation. Ce pack complet inclut tous les produits nécessaires, des torchons adaptés et une serpillière neuve."
                         },
                         {
-                            question: "Dois-je être présent lors de la prestation ?",
-                            answer: "Votre présence n'est pas obligatoire mais fortement conseillée en début de mission pour orienter l'équipe, et en fin de mission pour valider la qualité du travail effectué."
+                            question: "Dois-je vider mes placards ou préparer les pièces avant votre arrivée ?",
+                            answer: "Absolument pas ! Notre objectif est de vous soulager intégralement. Nos professionnels s'occupent de tout sur place. Vous n'avez pas besoin de préparer les pièces à l'avance ni de vider vos placards, nos équipes s'en chargent avec le plus grand soin pendant la prestation."
+                        },
+                        {
+                            question: "Combien de temps à l'avance dois-je réserver mon Grand Ménage à Casablanca ?",
+                            answer: "Nous savons que certains besoins ne peuvent pas attendre. Grâce à notre grande flexibilité et à la taille de nos équipes, vous avez la possibilité de réserver votre intervention d'urgence jusqu'à 12 heures seulement avant le début de la prestation."
                         }
                     ]}
                 />

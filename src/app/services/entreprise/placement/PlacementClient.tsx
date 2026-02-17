@@ -130,20 +130,20 @@ export default function PlacementClient() {
                     primaryColor="#f1db08"
                     faqs={[
                         {
-                            question: "Quel est l'avantage du placement par rapport à l'embauche directe ?",
-                            answer: "Vous vous libérez de toute la gestion RH (contrats, CNSS, mutuelle) et des risques juridiques, tout en garantissant la continuité du service en cas d'absence."
+                            question: "Quelle est la différence entre le service \"Flexible\" et \"Premium 360\" ?",
+                            answer: "Notre offre s'adapte à votre niveau de délégation. Avec le service Flexible, nous sécurisons toute la partie RH (contrats, paie) mais vous gardez le contrôle opérationnel en pilotant les tâches de l'intervenante sur site. Avec l'offre Premium 360, c'est une solution clé en main : nous pilotons la prestation de A à Z (produits, matériel, méthodes, supervision) avec une obligation de résultat pour que vous n'ayez plus rien à gérer."
                         },
                         {
-                            question: "Comment sélectionnez-vous le personnel placé ?",
-                            answer: "Chaque candidat passe par un recrutement rigoureux : tests de compétences, vérification des références professionnelles et enquête d'intégrité."
+                            question: "Qui gère l'administratif, les contrats et la paie du personnel ?",
+                            answer: "C'est la grande force de l'externalisation. Agence Ménage prend en charge l'intégralité du \"back-office\". Vous bénéficiez d'une solution avec zéro gestion RH de votre côté (plus de contrats à rédiger, de fiches de paie ou de suivi administratif), ce qui simplifie considérablement votre gestion interne avec un budget clair."
                         },
                         {
-                            question: "Peut-on demander le remplacement d'un agent s'il ne convient pas ?",
-                            answer: "Absolument. Si le profil ne correspond pas à vos attentes, nous procédons à son remplacement sous 48h sans frais supplémentaires."
+                            question: "Que se passe-t-il en cas d'absence, de maladie ou de congé de l'intervenante ?",
+                            answer: "La continuité de service est notre engagement numéro un. En cas de départ, d'insatisfaction ou d'absence imprévue, nous organisons immédiatement un remplacement. Dans le cadre de notre offre Premium 360, nous garantissons même ce remplacement le jour même (SLA) pour qu'il n'y ait absolument aucun impact sur votre activité."
                         },
                         {
-                            question: "Gérez-vous également les équipements de nettoyage ?",
-                            answer: "Dans notre offre Premium 360, nous fournissons et entretenons tout le matériel professionnel ainsi que les produits éco-responsables nécessaires."
+                            question: "Comment la qualité du nettoyage est-elle contrôlée au quotidien ?",
+                            answer: "Si vous optez pour la gestion Premium 360, vous n'achetez pas \"du ménage\" mais un standard de propreté garanti. La qualité est mesurée en continu grâce à la mise en place d'une supervision sur place, de check-lists strictes, d'inspections régulières et d'un reporting simple qui vous est adressé. De plus, nous garantissons une réactivité de traitement sous 24h au moindre retour de votre part."
                         }
                     ]}
                 />

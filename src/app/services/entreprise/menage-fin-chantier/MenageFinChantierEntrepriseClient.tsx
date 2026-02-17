@@ -104,20 +104,20 @@ La prestation comprend : L’évacuation des poussières et résidus de chantier
                     primaryColor="#88d89d"
                     faqs={[
                         {
-                            question: "Proposez-vous le nettoyage de grandes surfaces vitrées ?",
-                            answer: "Oui, nous disposons du matériel nécessaire pour le nettoyage des vitrines, baies vitrées et verrières, même en hauteur."
+                            question: "Vos équipes sont-elles équipées pour intervenir sur des chantiers professionnels ?",
+                            answer: "Oui, la sécurité et l'efficacité sont nos priorités sur site. Nos agents interviennent avec leurs Équipements de Protection Individuelle (EPI) obligatoires et déploient un parc matériel industriel (autolaveuses, aspirateurs à haut rendement, monobrosses) capable de traiter de très grandes superficies (plateaux de bureaux, commerces, entrepôts) dans le respect des normes de sécurité marocaines."
                         },
                         {
-                            question: "Le retrait des gravats est-il inclus ?",
-                            answer: "Nous incluons le retrait des petits débris. Pour les gravats plus volumineux, nous pouvons prévoir une benne en option additionnelle."
+                            question: "Intervenez-vous pour faciliter la \"levée des réserves\" avant la livraison finale ?",
+                            answer: "Absolument. Notre nettoyage de fin de chantier B2B est conçu pour vous assurer une \"réception de chantier\" sans accroc avec votre client final. Nous éliminons méticuleusement les laitances de ciment, traces de résine, peinture ou colle sur les vitrages techniques, les profilés aluminium et tous types de revêtements (sols souples, moquettes, parquets) pour une finition parfaite."
                         },
                         {
-                            question: "Quels délais pour une intervention de fin de chantier ?",
-                            answer: "Nous recommandons de nous contacter 3 à 5 jours avant la fin prévue des travaux pour bloquer une équipe aux dates souhaitées."
+                            question: "Pouvez-vous mobiliser une équipe en urgence pour respecter nos délais de livraison ?",
+                            answer: "Nous connaissons parfaitement la pression des délais dans le secteur de la construction et de l'aménagement à Casablanca. Agence Ménage est capable de dimensionner rapidement ses équipes et d'intervenir avec une grande flexibilité, y compris en horaires décalés (soir, week-end), pour s'adapter au planning de vos autres corps d'état et garantir la livraison de votre projet en temps et en heure."
                         },
                         {
-                            question: "Effectuez-vous la remise en état des sols spécifiques ?",
-                            answer: "Oui, nous traitons tous types de sols : décapage de carrelage, cristallisation de marbre ou nettoyage vapeur de moquettes si nécessaire."
+                            question: "Prenez-vous en charge l'évacuation des emballages volumineux et des gravats ?",
+                            answer: "Si notre cœur de métier reste le nettoyage de finition Premium, nous avons conscience de vos contraintes logistiques. Nous pouvons intégrer, sur devis spécifique en option, la gestion, la manutention et l'évacuation de vos déchets de chantier (cartons volumineux, palettes, reliquats de matériaux) afin de vous livrer un espace de travail totalement dégagé et prêt à l'emploi."
                         }
                     ]}
                 />

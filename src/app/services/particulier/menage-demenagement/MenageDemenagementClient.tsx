@@ -183,20 +183,20 @@ Options possibles : vitres extérieures/grandes baies, terrasse.`}
                     primaryColor="#d1a246"
                     faqs={[
                         {
-                            question: "Le matériel et les produits sont-ils inclus ?",
-                            answer: "Oui, notre équipe arrive avec tout le nécessaire : aspirateurs, produits dégraissants, nettoyeurs vapeur et consommables de nettoyage."
+                            question: "Fournissez-vous le matériel et les produits pour ce type de ménage ?",
+                            answer: "Oui, absolument. Nous savons qu'un déménagement est une source de stress et que vos affaires sont souvent déjà emballées. C'est pourquoi, contrairement à nos prestations standards, le nettoyage post-déménagement (ou avant emménagement) inclut d'office l'utilisation de tous nos produits d'entretien professionnels ainsi que notre propre matériel. Nos équipes arrivent équipées de A à Z."
                         },
                         {
-                            question: "Combien de temps à l'avance dois-je réserver ?",
-                            answer: "Nous recommandons de réserver au moins 48h à 72h à l'avance, particulièrement en fin de mois, période très sollicitée pour les déménagements."
+                            question: "Que comprend exactement cette prestation de nettoyage à vide ?",
+                            answer: "Il s'agit d'une remise à blanc complète de votre espace. Nous traitons le logement en profondeur : lessivage des portes, des interrupteurs et des plinthes, nettoyage intérieur et extérieur des placards vides, désinfection totale des pièces d'eau (sanitaires, salle de bain) et de la cuisine, ainsi que le lavage des vitres. L'objectif est de rendre ou d'intégrer un espace irréprochable."
                         },
                         {
-                            question: "Le nettoyage de l'électroménager est-il prévu ?",
-                            answer: "Oui, nous nettoyons l'intérieur et l'extérieur du four et du réfrigérateur, à condition qu'ils soient vides au moment de notre intervention."
+                            question: "Le logement doit-il être entièrement vidé de ses meubles avant votre arrivée ?",
+                            answer: "Pour vous garantir un résultat Premium et un nettoyage véritablement approfondi (notamment pour les sols et les murs), nous demandons que le logement soit totalement vide de ses meubles et cartons. L'espace dégagé permet à nos intervenantes d'être d'une efficacité redoutable dans les moindres recoins."
                         },
                         {
-                            question: "Réintervenez-vous en cas de souci lors de l'état des lieux ?",
-                            answer: "Notre objectif est votre satisfaction et la récupération de votre caution. Si le propriétaire émet une réserve sur le nettoyage, nous revenons corriger le tir sans frais."
+                            question: "Faut-il que l'eau et l'électricité soient toujours activées ?",
+                            answer: "Oui, c'est un point indispensable. Pour pouvoir utiliser notre matériel électrique et procéder au lessivage et à la désinfection de vos surfaces, l'eau courante et l'électricité doivent impérativement être actives le jour de notre intervention à Casablanca."
                         }
                     ]}
                 />

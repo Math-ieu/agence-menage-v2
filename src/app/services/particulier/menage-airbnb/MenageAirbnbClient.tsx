@@ -131,20 +131,20 @@ Il comprend le :
                     primaryColor="#9ccfcf"
                     faqs={[
                         {
-                            question: "Proposez-vous le service de blanchisserie ?",
-                            answer: "Oui, nous pouvons intégrer le lavage et le repassage du linge de maison (draps, serviettes) dans notre prestation pour que votre logement soit prêt pour les prochains voyageurs."
+                            question: "Gérez-vous le séchage et le repassage du linge de maison (draps, serviettes) ?",
+                            answer: "Oui, nous savons que la qualité du linge est le premier critère pour obtenir un avis 5 étoiles de vos voyageurs. C'est pourquoi nous proposons, en option complémentaire, la prise en charge du séchage et du repassage minutieux de vos draps et serviettes pour garantir des lits dignes d'un service hôtelier à chaque nouvelle arrivée."
                         },
                         {
-                            question: "Pouvez-vous gérer les remises de clés ?",
-                            answer: "Notre service principal est axé sur le nettoyage haute performance. Pour la gestion des clés ou le check-in, nous pouvons étudier des solutions sur mesure avec nos partenaires."
+                            question: "Gérez-vous le réapprovisionnement des consommables de base (savon, papier toilette, café) ?",
+                            answer: "Actuellement, nous concentrons toute notre expertise sur notre cœur de métier : l'excellence de la propreté Premium. Nous ne gérons donc pas les achats ni le réapprovisionnement de vos consommables. Nous vous invitons à laisser votre stock à disposition sur place, et nos équipes se chargeront de les disposer harmonieusement selon vos consignes avant l'arrivée de vos locataires."
                         },
                         {
-                            question: "Intervenez-vous le dimanche et les jours fériés ?",
-                            answer: "Absolument. Nous savons que les rotations Airbnb n'attendent pas. Nous proposons des interventions 7j/7 pour assurer la continuité de vos locations."
+                            question: "Pouvez-vous intervenir le dimanche entre deux réservations (check-out / check-in) ?",
+                            answer: "Absolument. Nous connaissons les contraintes de la location courte durée à Casablanca et savons que les rotations n'attendent pas. Nos équipes spécialisées Airbnb sont pleinement opérationnelles 7 jours sur 7, du lundi au dimanche inclus, pour assurer des transitions parfaites et ponctuelles entre le départ d'un locataire et l'arrivée du suivant."
                         },
                         {
-                            question: "Comment garantissez-vous la qualité pour mes voyageurs ?",
-                            answer: "Chaque prestation suit une procédure stricte de désinfection et de mise en place, garantissant un accueil irréprochable et des commentaires positifs sur la propreté."
+                            question: "Que se passe-t-il si votre équipe constate des dégradations laissées par les voyageurs ?",
+                            answer: "Nous sommes vos yeux sur place. Dès qu'une de nos intervenantes constate une casse, une dégradation ou toute anomalie anormale dans votre logement, notre protocole est strict : nous prenons immédiatement des photos détaillées. Nous vous partageons ces preuves en temps réel et nous mettons en attente nos opérations de nettoyage jusqu'à réception de vos consignes. Vous êtes ainsi parfaitement protégé pour formuler vos réclamations sur la plateforme de réservation."
                         }
                     ]}
                 />

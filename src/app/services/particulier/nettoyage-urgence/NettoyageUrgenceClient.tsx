@@ -134,20 +134,20 @@ Les interventions d’urgence couvrent exclusivement les cas suivants :
                         primaryColor={SERVICE_COLOR}
                         faqs={[
                             {
-                                question: "En combien de temps pouvez-vous intervenir ?",
-                                answer: "Nous nous efforçons de dépêcher une équipe dans les 2 à 4 heures suivant votre demande pour les situations les plus critiques à Casablanca."
+                                question: "Quels types d'urgences et de sinistres prenez-vous en charge ?",
+                                answer: "Nos équipes spécialisées interviennent pour toutes les situations critiques nécessitant une remise en état express : dégâts des eaux (fuites, inondations), nettoyage après un départ de feu ou un accident domestique, mais également pour des urgences non catastrophiques comme un grand nettoyage extrême après une fête, une réception ou un événement ayant laissé vos espaces très salis."
                             },
                             {
-                                question: "Intervenez-vous la nuit ou les week-ends ?",
-                                answer: "Oui, notre service d'urgence est disponible 24h/24 et 7j/7. Nous comprenons qu'un sinistre n'attend pas les heures de bureau."
+                                question: "Avez-vous le matériel nécessaire pour aspirer l'eau ou nettoyer la suie ?",
+                                answer: "Oui, un sinistre ne se nettoie pas avec un simple balai. Nous déployons immédiatement un équipement industriel adapté à la situation : aspirateurs à eau haute puissance pour assécher vos sols après une inondation, monobrosses, et produits professionnels capables d'éliminer les traces de suie, les odeurs tenaces ou les résidus d'accidents domestiques."
                             },
                             {
-                                question: "Quels types d'urgences traitez-vous ?",
-                                answer: "Nous intervenons principalement après des inondations, incendies, ou pour des remises en état express avant des événements imprévus."
+                                question: "Délivrez-vous des devis valables pour les déclarations d'assurance ?",
+                                answer: "Absolument. Lors d'un dégât des eaux ou d'un incendie, votre assurance habitation prend souvent en charge les frais de remise en état. Agence Ménage vous fournit rapidement un devis détaillé et officiel, conforme aux exigences des compagnies d'assurance marocaines, pour faciliter vos démarches de remboursement."
                             },
                             {
-                                question: "Le matériel est-il adapté aux sinistres ?",
-                                answer: "Absolûtement. Nous disposons d'aspirateurs à eau haute performance, de déshumidificateurs et de produits professionnels de décontamination."
+                                question: "Pouvez-vous intervenir très rapidement pour un nettoyage après une fête ?",
+                                answer: "La réactivité est au cœur de ce service. Que ce soit pour masquer les traces d'un dégât des eaux ou pour remettre à neuf votre villa après une grande réception, nous mobilisons nos équipes en urgence sur tout Casablanca. Nous agissons avec une totale discrétion et une efficacité redoutable pour que vous retrouviez un intérieur impeccable dans les plus brefs délais."
                             }
                         ]}
                     />

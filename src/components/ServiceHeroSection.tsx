@@ -59,11 +59,30 @@ const ServiceHeroSection = ({ title, description, image, primaryColor, isCollaps
         setOpenFaqIndex(openFaqIndex === index ? null : index);
     };
 
+    const faqSchema = faqs.length > 0 ? {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        "mainEntity": faqs.map(faq => ({
+            "@type": "Question",
+            "name": faq.question,
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": faq.answer
+            }
+        }))
+    } : null;
+
     return (
         <section
             className="relative py-8 md:py-16 bg-gradient-to-br from-primary/10 to-accent"
             style={primaryColor ? { background: `linear-gradient(to bottom right, ${primaryColor}26, ${primaryColor}1a)` } : {}}
         >
+            {faqSchema && (
+                <script
+                    type="application/ld+json"
+                    dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
+                />
+            )}
             <div className="container relative">
                 {/* Back Button */}
                 <button
@@ -121,7 +140,7 @@ const ServiceHeroSection = ({ title, description, image, primaryColor, isCollaps
                                 onClick={() => setActiveTab("description")}
                                 className={`flex-1 py-4 px-6 rounded-lg font-medium transition-all text-center text-lg ${activeTab === "description"
                                     ? "text-white shadow-md"
-                                    : "bg-opacity-20 hover:bg-opacity-30"
+                                    : "bg-opacity-20 hover:bg-opacity-30 ripple"
                                     }`}
                                 style={{
                                     backgroundColor: activeTab === "description" ? (primaryColor || "#287271") : `${primaryColor || "#287271"}40`,
@@ -131,10 +150,10 @@ const ServiceHeroSection = ({ title, description, image, primaryColor, isCollaps
                                 Description {title.toLowerCase()}
                             </button>
                             <button
-                                onClick={() => { }}
-                                className={`flex-1 py-4 px-6 rounded-lg font-medium transition-all text-center text-lg cursor-default ${activeTab === "faqs"
+                                onClick={() => setActiveTab("faqs")}
+                                className={`flex-1 py-4 px-6 rounded-lg font-medium transition-all text-center text-lg ${activeTab === "faqs"
                                     ? "text-white shadow-md"
-                                    : "bg-opacity-20 hover:bg-opacity-30"
+                                    : "bg-opacity-20 hover:bg-opacity-30 ripple"
                                     }`}
                                 style={{
                                     backgroundColor: activeTab === "faqs" ? (primaryColor || "#287271") : `${primaryColor || "#287271"}40`,
@@ -169,8 +188,8 @@ const ServiceHeroSection = ({ title, description, image, primaryColor, isCollaps
                             {/* FAQs Accordion */}
                             <div className="rounded-2xl overflow-hidden shadow-md">
                                 <button
-                                    onClick={() => { }}
-                                    className="w-full py-5 px-8 flex items-center justify-between font-bold text-white transition-all outline-none text-xl cursor-default"
+                                    onClick={() => toggleAccordion("faqs")}
+                                    className="w-full py-5 px-8 flex items-center justify-between font-bold text-white transition-all outline-none text-xl"
                                     style={{ backgroundColor: primaryColor || "#287271" }}
                                 >
                                     <span>Questions les plus fréquentes</span>

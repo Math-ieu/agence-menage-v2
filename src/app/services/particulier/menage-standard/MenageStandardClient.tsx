@@ -259,20 +259,28 @@ Il comprend le :
                     primaryColor="#1c6664"
                     faqs={[
                         {
-                            question: "Quelle est la durée minimale d'une prestation ?",
-                            answer: "La durée minimale pour une session de ménage standard est de 4 heures pour garantir un travail de qualité et une attention aux détails."
+                            question: "Fournissez-vous le matériel et les produits de nettoyage ?",
+                            answer: "Pour des raisons d'hygiène strictes et pour respecter les spécificités de vos surfaces, nos intervenantes utilisent votre propre équipement de base (aspirateur, balai, seau). Toutefois, pour vous simplifier totalement le quotidien, nous proposons un Pack Entretien en option. Ce kit complet et prêt à l'emploi inclut 6 produits de nettoyage efficaces, des torchons adaptés et une serpillière neuve. Il vous suffit de cocher cette option lors de votre réservation pour que notre équipe s'occupe de tout lors de son passage chez vous à Casablanca."
                         },
                         {
-                            question: "Dois-je fournir les produits de nettoyage ?",
-                            answer: "C'est comme vous préférez ! Vous pouvez fournir vos propres produits ou choisir notre option 'Produits fournis' (+90 MAD) lors de la réservation."
+                            question: "Dois-je obligatoirement être présent(e) à mon domicile pendant la prestation ?",
+                            answer: "Non, votre présence n'est absolument pas requise. La majorité de nos clients à Casablanca nous confient l'accès (clés laissées au concierge, boîte à clés ou ouverture en début de séance) pour que nous puissions intervenir en leur absence. Nos femmes de ménage sont rigoureusement sélectionnées pour leur fiabilité et formées à travailler en toute autonomie et discrétion. Vous pouvez donc partir l'esprit tranquille et retrouver votre intérieur impeccable à votre retour."
                         },
                         {
-                            question: "Est-ce que c'est toujours la même personne qui intervient ?",
-                            answer: "Pour les abonnements réguliers, nous nous efforçons d'envoyer la même intervenante pour assurer une continuité et une parfaite connaissance de votre domicile."
+                            question: "Aurai-je toujours la même femme de ménage à chaque intervention ?",
+                            answer: "Notre objectif est de vous assurer une continuité de service pour créer une véritable relation de confiance. Nous faisons donc le maximum pour vous assigner la même femme de ménage à chaque passage. Toutefois, en cas d'indisponibilité de votre intervenante habituelle, nous vous garantissons la continuité de votre prestation en organisant immédiatement son remplacement par une autre professionnelle qualifiée de notre agence."
                         },
                         {
-                            question: "Quelles sont les zones d'intervention ?",
-                            answer: "Nous intervenons dans tout le grand Casablanca. Si vous avez un doute sur votre quartier, n'hésitez pas à nous contacter."
+                            question: "Quel est le statut de votre personnel et comment est-il formé ?",
+                            answer: "Le professionnalisme et la conformité légale sont au cœur de nos engagements. Toutes nos intervenantes exercent sous le statut légal d'auto-entrepreneuse et sont obligatoirement déclarées à la CNSS (avec couverture AMO). Avant d'intervenir à votre domicile, chaque recrue suit une formation technique rigoureuse au sein de nos locaux à Casablanca afin de maîtriser nos standards de nettoyage Premium."
+                        },
+                        {
+                            question: "Êtes-vous assurés en cas d'accident pendant la prestation ?",
+                            answer: "Oui, votre tranquillité d'esprit est primordiale. Agence Ménage dispose d'une assurance professionnelle qui couvre l'ensemble de nos équipes en cas d'accidents du travail ou d'accidents domestiques survenant chez vous. Veuillez noter que cette couverture ne s'applique pas à la casse d'objets. C'est pourquoi nos équipes sont spécifiquement formées à manipuler vos biens avec la plus grande délicatesse."
+                        },
+                        {
+                            question: "Suis-je engagé(e) sur la durée avec un contrat strict ?",
+                            answer: "Absolument pas. Vous bénéficiez d'une flexibilité totale, sans aucun engagement de durée. Notre règle est simple : vous ne payez que les prestations que vous consommez. Si vous partez en vacances ou souhaitez annuler un passage, il vous suffit d'avertir notre agence au minimum 48 heures à l'avance."
                         }
                     ]}
                 />

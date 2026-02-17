@@ -145,20 +145,20 @@ Nos auxiliaires de vie assurent une présence 24h/24, 7j/7, selon les besoins en
                     primaryColor="#b46d2f"
                     faqs={[
                         {
-                            question: "Quelle est la formation de vos auxiliaires de vie ?",
-                            answer: "Nos intervenants sont sélectionnés pour leur expérience et formés aux gestes de premiers secours ainsi qu'à l'accompagnement des personnes dépendantes."
+                            question: "Quelles sont l'expérience et les qualifications de vos auxiliaires de vie ?",
+                            answer: "Confier un proche vulnérable exige une confiance absolue. Toutes nos auxiliaires de vie possèdent une solide expérience sur le terrain avec des références rigoureusement contrôlées. Elles sont qualifiées pour gérer des situations variées, allant de la simple compagnie pour les seniors jusqu'à l'assistance complète pour des pathologies lourdes (Alzheimer, Parkinson, paralysie). De plus, toutes nos intervenantes savent parfaitement lire et écrire, une compétence indispensable pour le bon suivi des prescriptions médicales."
                         },
                         {
-                            question: "Proposez-vous une présence de nuit ?",
-                            answer: "Oui, nous proposons des gardes de nuit ainsi que des forfaits de présence 24h/24 pour assurer une surveillance constante et rassurer la famille."
+                            question: "Quelles tâches exactes prenez-vous en charge au quotidien ?",
+                            answer: "Nos gardes malades assurent l'ensemble des gestes essentiels pour le confort de votre proche : aide à la toilette (incluant le change), préparation et aide à la prise des repas, rappel de la prise de médicaments et accompagnement moral. Cependant, notre cadre d'intervention est strictement non médical : nous n'effectuons aucun acte infirmier (administration d'oxygène, prises de sang, soins de plaies ou kinésithérapie)."
                         },
                         {
-                            question: "L'auxiliaire de vie peut-elle préparer les repas ?",
-                            answer: "Absolument. La préparation des repas adaptés au régime alimentaire et l'aide à la prise des repas font partie des missions principales."
+                            question: "Dois-je m'engager sur une semaine complète ou proposez-vous des interventions courtes ?",
+                            answer: "Vous bénéficiez d'une flexibilité totale pour vous adapter à l'état de santé de votre proche. Vous pouvez faire appel à nous pour quelques heures par jour (pour les repas ou les médicaments), pour remplacer votre auxiliaire de vie habituelle pendant son jour de repos, ou pour un besoin temporaire de quelques jours (par exemple, suite à une opération chirurgicale). Vous ne réservez que ce dont vous avez réellement besoin."
                         },
                         {
-                            question: "Comment se passe le remplacement en cas d'absence ?",
-                            answer: "Nous garantissons la continuité du service. En cas d'imprévu ou de congé, nous mobilisons immédiatement une remplaçante qualifiée déjà briefée sur le dossier."
+                            question: "Proposez-vous des gardes de nuit et que se passe-t-il si l'intervenante est absente ?",
+                            answer: "La sécurité et le bien-être de vos proches ne s'arrêtent jamais. Nous pouvons intervenir 24h/24 et 7j/7, y compris les jours fériés. Par ailleurs, la continuité des soins est notre priorité absolue : en cas d'indisponibilité imprévue de votre auxiliaire de vie habituelle, nous garantissons son remplacement immédiat par un profil tout aussi expérimenté de notre agence."
                         }
                     ]}
                 />

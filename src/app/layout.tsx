@@ -83,7 +83,7 @@ export default function RootLayout({
                     `}
                 </Script>
             </head>
-            <body className="antialiased min-h-screen flex flex-col overflow-x-hidden">
+            <body className="antialiased min-h-screen flex flex-col overflow-x-hidden" suppressHydrationWarning>
                 {/* Google Tag Manager (noscript) */}
                 <noscript>
                     <iframe

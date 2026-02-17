@@ -104,20 +104,20 @@ La prestation comprend : L’évacuation des poussières et résidus de chantier
                     primaryColor="#88d89d"
                     faqs={[
                         {
-                            question: "Qu'est-ce qui est inclus dans le nettoyage fin de chantier ?",
-                            answer: "Nous procédons au retrait de la poussière fine partout, au grattage des traces de peinture/ciment sur les sols et vitres, au dégraissage complet et à la désinfection."
+                            question: "Intervenez-vous avec du matériel industriel spécifique ?",
+                            answer: "Oui, un nettoyage post-travaux exige un équipement lourd et professionnel. Nos équipes interviennent sur votre site avec l'intégralité du matériel industriel nécessaire (aspirateurs de chantier à eau et poussière, monobrosses, raclettes professionnelles) pour garantir une remise en état parfaite de vos espaces fraîchement construits ou rénovés à Casablanca."
                         },
                         {
-                            question: "À quel moment faut-il programmer l'intervention ?",
-                            answer: "Il est préférable d'intervenir une fois que tous les corps de métier ont terminé leurs travaux et quitté les lieux, pour éviter que de la nouvelle poussière ne se dépose."
+                            question: "Êtes-vous capables d'éliminer les traces tenaces (ciment, colle, peinture) ?",
+                            answer: "Absolument. Nos agents maîtrisent les techniques de nettoyage de fin de chantier. En combinant l'action de nos machines et de produits spécifiques rigoureusement adaptés à la nature de chaque tâche (voile de ciment, gouttes de peinture, résidus de scotch ou de colle), nous éliminons les salissures les plus tenaces tout en préservant l'intégrité de vos matériaux neufs et de vos sols fragiles."
                         },
                         {
-                            question: "Gérez-vous l'évacuation des gravats ?",
-                            answer: "Notre service se concentre sur le nettoyage. L'évacuation des gros gravats de chantier doit être effectuée au préalable par l'entreprise de travaux."
+                            question: "Prenez-vous en charge l'évacuation des gravats et déchets de chantier ?",
+                            answer: "L'évacuation des gros encombrants et des gravats lourds n'est pas incluse dans notre prestation de nettoyage de base. Cependant, pour vous offrir une solution clé en main et vous faire gagner du temps avant la livraison de votre chantier, nous proposons le déblaiement en tant qu'option payante supplémentaire. Il suffit de nous le préciser lors de votre demande de devis."
                         },
                         {
-                            question: "Le matériel spécifique est-il prévu ?",
-                            answer: "Oui, nous utilisons des aspirateurs industriels haute puissance et des monobrosses si nécessaire pour retirer les résidus tenaces sur les sols."
+                            question: "Faut-il que l'eau et l'électricité soient raccordées pour votre intervention ?",
+                            answer: "Oui, c'est une condition indispensable à la réussite de notre mission. Pour pouvoir faire fonctionner nos équipements industriels et procéder au lessivage complet de vos surfaces, le chantier doit obligatoirement être raccordé à l'eau courante et à l'électricité le jour de l'intervention de nos équipes."
                         }
                     ]}
                 />

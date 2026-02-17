@@ -200,20 +200,20 @@ export default function MenageBureauxClient() {
                     primaryColor="#c7dd54"
                     faqs={[
                         {
-                            question: "Intervenez-vous en dehors des heures de bureau ?",
-                            answer: "Oui, nous pouvons planifier les passages tôt le matin ou en soirée pour ne pas gêner le travail de vos collaborateurs."
+                            question: "Vos agents peuvent-ils intervenir en dehors de nos heures d'ouverture ?",
+                            answer: "Oui, absolument. L'entretien de vos locaux ne doit jamais perturber la productivité de vos collaborateurs. C'est pourquoi nos équipes de nettoyage de bureaux à Casablanca sont opérationnelles 24h/24 et 7j/7. Nous pouvons intervenir très tôt le matin avant l'arrivée de vos équipes, tard le soir après la fermeture, ou même durant le week-end, selon votre cahier des charges."
                         },
                         {
-                            question: "Le personnel est-il formé à la discrétion ?",
-                            answer: "Absolument. Nos agents sont formés au respect de la confidentialité et à la discrétion nécessaire dans un environnement professionnel."
+                            question: "Fournissez-vous les consommables sanitaires (papier toilette, savon) ?",
+                            answer: "La gestion des stocks sanitaires peut vite devenir une contrainte chronophage pour votre entreprise. Nous proposons donc la fourniture et le réapprovisionnement régulier de vos consommables (papier hygiénique, essuie-mains, savon, désodorisant) sous forme d'option supplémentaire à la demande. Vous déléguez complètement cette gestion et maîtrisez votre budget."
                         },
                         {
-                            question: "Fournissez-vous les consommables (savon, papier) ?",
-                            answer: "Nous pouvons intégrer la gestion des stocks et la recharge de vos consommables sanitaires dans notre forfait sur simple demande."
+                            question: "Comment garantissez-vous la sécurité de nos locaux et la confidentialité ?",
+                            answer: "La sécurité de votre entreprise est notre priorité absolue. Tout notre personnel Premium est rigoureusement sélectionné, déclaré, et sensibilisé au respect strict de la confidentialité de vos documents et de vos espaces de travail. De plus, nous établissons avec vous un protocole hautement sécurisé pour la gestion de vos clés, de vos badges d'accès et l'activation de vos alarmes."
                         },
                         {
-                            question: "Comment gérez-vous les clés de nos bureaux ?",
-                            answer: "Nous avons une procédure rigoureuse de gestion des clés. Elles sont tracées et conservées en sécurité dans un coffre-fort au sein de notre agence."
+                            question: "Sommes-nous engagés sur un contrat de longue durée rigide ?",
+                            answer: "Non, nous croyons que la fidélité de nos clients B2B doit se gagner par l'excellence de notre travail quotidien, et non par un contrat verrouillé. Notre offre d'entretien est 100% flexible et sans engagement de durée. Nos abonnements fonctionnent au mois le mois : vous êtes totalement libre d'ajuster la fréquence de nos passages ou de suspendre notre collaboration à tout moment."
                         }
                     ]}
                 />
