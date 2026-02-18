@@ -1,10 +1,12 @@
 "use client";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { SERVICE_COLORS } from "@/constants/service-colors";
 import { ChevronDown, ChevronUp } from "lucide-react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import ServiceHeroSection from "@/components/ServiceHeroSection";
+import OtherServices from "@/components/OtherServices";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -203,7 +205,7 @@ export default function GrandMenageClient() {
         <div className="min-h-screen flex flex-col">
             <Header />
 
-            <div className="bg-[hsl(var(--primary)/0.05)]" style={{ "--primary": "183 95% 32%", "--secondary": "183 95% 90%" } as React.CSSProperties}>
+            <div className="bg-[hsl(var(--primary)/0.05)]" style={{ "--primary": SERVICE_COLORS.GRAND_MENAGE.hsl, "--secondary": `${SERVICE_COLORS.GRAND_MENAGE.hsl.split(' ').slice(0, 2).join(' ')} 90%` } as React.CSSProperties}>
                 <ServiceHeroSection
                     title="Grand Ménage"
                     description={`Le grand ménage a pour objectif d’assurer la propreté et l’entretien courant des espaces attribués.
@@ -226,7 +228,7 @@ Il comprend le :
 - Organisation du dressing
 - Nettoyage du frigo`}
                     image={serviceGrandMenage.src}
-                    primaryColor="#04969e"
+                    primaryColor={SERVICE_COLORS.GRAND_MENAGE.hex}
                     faqs={[
                         {
                             question: "Quelle est la différence exacte entre un ménage standard et un \"Grand ménage\" ?",
@@ -783,6 +785,7 @@ Il comprend le :
                         </form>
                     </div>
                 </main>
+                <OtherServices type="particulier" currentServiceUrl="/services/particulier/grand-menage" />
             </div>
 
             <Footer />

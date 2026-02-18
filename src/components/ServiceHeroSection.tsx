@@ -207,7 +207,7 @@ const ServiceHeroSection = ({ title, description, image, primaryColor, isCollaps
                                                             className={`w-full py-3 px-4 flex items-center justify-between text-left transition-all duration-300 outline-none ${isActive ? "text-white" : "text-slate-800 bg-white"}`}
                                                             style={isActive ? { backgroundColor: primaryColor || "#287271" } : {}}
                                                         >
-                                                            <span className="text-[11px] pr-4">{faq.question}</span>
+                                                            <span className="text-[11px] pr-4 font-bold">{faq.question}</span>
                                                             {isActive ? (
                                                                 <ChevronUp size={16} className="flex-shrink-0" />
                                                             ) : (
@@ -261,7 +261,7 @@ const ServiceHeroSection = ({ title, description, image, primaryColor, isCollaps
                                                     className={`w-full py-5 px-6 flex items-center justify-between text-left transition-all duration-300 outline-none ${isActive ? "text-white" : "text-slate-800 hover:bg-slate-50"}`}
                                                     style={isActive ? { backgroundColor: primaryColor || "#287271" } : {}}
                                                 >
-                                                    <span className="text-sm md:text-base pr-8">{faq.question}</span>
+                                                    <span className="text-sm md:text-base pr-8 font-bold">{faq.question}</span>
                                                     {isActive ? (
                                                         <ChevronUp size={24} className="flex-shrink-0" />
                                                     ) : (

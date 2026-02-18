@@ -2,10 +2,12 @@
 
 import React, { useState, useRef } from "react";
 import { useRouter } from "next/navigation";
+import { SERVICE_COLORS } from "@/constants/service-colors";
 import { ChevronDown, ChevronUp } from "lucide-react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import ServiceHeroSection from "@/components/ServiceHeroSection";
+import OtherServices from "@/components/OtherServices";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -123,13 +125,13 @@ export default function PlacementClient() {
         <div className="min-h-screen flex flex-col bg-slate-50">
             <Header />
 
-            <main className="flex-1 flex flex-col bg-[hsl(var(--primary)/0.05)]" style={{ "--primary": "54 94% 49%" } as React.CSSProperties}>
+            <main className="flex-1 flex flex-col bg-[hsl(var(--primary)/0.05)]" style={{ "--primary": SERVICE_COLORS.PLACEMENT.hsl } as React.CSSProperties}>
                 <ServiceHeroSection
                     title="Placement & Gestion de Propreté pour Entreprises"
                     isCollapsible={false}
                     description="Des solutions sur mesure pour l'entretien de vos locaux. Choisissez entre notre offre flexible pour garder le contrôle ou notre offre premium pour une gestion à 360° sans soucis."
                     image={serviceMenagePonctuel.src}
-                    primaryColor="#f1db08"
+                    primaryColor={SERVICE_COLORS.PLACEMENT.hex}
                     faqs={[
                         {
                             question: "Quelle est la différence entre le service \"Flexible\" et \"Premium 360\" ?",
@@ -581,6 +583,7 @@ export default function PlacementClient() {
                     )}
                 </section>
             </main>
+            <OtherServices type="entreprise" currentServiceUrl="/services/entreprise/placement" />
 
             <Footer />
 

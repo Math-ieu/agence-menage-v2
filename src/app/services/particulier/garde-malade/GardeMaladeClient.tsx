@@ -2,10 +2,12 @@
 
 import React, { useState, useRef } from "react";
 import { useRouter } from "next/navigation";
+import { SERVICE_COLORS } from "@/constants/service-colors";
 import { ChevronDown, ChevronUp, ArrowLeft } from "lucide-react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import ServiceHeroSection from "@/components/ServiceHeroSection";
+import OtherServices from "@/components/OtherServices";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -137,14 +139,14 @@ export default function GardeMaladeClient() {
         <div className="min-h-screen flex flex-col bg-white">
             <Header />
 
-            <main className="flex-1 flex flex-col bg-[hsl(var(--primary)/0.05)]" style={{ "--primary": "186 52% 55%" } as React.CSSProperties}>
+            <main className="flex-1 flex flex-col bg-[hsl(var(--primary)/0.05)]" style={{ "--primary": SERVICE_COLORS.GARDE_MALADE.hsl } as React.CSSProperties}>
                 <ServiceHeroSection
                     title="Auxiliaires de vie / Garde malade"
                     description={`Le service d'auxiliaires de vie / garde malade à domicile à Casablanca, proposé par Agence Ménage, met à votre disposition des auxiliaires de vie à domicile expérimentées pour accompagner les patients dans leur quotidien, avec sérieux, discrétion et bienveillance.
 
 Nos auxiliaires de vie assurent une présence 24h/24, 7j/7, selon les besoins en journée, la nuit, ou en continu. Elles interviennent auprès des personnes âgées ou en situation de dépendance.`}
                     image={gardeMaladeHero.src}
-                    primaryColor="#50bfcb"
+                    primaryColor={SERVICE_COLORS.GARDE_MALADE.hex}
                     faqs={[
                         {
                             question: "Quelles sont l'expérience et les qualifications de vos auxiliaires de vie ?",
@@ -754,6 +756,7 @@ Nos auxiliaires de vie assurent une présence 24h/24, 7j/7, selon les besoins en
                     </div>
                 )}
             </main>
+            <OtherServices type="particulier" currentServiceUrl="/services/particulier/garde-malade" />
 
             <Footer />
 

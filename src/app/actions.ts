@@ -257,6 +257,7 @@ export async function sendBookingEmailResend(serviceName: string, data: any, pri
         ${data.healthIssues ? `<tr><td style="padding: 5px 0;"><strong>Pathologie:</strong></td><td>${data.healthIssues}</td></tr>` : ""}
         ${data.numberOfDays ? `<tr><td style="padding: 5px 0;"><strong>Nombre de jours:</strong></td><td>${data.numberOfDays}</td></tr>` : ""}
       ` : ""}
+      ${data.additionalInfo ? `<tr><td style="padding: 5px 0;"><strong>Infos supp.:</strong></td><td>${data.additionalInfo}</td></tr>` : ""}
     </table>
   </div>
   <div style="margin-bottom: 20px;">

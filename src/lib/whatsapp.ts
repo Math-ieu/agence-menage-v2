@@ -88,6 +88,10 @@ export const formatBookingMessage = (serviceName: string, data: any, price: numb
         if (nature) details.push(`*Nature :* ${nature}`);
     }
 
+    if (data.additionalInfo) {
+        details.push(`*Informations supp. :* ${data.additionalInfo}`);
+    }
+
     if (serviceName === "Ménage post-déménagement") {
         if (data.accommodationState) details.push(`*État du logement :* ${data.accommodationState}`);
         if (data.cleanlinessType) details.push(`*Salissure :* ${data.cleanlinessType}`);

@@ -2,10 +2,12 @@
 
 import { useState, Suspense } from "react";
 import { useRouter } from "next/navigation";
+import { SERVICE_COLORS } from "@/constants/service-colors";
 import { ChevronDown, ChevronUp } from "lucide-react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import ServiceHeroSection from "@/components/ServiceHeroSection";
+import OtherServices from "@/components/OtherServices";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -168,7 +170,7 @@ const MenageDemenagementContent = () => {
         <div className="min-h-screen flex flex-col">
             <Header />
 
-            <div className="bg-[hsl(var(--primary)/0.05)]" style={{ "--primary": "36 92% 70%", "--secondary": "36 92% 95%" } as React.CSSProperties}>
+            <div className="bg-[hsl(var(--primary)/0.05)]" style={{ "--primary": SERVICE_COLORS.DEMENAGEMENT.hsl, "--secondary": `${SERVICE_COLORS.DEMENAGEMENT.hsl.split(' ').slice(0, 2).join(' ')} 95%` } as React.CSSProperties}>
                 <ServiceHeroSection
                     title="Ménage post - déménagement"
                     description={`Ménage post-déménagement : – tout inclus :
@@ -181,7 +183,7 @@ const MenageDemenagementContent = () => {
 Produits + matériel + main-d'œuvre inclus.
 Options possibles : vitres extérieures/grandes baies, terrasse.`}
                     image={serviceDemenagement.src}
-                    primaryColor="#f8c170"
+                    primaryColor={SERVICE_COLORS.DEMENAGEMENT.hex}
                     faqs={[
                         {
                             question: "Fournissez-vous le matériel et les produits pour ce type de ménage ?",
@@ -649,6 +651,7 @@ Options possibles : vitres extérieures/grandes baies, terrasse.`}
                         </form>
                     </div>
                 </main>
+                <OtherServices type="particulier" currentServiceUrl="/services/particulier/menage-demenagement" />
             </div>
 
             <Footer />

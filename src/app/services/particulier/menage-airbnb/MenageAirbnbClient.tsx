@@ -1,10 +1,12 @@
 "use client";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { SERVICE_COLORS } from "@/constants/service-colors";
 import { ChevronDown, ChevronUp } from "lucide-react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import ServiceHeroSection from "@/components/ServiceHeroSection";
+import OtherServices from "@/components/OtherServices";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -110,7 +112,7 @@ export default function MenageAirbnbClient() {
         <div className="min-h-screen flex flex-col">
             <Header />
 
-            <div className="bg-[hsl(var(--primary)/0.05)]" style={{ "--primary": "17 91% 66%" } as React.CSSProperties}>
+            <div className="bg-[hsl(var(--primary)/0.05)]" style={{ "--primary": SERVICE_COLORS.AIRBNB.hsl } as React.CSSProperties}>
                 <ServiceHeroSection
                     title="Ménage Airbnb"
                     description={`Le ménage Airbnb a pour objectif d’assurer la propreté et l’entretien courant des espaces attribués.
@@ -129,7 +131,7 @@ Il comprend le :
 - Rangement de la vaisselle
 - Vidage et nettoyage de la poubelle`}
                     image={serviceAirbnb.src}
-                    primaryColor="#f78458"
+                    primaryColor={SERVICE_COLORS.AIRBNB.hex}
                     faqs={[
                         {
                             question: "Gérez-vous le séchage et le repassage du linge de maison (draps, serviettes) ?",
@@ -533,6 +535,7 @@ Il comprend le :
                         </form>
                     </div>
                 </main>
+                <OtherServices type="particulier" currentServiceUrl="/services/particulier/menage-airbnb" />
             </div>
 
             <Footer />

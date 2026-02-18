@@ -2,10 +2,12 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { SERVICE_COLORS } from "@/constants/service-colors";
 import { ChevronDown, ChevronUp } from "lucide-react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import ServiceHeroSection from "@/components/ServiceHeroSection";
+import OtherServices from "@/components/OtherServices";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -194,12 +196,12 @@ export default function MenageBureauxClient() {
         <div className="min-h-screen flex flex-col">
             <Header />
 
-            <div className="bg-[hsl(var(--primary)/0.05)]" style={{ "--primary": "70 66% 60%" } as React.CSSProperties}>
+            <div className="bg-[hsl(var(--primary)/0.05)]" style={{ "--primary": SERVICE_COLORS.BUREAUX.hsl } as React.CSSProperties}>
                 <ServiceHeroSection
                     title="Ménage Bureaux"
                     description="Nettoyage des espaces de travail afin de garantir un environnement propre, sain et agréable pour les employés et les visiteurs. La prestation comprend : Le dépoussiérage des bureaux, plans de travail et surfaces accessibles, Le nettoyage des sols (balayage, serpière…), Le vidage des poubelles, Le nettoyage des vitres accessibles, L’entretien des espaces communs (salles de réunion, couloirs, cuisine, escaliers), nettoyage des bureaux, chaises, sols, toilettes… ainsi que les balcons, escaliers lorsqu’ils sont accessibles."
                     image={serviceBureaux.src}
-                    primaryColor="#c7dd54"
+                    primaryColor={SERVICE_COLORS.BUREAUX.hex}
                     faqs={[
                         {
                             question: "Vos agents peuvent-ils intervenir en dehors de nos heures d'ouverture ?",
@@ -763,6 +765,7 @@ export default function MenageBureauxClient() {
                         </form>
                     </div>
                 </main>
+                <OtherServices type="entreprise" currentServiceUrl="/services/entreprise/menage-bureaux" />
             </div>
 
             <Footer />

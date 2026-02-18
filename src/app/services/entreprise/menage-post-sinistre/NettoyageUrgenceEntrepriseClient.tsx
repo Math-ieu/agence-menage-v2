@@ -2,10 +2,12 @@
 
 import { useState, Suspense } from "react";
 import { useRouter } from "next/navigation";
+import { SERVICE_COLORS } from "@/constants/service-colors";
 import Link from "next/link";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import ServiceHeroSection from "@/components/ServiceHeroSection";
+import OtherServices from "@/components/OtherServices";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -50,7 +52,8 @@ const INITIAL_FORM_DATA = {
     whatsappNumber: "",
     firstName: "",
     lastName: "",
-    frequency: "oneshot"
+    frequency: "oneshot",
+    additionalInfo: ""
 };
 
 const NettoyageUrgenceContent = () => {
@@ -62,7 +65,6 @@ const NettoyageUrgenceContent = () => {
     const [formData, setFormData] = useState(INITIAL_FORM_DATA);
     const router = useRouter();
 
-    const SERVICE_COLOR = "#74a12d"; // Enterprise urgency color
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
@@ -125,13 +127,13 @@ Nos équipes interviennent en urgence pour :
         <div className="min-h-screen flex flex-col">
             <Header />
 
-            <div className="bg-[hsl(var(--primary)/0.05)]" style={{ "--primary": "84 56% 41%" } as React.CSSProperties}>
+            <div className="bg-[hsl(var(--primary)/0.05)]" style={{ "--primary": SERVICE_COLORS.URGENCE_E.hsl } as React.CSSProperties}>
                 <main className="flex-1">
                     <ServiceHeroSection
                         title="Ménage Post-sinistre"
                         description={serviceDescription}
                         image={serviceUrgence.src}
-                        primaryColor={SERVICE_COLOR}
+                        primaryColor={SERVICE_COLORS.URGENCE_E.hex}
                         faqs={[
                             {
                                 question: "Quelle est votre réactivité pour une intervention en entreprise ?",
@@ -264,6 +266,15 @@ Nos équipes interviennent en urgence pour :
                                                     </div>
                                                 </div>
                                             </RadioGroup>
+                                            <div className="mt-4 px-4">
+                                                <Label className="font-bold text-primary text-sm mb-2 block">Donnez-nous plus d’informations sur votre demande</Label>
+                                                <Textarea
+                                                    placeholder="Détaillez ici votre besoin spécifique (type de sinistre, surface concernée, urgence particulière...)"
+                                                    value={formData.additionalInfo}
+                                                    onChange={(e) => setFormData({ ...formData, additionalInfo: e.target.value })}
+                                                    className="min-h-[100px] border-primary/20"
+                                                />
+                                            </div>
                                         </div>
 
                                         {/* Planning */}
@@ -489,6 +500,7 @@ Nos équipes interviennent en urgence pour :
                         </div>
                     </section>
                 </main>
+                <OtherServices type="entreprise" currentServiceUrl="/services/entreprise/menage-post-sinistre" />
             </div>
             <Footer />
 

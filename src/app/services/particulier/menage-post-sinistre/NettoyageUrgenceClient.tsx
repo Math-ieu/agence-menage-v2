@@ -2,10 +2,12 @@
 
 import { useState, Suspense } from "react";
 import { useRouter } from "next/navigation";
+import { SERVICE_COLORS } from "@/constants/service-colors";
 import Link from "next/link";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import ServiceHeroSection from "@/components/ServiceHeroSection";
+import OtherServices from "@/components/OtherServices";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -50,7 +52,8 @@ const INITIAL_FORM_DATA = {
     whatsappNumber: "",
     firstName: "",
     lastName: "",
-    frequency: "oneshot"
+    frequency: "oneshot",
+    additionalInfo: ""
 };
 
 const NettoyageUrgenceContent = () => {
@@ -62,7 +65,6 @@ const NettoyageUrgenceContent = () => {
     const [formData, setFormData] = useState(INITIAL_FORM_DATA);
     const router = useRouter();
 
-    const SERVICE_COLOR = "#4f8130"; // New green
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
@@ -125,13 +127,13 @@ Les interventions d’urgence couvrent exclusivement les cas suivants :
         <div className="min-h-screen flex flex-col">
             <Header />
 
-            <div className="bg-[hsl(var(--primary)/0.05)]" style={{ "--primary": "97 46% 35%" } as React.CSSProperties}>
+            <div className="bg-[hsl(var(--primary)/0.05)]" style={{ "--primary": SERVICE_COLORS.URGENCE_P.hsl } as React.CSSProperties}>
                 <main className="flex-1">
                     <ServiceHeroSection
                         title="Ménage Post-sinistre"
                         description={serviceDescription}
                         image={serviceUrgence.src}
-                        primaryColor={SERVICE_COLOR}
+                        primaryColor={SERVICE_COLORS.URGENCE_P.hex}
                         faqs={[
                             {
                                 question: "Quels types d'urgences et de sinistres prenez-vous en charge ?",
@@ -299,6 +301,15 @@ Les interventions d’urgence couvrent exclusivement les cas suivants :
                                                     </div>
                                                 </div>
                                             </RadioGroup>
+                                            <div className="mt-4 px-4">
+                                                <Label className="font-bold text-primary text-sm mb-2 block">Donnez-nous plus d’informations sur votre demande</Label>
+                                                <Textarea
+                                                    placeholder="Détaillez ici votre besoin spécifique (type de sinistre, surface concernée, urgence particulière...)"
+                                                    value={formData.additionalInfo}
+                                                    onChange={(e) => setFormData({ ...formData, additionalInfo: e.target.value })}
+                                                    className="min-h-[100px] border-primary/20"
+                                                />
+                                            </div>
                                         </div>
 
                                         {/* Planning */}
@@ -577,25 +588,7 @@ Les interventions d’urgence couvrent exclusivement les cas suivants :
                         </div>
                     </section>
 
-                    <section className="py-12 bg-slate-50 border-t">
-                        <div className="container max-w-5xl mx-auto px-4 text-center">
-                            <h2 className="text-2xl font-bold text-primary mb-8">Voir d'autres services</h2>
-                            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                                <Link href="/services/particulier/menage-standard" className="bg-white p-6 rounded-xl shadow-sm border hover:shadow-md transition-shadow group">
-                                    <h3 className="font-bold text-lg text-primary group-hover:text-primary/80 mb-2">Ménage Standard</h3>
-                                    <p className="text-sm text-slate-600">Entretien régulier de votre domicile.</p>
-                                </Link>
-                                <Link href="/services/particulier/grand-menage" className="bg-white p-6 rounded-xl shadow-sm border hover:shadow-md transition-shadow group">
-                                    <h3 className="font-bold text-lg text-primary group-hover:text-primary/80 mb-2">Grand Ménage</h3>
-                                    <p className="text-sm text-slate-600">Nettoyage en profondeur pour une hygiène totale.</p>
-                                </Link>
-                                <Link href="/" className="bg-white p-6 rounded-xl shadow-sm border hover:shadow-md transition-shadow group">
-                                    <h3 className="font-bold text-lg text-primary group-hover:text-primary/80 mb-2">Tous nos services</h3>
-                                    <p className="text-sm text-slate-600">Découvrez l'ensemble de nos prestations.</p>
-                                </Link>
-                            </div>
-                        </div>
-                    </section>
+                    <OtherServices type="particulier" currentServiceUrl="/services/particulier/menage-post-sinistre" />
                 </main>
             </div>
             <Footer />
