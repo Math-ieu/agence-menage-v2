@@ -14,9 +14,11 @@ export default function sitemap(): MetadataRoute.Sitemap {
         '/services/particulier/menage-airbnb',
         '/services/particulier/menage-fin-chantier',
         '/services/particulier/garde-malade',
+        '/services/particulier/menage-post-sinistre',
         '/services/entreprise/menage-bureaux',
         '/services/entreprise/menage-fin-chantier',
         '/services/entreprise/placement',
+        '/services/entreprise/menage-post-sinistre',
     ]
 
     return routes.map((route) => ({
