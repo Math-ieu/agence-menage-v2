@@ -1,3 +1,4 @@
+"use client";
 import { Users, Phone, Monitor, ShieldCheck, MapPin, Settings2 } from "lucide-react";
 import Link from "next/link";
 import { Button } from "./ui/button";
@@ -65,7 +66,21 @@ const WhyChooseUs = ({ isEntreprise = false }: { isEntreprise?: boolean }) => {
             <>
               <p className="text-muted-foreground mb-6">Vous souhaitez un devis sur-mesure pour vos locaux ?</p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-                <a href="tel:0522200177" className="w-full sm:w-auto">
+                <a
+                  href="tel:+212522200177"
+                  id="am_phone_header"
+                  className="am-phone-header w-full sm:w-auto"
+                  onClick={() => {
+                    if (typeof window !== 'undefined') {
+                      (window as any).dataLayer = (window as any).dataLayer || [];
+                      (window as any).dataLayer.push({
+                        event: 'phone_click',
+                        phone_location: 'WhyChooseUs_B2B',
+                        phone_number: '0522200177'
+                      });
+                    }
+                  }}
+                >
                   <Button className="w-full sm:w-auto text-sm md:text-base px-6 py-3 rounded-full h-auto whitespace-normal" size="lg">
                     Contactez notre équipe B2B au<br className="sm:hidden" /> 05 22 20 01 77
                   </Button>

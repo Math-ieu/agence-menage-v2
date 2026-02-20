@@ -19,6 +19,8 @@ const WhatsAppSidebar = () => {
         <div className="fixed right-6 bottom-6 z-[100] flex justify-end">
             <a
                 href={whatsappLink}
+                id="wa-float"
+                data-gtm="whatsapp_floating_button"
                 target="_blank"
                 rel="noopener noreferrer"
                 onMouseEnter={() => setIsHovered(true)}
@@ -35,7 +37,7 @@ const WhatsAppSidebar = () => {
                     }
                 }}
                 className={cn(
-                    "relative flex items-center bg-gradient-to-br from-[#25D366] to-[#128C7E] text-white rounded-full transition-all duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)] h-14 outline-none overflow-hidden group px-[11px] border-t border-white/20 select-none",
+                    "wa-float relative flex items-center bg-gradient-to-br from-[#25D366] to-[#128C7E] text-white rounded-full transition-all duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)] h-14 outline-none overflow-hidden group px-[11px] border-t border-white/20 select-none",
                     "shadow-[0_10px_40px_-10px_rgba(37,211,102,0.5)] active:shadow-inner active:scale-95",
                     isHovered ? "w-[280px]" : "w-14"
                 )}

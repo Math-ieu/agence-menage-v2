@@ -65,7 +65,18 @@ const Header = () => {
           `}>
             <a
               href="tel:+212664226790"
-              className="flex items-center"
+              id="am_phone_header"
+              className="am-phone-header flex items-center"
+              onClick={() => {
+                if (typeof window !== 'undefined') {
+                  (window as any).dataLayer = (window as any).dataLayer || [];
+                  (window as any).dataLayer.push({
+                    event: 'phone_click',
+                    phone_location: 'header',
+                    phone_number: '0664226790'
+                  });
+                }
+              }}
             >
               <div className="w-0 group-hover:w-6 group-active:w-6 transition-all duration-300 overflow-hidden flex items-center shrink-0">
                 <Phone className={`w-4 h-4 mr-2 ${isEntreprise ? "text-white" : "text-primary"}`} />
