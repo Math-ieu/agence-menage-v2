@@ -7,6 +7,8 @@ import ServiceCard from "./ServiceCard";
 import { cn } from "@/lib/utils";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { Home, Briefcase, Key, Hammer, HeartHandshake, Building2, UserCheck } from "lucide-react";
+import Link from "next/link";
+import { Button } from "./ui/button";
 
 import { particulierServices, entrepriseServices } from "@/constants/services";
 
@@ -71,80 +73,7 @@ const ServicesSection = ({ type = "particulier" }: ServicesSectionProps) => {
                     isEntreprise ? "bg-white/30" : "bg-primary/20"
                 )} />
 
-                <div className={cn(
-                    "max-w-6xl mx-auto mt-12 text-center",
-                    isEntreprise ? "text-white/90" : "text-slate-600"
-                )}>
-                    {isEntreprise ? (
-                        <div className="space-y-8">
-                            <h3 className="text-2xl md:text-3xl font-bold text-center text-white mb-12">Nos Solutions pour les Entreprises</h3>
-                            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                                <div className="text-center">
-                                    <div className="w-16 h-16 mx-auto mb-4 bg-white/10 rounded-xl flex items-center justify-center">
-                                        <Building2 className="w-8 h-8 text-white" />
-                                    </div>
-                                    <h4 className="font-semibold text-white mb-2">Ménage de Bureaux</h4>
-                                    <p className="text-white/80 text-sm leading-relaxed">Des interventions discrètes et efficaces, adaptées à vos horaires (avant l'ouverture ou après la fermeture), pour maintenir des espaces de travail impeccables et stimulants.</p>
-                                </div>
-                                <div className="text-center">
-                                    <div className="w-16 h-16 mx-auto mb-4 bg-white/10 rounded-xl flex items-center justify-center">
-                                        <UserCheck className="w-8 h-8 text-white" />
-                                    </div>
-                                    <h4 className="font-semibold text-white mb-2">Placement & Gestion de Propreté</h4>
-                                    <p className="text-white/80 text-sm leading-relaxed">La mise à disposition de personnel qualifié avec un encadrement strict. Nous prenons en charge les plannings, les remplacements et le suivi de la qualité pour une totale tranquillité d'esprit.</p>
-                                </div>
-                                <div className="text-center">
-                                    <div className="w-16 h-16 mx-auto mb-4 bg-white/10 rounded-xl flex items-center justify-center">
-                                        <Hammer className="w-8 h-8 text-white" />
-                                    </div>
-                                    <h4 className="font-semibold text-white mb-2">Nettoyage Fin de Chantier</h4>
-                                    <p className="text-white/80 text-sm leading-relaxed">Une remise en état complète et minutieuse de vos locaux professionnels, plateaux de bureaux ou boutiques après travaux, pour une livraison parfaite et prête à l'usage.</p>
-                                </div>
-                            </div>
-                        </div>
-                    ) : (
-                        <div className="space-y-8">
-                            <h3 className="text-2xl md:text-3xl font-bold text-center text-slate-900 mb-12">Nos Domaines d'Intervention</h3>
-                            <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-6">
-                                <div className="text-center flex flex-col items-center">
-                                    <div className="w-16 h-16 shrink-0 mb-4 bg-primary/10 rounded-xl flex items-center justify-center">
-                                        <Home className="w-8 h-8 text-primary" />
-                                    </div>
-                                    <h4 className="font-semibold text-primary mb-2">Ménage Résidentiel</h4>
-                                    <p className="text-slate-600 text-sm leading-relaxed">Un entretien minutieux de votre maison ou appartement pour un quotidien serein.</p>
-                                </div>
-                                <div className="text-center flex flex-col items-center">
-                                    <div className="w-16 h-16 shrink-0 mb-4 bg-primary/10 rounded-xl flex items-center justify-center">
-                                        <Briefcase className="w-8 h-8 text-primary" />
-                                    </div>
-                                    <h4 className="font-semibold text-primary mb-2">Nettoyage de Bureaux</h4>
-                                    <p className="text-slate-600 text-sm leading-relaxed">Des locaux professionnels impeccables pour le bien-être de vos collaborateurs et l'image de votre entreprise.</p>
-                                </div>
-                                <div className="text-center flex flex-col items-center">
-                                    <div className="w-16 h-16 shrink-0 mb-4 bg-primary/10 rounded-xl flex items-center justify-center">
-                                        <Key className="w-8 h-8 text-primary" />
-                                    </div>
-                                    <h4 className="font-semibold text-primary mb-2">Entretien Airbnb</h4>
-                                    <p className="text-slate-600 text-sm leading-relaxed">Un service de nettoyage ultra-réactif entre deux locations pour garantir des avis 5 étoiles de vos voyageurs.</p>
-                                </div>
-                                <div className="text-center flex flex-col items-center">
-                                    <div className="w-16 h-16 shrink-0 mb-4 bg-primary/10 rounded-xl flex items-center justify-center">
-                                        <Hammer className="w-8 h-8 text-primary" />
-                                    </div>
-                                    <h4 className="font-semibold text-primary mb-2">Fin de Chantier</h4>
-                                    <p className="text-slate-600 text-sm leading-relaxed">Un grand nettoyage en profondeur pour effacer toute trace de travaux et rendre vos espaces prêts à l'usage.</p>
-                                </div>
-                                <div className="text-center flex flex-col items-center">
-                                    <div className="w-16 h-16 shrink-0 mb-4 bg-primary/10 rounded-xl flex items-center justify-center">
-                                        <HeartHandshake className="w-8 h-8 text-primary" />
-                                    </div>
-                                    <h4 className="font-semibold text-primary mb-2">Auxiliaire de Vie</h4>
-                                    <p className="text-slate-600 text-sm leading-relaxed">Un accompagnement humain et professionnel pour les personnes ayant besoin d'assistance au quotidien.</p>
-                                </div>
-                            </div>
-                        </div>
-                    )}
-                </div>
+
             </div>
 
             {(isEntreprise && !isMobile) ? (
@@ -215,6 +144,22 @@ const ServicesSection = ({ type = "particulier" }: ServicesSectionProps) => {
                     </div>
                 </div>
             )}
+
+            <div className="mt-16 text-center px-4">
+                <Link href="/contact" className="w-full sm:w-auto inline-block">
+                    <Button
+                        size="lg"
+                        className={cn(
+                            "w-full sm:w-auto text-lg px-8 py-6 rounded-full font-semibold shadow-lg transition-all hover:scale-105",
+                            isEntreprise
+                                ? "bg-white text-primary hover:bg-slate-100"
+                                : "bg-primary text-white hover:bg-primary/90"
+                        )}
+                    >
+                        Demandez votre devis
+                    </Button>
+                </Link>
+            </div>
         </section>
     );
 };
