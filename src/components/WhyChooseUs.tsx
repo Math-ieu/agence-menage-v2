@@ -1,29 +1,52 @@
-import { Users, Phone, Monitor } from "lucide-react";
+import { Users, Phone, Monitor, ShieldCheck, MapPin, Settings2 } from "lucide-react";
+import Link from "next/link";
+import { Button } from "./ui/button";
 
-const WhyChooseUs = () => {
-  const features = [
+const WhyChooseUs = ({ isEntreprise = false }: { isEntreprise?: boolean }) => {
+  const particuliersFeatures = [
+    {
+      icon: ShieldCheck,
+      title: "Fiabilité & Sécurité",
+      description: "Tout notre personnel est déclaré, vérifié et formé à nos standards d'excellence.",
+    },
+    {
+      icon: MapPin,
+      title: "Proximité",
+      description: "Une agence locale, implantée à la Résidence Anafe A, toujours réactive sur l'ensemble de Casablanca.",
+    },
+    {
+      icon: Settings2,
+      title: "Sur-mesure",
+      description: "Des prestations qui s'adaptent exactement à vos horaires et à vos exigences.",
+    },
+  ];
+
+  const entrepriseFeatures = [
     {
       icon: Users,
-      title: "Des Employés formés",
-      description: "Les employés de nos agences sont formés et expérimentés sur le terrain: pointues, et efficaces.",
+      title: "Un Personnel Formé et Évalué",
+      description: "Nos équipes maîtrisent des techniques de nettoyage pointues et efficaces, parfaitement adaptées aux exigences du milieu professionnel.",
     },
     {
       icon: Phone,
-      title: "Chargé de clientèle dédié 6j/7",
-      description: "Notre Service Client est disponible du Lundi au Samedi par email ou par téléphone.",
+      title: "Un Chargé de Clientèle Dédié 6j/7",
+      description: "Un interlocuteur unique à votre écoute. Notre service client est disponible du lundi au samedi pour répondre avec réactivité à vos demandes.",
     },
     {
       icon: Monitor,
-      title: "Réservation & gestion en ligne",
-      description: "Réservation et gestion des prestations: tout se fait en ligne !",
+      title: "Une Gestion en Ligne Simplifiée",
+      description: "Réservation, suivi des prestations et gestion : pilotez facilement votre contrat en ligne en toute transparence.",
     },
   ];
+
+  const features = isEntreprise ? entrepriseFeatures : particuliersFeatures;
+  const title = isEntreprise ? "Nos Engagements Pros" : "La Différence \"Premium Services\"";
 
   return (
     <section className="py-16 bg-background">
       <div className="container">
         <h2 className="text-2xl md:text-3xl font-bold text-center text-foreground mb-12">
-          Pourquoi réserver votre ménage chez<br />Agence Ménage ?
+          {title}
         </h2>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
@@ -36,6 +59,36 @@ const WhyChooseUs = () => {
               <p className="text-muted-foreground text-sm leading-relaxed">{feature.description}</p>
             </div>
           ))}
+        </div>
+        <div className="mt-16 text-center">
+          {isEntreprise ? (
+            <>
+              <p className="text-muted-foreground mb-6">Vous souhaitez un devis sur-mesure pour vos locaux ?</p>
+              <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+                <a href="tel:0522200177" className="w-full sm:w-auto">
+                  <Button className="w-full sm:w-auto text-sm md:text-base px-6 py-3 rounded-full h-auto whitespace-normal" size="lg">
+                    Contactez notre équipe B2B au<br className="sm:hidden" /> 05 22 20 01 77
+                  </Button>
+                </a>
+                <a href="https://wa.me/212664226790" target="_blank" rel="noreferrer" className="w-full sm:w-auto">
+                  <Button variant="outline" size="lg" className="w-full sm:w-auto text-lg px-8 py-6 rounded-full border-primary text-primary hover:bg-primary/10">WhatsApp : 06 64 22 67 90</Button>
+                </a>
+              </div>
+              <p className="mt-4 text-sm text-muted-foreground">Ou écrivez-nous à <a href="mailto:contact@agencemenage.ma" className="underline">contact@agencemenage.ma</a></p>
+            </>
+          ) : (
+            <>
+              <p className="text-muted-foreground mb-6">Vous avez besoin d'une intervention rapide ?</p>
+              <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+                <a href="https://wa.me/212664226790" target="_blank" rel="noreferrer" className="w-full sm:w-auto">
+                  <Button className="w-full sm:w-auto text-lg px-8 py-6 rounded-full" size="lg">Contactez-nous sur WhatsApp</Button>
+                </a>
+                <Link href="/contact" className="w-full sm:w-auto">
+                  <Button variant="outline" size="lg" className="w-full sm:w-auto text-lg px-8 py-6 rounded-full border-primary text-primary hover:bg-primary/10">Demandez votre devis gratuit en ligne</Button>
+                </Link>
+              </div>
+            </>
+          )}
         </div>
       </div>
     </section>

@@ -469,13 +469,6 @@ export default function PlacementClient() {
                                                                 <Input
                                                                     placeholder="6 00 00 00 00"
                                                                     value={formData.phoneNumber}
-                                                                    onFocus={() => {
-                                                                        if (typeof window !== "undefined" && (window as any).gtag) {
-                                                                            (window as any).gtag('event', 'conversion', {
-                                                                                'send_to': 'AW-17907112455/phone_field_interact',
-                                                                            });
-                                                                        }
-                                                                    }}
                                                                     onChange={(e) => {
                                                                         const newVal = e.target.value;
                                                                         setFormData(prev => ({

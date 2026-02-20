@@ -36,8 +36,8 @@ const Entreprise = () => {
         <HeroSection />
         <ServicesSection type="entreprise" />
         <AboutSectionEntreprise />
-        <PresentationSection />
-        <WhyChooseUs />
+        <PresentationSection isEntreprise />
+        <WhyChooseUs isEntreprise />
         <TeamReviews />
         <PartnersSection />
       </main>

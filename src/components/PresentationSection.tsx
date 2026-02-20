@@ -1,6 +1,6 @@
 import photoMehdi from "@/assets/photo-mehdi-presentation.png";
 
-const PresentationSection = () => {
+const PresentationSection = ({ isEntreprise = false }: { isEntreprise?: boolean }) => {
     return (
         <section className="relative py-20 bg-[#F2F2F2] overflow-hidden">
             {/* Background Decorations */}
@@ -47,18 +47,31 @@ const PresentationSection = () => {
                                 </div>
 
                                 <div className="space-y-3 text-slate-800 text-lg md:text-xl xl:text-2xl leading-tight text-center xl:text-left pt-2">
-                                    <p>
-                                        À Casablanca, nous recherchons un service qui respecte notre rythme, nos espaces et nos standards.
-                                    </p>
-                                    <p>
-                                        <span className="font-bold">Agence Ménage</span> est née de cette exigence : une propreté premium, encadrée et durable, pour les particuliers et les entreprises.
-                                    </p>
-                                    <p>
-                                        Adossés à <span className="font-bold">Agence Premium</span> et <span className="font-bold">Nounou.ma</span>, et accompagnés par <span className="font-bold">Julien COSTAN ZANON</span> (15 ans d'expertise en Suisse), nous appliquons une méthode rigoureuse et un contrôle qualité constant.
-                                    </p>
-                                    <p>
-                                        Bienvenue chez <span className="font-bold">Agence Ménage</span>.
-                                    </p>
+                                    {isEntreprise ? (
+                                        <>
+                                            <p>
+                                                À Casablanca, l'image de votre entreprise passe d'abord par l'accueil et la propreté de vos locaux. Vos collaborateurs et vos clients méritent un environnement sain, respectueux de vos standards et de votre rythme de travail.
+                                            </p>
+                                            <p>
+                                                Forts de notre appartenance au groupe Agence Premium (Nounou.ma) et appuyés par 15 ans d'expertise aux standards de qualité suisses, nous appliquons une méthode rigoureuse avec un contrôle qualité constant.
+                                            </p>
+                                            <p>
+                                                Nous ne faisons pas que nettoyer : <span className="font-bold">nous gérons la propreté de vos espaces professionnels</span> pour que vous puissiez vous concentrer à 100% sur votre cœur de métier.
+                                            </p>
+                                        </>
+                                    ) : (
+                                        <>
+                                            <p>
+                                                Bienvenue chez <span className="font-bold">Agence Premium Services</span>. Située en plein cœur de Casablanca, sur le Boulevard d'Anfa, notre agence est votre partenaire privilégié pour tous vos besoins en propreté et en accompagnement.
+                                            </p>
+                                            <p>
+                                                Nous savons que votre temps est précieux et que confier son intérieur ou ses locaux professionnels demande une confiance absolue.
+                                            </p>
+                                            <p>
+                                                C'est pourquoi nous mettons à votre disposition un personnel rigoureusement sélectionné, formé et digne de confiance. De l'intervention ponctuelle à l'entretien régulier, nous garantissons un résultat impeccable.
+                                            </p>
+                                        </>
+                                    )}
                                 </div>
 
                                 {/* Bottom Quote Mark & Author Block */}
