@@ -81,10 +81,10 @@ const WhyChooseUs = ({ isEntreprise = false }: { isEntreprise?: boolean }) => {
               <p className="text-muted-foreground mb-6">Vous avez besoin d'une intervention rapide ?</p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
                 <a href="https://wa.me/212664226790" target="_blank" rel="noreferrer" className="w-full sm:w-auto">
-                  <Button className="w-full sm:w-auto text-lg px-8 py-6 rounded-full" size="lg">Contactez-nous sur WhatsApp</Button>
+                  <Button className="w-full sm:w-auto text-sm md:text-base px-6 py-4 md:py-3 rounded-full h-auto whitespace-normal" size="lg">Contactez-nous sur WhatsApp</Button>
                 </a>
                 <Link href="/contact" className="w-full sm:w-auto">
-                  <Button variant="outline" size="lg" className="w-full sm:w-auto text-lg px-8 py-6 rounded-full border-primary text-primary hover:bg-primary/10">Demandez votre devis gratuit en ligne</Button>
+                  <Button variant="outline" size="lg" className="w-full sm:w-auto text-sm md:text-base px-6 py-4 md:py-3 rounded-full h-auto whitespace-normal border-primary text-primary hover:bg-primary/10">Demandez votre devis gratuit en ligne</Button>
                 </Link>
               </div>
             </>
