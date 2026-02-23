@@ -76,7 +76,7 @@ export default function GrandMenageClient() {
     const [formData, setFormData] = useState(INITIAL_FORM_DATA);
     const router = useRouter();
 
-    const baseRate = 65;
+    const baseRate = 70;
     let visitsPerWeek = 1;
     let discountRate = 0;
     let discountAmount = 0;
