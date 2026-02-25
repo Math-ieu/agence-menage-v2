@@ -7,9 +7,11 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { Analytics } from "@vercel/analytics/react";
 import QueryProvider from "@/components/QueryProvider";
-import WhatsAppSidebar from "@/components/WhatsAppSidebar";
-import ScrollToTop from "@/components/ScrollToTop";
 import WhyChooseUs from "@/components/WhyChooseUs";
+import dynamic from "next/dynamic";
+
+const WhatsAppSidebar = dynamic(() => import("@/components/WhatsAppSidebar"));
+const ScrollToTop = dynamic(() => import("@/components/ScrollToTop"));
 
 const workSans = Work_Sans({
     subsets: ["latin"],
@@ -61,7 +63,7 @@ export default function RootLayout({
     return (
         <html lang="fr" className={`${workSans.variable}`} suppressHydrationWarning>
             <head>
-                <Script id="google-tag-manager-init" strategy="afterInteractive">
+                <Script id="google-tag-manager-init" strategy="lazyOnload">
                     {`(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
                     new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
                     j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
@@ -71,9 +73,9 @@ export default function RootLayout({
                 <Script
                     async
                     src="https://www.googletagmanager.com/gtag/js?id=AW-17907112455"
-                    strategy="afterInteractive"
+                    strategy="lazyOnload"
                 />
-                <Script id="google-tag-manager" strategy="afterInteractive">
+                <Script id="google-tag-manager" strategy="lazyOnload">
                     {`
                       window.dataLayer = window.dataLayer || [];
                       function gtag(){dataLayer.push(arguments);}

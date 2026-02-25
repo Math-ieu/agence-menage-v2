@@ -3,11 +3,13 @@ import Header from "@/components/Header";
 import HeroSection from "@/components/HeroSection";
 import ServicesSection from "@/components/ServicesSection";
 import AboutSectionParticulier from "@/components/AboutSectionParliculier";
-import PresentationSection from "@/components/PresentationSection";
-import WhyChooseUs from "@/components/WhyChooseUs";
-import TeamReviews from "@/components/TeamReviews";
-import PartnersSection from "@/components/PartnersSection";
-import Footer from "@/components/Footer";
+import dynamic from "next/dynamic";
+
+const PresentationSection = dynamic(() => import("@/components/PresentationSection"));
+const WhyChooseUs = dynamic(() => import("@/components/WhyChooseUs"));
+const TeamReviews = dynamic(() => import("@/components/TeamReviews"));
+const PartnersSection = dynamic(() => import("@/components/PartnersSection"));
+const Footer = dynamic(() => import("@/components/Footer"));
 
 export default function HomeClient() {
     return (
