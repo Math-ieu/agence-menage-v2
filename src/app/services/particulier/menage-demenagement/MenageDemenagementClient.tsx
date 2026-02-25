@@ -17,7 +17,7 @@ import { Switch } from "@/components/ui/switch";
 import { Slider } from "@/components/ui/slider";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { toast } from "sonner";
-import serviceDemenagement from "@/assets/service-menage-demenagement.png";
+import serviceDemenagement from "@/assets/service-menage-demenagement.webp";
 import { createWhatsAppLink, formatBookingMessage, DESTINATION_PHONE_NUMBER, getConfirmationMessage } from "@/lib/whatsapp";
 import { sendBookingEmail } from "@/lib/email";
 import { calculateSurchargeMultiplier } from "@/lib/pricing";

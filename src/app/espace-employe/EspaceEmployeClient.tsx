@@ -10,7 +10,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { toast } from "sonner";
 import { createWhatsAppLink, formatCandidateMessage, DESTINATION_PHONE_NUMBER } from "@/lib/whatsapp";
 import { sendEmployeeEmail } from "@/app/actions";
-import heroImage from "@/assets/hero-espace-employe.png";
+import heroImage from "@/assets/hero-espace-employe.webp";
 import { GraduationCap, Clock, MapPin, Heart } from "lucide-react";
 
 const INITIAL_FORM_DATA = {

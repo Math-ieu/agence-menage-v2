@@ -31,9 +31,9 @@ import {
 } from "@/components/ui/dialog";
 
 // New assets
-import gardeMaladeHero from "@/assets/service-garde-malade.png";
-import handsCare from "@/assets/hands-care.png";
-import caregiverVisit from "@/assets/caregiver-visit.png";
+import gardeMaladeHero from "@/assets/service-garde-malade.webp";
+import handsCare from "@/assets/hands-care.webp";
+import caregiverVisit from "@/assets/caregiver-visit.webp";
 
 const INITIAL_FORM_DATA = {
     frequency: "oneshot",

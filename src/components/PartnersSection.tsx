@@ -1,8 +1,8 @@
 import React from "react";
 import Image from "next/image";
-import logoPremium from "@/assets/Logo Agence premium.png";
-import logoNounou from "@/assets/Logo Nounou.ma.png";
-import logoMenage from "@/assets/LOGO-AGENCE-MENAGE.png";
+import logoPremium from "@/assets/Logo Agence premium.webp";
+import logoNounou from "@/assets/Logo Nounou.ma.webp";
+import logoMenage from "@/assets/LOGO-AGENCE-MENAGE.webp";
 
 const PartnersSection = () => {
     const partners = [

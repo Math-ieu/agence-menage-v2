@@ -4,7 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
-import logoPlaceholder from "@/assets/LOGO-AGENCE-MENAGE.png";
+import logoPlaceholder from "@/assets/LOGO-AGENCE-MENAGE.webp";
 import { Menu, X, Phone } from "lucide-react";
 
 

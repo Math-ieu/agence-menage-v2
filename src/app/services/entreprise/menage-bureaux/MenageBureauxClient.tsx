@@ -16,7 +16,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Switch } from "@/components/ui/switch";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { toast } from "sonner";
-import serviceBureaux from "@/assets/service-menage-bureaux.png";
+import serviceBureaux from "@/assets/service-menage-bureaux.webp";
 import { getConfirmationMessage } from "@/lib/whatsapp";
 import { sendBookingEmail } from "@/lib/email";
 import { calculateSurchargeMultiplier } from "@/lib/pricing";

@@ -1,10 +1,10 @@
 "use client";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import heroParticulier from "@/assets/hero-home-particulier.png";
-import heroEntreprise from "@/assets/hero-home-entreprise.png";
-import heroParticulierMobile from "@/assets/couverture-particulier-mobile.png";
-import heroEntrepriseMobile from "@/assets/couverture-entreprise-mobile.png";
+import heroParticulier from "@/assets/hero-home-particulier.webp";
+import heroEntreprise from "@/assets/hero-home-entreprise.webp";
+import heroParticulierMobile from "@/assets/couverture-particulier-mobile.webp";
+import heroEntrepriseMobile from "@/assets/couverture-entreprise-mobile.webp";
 import Image from "next/image";
 
 const HeroSection = () => {

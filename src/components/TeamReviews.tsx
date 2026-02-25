@@ -3,16 +3,16 @@ import { useState, useEffect } from "react";
 import Image from "next/image";
 import { MoveRight } from "lucide-react";
 import { cn } from "@/lib/utils";
-import team1 from "@/assets/team/Mehdi HARIT.png";
-import team2 from "@/assets/team/Julien COSTANT.png";
-import team3 from "@/assets/team/Hasna BOUADILI.png";
-import team4 from "@/assets/team/Dianne ADOTE.png";
-import team5 from "@/assets/team/Zineb BOUNEFFAH.png";
-import team6 from "@/assets/team/Parfaite FLEAN.png";
-import team7 from "@/assets/team/Imane HARIT.png";
-import team8 from "@/assets/team/Meriem GUERRI.png";
-import team9 from "@/assets/team/Noura GOUJANE.png";
-import team10 from "@/assets/team/Kaoutar IDRISSI .png";
+import team1 from "@/assets/team/Mehdi HARIT.webp";
+import team2 from "@/assets/team/Julien COSTANT.webp";
+import team3 from "@/assets/team/Hasna BOUADILI.webp";
+import team4 from "@/assets/team/Dianne ADOTE.webp";
+import team5 from "@/assets/team/Zineb BOUNEFFAH.webp";
+import team6 from "@/assets/team/Parfaite FLEAN.webp";
+import team7 from "@/assets/team/Imane HARIT.webp";
+import team8 from "@/assets/team/Meriem GUERRI.webp";
+import team9 from "@/assets/team/Noura GOUJANE.webp";
+import team10 from "@/assets/team/Kaoutar IDRISSI .webp";
 
 const teamData = [
     { id: "01", name: "Mehdi HARIT", role: "General Manager", image: team1 },

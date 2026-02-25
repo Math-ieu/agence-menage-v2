@@ -2,9 +2,9 @@
 import Header from "@/components/Header";
 import HeroSection from "@/components/HeroSection";
 import ServicesSection from "@/components/ServicesSection";
-import AboutSectionParticulier from "@/components/AboutSectionParliculier";
 import dynamic from "next/dynamic";
 
+const AboutSectionParticulier = dynamic(() => import("@/components/AboutSectionParliculier"));
 const PresentationSection = dynamic(() => import("@/components/PresentationSection"));
 const WhyChooseUs = dynamic(() => import("@/components/WhyChooseUs"));
 const TeamReviews = dynamic(() => import("@/components/TeamReviews"));

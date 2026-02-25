@@ -19,7 +19,7 @@ import { ChevronDown, ChevronUp } from "lucide-react";
 import { useSearchParams } from "next/navigation";
 import { createWhatsAppLink, formatBookingMessage, DESTINATION_PHONE_NUMBER, getConfirmationMessage } from "@/lib/whatsapp";
 import { sendBookingEmail } from "@/lib/email";
-import serviceUrgence from "@/assets/service-nettoyage-urgence.png";
+import serviceUrgence from "@/assets/service-nettoyage-urgence.webp";
 import "@/styles/sticky-summary.css";
 import { Checkbox } from "@/components/ui/checkbox";
 import {

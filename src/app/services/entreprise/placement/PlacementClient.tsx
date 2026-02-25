@@ -18,7 +18,7 @@ import { toast } from "sonner";
 import { getConfirmationMessage } from "@/lib/whatsapp";
 import { sendBookingEmail } from "@/lib/email";
 import { Checkbox } from "@/components/ui/checkbox";
-import serviceMenagePonctuel from "@/assets/service-placement-gestion.png";
+import serviceMenagePonctuel from "@/assets/service-placement-gestion.webp";
 import "@/styles/sticky-summary.css";
 import { FREQUENCES } from "@/app/frequences";
 import {

@@ -1,6 +1,6 @@
 import { Metadata } from "next";
 import { Inter, Work_Sans } from "next/font/google";
-import Script from "next/script";
+import { GoogleTagManager, GoogleAnalytics } from "@next/third-parties/google";
 import "./globals.css";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
@@ -63,39 +63,10 @@ export default function RootLayout({
     return (
         <html lang="fr" className={`${workSans.variable}`} suppressHydrationWarning>
             <head>
-                <Script id="google-tag-manager-init" strategy="lazyOnload">
-                    {`(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-                    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-                    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-                    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-                    })(window,document,'script','dataLayer','GTM-MCPC5PJJ');`}
-                </Script>
-                <Script
-                    async
-                    src="https://www.googletagmanager.com/gtag/js?id=AW-17907112455"
-                    strategy="lazyOnload"
-                />
-                <Script id="google-tag-manager" strategy="lazyOnload">
-                    {`
-                      window.dataLayer = window.dataLayer || [];
-                      function gtag(){dataLayer.push(arguments);}
-                      gtag('js', new Date());
-
-                      gtag('config', 'AW-17907112455');
-                    `}
-                </Script>
             </head>
             <body className="antialiased min-h-screen flex flex-col overflow-x-hidden" suppressHydrationWarning>
-                {/* Google Tag Manager (noscript) */}
-                <noscript>
-                    <iframe
-                        src="https://www.googletagmanager.com/ns.html?id=GTM-MCPC5PJJ"
-                        height="0"
-                        width="0"
-                        style={{ display: "none", visibility: "hidden" }}
-                    ></iframe>
-                </noscript>
-                {/* End Google Tag Manager (noscript) */}
+                <GoogleTagManager gtmId="GTM-MCPC5PJJ" />
+                <GoogleAnalytics gaId="AW-17907112455" />
                 <QueryProvider>
                     <TooltipProvider>
                         <ScrollToTop />

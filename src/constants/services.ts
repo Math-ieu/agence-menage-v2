@@ -1,13 +1,13 @@
-import imgStandard from "@/assets/service-menage-standard.png";
-import imgGrand from "@/assets/service-grand-menage.png";
-import imgAirbnb from "@/assets/service-menage-airbnb.png";
-import imgDemenagement from "@/assets/service-menage-demenagement.png";
-import imgChantier from "@/assets/service-fin-chantier-particulier.png";
-import imgAuxiliaire from "@/assets/service-garde-malade.png";
-import imgUrgence from "@/assets/service-nettoyage-urgence.png";
-import imgBureaux from "@/assets/service-menage-bureaux.png";
-import imgPlacement from "@/assets/service-placement-gestion.png";
-import imgChantierEntreprise from "@/assets/service-fin-chantier-entreprise.png";
+import imgStandard from "@/assets/service-menage-standard.webp";
+import imgGrand from "@/assets/service-grand-menage.webp";
+import imgAirbnb from "@/assets/service-menage-airbnb.webp";
+import imgDemenagement from "@/assets/service-menage-demenagement.webp";
+import imgChantier from "@/assets/service-fin-chantier-particulier.webp";
+import imgAuxiliaire from "@/assets/service-garde-malade.webp";
+import imgUrgence from "@/assets/service-nettoyage-urgence.webp";
+import imgBureaux from "@/assets/service-menage-bureaux.webp";
+import imgPlacement from "@/assets/service-placement-gestion.webp";
+import imgChantierEntreprise from "@/assets/service-fin-chantier-entreprise.webp";
 
 import { SERVICE_COLORS } from "./service-colors";
 

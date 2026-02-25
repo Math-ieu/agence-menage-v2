@@ -1,4 +1,4 @@
-import photoMehdi from "@/assets/photo-mehdi-presentation.png";
+import photoMehdi from "@/assets/photo-mehdi-presentation.webp";
 import Image from "next/image";
 
 const PresentationSection = ({ isEntreprise = false }: { isEntreprise?: boolean }) => {

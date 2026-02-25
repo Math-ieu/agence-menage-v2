@@ -1,6 +1,6 @@
-import logoPremium from "@/assets/Logo Agence premium.png";
-import logoNounou from "@/assets/Logo Nounou.ma.png";
-import logoMenage from "@/assets/LOGO-AGENCE-MENAGE.png";
+import logoPremium from "@/assets/Logo Agence premium.webp";
+import logoNounou from "@/assets/Logo Nounou.ma.webp";
+import logoMenage from "@/assets/LOGO-AGENCE-MENAGE.webp";
 
 const AgenciesSection = () => {
     const agencies = [
