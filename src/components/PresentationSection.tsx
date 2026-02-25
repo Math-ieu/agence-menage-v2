@@ -1,4 +1,5 @@
 import photoMehdi from "@/assets/photo-mehdi-presentation.png";
+import Image from "next/image";
 
 const PresentationSection = ({ isEntreprise = false }: { isEntreprise?: boolean }) => {
     return (
@@ -29,8 +30,8 @@ const PresentationSection = ({ isEntreprise = false }: { isEntreprise?: boolean 
 
                     {/* Mobile & Tablet: Photo at top */}
                     <div className="xl:hidden -mb-12 relative z-20">
-                        <img
-                            src={photoMehdi.src}
+                        <Image
+                            src={photoMehdi}
                             alt="Mehdi HARIT"
                             className="w-56 h-auto drop-shadow-xl"
                         />
@@ -78,8 +79,8 @@ const PresentationSection = ({ isEntreprise = false }: { isEntreprise?: boolean 
                                 <div className="flex flex-col xl:flex-row items-center xl:items-end mt-0">
                                     {/* Desktop Photo: positioned bottom-left corner */}
                                     <div className="hidden xl:block flex-shrink-0 -mb-28 -ml-56 xl:-ml-64">
-                                        <img
-                                            src={photoMehdi.src}
+                                        <Image
+                                            src={photoMehdi}
                                             alt="Mehdi HARIT"
                                             className="w-72 lg:w-80 h-auto drop-shadow-2xl"
                                         />

@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useRef } from "react";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { SERVICE_COLORS } from "@/constants/service-colors";
 import { ChevronDown, ChevronUp, ArrowLeft } from "lucide-react";
@@ -184,16 +185,16 @@ Nos auxiliaires de vie assurent une présence 24h/24, 7j/7, selon les besoins en
                                 </p>
                             </div>
                             <div className="flex justify-center">
-                                <div className="w-80 h-80 rounded-full overflow-hidden border-[12px] border-white shadow-2xl ring-1 ring-primary/20">
-                                    <img src={handsCare.src} alt="Mains soin" className="w-full h-full object-cover" />
+                                <div className="w-80 h-80 rounded-full overflow-hidden border-[12px] border-white shadow-2xl ring-1 ring-primary/20 relative">
+                                    <Image src={handsCare} alt="Mains soin" className="w-full h-full object-cover" />
                                 </div>
                             </div>
                         </div>
 
                         <div className="grid md:grid-cols-2 gap-16 items-center text-right py-12">
                             <div className="flex justify-center md:order-first order-last text-left">
-                                <div className="w-80 h-80 rounded-[3rem] rotate-6 overflow-hidden border-[12px] border-white shadow-2xl ring-1 ring-primary/20">
-                                    <img src={caregiverVisit.src} alt="Visite soin" className="w-full h-full object-cover -rotate-6 scale-125" />
+                                <div className="w-80 h-80 rounded-[3rem] rotate-6 overflow-hidden border-[12px] border-white shadow-2xl ring-1 ring-primary/20 relative">
+                                    <Image src={caregiverVisit} alt="Visite soin" className="w-full h-full object-cover -rotate-6 scale-125" />
                                 </div>
                             </div>
                             <div className="space-y-6">

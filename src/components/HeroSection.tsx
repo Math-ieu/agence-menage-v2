@@ -5,6 +5,7 @@ import heroParticulier from "@/assets/hero-home-particulier.png";
 import heroEntreprise from "@/assets/hero-home-entreprise.png";
 import heroParticulierMobile from "@/assets/couverture-particulier-mobile.png";
 import heroEntrepriseMobile from "@/assets/couverture-entreprise-mobile.png";
+import Image from "next/image";
 
 const HeroSection = () => {
   const pathname = usePathname();
@@ -23,10 +24,14 @@ const HeroSection = () => {
       </div>
 
       {/* Mobile Background */}
-      <div
-        className="absolute inset-0 bg-cover bg-center bg-no-repeat block md:hidden"
-        style={{ backgroundImage: `url(${heroImageMobile.src})` }}
-      >
+      <div className="absolute inset-0 block md:hidden">
+        <Image
+          src={heroImageMobile}
+          alt="Background Mobile"
+          fill
+          priority
+          style={{ objectFit: "cover", objectPosition: "center" }}
+        />
         <div className="absolute inset-0 bg-gradient-to-b from-foreground/40 via-transparent to-transparent" />
       </div>
 

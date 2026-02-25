@@ -1,5 +1,6 @@
 "use client";
 import { useState, useEffect } from "react";
+import Image from "next/image";
 import { MoveRight } from "lucide-react";
 import { cn } from "@/lib/utils";
 import team1 from "@/assets/team/Mehdi HARIT.png";
@@ -116,7 +117,7 @@ const TeamReviews = () => {
                                                 slotIndex === 0 ? "ring-2 ring-[#287271] ring-offset-4 scale-105 z-10 opacity-100 grayscale-0" : "opacity-40 hover:opacity-80 grayscale"
                                             )}
                                         >
-                                            <img src={member.image.src} alt={member.name} className="w-full h-full object-cover transition-all duration-700" />
+                                            <Image src={member.image} alt={member.name} className="w-full h-full object-cover transition-all duration-700" />
                                         </button>
                                     );
                                 })}
@@ -134,9 +135,9 @@ const TeamReviews = () => {
                                 style={{ transform: `translateY(-${activeIndex * 100}%)` }}
                             >
                                 {teamData.map((member) => (
-                                    <div key={member.id} className="w-full h-full flex-shrink-0">
-                                        <img
-                                            src={member.image.src}
+                                    <div key={member.id} className="w-full h-full flex-shrink-0 relative">
+                                        <Image
+                                            src={member.image}
                                             alt={member.name}
                                             className="w-full h-full object-cover"
                                         />

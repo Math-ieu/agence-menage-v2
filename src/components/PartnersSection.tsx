@@ -1,4 +1,5 @@
 import React from "react";
+import Image from "next/image";
 import logoPremium from "@/assets/Logo Agence premium.png";
 import logoNounou from "@/assets/Logo Nounou.ma.png";
 import logoMenage from "@/assets/LOGO-AGENCE-MENAGE.png";
@@ -38,8 +39,8 @@ const PartnersSection = () => {
                             className="group transition-all duration-300 transform hover:scale-110 opacity-90 hover:opacity-100"
                             title={partner.name}
                         >
-                            <img
-                                src={partner.logo.src}
+                            <Image
+                                src={partner.logo}
                                 alt={partner.name}
                                 className="h-16 md:h-24 w-auto object-contain"
                             />

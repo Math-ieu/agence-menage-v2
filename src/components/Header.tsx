@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
 import logoPlaceholder from "@/assets/LOGO-AGENCE-MENAGE.png";
 import { Menu, X, Phone } from "lucide-react";
@@ -31,10 +32,11 @@ const Header = () => {
       }`}>
       <div className="container flex h-20 items-center justify-between">
         <Link href="/" className="flex items-center gap-2 flex-shrink-0">
-          <img
-            src={logoPlaceholder.src}
+          <Image
+            src={logoPlaceholder}
             alt="Agence Ménage"
             className={`h-16 w-auto transition-all duration-[2000ms] ${isEntreprise ? "brightness-0 invert" : ""}`}
+            priority
           />
         </Link>
 

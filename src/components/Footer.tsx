@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import { Facebook, Instagram, Mail, Phone, MapPin } from "lucide-react";
 import logoPlaceholder from "@/assets/LOGO-AGENCE-MENAGE.png";
 
@@ -9,7 +10,7 @@ const Footer = () => {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-12 mb-12">
           {/* Logo Column */}
           <div className="flex flex-col items-start">
-            <img src={logoPlaceholder.src} alt="Agence Ménage" className="h-16 w-auto mb-6 brightness-0 invert" />
+            <Image src={logoPlaceholder} alt="Agence Ménage" className="h-16 w-auto mb-6 brightness-0 invert" />
             <p className="text-primary-foreground font-bold text-lg leading-relaxed max-w-xs">
               Premium, tout simplement.
             </p>
