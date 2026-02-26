@@ -66,28 +66,11 @@ const WhyChooseUs = ({ isEntreprise = false }: { isEntreprise?: boolean }) => {
             <>
               <p className="text-muted-foreground mb-6">Vous souhaitez un devis sur-mesure pour vos locaux ?</p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-                <a
-                  href="tel:+212522200177"
-                  id="am_phone_header"
-                  className="am-phone-header w-full sm:w-auto"
-                  onClick={() => {
-                    if (typeof window !== 'undefined') {
-                      (window as any).dataLayer = (window as any).dataLayer || [];
-                      (window as any).dataLayer.push({
-                        event: 'phone_click',
-                        phone_location: 'WhyChooseUs_B2B',
-                        phone_number: '0522200177'
-                      });
-                    }
-                  }}
-                >
-                  <Button className="w-full sm:w-auto text-sm md:text-base px-6 py-3 rounded-full h-auto whitespace-normal" size="lg">
-                    Contactez notre équipe B2B au<br className="sm:hidden" /> 05 22 20 01 77
+                <Link href="/contact" className="w-full sm:w-auto">
+                  <Button className="w-full sm:w-auto text-base px-6 py-4 md:py-3 rounded-full h-auto whitespace-normal" size="lg">
+                    Demandez votre devis
                   </Button>
-                </a>
-                <a href="https://wa.me/212664226790" target="_blank" rel="noreferrer" className="w-full sm:w-auto">
-                  <Button variant="outline" size="lg" className="w-full sm:w-auto text-lg px-8 py-6 rounded-full border-primary text-primary hover:bg-primary/10">WhatsApp : 06 64 22 67 90</Button>
-                </a>
+                </Link>
               </div>
               <p className="mt-4 text-sm text-muted-foreground">Ou écrivez-nous à <a href="mailto:contact@agencemenage.ma" className="underline">contact@agencemenage.ma</a></p>
             </>

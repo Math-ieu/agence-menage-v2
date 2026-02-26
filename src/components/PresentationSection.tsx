@@ -63,7 +63,7 @@ const PresentationSection = ({ isEntreprise = false }: { isEntreprise?: boolean 
                                     ) : (
                                         <>
                                             <p>
-                                                Bienvenue chez <span className="font-bold">Agence Premium Services</span>. Située en plein cœur de Casablanca, sur le Boulevard d'Anfa, notre agence est votre partenaire privilégié pour tous vos besoins en propreté et en accompagnement.
+                                                Bienvenue chez <span className="font-bold">Agence Ménage Services</span>. Située en plein cœur de Casablanca, sur le Boulevard d'Anfa, notre agence est votre partenaire privilégié pour tous vos besoins en propreté et en accompagnement.
                                             </p>
                                             <p>
                                                 Nous savons que votre temps est précieux et que confier son intérieur ou ses locaux professionnels demande une confiance absolue.

@@ -21,6 +21,7 @@ const ServicesSection = ({ type = "particulier" }: ServicesSectionProps) => {
     const services = isEntreprise ? entrepriseServices : particulierServices;
     const title = isEntreprise ? "Services pour entreprises" : "Services pour particuliers";
     const isMobile = useIsMobile();
+    const textbutton = isEntreprise ? "Demander un devis" : "Réserver mon ménage";
 
     const [emblaRef, emblaApi] = useEmblaCarousel(
         {
@@ -156,7 +157,7 @@ const ServicesSection = ({ type = "particulier" }: ServicesSectionProps) => {
                                 : "bg-primary text-white hover:bg-primary/90"
                         )}
                     >
-                        Demandez votre devis
+                        {textbutton}
                     </Button>
                 </Link>
             </div>

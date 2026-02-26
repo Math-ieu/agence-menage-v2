@@ -39,7 +39,7 @@ const HeroSection = () => {
         {/* Texte centré verticalement à gauche sur desktop, centré sur mobile */}
         <div className="animate-fade-in mb-auto mt-auto text-center bg-black/40 p-6 md:p-8 rounded-2xl md:max-w-4xl backdrop-blur-sm mx-auto">
           <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-primary-foreground leading-tight mb-4 drop-shadow-lg">
-            {isEntreprise ? "Nettoyage d'Entreprise à Casablanca : L'Exigence et la Propreté Premium" : "Agence Premium Services : Votre Expert en Nettoyage et Entretien à Casablanca"}
+            {isEntreprise ? "Nettoyage d'Entreprise à Casablanca : L'Exigence et la Propreté Premium" : "Agence Ménage Services : Votre Expert en Nettoyage et Entretien à Casablanca"}
           </h1>
           <h2 className="text-xl md:text-2xl text-primary-foreground/90 font-medium drop-shadow-md">
             {isEntreprise ? "Des solutions sur-mesure pour l'entretien de vos bureaux, la gestion de propreté et le nettoyage de fin de chantier." : "Des professionnels de confiance pour faire briller vos espaces de vie, vos bureaux et vos locations Airbnb."}

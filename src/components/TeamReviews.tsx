@@ -166,6 +166,7 @@ const TeamReviews = () => {
                             <div className="pt-8 flex justify-center xl:justify-start">
                                 <button
                                     onClick={nextSlide}
+                                    aria-label="Suivant"
                                     className="group relative w-20 h-20 rounded-full bg-[#287271] flex items-center justify-center transition-all duration-500 hover:scale-110 active:scale-95 shadow-2xl shadow-[#287271]/40 overflow-hidden"
                                 >
                                     <MoveRight className="w-8 h-8 text-white group-hover:translate-x-1 transition-transform z-10" />

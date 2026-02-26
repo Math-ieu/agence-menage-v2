@@ -1,6 +1,7 @@
 "use server";
 
 import { Resend } from 'resend';
+import { DESTINATION_PHONE_NUMBER } from '@/lib/whatsapp';
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
@@ -289,6 +290,35 @@ export async function sendBookingEmailResend(serviceName: string, data: any, pri
       return { success: false, error };
     }
 
+    if (process.env.D360_API_KEY) {
+      const formattedDate = data.schedulingDate || "-";
+      const formattedHour = scheduling_time || "-";
+      const fallbackPrice = typeof price === "number" ? `${price} MAD` : String(price);
+
+      // 1. To Client
+      if (data.phoneNumber) {
+        sendAutomatedWhatsAppMessage(
+          data.phoneNumber,
+          "confirmation_reservation",
+          [client_name, serviceName, formattedDate, formattedHour]
+        ).catch(err => console.error("Client WA Error:", err));
+      }
+
+      // 2. To Agency
+      sendAutomatedWhatsAppMessage(
+        DESTINATION_PHONE_NUMBER,
+        "notification_interne",
+        [
+          client_name,
+          data.phoneNumber || "-",
+          serviceName,
+          `${formattedDate} à ${formattedHour}`,
+          data.city || data.neighborhood || "Non précisé",
+          fallbackPrice
+        ]
+      ).catch(err => console.error("Agency WA Error:", err));
+    }
+
     return { success: true, data: resData };
   } catch (err) {
     console.error("Action error:", err);
@@ -301,26 +331,28 @@ export async function sendAutomatedWhatsAppMessage(
   templateName: string,
   variables: string[]
 ) {
-  const WHATSAPP_TOKEN = process.env.WHATSAPP_ACCESS_TOKEN;
-  const PHONE_NUMBER_ID = process.env.WHATSAPP_PHONE_NUMBER_ID;
+  const API_KEY = process.env.D360_API_KEY;
 
-  if (!WHATSAPP_TOKEN || !PHONE_NUMBER_ID) {
-    console.error("WhatsApp credentials missing in .env");
+  if (!API_KEY) {
+    console.error("D360_API_KEY missing in .env");
     return { success: false, error: "Configuration manquante" };
   }
 
   try {
+    const formattedNumber = targetNumber.replace(/\+/g, "").replace(/\s/g, "");
+
     const response = await fetch(
-      `https://graph.facebook.com/v18.0/${PHONE_NUMBER_ID}/messages`,
+      `https://waba-v2.360dialog.io/messages`,
       {
         method: "POST",
         headers: {
-          "Authorization": `Bearer ${WHATSAPP_TOKEN}`,
+          "D360-API-KEY": API_KEY,
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
           messaging_product: "whatsapp",
-          to: targetNumber.replace(/\+/g, ""), // Remove + if present
+          recipient_type: "individual",
+          to: formattedNumber,
           type: "template",
           template: {
             name: templateName,
@@ -332,7 +364,7 @@ export async function sendAutomatedWhatsAppMessage(
                 type: "body",
                 parameters: variables.map(v => ({
                   type: "text",
-                  text: v
+                  text: String(v)
                 }))
               }
             ]
@@ -344,7 +376,7 @@ export async function sendAutomatedWhatsAppMessage(
     const result = await response.json();
 
     if (!response.ok) {
-      console.error("WhatsApp API Error:", result);
+      console.error("WhatsApp 360dialog API Error:", result);
       return { success: false, error: result };
     }
 
