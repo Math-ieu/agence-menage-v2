@@ -295,28 +295,36 @@ export async function sendBookingEmailResend(serviceName: string, data: any, pri
       const formattedHour = scheduling_time || "-";
       const fallbackPrice = typeof price === "number" ? `${price} MAD` : String(price);
 
+      const waPromises = [];
+
       // 1. To Client
       if (data.phoneNumber) {
-        sendAutomatedWhatsAppMessage(
-          data.phoneNumber,
-          "confirmation_reservation",
-          [client_name, serviceName, formattedDate, formattedHour]
-        ).catch(err => console.error("Client WA Error:", err));
+        waPromises.push(
+          sendAutomatedWhatsAppMessage(
+            data.phoneNumber,
+            "confirmation_reservation",
+            [client_name, serviceName, formattedDate, formattedHour]
+          ).catch(err => console.error("Client WA Error:", err))
+        );
       }
 
       // 2. To Agency
-      sendAutomatedWhatsAppMessage(
-        DESTINATION_PHONE_NUMBER,
-        "notification_interne",
-        [
-          client_name,
-          data.phoneNumber || "-",
-          serviceName,
-          `${formattedDate} à ${formattedHour}`,
-          data.city || data.neighborhood || "Non précisé",
-          fallbackPrice
-        ]
-      ).catch(err => console.error("Agency WA Error:", err));
+      waPromises.push(
+        sendAutomatedWhatsAppMessage(
+          DESTINATION_PHONE_NUMBER,
+          "notification_interne",
+          [
+            client_name,
+            data.phoneNumber || "-",
+            serviceName,
+            `${formattedDate} à ${formattedHour}`,
+            data.city || data.neighborhood || "Non précisé",
+            fallbackPrice
+          ]
+        ).catch(err => console.error("Agency WA Error:", err))
+      );
+
+      await Promise.all(waPromises);
     }
 
     return { success: true, data: resData };
