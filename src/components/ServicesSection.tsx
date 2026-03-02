@@ -28,8 +28,7 @@ const ServicesSection = ({ type = "particulier" }: ServicesSectionProps) => {
             loop: true,
             align: "start",
             skipSnaps: false,
-            active: !isEntreprise || isMobile,
-            dragFree: true // Allows for a more natural scroll/drag feel
+            dragFree: true
         },
         [Autoplay({ delay: 2000, stopOnInteraction: false, stopOnMouseEnter: true }), WheelGestures()]
     );
@@ -73,13 +72,11 @@ const ServicesSection = ({ type = "particulier" }: ServicesSectionProps) => {
                     "h-1.5 w-24 mx-auto mt-6 rounded-full",
                     isEntreprise ? "bg-white/30" : "bg-primary/20"
                 )} />
-
-
             </div>
 
-            {(isEntreprise && !isMobile) ? (
-                /* Static Grid for Enterprise (Desktop) */
-                <div className="container px-4 mx-auto flex flex-wrap justify-center gap-8 md:gap-12">
+            {/* Static Grid for Enterprise (Desktop) */}
+            {isEntreprise && (
+                <div className="hidden md:flex container px-4 mx-auto flex-wrap justify-center gap-8 md:gap-12">
                     {services.map((service, index) => (
                         <ServiceCard
                             key={`${service.title}-${index}`}
@@ -91,60 +88,62 @@ const ServicesSection = ({ type = "particulier" }: ServicesSectionProps) => {
                         />
                     ))}
                 </div>
-            ) : (
-                /* Embla Carousel for Particulier OR Enterprise on Mobile */
-                <div className="container px-4 mx-auto relative group">
-                    <div className="overflow-hidden cursor-grab active:cursor-grabbing" ref={emblaRef}>
-                        <div className="flex -ml-8">
-                            {services.map((service, index) => (
-                                <div key={`${service.title}-${index}`} className="pl-8 flex-[0_0_auto]">
-                                    <ServiceCard
-                                        title={service.title}
-                                        description={service.description}
-                                        image={service.image}
-                                        color={service.color}
-                                        url={service.url}
-                                    />
-                                </div>
-                            ))}
-                        </div>
-                    </div>
+            )}
 
-                    {/* Progress Bar & Indicators Container */}
-                    <div className="mt-12 flex flex-col items-center gap-6">
-                        {/* 3 Indicators */}
-                        <div className="flex gap-3">
-                            {[0, 1, 2].map((i) => {
-                                // Simple mapping of index to 3 groups
-                                const sectionSize = Math.ceil(services.length / 3);
-                                const isActive = Math.floor(selectedIndex / sectionSize) === i;
-
-                                return (
-                                    <div
-                                        key={i}
-                                        className={cn(
-                                            "h-1.5 rounded-full transition-all duration-500",
-                                            isActive ? "w-8" : "w-4 bg-slate-200"
-                                        )}
-                                        style={isActive ? { backgroundColor: services[selectedIndex].color } : {}}
-                                    />
-                                );
-                            })}
-                        </div>
-
-                        {/* Full Progress Bar */}
-                        <div className="w-full max-w-md h-1 bg-slate-100 rounded-full overflow-hidden">
-                            <div
-                                className="h-full transition-all duration-300 ease-out"
-                                style={{
-                                    width: `${scrollProgress}%`,
-                                    backgroundColor: services[selectedIndex].color
-                                }}
-                            />
-                        </div>
+            {/* Embla Carousel for Particulier OR Enterprise on Mobile */}
+            <div className={cn(
+                "container px-4 mx-auto relative group",
+                isEntreprise ? "block md:hidden" : "block"
+            )}>
+                <div className="overflow-hidden cursor-grab active:cursor-grabbing" ref={emblaRef}>
+                    <div className="flex -ml-8">
+                        {services.map((service, index) => (
+                            <div key={`${service.title}-${index}`} className="pl-8 flex-[0_0_auto]">
+                                <ServiceCard
+                                    title={service.title}
+                                    description={service.description}
+                                    image={service.image}
+                                    color={service.color}
+                                    url={service.url}
+                                />
+                            </div>
+                        ))}
                     </div>
                 </div>
-            )}
+
+                {/* Progress Bar & Indicators Container */}
+                <div className="mt-12 flex flex-col items-center gap-6">
+                    {/* 3 Indicators */}
+                    <div className="flex gap-3">
+                        {[0, 1, 2].map((i) => {
+                            const sectionSize = Math.ceil(services.length / 3);
+                            const isActive = Math.floor(selectedIndex / sectionSize) === i;
+
+                            return (
+                                <div
+                                    key={i}
+                                    className={cn(
+                                        "h-1.5 rounded-full transition-all duration-500",
+                                        isActive ? "w-8" : "w-4 bg-slate-200"
+                                    )}
+                                    style={isActive ? { backgroundColor: services[selectedIndex].color } : {}}
+                                />
+                            );
+                        })}
+                    </div>
+
+                    {/* Full Progress Bar */}
+                    <div className="w-full max-w-md h-1 bg-slate-100 rounded-full overflow-hidden">
+                        <div
+                            className="h-full transition-all duration-300 ease-out"
+                            style={{
+                                width: `${scrollProgress}%`,
+                                backgroundColor: services[selectedIndex].color
+                            }}
+                        />
+                    </div>
+                </div>
+            </div>
 
             <div className="mt-16 text-center px-4">
                 <Link href="/contact" className="w-full sm:w-auto inline-block">

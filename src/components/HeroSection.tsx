@@ -30,6 +30,7 @@ const HeroSection = () => {
           alt="Background Mobile"
           fill
           priority
+          fetchPriority="high"
           style={{ objectFit: "cover", objectPosition: "center" }}
         />
         <div className="absolute inset-0 bg-gradient-to-b from-foreground/40 via-transparent to-transparent" />
