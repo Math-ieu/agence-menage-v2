@@ -1,6 +1,6 @@
 import { Metadata } from "next";
 import { Inter, Work_Sans } from "next/font/google";
-import { GoogleTagManager, GoogleAnalytics } from "@next/third-parties/google";
+import Script from "next/script";
 import "./globals.css";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
@@ -65,8 +65,44 @@ export default function RootLayout({
             <head>
             </head>
             <body className="antialiased min-h-screen flex flex-col overflow-x-hidden" suppressHydrationWarning>
-                <GoogleTagManager gtmId="GTM-MCPC5PJJ" />
-                <GoogleAnalytics gaId="AW-17907112455" />
+                <noscript>
+                    <iframe
+                        src="https://www.googletagmanager.com/ns.html?id=GTM-MCPC5PJJ"
+                        height="0"
+                        width="0"
+                        style={{ display: "none", visibility: "hidden" }}
+                    />
+                </noscript>
+                <Script
+                    id="gtm-script"
+                    strategy="lazyOnload"
+                    dangerouslySetInnerHTML={{
+                        __html: `
+                            (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+                            new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+                            j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+                            'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+                            })(window,document,'script','dataLayer','GTM-MCPC5PJJ');
+                        `,
+                    }}
+                />
+                <Script
+                    id="ga-script"
+                    strategy="lazyOnload"
+                    src={`https://www.googletagmanager.com/gtag/js?id=AW-17907112455`}
+                />
+                <Script
+                    id="ga-config"
+                    strategy="lazyOnload"
+                    dangerouslySetInnerHTML={{
+                        __html: `
+                            window.dataLayer = window.dataLayer || [];
+                            function gtag(){dataLayer.push(arguments);}
+                            gtag('js', new Date());
+                            gtag('config', 'AW-17907112455');
+                        `,
+                    }}
+                />
                 <QueryProvider>
                     <TooltipProvider>
                         <ScrollToTop />

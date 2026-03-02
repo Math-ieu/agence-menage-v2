@@ -1,13 +1,15 @@
 import Header from "@/components/Header";
 import HeroSection from "@/components/HeroSection";
 import ServicesSection from "@/components/ServicesSection";
-import AboutSectionEntreprise from "@/components/AboutSectionEntreprise";
-import PresentationSection from "@/components/PresentationSection";
-import TeamReviews from "@/components/TeamReviews";
-import PartnersSection from "@/components/PartnersSection";
-import WhyChooseUs from "@/components/WhyChooseUs";
-import Footer from "@/components/Footer";
+import dynamic from "next/dynamic";
 import { Metadata } from "next";
+
+const AboutSectionEntreprise = dynamic(() => import("@/components/AboutSectionEntreprise"));
+const PresentationSection = dynamic(() => import("@/components/PresentationSection"));
+const TeamReviews = dynamic(() => import("@/components/TeamReviews"));
+const PartnersSection = dynamic(() => import("@/components/PartnersSection"));
+const WhyChooseUs = dynamic(() => import("@/components/WhyChooseUs"));
+const Footer = dynamic(() => import("@/components/Footer"));
 
 export const metadata: Metadata = {
   title: "Nettoyage Entreprise Casablanca | Agence Ménage Pro",
