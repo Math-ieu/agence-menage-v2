@@ -54,7 +54,7 @@ const HeroSection = () => {
             <div className="inline-flex rounded-full overflow-hidden bg-background/95 p-1 shadow-xl">
               <Link href="/">
                 <button
-                  className={`px-6 py-3 rounded-full text-sm md:text-base font-semibold transition-all duration-[2000ms] ${!isEntreprise
+                  className={`px-6 py-3 rounded-full text-sm md:text-base font-semibold transition-all duration-1000 ${!isEntreprise
                     ? "bg-primary text-primary-foreground shadow-md"
                     : "bg-transparent text-foreground hover:bg-muted"
                     }`}
@@ -64,7 +64,7 @@ const HeroSection = () => {
               </Link>
               <Link href="/entreprise">
                 <button
-                  className={`px-6 py-3 rounded-full text-sm md:text-base font-semibold transition-all duration-[2000ms] ${isEntreprise
+                  className={`px-6 py-3 rounded-full text-sm md:text-base font-semibold transition-all duration-1000 ${isEntreprise
                     ? "bg-primary text-primary-foreground shadow-md"
                     : "bg-transparent text-foreground hover:bg-muted"
                     }`}

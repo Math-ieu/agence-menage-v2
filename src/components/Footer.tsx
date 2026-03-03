@@ -1,6 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
-import { Facebook, Instagram, Mail, Phone, MapPin } from "lucide-react";
+import { Facebook, Instagram, Mail, Phone, MapPin, MessageCircle, User } from "lucide-react";
 import logoPlaceholder from "@/assets/LOGO-AGENCE-MENAGE.webp";
 
 const Footer = () => {
@@ -60,6 +60,14 @@ const Footer = () => {
               <li className="flex items-start gap-3 text-primary-foreground font-bold text-sm lg:text-base">
                 <MapPin className="w-5 h-5 mt-1 shrink-0" />
                 <span>36 boulevard d’anfa, résidence Anafe A, etage 7, Casablanca</span>
+              </li>
+              <li className="flex items-center gap-3 text-primary-foreground font-bold text-sm lg:text-base">
+                <MessageCircle className="w-5 h-5 shrink-0" />
+                <Link href="/contact" className="hover:text-white transition-colors">Contactez-nous</Link>
+              </li>
+              <li className="flex items-center gap-3 text-primary-foreground font-bold text-sm lg:text-base">
+                <User className="w-5 h-5 shrink-0" />
+                <Link href="/espace-employe" className="hover:text-white transition-colors">Espace employé</Link>
               </li>
             </ul>
           </div>

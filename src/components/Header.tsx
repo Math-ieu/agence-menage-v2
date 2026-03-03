@@ -30,14 +30,14 @@ const Header = () => {
   };
 
   return (
-    <header className={`sticky top-0 z-50 w-full shadow-sm border-b transition-all duration-[2000ms] ${isEntreprise ? "bg-primary border-primary/20" : "bg-background"
+    <header className={`sticky top-0 z-50 w-full shadow-sm border-b transition-all duration-1000 ${isEntreprise ? "bg-primary border-primary/20" : "bg-background"
       }`}>
       <div className="container flex h-20 items-center justify-between">
         <Link href="/" className="flex items-center gap-2 flex-shrink-0">
           <Image
             src={logoPlaceholder}
             alt="Agence Ménage"
-            className={`h-16 w-auto transition-all duration-[2000ms] ${isEntreprise ? "brightness-0 invert" : ""}`}
+            className={`h-16 w-auto transition-all duration-1000 ${isEntreprise ? "brightness-0 invert" : ""}`}
             priority
           />
         </Link>
@@ -48,7 +48,7 @@ const Header = () => {
             <div key={item.label} className="relative group py-6">
               <Link
                 href={item.href}
-                className={`text-base font-bold transition-all duration-[2000ms] whitespace-nowrap ${isEntreprise
+                className={`text-base font-bold transition-all duration-1000 whitespace-nowrap ${isEntreprise
                   ? `hover:text-white/80 ${item.active ? "text-white border-b-2 border-white pb-1" : "text-white/90"}`
                   : `hover:text-primary ${item.active ? "text-primary border-b-2 border-primary pb-1" : "text-foreground"}`
                   }`}
