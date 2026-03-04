@@ -7,55 +7,32 @@ import { StaticImageData } from "next/image";
 interface ServiceCardProps {
   title: string;
   subtitle?: string; // For backward compatibility
-  description?: string; // New field
+  description?: string; // For backward compatibility
   image: string | StaticImageData;
   color: string;
   url?: string;
 }
 
-const ServiceCard = ({ title, subtitle, description, image, color, url }: ServiceCardProps) => {
-  const displayDescription = description || subtitle;
+const ServiceCard = ({ title, image, color, url }: ServiceCardProps) => {
   const imageSrc = typeof image === "string" ? image : image?.src;
 
   const cardContent = (
-    <div className="flex flex-col items-center min-w-[300px] max-w-[300px] w-[300px] flex-shrink-0 group py-4">
-      <div className="relative bg-white rounded-[2rem] shadow-lg w-full overflow-visible flex flex-col transition-all duration-300 hover:shadow-xl border border-slate-100 h-[450px]">
-        {/* Banner - fixed height for alignment */}
-        <div
-          className="rounded-2xl mx-4 mt-4 h-32 flex items-start justify-center p-6 transition-transform duration-300 group-hover:scale-[1.02]"
-          style={{ backgroundColor: color }}
-        >
-          <h3 className="text-white text-xl font-bold text-center line-clamp-2 drop-shadow-sm leading-tight pt-1">
-            {title}
-          </h3>
-        </div>
+    <div className="flex items-center min-w-[300px] w-[300px] sm:min-w-[340px] sm:w-[340px] h-48 sm:h-52 group py-4 pr-[32px] shrink-0">
+      <div
+        className="w-full h-full relative rounded-3xl shadow-sm hover:shadow-lg transition-transform duration-300 group-hover:-translate-y-1 flex items-center pl-6 pr-14"
+        style={{ backgroundColor: color }}
+      >
+        <h2 className="text-white text-[24px] sm:text-[30px] font-bold leading-snug z-10 w-[150px] sm:w-[160px] break-words drop-shadow-md">
+          {title}
+        </h2>
 
-        {/* Circular image overlapping banner */}
-        <div className="flex justify-center -mt-10 relative z-10 transition-transform duration-500 group-hover:-translate-y-1">
-          <div className="w-24 h-24 rounded-full border-4 border-white ring-2 ring-slate-100 overflow-hidden shadow-lg bg-white">
-            <img
-              src={imageSrc}
-              alt={title}
-              className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
-            />
-          </div>
-        </div>
-
-        {/* Description - fixed-height container to align button */}
-        <div className="px-6 mt-4 pb-6 flex-1 flex flex-col">
-          <p className="text-slate-600 text-sm leading-relaxed italic text-justify line-clamp-4">
-            {displayDescription}
-          </p>
-        </div>
-
-        {/* CTA Button Area */}
-        <div className="px-6 pb-8 mt-auto">
-          <div
-            className="w-full py-3.5 rounded-full text-white font-bold text-sm transition-all duration-300 hover:scale-105 shadow-md flex items-center justify-center group-hover:shadow-primary/20"
-            style={{ backgroundColor: color }}
-          >
-            Découvrez le service
-          </div>
+        {/* Circular image overlapping right edge */}
+        <div className="absolute right-[-32px] top-1/2 -translate-y-1/2 w-[100px] h-[100px] sm:w-[140px] sm:h-[140px] rounded-full border-[4px] border-white/40 shadow-md overflow-hidden bg-transparent z-20 transition-transform duration-500 group-hover:scale-105">
+          <img
+            src={imageSrc}
+            alt={title}
+            className="w-full h-full object-cover"
+          />
         </div>
       </div>
     </div>

@@ -6,7 +6,7 @@ import WheelGestures from "embla-carousel-wheel-gestures";
 import ServiceCard from "./ServiceCard";
 import { cn } from "@/lib/utils";
 import { useIsMobile } from "@/hooks/use-mobile";
-import { Home, Briefcase, Key, Hammer, HeartHandshake, Building2, UserCheck } from "lucide-react";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 import Link from "next/link";
 import { Button } from "./ui/button";
 
@@ -76,7 +76,7 @@ const ServicesSection = ({ type = "particulier" }: ServicesSectionProps) => {
 
             {/* Static Grid for Enterprise (Desktop) */}
             {isEntreprise && (
-                <div className="hidden md:flex container px-4 mx-auto flex-wrap justify-center gap-8 md:gap-12">
+                <div className="hidden md:flex w-full px-4 md:px-8 mx-auto flex-nowrap justify-start xl:justify-center gap-6 pb-8">
                     {services.map((service, index) => (
                         <ServiceCard
                             key={`${service.title}-${index}`}
@@ -92,11 +92,14 @@ const ServicesSection = ({ type = "particulier" }: ServicesSectionProps) => {
 
             {/* Embla Carousel for Particulier OR Enterprise on Mobile */}
             <div className={cn(
-                "container px-4 mx-auto relative group",
+                "w-full mx-auto relative group",
                 isEntreprise ? "block md:hidden" : "block"
             )}>
-                <div className="overflow-hidden cursor-grab active:cursor-grabbing" ref={emblaRef}>
-                    <div className="flex -ml-8">
+                <div
+                    className="overflow-hidden cursor-grab active:cursor-grabbing [mask-image:linear-gradient(to_right,transparent,black_5%,black_95%,transparent)]"
+                    ref={emblaRef}
+                >
+                    <div className="flex -ml-8 px-4 md:px-8">
                         {services.map((service, index) => (
                             <div key={`${service.title}-${index}`} className="pl-8 flex-[0_0_auto]">
                                 <ServiceCard
@@ -111,37 +114,22 @@ const ServicesSection = ({ type = "particulier" }: ServicesSectionProps) => {
                     </div>
                 </div>
 
-                {/* Progress Bar & Indicators Container */}
-                <div className="mt-12 flex flex-col items-center gap-6">
-                    {/* 3 Indicators */}
-                    <div className="flex gap-3">
-                        {[0, 1, 2].map((i) => {
-                            const sectionSize = Math.ceil(services.length / 3);
-                            const isActive = Math.floor(selectedIndex / sectionSize) === i;
-
-                            return (
-                                <div
-                                    key={i}
-                                    className={cn(
-                                        "h-1.5 rounded-full transition-all duration-500",
-                                        isActive ? "w-8" : "w-4 bg-slate-200"
-                                    )}
-                                    style={isActive ? { backgroundColor: services[selectedIndex].color } : {}}
-                                />
-                            );
-                        })}
-                    </div>
-
-                    {/* Full Progress Bar */}
-                    <div className="w-full max-w-md h-1 bg-slate-100 rounded-full overflow-hidden">
-                        <div
-                            className="h-full transition-all duration-300 ease-out"
-                            style={{
-                                width: `${scrollProgress}%`,
-                                backgroundColor: services[selectedIndex].color
-                            }}
-                        />
-                    </div>
+                {/* Navigation Arrows Container */}
+                <div className="mt-8 hidden md:flex justify-center gap-4">
+                    <button
+                        onClick={() => emblaApi?.scrollPrev()}
+                        className="w-10 h-10 rounded-full border-[1.5px] border-primary text-primary flex items-center justify-center hover:bg-primary hover:text-white transition-colors"
+                        aria-label="Précédent"
+                    >
+                        <ChevronLeft className="w-5 h-5" />
+                    </button>
+                    <button
+                        onClick={() => emblaApi?.scrollNext()}
+                        className="w-10 h-10 rounded-full border-[1.5px] border-primary text-primary flex items-center justify-center hover:bg-primary hover:text-white transition-colors"
+                        aria-label="Suivant"
+                    >
+                        <ChevronRight className="w-5 h-5" />
+                    </button>
                 </div>
             </div>
 
