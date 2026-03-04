@@ -168,16 +168,21 @@ export default function GrandMenageClient() {
 
     const incrementPeople = () => setFormData({ ...formData, numberOfPeople: formData.numberOfPeople + 1 });
     const decrementPeople = () => {
-        const minResources = calculateMinResources(formData.surfaceArea);
-        if (formData.numberOfPeople > minResources.people) {
-            setFormData({ ...formData, numberOfPeople: formData.numberOfPeople - 1 });
+        if (formData.numberOfPeople > 1) {
+            const newPeopleCount = formData.numberOfPeople - 1;
+            setFormData(prev => ({
+                ...prev,
+                numberOfPeople: newPeopleCount,
+                duration: newPeopleCount === 1 ? 6 : prev.duration
+            }));
         }
     };
 
     const incrementDuration = () => setFormData({ ...formData, duration: formData.duration + 1 });
     const decrementDuration = () => {
         const minResources = calculateMinResources(formData.surfaceArea);
-        if (formData.duration > minResources.duration) {
+        const minDuration = formData.numberOfPeople > 1 ? minResources.duration : 6;
+        if (formData.duration > minDuration) {
             setFormData({ ...formData, duration: formData.duration - 1 });
         }
     };
@@ -381,9 +386,8 @@ Il comprend le :
                                                     <span>300m² et plus</span>
                                                 </div>
                                             </div>
-                                            <p className="text-[10px] text-red-500 text-center font-medium leading-tight px-10">
-                                                Selon la superficie indiquée, le système détermine automatiquement la durée et
-                                                l’effectif minimum requis ; ces minimums ne peuvent pas être réduits.
+                                            <p className="text-sm text-red-500 text-center font-bold leading-tight px-10 mt-4">
+                                                Pour cette superficie, nous vous recommandons {calculateMinResources(formData.surfaceArea).duration} heures et {calculateMinResources(formData.surfaceArea).people} personne(s).
                                             </p>
                                         </div>
                                     </div>
@@ -456,7 +460,7 @@ Il comprend le :
                                                 size="icon"
                                                 className="h-10 w-10 rounded-full bg-slate-100 text-primary hover:bg-slate-200 border border-slate-200 shadow-sm disabled:opacity-30"
                                                 onClick={decrementDuration}
-                                                disabled={formData.duration <= calculateMinResources(formData.surfaceArea).duration}
+                                                disabled={formData.duration <= (formData.numberOfPeople > 1 ? calculateMinResources(formData.surfaceArea).duration : 6)}
                                             >
                                                 <span className="text-2xl">-</span>
                                             </Button>
@@ -486,7 +490,7 @@ Il comprend le :
                                                 size="icon"
                                                 className="h-10 w-10 rounded-full bg-slate-100 text-primary hover:bg-slate-200 border border-slate-200 shadow-sm disabled:opacity-30"
                                                 onClick={decrementPeople}
-                                                disabled={formData.numberOfPeople <= calculateMinResources(formData.surfaceArea).people}
+                                                disabled={formData.numberOfPeople <= 1}
                                             >
                                                 <span className="text-2xl">-</span>
                                             </Button>
