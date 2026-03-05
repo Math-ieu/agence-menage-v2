@@ -450,9 +450,12 @@ Il comprend le :
                                     </div>
 
                                     <div>
-                                        <h3 className="text-xl font-bold bg-primary/10 text-primary p-3 rounded-lg text-center mb-4">
+                                        <h3 className="text-xl font-bold bg-primary/10 text-primary p-3 rounded-lg text-center mb-2">
                                             Durée de prestation
                                         </h3>
+                                        <p className="text-red-500 text-xs text-center mb-4 font-bold">
+                                            La durée minimale pour votre ménage est de 6 h
+                                        </p>
                                         <div className="flex items-center justify-center gap-8 p-4 bg-white border rounded-xl">
                                             <Button
                                                 type="button"

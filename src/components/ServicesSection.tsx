@@ -76,7 +76,7 @@ const ServicesSection = ({ type = "particulier" }: ServicesSectionProps) => {
 
             {/* Static Grid for Enterprise (Desktop) */}
             {isEntreprise && (
-                <div className="hidden md:flex w-full px-4 md:px-8 mx-auto flex-nowrap justify-start xl:justify-center gap-6 pb-8">
+                <div className="hidden md:flex w-full px-4 md:px-8 mx-auto flex-nowrap justify-start xl:justify-center gap-4 pb-8">
                     {services.map((service, index) => (
                         <ServiceCard
                             key={`${service.title}-${index}`}
@@ -90,48 +90,61 @@ const ServicesSection = ({ type = "particulier" }: ServicesSectionProps) => {
                 </div>
             )}
 
-            {/* Embla Carousel for Particulier OR Enterprise on Mobile */}
-            <div className={cn(
-                "w-full mx-auto relative group",
-                isEntreprise ? "block md:hidden" : "block"
-            )}>
-                <div
-                    className="overflow-hidden cursor-grab active:cursor-grabbing [mask-image:linear-gradient(to_right,transparent,black_5%,black_95%,transparent)]"
-                    ref={emblaRef}
-                >
-                    <div className="flex -ml-8 px-4 md:px-8">
-                        {services.map((service, index) => (
-                            <div key={`${service.title}-${index}`} className="pl-8 flex-[0_0_auto]">
-                                <ServiceCard
-                                    title={service.title}
-                                    description={service.description}
-                                    image={service.image}
-                                    color={service.color}
-                                    url={service.url}
-                                />
-                            </div>
-                        ))}
+            {/* Vertical Column for Mobile (Both) */}
+            <div className="flex flex-col items-center -space-y-4 md:hidden w-full px-4 mx-auto overflow-hidden">
+                {services.map((service, index) => (
+                    <ServiceCard
+                        key={`${service.title}-${index}`}
+                        title={service.title}
+                        description={service.description}
+                        image={service.image}
+                        color={service.color}
+                        url={service.url}
+                    />
+                ))}
+            </div>
+
+            {/* Embla Carousel for Particulier (Desktop) */}
+            {!isEntreprise && (
+                <div className="hidden md:block w-full mx-auto relative group">
+                    <div
+                        className="overflow-hidden cursor-grab active:cursor-grabbing [mask-image:linear-gradient(to_right,transparent,black_5%,black_95%,transparent)]"
+                        ref={emblaRef}
+                    >
+                        <div className="flex -ml-4 px-4 md:px-8">
+                            {services.map((service, index) => (
+                                <div key={`${service.title}-${index}`} className="pl-4 flex-[0_0_auto]">
+                                    <ServiceCard
+                                        title={service.title}
+                                        description={service.description}
+                                        image={service.image}
+                                        color={service.color}
+                                        url={service.url}
+                                    />
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+
+                    {/* Navigation Arrows Container */}
+                    <div className="mt-8 flex justify-center gap-4">
+                        <button
+                            onClick={() => emblaApi?.scrollPrev()}
+                            className="w-10 h-10 rounded-full border-[1.5px] border-primary text-primary flex items-center justify-center hover:bg-primary hover:text-white transition-colors"
+                            aria-label="Précédent"
+                        >
+                            <ChevronLeft className="w-5 h-5" />
+                        </button>
+                        <button
+                            onClick={() => emblaApi?.scrollNext()}
+                            className="w-10 h-10 rounded-full border-[1.5px] border-primary text-primary flex items-center justify-center hover:bg-primary hover:text-white transition-colors"
+                            aria-label="Suivant"
+                        >
+                            <ChevronRight className="w-5 h-5" />
+                        </button>
                     </div>
                 </div>
-
-                {/* Navigation Arrows Container */}
-                <div className="mt-8 hidden md:flex justify-center gap-4">
-                    <button
-                        onClick={() => emblaApi?.scrollPrev()}
-                        className="w-10 h-10 rounded-full border-[1.5px] border-primary text-primary flex items-center justify-center hover:bg-primary hover:text-white transition-colors"
-                        aria-label="Précédent"
-                    >
-                        <ChevronLeft className="w-5 h-5" />
-                    </button>
-                    <button
-                        onClick={() => emblaApi?.scrollNext()}
-                        className="w-10 h-10 rounded-full border-[1.5px] border-primary text-primary flex items-center justify-center hover:bg-primary hover:text-white transition-colors"
-                        aria-label="Suivant"
-                    >
-                        <ChevronRight className="w-5 h-5" />
-                    </button>
-                </div>
-            </div>
+            )}
 
             <div className="mt-16 text-center px-4">
                 <Link href="/contact" className="w-full sm:w-auto inline-block">
