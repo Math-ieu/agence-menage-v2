@@ -1,6 +1,6 @@
 {
-  "name": "MyWebSite",
-  "short_name": "MySite",
+  "name": "Agence Ménage",
+  "short_name": "Agence Ménage",
   "icons": [
     {
       "src": "/web-app-manifest-192x192.png",
