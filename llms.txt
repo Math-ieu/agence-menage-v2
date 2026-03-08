@@ -1,0 +1,50 @@
+# Agence Ménage v2
+
+> Plateforme moderne de réservation de services de nettoyage à Casablanca (B2C & B2B).
+
+Ce projet est une application web construite avec **Next.js 16 (App Router)**, **TypeScript**, **Tailwind CSS**, et **Shadcn UI**.
+
+## Structure du Projet
+
+- `src/app/` : Routes de l'application (Next.js App Router).
+- `src/components/` : Composants React métier réutilisables.
+- `src/assets/` : Images, icônes et autres assets statiques.
+- `src/components/ui/` : Composants de base de Shadcn UI.
+- `src/lib/` : Utilitaires fonctionnels et configurations.
+- `public/` : Fichiers statiques, images et metadata SEO.
+
+## Pages et Liens Importants
+
+- [Accueil](https://www.agencemenage.ma/) - Page d'accueil principale du site pour les particuliers.
+- [Entreprise](https://www.agencemenage.ma/entreprise) - Hub dédié aux services Business-to-Business (B2B) / Nettoyage commercial.
+- [Contact](https://www.agencemenage.ma/contact) - Formulaire de contact général pour les demandes spécifiques.
+- [Espace Employé](https://www.agencemenage.ma/espace-employe) - Portail destiné aux employés de l'agence.
+- [Ménage Standard](https://www.agencemenage.ma/services/particulier/menage-standard) - Service d'entretien régulier du domicile B2C.
+- [Grand Ménage](https://www.agencemenage.ma/services/particulier/grand-menage) - Nettoyage en profondeur de l'habitation B2C.
+- [Ménage Déménagement](https://www.agencemenage.ma/services/particulier/menage-demenagement) - Nettoyage avant emménagement ou après déménagement B2C.
+- [Ménage Airbnb](https://www.agencemenage.ma/services/particulier/menage-airbnb) - Préparation et nettoyage spécialisé pour les locations saisonnières B2C.
+- [Ménage Fin de Chantier (Particuliers)](https://www.agencemenage.ma/services/particulier/menage-fin-chantier) - Remise en état de résidences suite à des travaux B2C.
+- [Garde Malade](https://www.agencemenage.ma/services/particulier/garde-malade) - Assistance et maintien professionnel à domicile B2C.
+- [Ménage Post-Sinistre (Particuliers)](https://www.agencemenage.ma/services/particulier/menage-post-sinistre) - Nettoyage de résidences spécialisé suite à un dégât B2C.
+- [Ménage Bureaux](https://www.agencemenage.ma/services/entreprise/menage-bureaux) - Entretien régulier des espaces professionnels et bureaux B2B.
+- [Ménage Fin de Chantier (Pro)](https://www.agencemenage.ma/services/entreprise/menage-fin-chantier) - Remise au propre d'installations professionnelles post-travaux B2B.
+- [Placement de Personnel](https://www.agencemenage.ma/services/entreprise/placement) - Mise à disposition de personnel d'entretien et agents qualifiés B2B.
+- [Ménage Post-Sinistre (Pro)](https://www.agencemenage.ma/services/entreprise/menage-post-sinistre) - Intervention d'urgence pour locaux professionnels sinistrés B2B.
+
+## Technologies Clés
+
+- **Framework :** Next.js 16
+- **Langage :** TypeScript strict
+- **Styling :** Tailwind CSS, Framer Motion (animations)
+- **UI Components :** Shadcn UI, Radix UI Primitives
+- **Formulaires & Validation :** React Hook Form, Zod
+- **Notifications & Emails :** Resend, EmailJS, WhatsApp API (360dialog)
+- **Icônes :** Lucide React
+
+## Conventions et Bonnes Pratiques
+
+- **Server Components par défaut :** Utiliser les directives `"use client"` uniquement pour les composants interactifs nécessitant des hooks d'état (`useState`, `useEffect`) ou des événements DOM.
+- **Styling :** Toujours privilégier les classes utilitaires Tailwind CSS. Utiliser `cn` (clsx + tailwind-merge) pour conditionner dynamiquement les classes.
+- **Composants UI :** Réutiliser un maximum les composants de la librairie interne (Shadcn) situés dans `src/components/ui/` avant d'en créer de nouveaux.
+- **SEO & Performances :** Utiliser les conventions Next.js pour les métadonnées (`metadata` API) et optimiser les assets multimédias via `next/image` ou `next/video`.
+- **Responsive Design :** Concevoir chaque interface en mobile-first, le trafic mobile étant prioritaire pour cette plateforme de réservation.
