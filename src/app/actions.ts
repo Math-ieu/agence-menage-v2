@@ -135,18 +135,35 @@ export async function sendBookingEmailResend(serviceName: string, data: any, pri
   try {
     const optionalServices = [];
     if (data.additionalServices?.produitsEtOutils) {
-      optionalServices.push("Produits et outils (+90 MAD)");
+      optionalServices.push("Produits de ménage : 90 MAD");
     }
     if (data.additionalServices?.torchonsEtSerpierres) {
-      optionalServices.push("Torchons et serpillères (+40 MAD)");
+      optionalServices.push("Torchons et serpillères : 40 MAD");
     }
     if (data.additionalServices?.nettoyageTerrasse) {
-      optionalServices.push("Nettoyage Terrasse (+500 MAD)");
+      optionalServices.push("Nettoyage Terrasse : 500 MAD");
     }
     if (data.additionalServices?.baiesVitrees) {
-      optionalServices.push("Baies Vitrées (Sur devis)");
+      optionalServices.push("Baies Vitrées : Sur devis");
     }
     if (data.intensiveOption || data.cleanlinessType === "intensif") optionalServices.push("Option Intensif");
+
+    // Format date with day name
+    let formattedDateWithDay = data.schedulingDate || "-";
+    if (data.schedulingDate) {
+      try {
+        const dateObj = new Date(data.schedulingDate);
+        if (!isNaN(dateObj.getTime())) {
+          const days = ['Dim', 'Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam'];
+          const dayName = days[dateObj.getDay()];
+          // Assuming schedulingDate is already in a readable format, otherwise format it
+          // If it's YYYY-MM-DD, we can just prepend the day name
+          formattedDateWithDay = `${dayName}. ${data.schedulingDate}`;
+        }
+      } catch (e) {
+        console.error("Date formatting error:", e);
+      }
+    }
 
     const surfaceValue = data.officeSurface || data.surfaceArea || data.surface || "";
     const formattedSurface = surfaceValue ? `${surfaceValue} m²` : "";
@@ -264,7 +281,7 @@ export async function sendBookingEmailResend(serviceName: string, data: any, pri
   <div style="margin-bottom: 20px;">
     <h3 style="color: #175e5c; border-left: 4px solid #175e5c; padding-left: 10px; margin-bottom: 10px;">Lieu et Horaire</h3>
     <table style="width: 100%; border-collapse: collapse;">
-      ${data.schedulingDate ? `<tr><td style="padding: 5px 0; width: 40%;"><strong>Date:</strong></td><td>${data.schedulingDate}</td></tr>` : ""}
+      ${formattedDateWithDay !== "-" ? `<tr><td style="padding: 5px 0; width: 40%;"><strong>Date:</strong></td><td>${formattedDateWithDay}</td></tr>` : ""}
       ${scheduling_time ? `<tr><td style="padding: 5px 0; width: 40%;"><strong>Heure:</strong></td><td>${scheduling_time}</td></tr>` : ""}
       ${isGardeMalade && data.careLocation ? `<tr><td style="padding: 5px 0; width: 40%;"><strong>Lieu de garde:</strong></td><td>${data.careLocation}</td></tr>` : ""}
       ${isGardeMalade && data.careAddress ? `<tr><td style="padding: 5px 0; width: 40%;"><strong>Adresse de garde:</strong></td><td>${data.careAddress}</td></tr>` : ""}
@@ -291,7 +308,7 @@ export async function sendBookingEmailResend(serviceName: string, data: any, pri
     }
 
     if (process.env.D360_API_KEY) {
-      const formattedDate = data.schedulingDate || "-";
+      const formattedDate = formattedDateWithDay;
       const formattedHour = scheduling_time || "-";
       const fallbackPrice = typeof price === "number" ? `${price} MAD` : String(price);
 
@@ -326,6 +343,35 @@ export async function sendBookingEmailResend(serviceName: string, data: any, pri
 
       await Promise.all(waPromises);
     }
+
+    // --- ENREGISTREMENT API BACK-OFFICE ---
+    try {
+      const { createDemande } = await import('@/lib/api');
+      
+      const apiPayload = {
+        service: serviceName,
+        segment: isEntreprise ? 'entreprise' as const : 'particulier' as const,
+        client_nom: client_name,
+        client_phone: data.phoneNumber,
+        client_email: data.email || null,
+        client_whatsapp: data.whatsappNumber || null,
+        client_entity_name: data.entityName || null,
+        statut: 'en_attente',
+        source: 'site',
+        is_devis: price === "Sur devis",
+        prix: typeof price === "number" ? price.toString() : null,
+        frequency: data.frequency === "oneshot" ? 'oneshot' as const : 'abonnement' as const,
+        formulaire_data: data
+      };
+      
+      await createDemande(apiPayload);
+      console.log('Demande successfully saved via Django API');
+    } catch (apiError) {
+      // On ne bloque pas et on ne retourne pas d'erreur HTTP si l'API back-office fail,
+      // car le client a déjà reçu son email de confirmation.
+      console.error("Erreur lors de l'enregistrement de la demande dans l'API:", apiError);
+    }
+    // --------------------------------------
 
     return { success: true, data: resData };
   } catch (err) {
