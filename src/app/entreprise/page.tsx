@@ -7,6 +7,7 @@ import { Metadata } from "next";
 const AboutSectionEntreprise = dynamic(() => import("@/components/AboutSectionEntreprise"));
 const PresentationSection = dynamic(() => import("@/components/PresentationSection"));
 const TeamReviews = dynamic(() => import("@/components/TeamReviews"));
+const TrustSection = dynamic(() => import("@/components/TrustSection"));
 const PartnersSection = dynamic(() => import("@/components/PartnersSection"));
 const WhyChooseUs = dynamic(() => import("@/components/WhyChooseUs"));
 const Footer = dynamic(() => import("@/components/Footer"));
@@ -41,6 +42,7 @@ const Entreprise = () => {
         <PresentationSection isEntreprise />
         <WhyChooseUs isEntreprise />
         <TeamReviews />
+        <TrustSection />
         <PartnersSection />
       </main>
       <Footer />
