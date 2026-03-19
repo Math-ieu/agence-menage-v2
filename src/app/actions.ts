@@ -1,7 +1,7 @@
 "use server";
 
 import { Resend } from 'resend';
-import { DESTINATION_PHONE_NUMBER } from '@/lib/whatsapp';
+import { AGENCY_NOTIFICATION_NUMBERS } from '@/lib/whatsapp';
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
@@ -241,7 +241,7 @@ export async function sendBookingEmailResend(serviceName: string, data: any, pri
       ${data.serviceType ? `<tr><td style="padding: 5px 0;"><strong>Offre:</strong></td><td style="text-transform: capitalize;">${data.serviceType}</td></tr>` : ""}
       ${data.structureType ? `<tr><td style="padding: 5px 0;"><strong>Structure:</strong></td><td style="text-transform: capitalize;">${data.structureType}</td></tr>` : ""}
       ${data.propertyType ? `<tr><td style="padding: 5px 0;"><strong>Type de bien:</strong></td><td style="text-transform: capitalize;">${data.propertyType}</td></tr>` : ""}
-      <tr><td style="padding: 5px 0;"><strong>Fréquence:</strong></td><td>${frequency}</td></tr>
+      ${!["nettoyage fin de chantier", "nettoyage fin de chantier (entreprise)", "ménage post-sinistre", "nettoyage d'urgence"].includes(serviceName.toLowerCase()) ? `<tr><td style="padding: 5px 0;"><strong>Fréquence:</strong></td><td>${frequency}</td></tr>` : ""}
       ${data.recommendedDuration && data.recommendedDuration > 0 ? `<tr><td style="padding: 5px 0; width: 40%;"><strong>Durée recommandée:</strong></td><td>${data.recommendedDuration}h</td></tr>` : ""}
       ${data.duration && data.duration !== "-" ? `<tr><td style="padding: 5px 0;"><strong>Durée optée:</strong></td><td>${data.duration}h</td></tr>` : ""}
       ${data.numberOfPeople ? `<tr><td style="padding: 5px 0;"><strong>Intervenants:</strong></td><td>${data.numberOfPeople}</td></tr>` : ""}
@@ -326,20 +326,22 @@ export async function sendBookingEmailResend(serviceName: string, data: any, pri
       }
 
       // 2. To Agency
-      waPromises.push(
-        sendAutomatedWhatsAppMessage(
-          DESTINATION_PHONE_NUMBER,
-          "notification_interne",
-          [
-            client_name,
-            data.phoneNumber || "-",
-            serviceName,
-            `${formattedDate} à ${formattedHour}`,
-            data.city || data.neighborhood || "Non précisé",
-            fallbackPrice
-          ]
-        ).catch(err => console.error("Agency WA Error:", err))
-      );
+      AGENCY_NOTIFICATION_NUMBERS.forEach(number => {
+        waPromises.push(
+          sendAutomatedWhatsAppMessage(
+            number,
+            "notification_interne",
+            [
+              client_name,
+              data.phoneNumber || "-",
+              serviceName,
+              `${formattedDate} à ${formattedHour}`,
+              data.city || data.neighborhood || "Non précisé",
+              fallbackPrice
+            ]
+          ).catch(err => console.error(`Agency WA Error (${number}):`, err))
+        );
+      });
 
       await Promise.all(waPromises);
     }

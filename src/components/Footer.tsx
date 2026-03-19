@@ -76,7 +76,7 @@ const Footer = () => {
         <div className="border-t border-primary-foreground/20 pt-8">
           <div className="flex flex-col md:flex-row items-center justify-between gap-6">
             <p className="text-primary-foreground/70 font-bold text-sm text-center md:text-left">
-              © 2026 Agence premium services. Tous droits réservés.
+              © 2026 Agence Ménage Services — Casablanca, Maroc | Tous droits réservés
             </p>
 
             <div className="flex items-center gap-6">

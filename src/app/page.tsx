@@ -21,5 +21,23 @@ export const metadata: Metadata = {
 };
 
 export default function Home() {
-    return <HomeClient />;
+    const jsonLd = {
+        "@context": "https://schema.org",
+        "@type": ["LocalBusiness", "Service"],
+        "name": "Agence Ménage Services",
+        "url": "https://agencemenage.ma",
+        "description": "Expert en nettoyage et entretien à Casablanca",
+        "areaServed": "Casablanca",
+        "serviceType": "Nettoyage et entretien",
+    };
+
+    return (
+        <>
+            <script
+                type="application/ld+json"
+                dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+            />
+            <HomeClient />
+        </>
+    );
 }

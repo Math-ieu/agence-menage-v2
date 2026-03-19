@@ -50,7 +50,7 @@ const HeroSection = () => {
         {/* Toggle centré en bas */}
         <div className="mt-auto flex justify-center animate-fade-in" style={{ animationDelay: "0.2s" }}>
           <div className="flex flex-col items-center">
-            <h1 className="text-primary font-bold text-xl md:text-2xl mb-4 bg-white rounded-lg px-4 py-2 inline-block shadow-md text-center">Zone de couverture actuelle : Grand Casablanca</h1>
+            <h2 className="text-primary font-bold text-xl md:text-2xl mb-4 bg-white rounded-lg px-4 py-2 inline-block shadow-md text-center">Zone de couverture actuelle : Grand Casablanca</h2>
             <div className="inline-flex rounded-full overflow-hidden bg-background/95 p-1 shadow-xl">
               <Link href="/">
                 <button
