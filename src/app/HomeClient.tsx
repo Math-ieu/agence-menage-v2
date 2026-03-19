@@ -8,6 +8,7 @@ const AboutSectionParticulier = dynamic(() => import("@/components/AboutSectionP
 const PresentationSection = dynamic(() => import("@/components/PresentationSection"));
 const WhyChooseUs = dynamic(() => import("@/components/WhyChooseUs"));
 const TeamReviews = dynamic(() => import("@/components/TeamReviews"));
+const TrustSection = dynamic(() => import("@/components/TrustSection"));
 const PartnersSection = dynamic(() => import("@/components/PartnersSection"));
 const Footer = dynamic(() => import("@/components/Footer"));
 
@@ -22,6 +23,7 @@ export default function HomeClient() {
                 <PresentationSection />
                 <WhyChooseUs />
                 <TeamReviews />
+                <TrustSection />
                 <PartnersSection />
                 <Footer />
             </main>
