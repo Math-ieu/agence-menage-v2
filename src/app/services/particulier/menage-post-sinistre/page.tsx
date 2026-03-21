@@ -21,5 +21,24 @@ export const metadata: Metadata = {
 };
 
 export default function NettoyageUrgencePage() {
-    return <NettoyageUrgenceClient />;
+    const jsonLd = {
+        "@context": "https://schema.org",
+        "@type": "Service",
+        "serviceType": "Ménage Post Sinistre",
+        "provider": {
+            "@id": "https://www.agencemenage.ma/#organization"
+        },
+        "areaServed": "Casablanca",
+        "description": "Service de nettoyage et remise en état après sinistre à Casablanca"
+    };
+
+    return (
+        <>
+            <script
+                type="application/ld+json"
+                dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+            />
+            <NettoyageUrgenceClient />
+        </>
+    );
 }

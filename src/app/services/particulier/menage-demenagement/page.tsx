@@ -21,5 +21,24 @@ export const metadata: Metadata = {
 };
 
 export default function MenageDemenagementPage() {
-    return <MenageDemenagementClient />;
+    const jsonLd = {
+        "@context": "https://schema.org",
+        "@type": "Service",
+        "serviceType": "Ménage Post Déménagement",
+        "provider": {
+            "@id": "https://www.agencemenage.ma/#organization"
+        },
+        "areaServed": "Casablanca",
+        "description": "Service de nettoyage complet après déménagement à Casablanca"
+    };
+
+    return (
+        <>
+            <script
+                type="application/ld+json"
+                dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+            />
+            <MenageDemenagementClient />
+        </>
+    );
 }

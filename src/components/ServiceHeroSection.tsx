@@ -106,6 +106,8 @@ const ServiceHeroSection = ({ title, description, image, primaryColor, isCollaps
                             src={typeof image === "string" ? image : (image as any)?.src}
                             alt={title}
                             className="w-full h-full object-cover scale-110"
+                            width={256}
+                            height={256}
                         />
                     </div>
                     <div
@@ -292,10 +294,31 @@ const ServiceHeroSection = ({ title, description, image, primaryColor, isCollaps
                             src={typeof image === "string" ? image : (image as any)?.src}
                             alt={title}
                             className="w-full h-full object-cover"
+                            width={800}
+                            height={500}
                         />
                     </div>
                 </div>
             </div>
+            {faqs && faqs.length > 0 && (
+                <script
+                    type="application/ld+json"
+                    dangerouslySetInnerHTML={{
+                        __html: JSON.stringify({
+                            "@context": "https://schema.org",
+                            "@type": "FAQPage",
+                            "mainEntity": faqs.map((faq) => ({
+                                "@type": "Question",
+                                "name": faq.question,
+                                "acceptedAnswer": {
+                                    "@type": "Answer",
+                                    "text": faq.answer
+                                }
+                            }))
+                        })
+                    }}
+                />
+            )}
         </section>
     );
 };

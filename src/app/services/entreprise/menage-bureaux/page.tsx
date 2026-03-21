@@ -21,5 +21,24 @@ export const metadata: Metadata = {
 };
 
 export default function MenageBureauxPage() {
-  return <MenageBureauxClient />;
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Service",
+    "serviceType": "Ménage pour Bureaux",
+    "provider": {
+      "@id": "https://www.agencemenage.ma/#organization"
+    },
+    "areaServed": "Casablanca",
+    "description": "Service de nettoyage et entretien de bureaux pour entreprises à Casablanca"
+  };
+
+  return (
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
+      <MenageBureauxClient />
+    </>
+  );
 }

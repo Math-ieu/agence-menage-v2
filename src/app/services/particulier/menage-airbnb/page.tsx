@@ -21,5 +21,24 @@ export const metadata: Metadata = {
 };
 
 export default function MenageAirbnbPage() {
-    return <MenageAirbnbClient />;
+    const jsonLd = {
+        "@context": "https://schema.org",
+        "@type": "Service",
+        "serviceType": "Ménage Airbnb",
+        "provider": {
+            "@id": "https://www.agencemenage.ma/#organization"
+        },
+        "areaServed": "Casablanca",
+        "description": "Service de ménage et entretien pour locations Airbnb à Casablanca"
+    };
+
+    return (
+        <>
+            <script
+                type="application/ld+json"
+                dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+            />
+            <MenageAirbnbClient />
+        </>
+    );
 }

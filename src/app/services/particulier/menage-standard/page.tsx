@@ -21,5 +21,24 @@ export const metadata: Metadata = {
 };
 
 export default function MenageStandardPage() {
-  return <MenageStandardClient />;
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Service",
+    "serviceType": "Ménage Standard",
+    "provider": {
+      "@id": "https://www.agencemenage.ma/#organization"
+    },
+    "areaServed": "Casablanca",
+    "description": "Service de ménage standard hebdomadaire pour particuliers à Casablanca"
+  };
+
+  return (
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
+      <MenageStandardClient />
+    </>
+  );
 }

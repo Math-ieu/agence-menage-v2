@@ -32,6 +32,8 @@ const ServiceCard = ({ title, image, color, url }: ServiceCardProps) => {
             src={imageSrc}
             alt={title}
             className="w-full h-full object-cover"
+            width={140}
+            height={140}
           />
         </div>
       </div>

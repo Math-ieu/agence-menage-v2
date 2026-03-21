@@ -21,5 +21,24 @@ export const metadata: Metadata = {
 };
 
 export default function PlacementPage() {
-    return <PlacementClient />;
+    const jsonLd = {
+        "@context": "https://schema.org",
+        "@type": "Service",
+        "serviceType": "Placement Femme de Ménage pour Entreprises",
+        "provider": {
+            "@id": "https://www.agencemenage.ma/#organization"
+        },
+        "areaServed": "Casablanca",
+        "description": "Service de placement de femmes de ménage qualifiées pour entreprises à Casablanca"
+    };
+
+    return (
+        <>
+            <script
+                type="application/ld+json"
+                dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+            />
+            <PlacementClient />
+        </>
+    );
 }

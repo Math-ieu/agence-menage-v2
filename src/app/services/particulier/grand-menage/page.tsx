@@ -21,5 +21,24 @@ export const metadata: Metadata = {
 };
 
 export default function GrandMenagePage() {
-  return <GrandMenageClient />;
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Service",
+    "serviceType": "Grand Ménage",
+    "provider": {
+      "@id": "https://www.agencemenage.ma/#organization"
+    },
+    "areaServed": "Casablanca",
+    "description": "Service de grand ménage en profondeur pour particuliers à Casablanca"
+  };
+
+  return (
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
+      <GrandMenageClient />
+    </>
+  );
 }

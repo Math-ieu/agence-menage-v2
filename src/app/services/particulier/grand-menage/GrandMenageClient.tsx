@@ -609,6 +609,8 @@ Il comprend le :
                                                             src={cleaningProduct.src}
                                                             alt="Produits"
                                                             className="w-10 h-10 object-contain"
+                                                            width={40}
+                                                            height={40}
                                                         />
                                                         <div className="flex flex-col">
                                                             <span className="font-bold text-primary text-sm">Produits : + 90 MAD</span>
@@ -633,6 +635,8 @@ Il comprend le :
                                                                 src={cleaningClothsMop.src}
                                                                 alt="Torchons"
                                                                 className="w-full h-full object-cover"
+                                                                width={40}
+                                                                height={40}
                                                             />
                                                         </div>
                                                         <span className="font-bold text-primary text-sm">Torchons et serpillères : + 40 MAD</span>

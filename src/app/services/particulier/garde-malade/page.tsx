@@ -21,5 +21,24 @@ export const metadata: Metadata = {
 };
 
 export default function GardeMaladePage() {
-  return <GardeMaladeClient />;
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Service",
+    "serviceType": "Auxiliaire de Vie et Garde Malade",
+    "provider": {
+      "@id": "https://www.agencemenage.ma/#organization"
+    },
+    "areaServed": "Casablanca",
+    "description": "Service d'auxiliaire de vie et garde malade à domicile à Casablanca"
+  };
+
+  return (
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
+      <GardeMaladeClient />
+    </>
+  );
 }

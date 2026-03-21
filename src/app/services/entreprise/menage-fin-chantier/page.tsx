@@ -21,5 +21,24 @@ export const metadata: Metadata = {
 };
 
 export default function MenageFinChantierEntreprisePage() {
-    return <MenageFinChantierEntrepriseClient />;
+    const jsonLd = {
+        "@context": "https://schema.org",
+        "@type": "Service",
+        "serviceType": "Ménage Fin de Chantier Entreprises",
+        "provider": {
+            "@id": "https://www.agencemenage.ma/#organization"
+        },
+        "areaServed": "Casablanca",
+        "description": "Service de nettoyage fin de chantier pour entreprises à Casablanca"
+    };
+
+    return (
+        <>
+            <script
+                type="application/ld+json"
+                dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+            />
+            <MenageFinChantierEntrepriseClient />
+        </>
+    );
 }
