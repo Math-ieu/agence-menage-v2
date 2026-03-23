@@ -5,7 +5,7 @@ const TrustSection = () => {
   const trustItems = [
     {
       title: "VOTRE PARTENAIRE",
-      content: "Agence Ménage Services est votre partenaire de confiance pour tous vos besoins en nettoyage et entretien à Casablanca et dans le Grand Casablanca. Que vous soyez un particulier ou une entreprise, nous proposons des prestations professionnelles adaptées à vos besoins et à votre budget."
+      content: "Agence Ménage est votre partenaire de confiance pour tous vos besoins en nettoyage et entretien à Casablanca et dans le Grand Casablanca. Que vous soyez un particulier ou une entreprise, nous proposons des prestations professionnelles adaptées à vos besoins et à votre budget."
     },
     {
       title: "SERVICES DE NETTOYAGE",
@@ -17,7 +17,7 @@ const TrustSection = () => {
     },
     {
       title: "TARIF ABORDABLE",
-      content: "Des tarifs transparents Chez Agence Ménage Services, nous croyons en la transparence totale. Pas de frais cachés, pas de mauvaises surprises. Demandez votre devis gratuit en ligne en moins de 2 minutes."
+      content: "Des tarifs transparents Chez Agence Ménage, nous croyons en la transparence totale. Pas de frais cachés, pas de mauvaises surprises. Demandez votre devis gratuit en ligne en moins de 2 minutes."
     }
   ];
 

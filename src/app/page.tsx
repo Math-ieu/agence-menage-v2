@@ -24,7 +24,7 @@ export default function Home() {
     const jsonLd = {
         "@context": "https://schema.org",
         "@type": ["LocalBusiness", "Service"],
-        "name": "Agence Ménage Services",
+        "name": "Agence Ménage",
         "url": "https://agencemenage.ma",
         "description": "Expert en nettoyage et entretien à Casablanca",
         "areaServed": "Casablanca",

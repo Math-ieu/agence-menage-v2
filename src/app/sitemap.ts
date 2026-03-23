@@ -6,6 +6,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     const routes = [
         '',
         '/entreprise',
+        '/a-propos',
         '/contact',
         '/espace-employe',
         '/services/particulier/menage-standard',

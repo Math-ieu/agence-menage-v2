@@ -1,6 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
-import { Facebook, Instagram, Mail, Phone, MapPin, MessageCircle, User } from "lucide-react";
+import { Facebook, Instagram, Mail, Phone, MapPin, MessageCircle, User, Users } from "lucide-react";
 import logoPlaceholder from "@/assets/LOGO-AGENCE-MENAGE.webp";
 
 const Footer = () => {
@@ -62,6 +62,10 @@ const Footer = () => {
                 <span>36 boulevard d’anfa, résidence Anafe A, etage 7, Casablanca</span>
               </li>
               <li className="flex items-center gap-3 text-primary-foreground font-bold text-sm lg:text-base">
+                <Users className="w-5 h-5 shrink-0" />
+                <Link href="/a-propos" className="hover:text-white transition-colors">À propos</Link>
+              </li>
+              <li className="flex items-center gap-3 text-primary-foreground font-bold text-sm lg:text-base">
                 <MessageCircle className="w-5 h-5 shrink-0" />
                 <Link href="/contact" className="hover:text-white transition-colors">Contactez-nous</Link>
               </li>
@@ -76,7 +80,7 @@ const Footer = () => {
         <div className="border-t border-primary-foreground/20 pt-8">
           <div className="flex flex-col md:flex-row items-center justify-between gap-6">
             <p className="text-primary-foreground/70 font-bold text-sm text-center md:text-left">
-              © 2026 Agence Ménage Services — Casablanca, Maroc | Tous droits réservés
+              © 2026 Agence Ménage — Casablanca, Maroc | Tous droits réservés
             </p>
 
             <div className="flex items-center gap-6">

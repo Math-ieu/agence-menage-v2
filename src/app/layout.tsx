@@ -20,7 +20,7 @@ const workSans = Work_Sans({
 });
 
 export const metadata: Metadata = {
-    authors: [{ name: "Agence Ménage Services" }],
+    authors: [{ name: "Agence Ménage" }],
     title: {
         default: "Agence de Ménage Casablanca | Nettoyage Professionnel & Fiable",
         template: "%s",
