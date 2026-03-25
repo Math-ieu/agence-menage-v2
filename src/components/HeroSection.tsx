@@ -16,10 +16,15 @@ const HeroSection = () => {
   return (
     <section className="relative h-[700px] md:h-[650px] overflow-hidden">
       {/* Desktop Background */}
-      <div
-        className="absolute inset-0 bg-cover bg-center bg-no-repeat hidden md:block"
-        style={{ backgroundImage: `url(${heroImage.src})` }}
-      >
+      <div className="absolute inset-0 hidden md:block">
+        <Image
+          src={heroImage}
+          alt="Background Desktop"
+          fill
+          priority
+          fetchPriority="high"
+          style={{ objectFit: "cover", objectPosition: "center" }}
+        />
         <div className="absolute inset-0 bg-gradient-to-r from-foreground/60 to-transparent" />
       </div>
 
@@ -40,7 +45,7 @@ const HeroSection = () => {
         {/* Texte centré verticalement à gauche sur desktop, centré sur mobile */}
         <div className="animate-fade-in mb-auto mt-auto text-center bg-black/40 p-6 md:p-8 rounded-2xl md:max-w-4xl backdrop-blur-sm mx-auto">
           <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-primary-foreground leading-tight mb-4 drop-shadow-lg">
-            {isEntreprise ? "Nettoyage d'Entreprise à Casablanca : L'Exigence et la Propreté Premium" : "Agence Ménage  : Votre Expert en Nettoyage et Entretien"}
+            {isEntreprise ? "Nettoyage d'Entreprise à Casablanca : L'Exigence et la Propreté Premium" : "Agence Ménage : Expert en Nettoyage et Entretien pour Particuliers & Entreprises au Maroc"}
           </h1>
           <h2 className="text-xl md:text-2xl text-primary-foreground/90 font-medium drop-shadow-md">
             {isEntreprise ? "Des solutions sur-mesure pour l'entretien de vos bureaux, la gestion de propreté et le nettoyage de fin de chantier." : "Des professionnels de confiance pour faire briller vos espaces de vie, vos bureaux et vos locations Airbnb."}

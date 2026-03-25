@@ -25,10 +25,10 @@ export const metadata: Metadata = {
         default: "Agence de Ménage Casablanca | Nettoyage Professionnel & Fiable",
         template: "%s",
     },
-    description: "Services de ménage et nettoyage pour particuliers et entreprises à Casablanca. Professionnalisme, discrétion et satisfaction garantis.",
+    description: "Agence Ménage — femmes de ménage qualifiées pour particuliers et entreprises au Maroc. Nettoyage standard, grand ménage, Airbnb et post-chantier. Disponible 7j/7.",
     openGraph: {
         title: "Agence de Ménage - Services de nettoyage professionnels",
-        description: "Services de ménage et nettoyage pour particuliers et entreprises à Casablanca.",
+        description: "Agence Ménage — femmes de ménage qualifiées pour particuliers et entreprises au Maroc. Nettoyage standard, grand ménage, Airbnb et post-chantier. Disponible 7j/7.",
         type: "website",
         url: "https://www.agencemenage.ma",
         images: [
@@ -49,10 +49,7 @@ export const metadata: Metadata = {
         follow: true,
     },
     verification: {
-        google: [
-            "XlhIPJ8VqqCVLwwxTxrfm5aLsAt0N4PPgFu7U1apY_0",
-            "aIvUpt-vH6Kct-44tIJYPYciubL4YDEMnoc24z0MrJA",
-        ],
+        google: "XlhIPJ8VqqCVLwwxTxrfm5aLsAt0N4PPgFu7U1apY_0",
     },
 };
 
@@ -62,8 +59,16 @@ export default function RootLayout({
     children: React.ReactNode;
 }>) {
     return (
-        <html lang="fr" className={`${workSans.variable}`} suppressHydrationWarning>
+        <html lang="fr-MA" className={`${workSans.variable}`} suppressHydrationWarning>
             <head>
+                <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+                <link rel="alternate" hrefLang="fr-MA" href="https://www.agencemenage.ma/" />
+                <link rel="icon" type="image/png" href="/favicon-96x96.png" sizes="96x96" />
+                <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+                <link rel="shortcut icon" href="/favicon.ico" />
+                <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+                <meta name="apple-mobile-web-app-title" content="Agence Menage" />
+                <link rel="manifest" href="/site.webmanifest" />
             </head>
             <body className="antialiased min-h-screen flex flex-col overflow-x-hidden" suppressHydrationWarning>
                 <noscript>

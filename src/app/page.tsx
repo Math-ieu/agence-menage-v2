@@ -23,12 +23,63 @@ export const metadata: Metadata = {
 export default function Home() {
     const jsonLd = {
         "@context": "https://schema.org",
-        "@type": ["LocalBusiness", "Service"],
+        "@type": "LocalBusiness",
+        "@id": "https://www.agencemenage.ma/#organization",
         "name": "Agence Ménage",
-        "url": "https://agencemenage.ma",
-        "description": "Expert en nettoyage et entretien à Casablanca",
-        "areaServed": "Casablanca",
-        "serviceType": "Nettoyage et entretien",
+        "description": "Agence de ménage professionnelle au Maroc offrant des services de femmes de ménage qualifiées pour particuliers et entreprises.",
+        "url": "https://www.agencemenage.ma",
+        "telephone": "+212664331463",
+        "email": "contact@agencemenage.ma",
+        "address": {
+            "@type": "PostalAddress",
+            "streetAddress": "36 Boulevard d'Anfa",
+            "addressLocality": "Casablanca",
+            "addressRegion": "Grand Casablanca",
+            "addressCountry": "MA"
+        },
+        "geo": {
+            "@type": "GeoCoordinates",
+            "latitude": "33.5912",
+            "longitude": "-7.6331"
+        },
+        "areaServed": [
+            {
+                "@type": "City",
+                "name": "Casablanca"
+            },
+            {
+                "@type": "GeoCircle",
+                "geoMidpoint": {
+                    "@type": "GeoCoordinates",
+                    "latitude": "33.5912",
+                    "longitude": "-7.6331"
+                },
+                "geoRadius": "50km"
+            }
+        ],
+        "priceRange": "MAD",
+        "openingHoursSpecification": [
+            {
+                "@type": "OpeningHoursSpecification",
+                "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"],
+                "opens": "08:00",
+                "closes": "18:00"
+            }
+        ],
+        "sameAs": [
+            "https://www.facebook.com/profile.php?id=61586972460164",
+            "https://www.instagram.com/agencemenage/"
+        ],
+        "founder": [
+            {
+                "@type": "Person",
+                "name": "Mehdi HARIT"
+            },
+            {
+                "@type": "Person",
+                "name": "Julien CONTAN"
+            }
+        ]
     };
 
     return (
