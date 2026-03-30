@@ -39,6 +39,7 @@ const AgenciesSection = () => {
                                 className="h-12 md:h-16 w-auto grayscale group-hover:grayscale-0 transition-all duration-300"
                                 width={200}
                                 height={64}
+                                loading="lazy"
                             />
                         </a>
                     ))}

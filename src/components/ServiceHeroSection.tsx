@@ -108,6 +108,7 @@ const ServiceHeroSection = ({ title, description, image, primaryColor, isCollaps
                             className="w-full h-full object-cover scale-110"
                             width={256}
                             height={256}
+                            loading="lazy"
                         />
                     </div>
                     <div
@@ -296,6 +297,7 @@ const ServiceHeroSection = ({ title, description, image, primaryColor, isCollaps
                             className="w-full h-full object-cover"
                             width={800}
                             height={500}
+                            loading="lazy"
                         />
                     </div>
                 </div>

@@ -686,6 +686,7 @@ Il comprend le :
                                                         className="w-12 h-12 object-contain"
                                                         width={48}
                                                         height={48}
+                                                        loading="lazy"
                                                     />
                                                     <span className="font-bold text-primary">Produit : + 90 MAD</span>
                                                 </div>

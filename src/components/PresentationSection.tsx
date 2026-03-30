@@ -93,7 +93,7 @@ const PresentationSection = ({ isEntreprise = false }: { isEntreprise?: boolean 
                                         </div>
 
                                         <div className="text-center xl:text-left mt-0">
-                                            <h4 className="text-[#287271] text-xl md:text-2xl font-black mb-0">Mehdi HARIT</h4>
+                                            <h3 className="text-[#287271] text-xl md:text-2xl font-black mb-0">Mehdi HARIT</h3>
                                             <p className="text-slate-600 text-xs md:text-sm font-bold uppercase tracking-wider">
                                                 General Manager du groupe agence premium
                                             </p>

@@ -1,6 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
-import { Facebook, Instagram, Mail, Phone, MapPin, MessageCircle, User, Users } from "lucide-react";
+import { Facebook, Instagram, Mail, Phone, MapPin, MessageCircle, User, Users, BookOpen } from "lucide-react";
 import logoPlaceholder from "@/assets/LOGO-AGENCE-MENAGE.webp";
 
 const Footer = () => {
@@ -73,6 +73,10 @@ const Footer = () => {
                 <User className="w-5 h-5 shrink-0" />
                 <Link href="/espace-employe" className="hover:text-white transition-colors">Espace employé</Link>
               </li>
+              {/* <li className="flex items-center gap-3 text-primary-foreground font-bold text-sm lg:text-base">
+                <BookOpen className="w-5 h-5 shrink-0" />
+                <Link href="/blog" className="hover:text-white transition-colors">Notre Blog</Link>
+              </li> */}
             </ul>
           </div>
         </div>

@@ -611,6 +611,7 @@ Il comprend le :
                                                             className="w-10 h-10 object-contain"
                                                             width={40}
                                                             height={40}
+                                                            loading="lazy"
                                                         />
                                                         <div className="flex flex-col">
                                                             <span className="font-bold text-primary text-sm">Produits : + 90 MAD</span>
@@ -637,6 +638,7 @@ Il comprend le :
                                                                 className="w-full h-full object-cover"
                                                                 width={40}
                                                                 height={40}
+                                                                loading="lazy"
                                                             />
                                                         </div>
                                                         <span className="font-bold text-primary text-sm">Torchons et serpillères : + 40 MAD</span>

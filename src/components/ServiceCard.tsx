@@ -34,6 +34,7 @@ const ServiceCard = ({ title, image, color, url }: ServiceCardProps) => {
             className="w-full h-full object-cover"
             width={140}
             height={140}
+            loading="lazy"
           />
         </div>
       </div>
