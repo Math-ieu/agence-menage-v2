@@ -20,8 +20,8 @@ const HeroSection = () => {
         <Image
           src={heroImage}
           alt="Background Desktop"
-          fill
-          priority
+          loading="lazy"
+         fill
           fetchPriority="high"
           style={{ objectFit: "cover", objectPosition: "center" }}
         />
