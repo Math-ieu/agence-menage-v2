@@ -4,6 +4,13 @@ import HomeClient from "./HomeClient";
 export const metadata: Metadata = {
     title: "Agence Ménage Casablanca | Femme de Ménage & Nettoyage",
     description: "Agence Ménage — Service de nettoyage professionnel pour particuliers et entreprises. Disponible 7j/7. Devis gratuit via WhatsApp.",
+    alternates: {
+        canonical: "/",
+        languages: {
+            "fr-MA": "/",
+            "x-default": "/",
+        },
+    },
     openGraph: {
         title: "Agence Ménage Casablanca | Femme de Ménage & Nettoyage",
         description: "Agence Ménage — Service de nettoyage professionnel pour particuliers et entreprises. Disponible 7j/7. Devis gratuit via WhatsApp.",

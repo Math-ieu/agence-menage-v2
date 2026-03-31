@@ -4,6 +4,13 @@ import GardeMaladeClient from "./GardeMaladeClient";
 export const metadata: Metadata = {
   title: "Garde Malade & Auxiliaire de Vie Casablanca | Aide",
   description: "Service d'auxiliaire de vie et garde malade à Casablanca. Accompagnement bienveillant et sécurisé pour personnes âgées ou dépendantes à domicile 24h/24.",
+  alternates: {
+    canonical: "/services/particulier/garde-malade",
+    languages: {
+      "fr-MA": "/services/particulier/garde-malade",
+      "x-default": "/services/particulier/garde-malade",
+    },
+  },
   openGraph: {
     title: "Garde Malade & Auxiliaire de Vie Casablanca | Aide",
     description: "Service d'auxiliaire de vie et garde malade à Casablanca. Accompagnement bienveillant et sécurisé pour personnes âgées ou dépendantes à domicile 24h/24.",

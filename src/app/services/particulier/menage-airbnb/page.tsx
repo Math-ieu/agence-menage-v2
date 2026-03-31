@@ -4,6 +4,13 @@ import MenageAirbnbClient from "./MenageAirbnbClient";
 export const metadata: Metadata = {
     title: "Ménage Airbnb Casablanca | Agence de Ménage Pro",
     description: "Ménage Airbnb à Casablanca par notre agence de ménage. Services de femmes de ménage pour un accueil impeccable et une satisfaction garantie de vos voyageurs.",
+    alternates: {
+        canonical: "/services/particulier/menage-airbnb",
+        languages: {
+            "fr-MA": "/services/particulier/menage-airbnb",
+            "x-default": "/services/particulier/menage-airbnb",
+        },
+    },
     openGraph: {
         title: "Ménage Airbnb Casablanca | Agence de Ménage Pro",
         description: "Ménage Airbnb à Casablanca par notre agence de ménage. Services de femmes de ménage pour un accueil impeccable et une satisfaction garantie de vos voyageurs.",

@@ -15,6 +15,13 @@ const Footer = dynamic(() => import("@/components/Footer"));
 export const metadata: Metadata = {
   title: "Nettoyage Entreprise Casablanca | Agence Ménage Pro",
   description: "Solutions de nettoyage entreprise à Casablanca. Notre agence de ménage propose des services professionnels de femmes de ménage pour bureaux et commerces.",
+  alternates: {
+    canonical: "/entreprise",
+    languages: {
+      "fr-MA": "/entreprise",
+      "x-default": "/entreprise",
+    },
+  },
   openGraph: {
     title: "Nettoyage Entreprise Casablanca | Agence Ménage Pro",
     description: "Solutions de nettoyage entreprise à Casablanca. Notre agence de ménage propose des services professionnels de femmes de ménage pour bureaux et commerces.",

@@ -4,6 +4,13 @@ import ContactClient from "./ContactClient";
 export const metadata: Metadata = {
     title: "Contact Agence Ménage Casablanca | Devis Gratuit",
     description: "Contactez notre agence de ménage à Casablanca pour une femme de ménage ou un nettoyage pro. Devis gratuit et personnalisé selon vos besoins spécifiques.",
+    alternates: {
+        canonical: "/contact",
+        languages: {
+            "fr-MA": "/contact",
+            "x-default": "/contact",
+        },
+    },
     openGraph: {
         title: "Contact Agence Ménage Casablanca | Devis Gratuit",
         description: "Contactez notre agence de ménage à Casablanca pour une femme de ménage ou un nettoyage pro. Devis gratuit et personnalisé selon vos besoins spécifiques.",

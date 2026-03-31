@@ -4,6 +4,13 @@ import MenageStandardClient from "./MenageStandardClient";
 export const metadata: Metadata = {
   title: "Ménage Standard Casablanca | Services d'une Femme de Ménage",
   description: "Service de ménage standard à Casablanca. Notre agence de ménage propose des femmes de ménage qualifiées pour un entretien régulier et fiable de votre domicile.",
+  alternates: {
+    canonical: "/services/particulier/menage-standard",
+    languages: {
+      "fr-MA": "/services/particulier/menage-standard",
+      "x-default": "/services/particulier/menage-standard",
+    },
+  },
   openGraph: {
     title: "Ménage Standard Casablanca | Services d'une Femme de Ménage",
     description: "Service de ménage standard à Casablanca. Notre agence de ménage propose des femmes de ménage qualifiées pour un entretien régulier et fiable de votre domicile.",

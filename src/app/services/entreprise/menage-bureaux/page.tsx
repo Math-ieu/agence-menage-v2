@@ -4,6 +4,13 @@ import MenageBureauxClient from "./MenageBureauxClient";
 export const metadata: Metadata = {
   title: "Nettoyage de Bureaux Casablanca | Service Propreté",
   description: "Entretien régulier de vos bureaux et locaux professionnels à Casablanca. Environnement de travail propre et productif pour vos collaborateurs.",
+  alternates: {
+    canonical: "/services/entreprise/menage-bureaux",
+    languages: {
+      "fr-MA": "/services/entreprise/menage-bureaux",
+      "x-default": "/services/entreprise/menage-bureaux",
+    },
+  },
   openGraph: {
     title: "Nettoyage de Bureaux Casablanca | Service Propreté",
     description: "Entretien régulier de vos bureaux et locaux professionnels à Casablanca. Environnement de travail propre et productif for vos collaborateurs.",

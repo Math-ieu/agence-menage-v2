@@ -4,6 +4,13 @@ import MenageDemenagementClient from "./MenageDemenagementClient";
 export const metadata: Metadata = {
     title: "Ménage Post-Déménagement Casablanca | Nettoyage Pro",
     description: "Préparez votre emménagement ou libérez votre ancien logement avec notre service de nettoyage post-déménagement à Casablanca. Propreté garantie.",
+    alternates: {
+        canonical: "/services/particulier/menage-demenagement",
+        languages: {
+            "fr-MA": "/services/particulier/menage-demenagement",
+            "x-default": "/services/particulier/menage-demenagement",
+        },
+    },
     openGraph: {
         title: "Ménage Post-Déménagement Casablanca | Nettoyage Pro",
         description: "Préparez votre emménagement ou libérez votre ancien logement avec notre service de nettoyage post-déménagement à Casablanca. Propreté garantie.",

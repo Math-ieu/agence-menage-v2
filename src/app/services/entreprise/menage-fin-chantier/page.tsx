@@ -4,6 +4,13 @@ import MenageFinChantierEntrepriseClient from "./MenageFinChantierEntrepriseClie
 export const metadata: Metadata = {
     title: "Nettoyage Fin de Chantier Entreprise Casablanca | Pro",
     description: "Service de nettoyage après construction pour professionnels à Casablanca. Livraison de locaux impeccables et prêts à l'exploitation.",
+    alternates: {
+        canonical: "/services/entreprise/menage-fin-chantier",
+        languages: {
+            "fr-MA": "/services/entreprise/menage-fin-chantier",
+            "x-default": "/services/entreprise/menage-fin-chantier",
+        },
+    },
     openGraph: {
         title: "Nettoyage Fin de Chantier Entreprise Casablanca | Pro",
         description: "Service de nettoyage après construction for professionnels à Casablanca. Livraison de locaux impeccables et prêts à l'exploitation.",

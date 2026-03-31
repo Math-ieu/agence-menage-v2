@@ -4,6 +4,13 @@ import GrandMenageClient from "./GrandMenageClient";
 export const metadata: Metadata = {
   title: "Grand Ménage Casablanca | Agence de Ménage & Nettoyage",
   description: "Grand ménage à Casablanca par une agence de ménage experte. Nettoyage en profondeur par nos femmes de ménage pour une hygiène irréprochable de votre foyer.",
+  alternates: {
+    canonical: "/services/particulier/grand-menage",
+    languages: {
+      "fr-MA": "/services/particulier/grand-menage",
+      "x-default": "/services/particulier/grand-menage",
+    },
+  },
   openGraph: {
     title: "Grand Ménage Casablanca | Agence de Ménage & Nettoyage",
     description: "Grand ménage à Casablanca par une agence de ménage experte. Nettoyage en profondeur par nos femmes de ménage pour une hygiène irréprochable de votre foyer.",

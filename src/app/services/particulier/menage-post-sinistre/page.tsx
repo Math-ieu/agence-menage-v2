@@ -4,6 +4,13 @@ import NettoyageUrgenceClient from "./NettoyageUrgenceClient";
 export const metadata: Metadata = {
     title: "Ménage Post-sinistre Casablanca | Intervention Rapide 24/7",
     description: "Intervention de ménage rapide à Casablanca pour situations après sinistre : dégât des eaux, incendie ou imprévus. Réactivité maximale.",
+    alternates: {
+        canonical: "/services/particulier/menage-post-sinistre",
+        languages: {
+            "fr-MA": "/services/particulier/menage-post-sinistre",
+            "x-default": "/services/particulier/menage-post-sinistre",
+        },
+    },
     openGraph: {
         title: "Ménage Post-sinistre Casablanca | Intervention Rapide 24/7",
         description: "Intervention de ménage rapide à Casablanca pour situations après sinistre : dégât des eaux, incendie ou imprévus. Réactivité maximale.",

@@ -4,6 +4,13 @@ import MenageFinChantierClient from "./MenageFinChantierClient";
 export const metadata: Metadata = {
     title: "Nettoyage Fin de Chantier Casablanca | Remise en État",
     description: "Nettoyage complet après travaux à Casablanca. Élimination de poussière et résidus de chantier pour emménager dans un espace propre et sain.",
+    alternates: {
+        canonical: "/services/particulier/menage-fin-chantier",
+        languages: {
+            "fr-MA": "/services/particulier/menage-fin-chantier",
+            "x-default": "/services/particulier/menage-fin-chantier",
+        },
+    },
     openGraph: {
         title: "Nettoyage Fin de Chantier Casablanca | Remise en État",
         description: "Nettoyage complet après travaux à Casablanca. Élimination de poussière et résidus de chantier pour emménager dans un espace propre et sain.",

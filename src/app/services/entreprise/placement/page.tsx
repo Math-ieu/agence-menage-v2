@@ -4,6 +4,13 @@ import PlacementClient from "./PlacementClient";
 export const metadata: Metadata = {
     title: "Placement & Gestion de Propreté B2B Casablanca | Agence",
     description: "Service de placement et gestion de propreté pour entreprises à Casablanca. Recrutement rigoureux de profils qualifiés pour l'entretien de vos locaux professionnels.",
+    alternates: {
+        canonical: "/services/entreprise/placement",
+        languages: {
+            "fr-MA": "/services/entreprise/placement",
+            "x-default": "/services/entreprise/placement",
+        },
+    },
     openGraph: {
         title: "Placement & Gestion de Propreté B2B Casablanca | Agence",
         description: "Service de placement et gestion de propreté pour entreprises à Casablanca. Recrutement rigoureux de profils qualifiés pour l'entretien de vos locaux professionnels.",

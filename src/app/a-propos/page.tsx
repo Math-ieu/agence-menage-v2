@@ -9,6 +9,13 @@ const Footer = dynamic(() => import("@/components/Footer"));
 export const metadata: Metadata = {
   title: "À propos d'Agence Ménage | Notre Histoire et Nos Fondateurs",
   description: "Découvrez l'histoire d'Agence Ménage, notre mission et l'expertise de nos fondateurs Mehdi HARIT et Julien CONTAN. Le nettoyage professionnel accessible à tous au Maroc.",
+  alternates: {
+    canonical: "/a-propos",
+    languages: {
+      "fr-MA": "/a-propos",
+      "x-default": "/a-propos",
+    },
+  },
 };
 
 export default function AboutPage() {

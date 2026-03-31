@@ -43,7 +43,11 @@ export const metadata: Metadata = {
     },
     metadataBase: new URL("https://www.agencemenage.ma"),
     alternates: {
-        canonical: "./",
+        canonical: "/",
+        languages: {
+            "fr-MA": "/",
+            "x-default": "/",
+        },
     },
     robots: {
         index: true,
@@ -52,6 +56,15 @@ export const metadata: Metadata = {
     verification: {
         google: "XlhIPJ8VqqCVLwwxTxrfm5aLsAt0N4PPgFu7U1apY_0",
     },
+    icons: {
+        icon: [
+            { url: "/favicon-96x96.png", sizes: "96x96", type: "image/png" },
+            { url: "/favicon.svg", type: "image/svg+xml" },
+        ],
+        shortcut: "/favicon.ico",
+        apple: "/apple-touch-icon.png",
+    },
+    manifest: "/site.webmanifest",
 };
 
 export default function RootLayout({
@@ -61,16 +74,6 @@ export default function RootLayout({
 }>) {
     return (
         <html lang="fr-MA" className={`${workSans.variable}`} suppressHydrationWarning>
-            <head>
-                <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-                <link rel="alternate" hrefLang="fr-MA" href="https://www.agencemenage.ma/" />
-                <link rel="icon" type="image/png" href="/favicon-96x96.png" sizes="96x96" />
-                <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-                <link rel="shortcut icon" href="/favicon.ico" />
-                <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
-                <meta name="apple-mobile-web-app-title" content="Agence Menage" />
-                <link rel="manifest" href="/site.webmanifest" />
-            </head>
             <body className="antialiased min-h-screen flex flex-col overflow-x-hidden" suppressHydrationWarning>
                 <TrackingScripts />
                 <QueryProvider>

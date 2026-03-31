@@ -4,6 +4,13 @@ import NettoyageUrgenceEntrepriseClient from "./NettoyageUrgenceEntrepriseClient
 export const metadata: Metadata = {
     title: "Ménage Post-sinistre Entreprise Casablanca | Intervention Rapide 24/7",
     description: "Intervention de ménage rapide pour entreprises à Casablanca après sinistre : dégât des eaux, incendie ou imprévus. Réactivité maximale pour vos locaux.",
+    alternates: {
+        canonical: "/services/entreprise/menage-post-sinistre",
+        languages: {
+            "fr-MA": "/services/entreprise/menage-post-sinistre",
+            "x-default": "/services/entreprise/menage-post-sinistre",
+        },
+    },
     openGraph: {
         title: "Ménage Post-sinistre Entreprise Casablanca | Intervention Rapide 24/7",
         description: "Intervention de ménage rapide pour entreprises à Casablanca après sinistre : dégât des eaux, incendie ou imprévus. Réactivité maximale pour vos locaux.",
