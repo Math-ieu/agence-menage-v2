@@ -95,8 +95,8 @@ export default function BlogClientPage() {
             posts={entreprisePosts}
             services={entrepriseServices}
             ctaButtons={[
-              { label: "Contacter un conseiller", url: "https://www.agencemenage.ma/contact" },
-              { label: "Demander un devis", url: "https://www.agencemenage.ma/devis", variant: "outline" },
+              { label: "Contacter un conseiller", url: "/contact" },
+              { label: "Demander un devis", url: "/contact", variant: "outline" },
             ]}
             bgColor="#F0F9FF"
           />

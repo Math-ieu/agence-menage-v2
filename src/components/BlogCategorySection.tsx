@@ -30,20 +30,20 @@ interface BlogCategorySectionProps {
 }
 
 const particulierServices: ServiceReminder[] = [
-  { icon: <Sparkles className="w-5 h-5" />, name: "Ménage Standard", url: "https://www.agencemenage.ma/services/particulier/menage-standard" },
-  { icon: <Home className="w-5 h-5" />, name: "Grand Ménage", url: "https://www.agencemenage.ma/services/particulier/grand-menage" },
-  { icon: <Clock className="w-5 h-5" />, name: "Ménage Airbnb", url: "https://www.agencemenage.ma/services/particulier/menage-airbnb" },
-  { icon: <Building2 className="w-5 h-5" />, name: "Nettoyage post-déménagement", url: "https://www.agencemenage.ma/services/particulier/nettoyage-post-demenagement" },
-  { icon: <Settings className="w-5 h-5" />, name: "Ménage fin de chantier", url: "https://www.agencemenage.ma/services/particulier/menage-fin-chantier" },
-  { icon: <UserCheck className="w-5 h-5" />, name: "Auxiliaire de vie / Garde malade", url: "https://www.agencemenage.ma/services/particulier/auxiliaire-de-vie" },
-  { icon: <Shield className="w-5 h-5" />, name: "Ménage Post-sinistre", url: "https://www.agencemenage.ma/services/particulier/menage-post-sinistre" },
+  { icon: <Sparkles className="w-5 h-5" />, name: "Ménage Standard", url: "/services/particulier/menage-standard" },
+  { icon: <Home className="w-5 h-5" />, name: "Grand Ménage", url: "/services/particulier/grand-menage" },
+  { icon: <Clock className="w-5 h-5" />, name: "Ménage Airbnb", url: "/services/particulier/menage-airbnb" },
+  { icon: <Building2 className="w-5 h-5" />, name: "Nettoyage post-déménagement", url: "/services/particulier/menage-demenagement" },
+  { icon: <Settings className="w-5 h-5" />, name: "Ménage fin de chantier", url: "/services/particulier/menage-fin-chantier" },
+  { icon: <UserCheck className="w-5 h-5" />, name: "Auxiliaire de vie / Garde malade", url: "/services/particulier/auxiliaire-de-vie" },
+  { icon: <Shield className="w-5 h-5" />, name: "Ménage Post-sinistre", url: "/services/particulier/menage-post-sinistre" },
 ];
 
 const entrepriseServices: ServiceReminder[] = [
-  { icon: <Building2 className="w-5 h-5" />, name: "Ménages bureaux", url: "https://www.agencemenage.ma/services/entreprise/nettoyage-bureaux" },
-  { icon: <UserCheck className="w-5 h-5" />, name: "Placement & Gestion", url: "https://www.agencemenage.ma/services/entreprise/mise-a-disposition" },
-  { icon: <Settings className="w-5 h-5" />, name: "Nettoyage Fin de chantier", url: "https://www.agencemenage.ma/services/entreprise/nettoyage-fin-chantier" },
-  { icon: <Shield className="w-5 h-5" />, name: "Ménage Post-sinistre", url: "https://www.agencemenage.ma/services/entreprise/menage-post-sinistre" },
+  { icon: <Building2 className="w-5 h-5" />, name: "Ménages bureaux", url: "/services/entreprise/nettoyage-bureaux" },
+  { icon: <UserCheck className="w-5 h-5" />, name: "Placement & Gestion", url: "/services/entreprise/mise-a-disposition" },
+  { icon: <Settings className="w-5 h-5" />, name: "Nettoyage Fin de chantier", url: "/services/entreprise/nettoyage-fin-chantier" },
+  { icon: <Shield className="w-5 h-5" />, name: "Ménage Post-sinistre", url: "/services/entreprise/menage-post-sinistre" },
 ];
 
 const BlogCategorySection = ({ id, title, icon, description, posts, services, ctaButtons, bgColor }: BlogCategorySectionProps) => {

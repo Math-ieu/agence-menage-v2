@@ -98,12 +98,12 @@ const ServicesShowcase = ({ activeTab = "particuliers" }: ServicesShowcaseProps)
         </p>
 
         <div className="flex justify-center gap-3 mb-10">
-          <a href="https://www.agencemenage.ma/devis" target="_blank" rel="noopener noreferrer">
+          <a href="/contact" target="_blank" rel="noopener noreferrer">
             <Button className="rounded-full" size="lg">
               Réserver mon ménage
             </Button>
           </a>
-          <a href="https://www.agencemenage.ma/contact" target="_blank" rel="noopener noreferrer">
+          <a href="/contact" target="_blank" rel="noopener noreferrer">
             <Button variant="outline" className="rounded-full" size="lg">
               Nous contacter
             </Button>
