@@ -208,11 +208,103 @@ export async function sendBookingEmailResend(serviceName: string, data: any, pri
     }
     const combinedNotes = notesList.filter(Boolean).filter(n => n !== data.healthIssues).join(". ");
 
-    const { data: resData, error } = await resend.emails.send({
-      from: 'Agence Ménage <onboarding@resend.dev>',
-      to: ['notification@agencemenage.ma'],
-      subject: `Nouvelle Réservation: ${serviceName} - ${client_name}`,
-      html: `
+    // For Ménage Standard, format the rooms description into type_habitation for the back-office
+    if (serviceName.toLowerCase() === "ménage standard") {
+      const roomLabels: Record<string, string> = {
+        cuisine: "Cuisine",
+        suiteAvecBain: "Suite avec bain",
+        suiteSansBain: "Suite sans bain",
+        salleDeBain: "Salle de bain",
+        chambre: "Chambre",
+        salonMarocain: "Salon Marocain",
+        salonEuropeen: "Salon Européen",
+        toilettesLavabo: "Toilettes/Lavabo",
+        rooftop: "Rooftop/Terrasse",
+        escalier: "Escalier"
+      };
+      
+      const roomsSummary = data.rooms 
+        ? Object.entries(data.rooms)
+            .filter(([_, v]) => (v as number) > 0)
+            .map(([k, v]) => `${v} ${roomLabels[k] || k}`)
+            .join(", ")
+        : "";
+      
+      if (roomsSummary) {
+        const propertyTypeLabel = data.propertyType 
+          ? data.propertyType.charAt(0).toUpperCase() + data.propertyType.slice(1)
+          : "";
+        data.type_habitation = propertyTypeLabel 
+          ? `${propertyTypeLabel} (${roomsSummary})` 
+          : roomsSummary;
+      }
+    }
+
+    // General mapping for other services if not already set (for back-office list view)
+    if (!data.type_habitation && !data.structure_type) {
+      const pType = data.propertyType || data.structureType || data.careLocation;
+      const surface = data.officeSurface || (data.surfaceArea ? `${data.surfaceArea} m²` : "");
+      
+      if (pType || surface) {
+        const label = typeof pType === 'string' && pType ? pType.charAt(0).toUpperCase() + pType.slice(1) : "";
+        const formatted = label && surface ? `${label} (${surface})` : (label || surface);
+        
+        if (isEntreprise) {
+          data.structure_type = formatted;
+        } else {
+          data.type_habitation = formatted;
+        }
+      }
+    }
+
+    // --- ENREGISTREMENT API BACK-OFFICE ---
+    let apiSuccess = false;
+    try {
+      const { createDemande } = await import('@/lib/api');
+      
+      const isDevis = typeof price === 'string' && price.toLowerCase().includes('devis');
+      
+      const apiPayload = {
+        service: serviceName,
+        segment: isEntreprise ? 'entreprise' as const : 'particulier' as const,
+        client_nom: isEntreprise ? (data.contactPerson || data.entityName || '') : (data.lastName || client_name || ''),
+        client_prenom: isEntreprise ? '' : (data.firstName || ''),
+        client_phone: data.phoneNumber || '',
+        client_email: data.email || '',
+        client_whatsapp: data.whatsappNumber || '',
+        client_entity: data.entityName || '',
+        client_ville: data.city || '',
+        client_quartier: data.neighborhood || '',
+        client_address: data.careAddress || data.neighborhood || '',
+        date_intervention: data.schedulingDate || null,
+        heure_intervention: scheduling_time || '',
+        preference_horaire: data.schedulingTime === 'morning' ? 'matin' : (data.schedulingTime === 'afternoon' ? 'apres_midi' : (data.schedulingTime || '')),
+        frequency_label: data.frequencyLabel || data.subFrequency || (data.frequency === 'oneshot' ? 'Une fois' : 'Mensuel'),
+        statut: 'en_attente',
+        source: 'site',
+        is_devis: isDevis,
+        prix: typeof price === "number" ? price.toString() : (!isDevis && typeof price === "string" ? price : null),
+        frequency: data.frequency === "oneshot" ? 'oneshot' as const : 'abonnement' as const,
+        formulaire_data: data
+      };
+      
+      await createDemande(apiPayload);
+      apiSuccess = true;
+      console.log('Demande successfully saved via Django API');
+    } catch (apiError) {
+      console.error("Erreur lors de l'enregistrement de la demande dans l'API:", apiError);
+    }
+    // --------------------------------------
+
+    let emailSent = false;
+    let resData = null;
+
+    try {
+      const emailResult = await resend.emails.send({
+        from: 'Agence Ménage <onboarding@resend.dev>',
+        to: ['notification@agencemenage.ma'],
+        subject: `Nouvelle Réservation: ${serviceName} - ${client_name}`,
+        html: `
 <div style="font-family: Arial, sans-serif; max-width: 600px; margin: auto; border: 1px solid #ddd; padding: 20px; color: #333;">
   <div style="text-align: center; border-bottom: 2px solid #edba54; padding-bottom: 10px; margin-bottom: 20px;">
     <h2 style="color: #edba54; margin: 0;">
@@ -246,23 +338,23 @@ export async function sendBookingEmailResend(serviceName: string, data: any, pri
       ${data.duration && data.duration !== "-" ? `<tr><td style="padding: 5px 0;"><strong>Durée optée:</strong></td><td>${data.duration}h</td></tr>` : ""}
       ${data.numberOfPeople ? `<tr><td style="padding: 5px 0;"><strong>Intervenants:</strong></td><td>${data.numberOfPeople}</td></tr>` : ""}
       ${data.rooms ? `<tr><td style="padding: 5px 0;"><strong>Pièces:</strong></td><td style="text-transform: capitalize;">${(() => {
-          const roomLabels: Record<string, string> = {
-            cuisine: "Cuisine",
-            suiteAvecBain: "Suite avec bain",
-            suiteSansBain: "Suite sans bain",
-            salleDeBain: "Salle de bain",
-            chambre: "Chambre",
-            salonMarocain: "Salon Marocain",
-            salonEuropeen: "Salon Européen",
-            toilettesLavabo: "Toilettes/Lavabo",
-            rooftop: "Rooftop / Terrasse",
-            escalier: "Escalier"
-          };
-          return Object.entries(data.rooms)
-            .filter(([_, v]) => (v as number) > 0)
-            .map(([k, v]) => `${v} ${roomLabels[k] || k}`)
-            .join(", ");
-        })()}</td></tr>` : ""}
+        const roomLabels: Record<string, string> = {
+          cuisine: "Cuisine",
+          suiteAvecBain: "Suite avec bain",
+          suiteSansBain: "Suite sans bain",
+          salleDeBain: "Salle de bain",
+          chambre: "Chambre",
+          salonMarocain: "Salon Marocain",
+          salonEuropeen: "Salon Européen",
+          toilettesLavabo: "Toilettes/Lavabo",
+          rooftop: "Rooftop / Terrasse",
+          escalier: "Escalier"
+        };
+        return Object.entries(data.rooms)
+          .filter(([_, v]) => (v as number) > 0)
+          .map(([k, v]) => `${v} ${roomLabels[k] || k}`)
+          .join(", ");
+      })()}</td></tr>` : ""}
       ${optionalServices.length > 0 ? `<tr><td style="padding: 5px 0;"><strong>Services optionnels:</strong></td><td>${optionalServices.join(", ")}</td></tr>` : ""}
       ${formattedSurface ? `<tr><td style="padding: 5px 0;"><strong>Surface:</strong></td><td>${formattedSurface}</td></tr>` : ""}
       ${serviceName === "Ménage post-déménagement" ? `
@@ -299,86 +391,74 @@ export async function sendBookingEmailResend(serviceName: string, data: any, pri
     <h3 style="margin: 0;">Total Estimé: <span style="color: #edba54;">${typeof price === "number" ? `${price} MAD` : price}</span></h3>
   </div>
 </div>
-      `,
-    });
+        `,
+      });
 
-    if (error) {
-      console.error("Resend error:", error);
-      return { success: false, error };
+      if (emailResult.error) {
+        console.error("Resend error:", emailResult.error);
+      } else {
+        emailSent = true;
+        resData = emailResult.data;
+      }
+    } catch (emailErr) {
+      console.error("Email sending exception:", emailErr);
     }
 
     if (process.env.D360_API_KEY) {
-      const formattedDate = formattedDateWithDay;
-      const formattedHour = scheduling_time || "-";
-      const fallbackPrice = typeof price === "number" ? `${price} MAD` : String(price);
+      try {
+        const formattedDate = formattedDateWithDay;
+        const formattedHour = scheduling_time || "-";
+        const fallbackPrice = typeof price === "number" ? `${price} MAD` : String(price);
 
-      const waPromises = [];
+        const waPromises = [];
 
-      // 1. To Client
-      if (data.phoneNumber) {
-        waPromises.push(
-          sendAutomatedWhatsAppMessage(
-            data.phoneNumber,
-            "confirmation_reservation",
-            [client_name, serviceName, formattedDate, formattedHour]
-          ).catch(err => console.error("Client WA Error:", err))
-        );
+        // 1. To Client
+        if (data.phoneNumber) {
+          waPromises.push(
+            sendAutomatedWhatsAppMessage(
+              data.phoneNumber,
+              "confirmation_reservation",
+              [client_name, serviceName, formattedDate, formattedHour]
+            ).catch(err => console.error("Client WA Error:", err))
+          );
+        }
+
+        // 2. To Agency
+        AGENCY_NOTIFICATION_NUMBERS.forEach(number => {
+          waPromises.push(
+            sendAutomatedWhatsAppMessage(
+              number,
+              "notification_interne",
+              [
+                client_name,
+                data.phoneNumber || "-",
+                serviceName,
+                `${formattedDate} à ${formattedHour}`,
+                data.city || data.neighborhood || "Non précisé",
+                fallbackPrice
+              ]
+            ).catch(err => console.error(`Agency WA Error (${number}):`, err))
+          );
+        });
+
+        await Promise.all(waPromises);
+      } catch (waErr) {
+        console.error("WhatsApp notification error:", waErr);
       }
-
-      // 2. To Agency
-      AGENCY_NOTIFICATION_NUMBERS.forEach(number => {
-        waPromises.push(
-          sendAutomatedWhatsAppMessage(
-            number,
-            "notification_interne",
-            [
-              client_name,
-              data.phoneNumber || "-",
-              serviceName,
-              `${formattedDate} à ${formattedHour}`,
-              data.city || data.neighborhood || "Non précisé",
-              fallbackPrice
-            ]
-          ).catch(err => console.error(`Agency WA Error (${number}):`, err))
-        );
-      });
-
-      await Promise.all(waPromises);
     }
 
-    // --- ENREGISTREMENT API BACK-OFFICE ---
-    try {
-      const { createDemande } = await import('@/lib/api');
-      
-      const apiPayload = {
-        service: serviceName,
-        segment: isEntreprise ? 'entreprise' as const : 'particulier' as const,
-        client_nom: client_name,
-        client_phone: data.phoneNumber,
-        client_email: data.email || null,
-        client_whatsapp: data.whatsappNumber || null,
-        client_entity_name: data.entityName || null,
-        statut: 'en_attente',
-        source: 'site',
-        is_devis: price === "Sur devis",
-        prix: typeof price === "number" ? price.toString() : null,
-        frequency: data.frequency === "oneshot" ? 'oneshot' as const : 'abonnement' as const,
-        formulaire_data: data
-      };
-      
-      await createDemande(apiPayload);
-      console.log('Demande successfully saved via Django API');
-    } catch (apiError) {
-      // On ne bloque pas et on ne retourne pas d'erreur HTTP si l'API back-office fail,
-      // car le client a déjà reçu son email de confirmation.
-      console.error("Erreur lors de l'enregistrement de la demande dans l'API:", apiError);
-    }
-    // --------------------------------------
-
-    return { success: true, data: resData };
+    // Return success if AT LEAST the API creation worked OR the email was sent
+    // But return boolean success based on API success mainly for back-office tracking
+    return { 
+      success: apiSuccess, 
+      apiSuccess, 
+      emailSent,
+      data: resData,
+      error: apiSuccess ? null : "Failed to record demand in back-office" 
+    };
   } catch (err) {
     console.error("Action error:", err);
-    return { success: false, error: err };
+    return { success: false, error: String(err) };
   }
 }
 

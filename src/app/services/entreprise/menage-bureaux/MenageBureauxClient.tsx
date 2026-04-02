@@ -64,6 +64,7 @@ export default function MenageBureauxClient() {
     const [showConfirmation, setShowConfirmation] = useState(false);
     const [isSummaryExpanded, setIsSummaryExpanded] = useState(false);
     const [formData, setFormData] = useState(INITIAL_FORM_DATA);
+    const [isSubmitting, setIsSubmitting] = useState(false);
     const router = useRouter();
 
     const calculateResources = (range: string) => {
@@ -168,11 +169,25 @@ export default function MenageBureauxClient() {
                 : `${formData.whatsappPrefix} ${formData.whatsappNumber}`
         };
 
+        setIsSubmitting(true);
         try {
-            await sendBookingEmail("Ménage Bureaux", bookingData, totalPrice, true);
-            router.push(window.location.pathname + "/merci");
+            const result = await sendBookingEmail("Ménage Bureaux", bookingData, totalPrice, true);
+
+            if (result.success) {
+                setShowConfirmation(true);
+            } else {
+                if (result.emailSent) {
+                    toast.warning("Demande envoyée par email, mais l'enregistrement automatique a échoué. Nous vous contacterons rapidement.");
+                    setShowConfirmation(true);
+                } else {
+                    toast.error("Une erreur est survenue lors de l'envoi de votre demande. Veuillez nous contacter via WhatsApp.");
+                }
+            }
         } catch (error) {
+            console.error(error);
             toast.error("Une erreur est survenue lors de l'envoi de votre demande.");
+        } finally {
+            setIsSubmitting(false);
         }
     };
 
@@ -181,6 +196,7 @@ export default function MenageBureauxClient() {
         if (!open) {
             setFormData(INITIAL_FORM_DATA);
             setWasValidated(false);
+            router.push(window.location.pathname + "/merci");
         }
     };
 
@@ -323,7 +339,7 @@ export default function MenageBureauxClient() {
                                 <div className="bg-card rounded-lg p-4 md:p-6 border shadow-sm space-y-6">
                                     <div>
                                         <h3 className="text-xl font-bold bg-primary text-white p-3 rounded-lg text-center mb-4 uppercase">
-                                            Superficie de votre cadre en M²
+                                            Superficie de votre bien en M²
                                         </h3>
                                         <div className="p-6 bg-muted/30 rounded-xl border border-muted">
                                             <p className="text-center text-red-500 text-xs font-bold mb-4 italic">
@@ -754,9 +770,17 @@ export default function MenageBureauxClient() {
                                     <div className="flex justify-center pt-8">
                                         <Button
                                             type="submit"
-                                            className="bg-primary hover:bg-primary/90 text-white px-8 py-4 text-base font-bold shadow-lg shadow-primary/20 h-auto rounded-full w-full md:w-auto md:min-w-[260px] transition-all hover:scale-105 active:scale-95"
+                                            disabled={isSubmitting}
+                                            className="bg-primary hover:bg-primary/90 text-white px-8 py-4 text-base font-bold shadow-lg shadow-primary/20 h-auto rounded-full w-full md:w-auto md:min-w-[260px] transition-all hover:scale-105 active:scale-95 disabled:opacity-70 disabled:cursor-not-allowed"
                                         >
-                                            Confirmer ma réservation
+                                            {isSubmitting ? (
+                                                <div className="flex items-center gap-2">
+                                                    <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                                                    Envoi en cours...
+                                                </div>
+                                            ) : (
+                                                "Confirmer ma réservation"
+                                            )}
                                         </Button>
                                     </div>
                                 </div>

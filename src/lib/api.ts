@@ -7,7 +7,15 @@ export interface DemandePayload {
   client_phone: string;
   client_email?: string | null;
   client_whatsapp?: string | null;
-  client_entity_name?: string | null;
+  client_entity?: string | null;
+  client_address?: string | null;
+  client_ville?: string | null;
+  client_quartier?: string | null;
+  client_prenom?: string | null;
+  date_intervention?: string | null;
+  heure_intervention?: string | null;
+  preference_horaire?: string | null;
+  frequency_label?: string | null;
   statut?: string;
   source?: string;
   is_devis?: boolean;

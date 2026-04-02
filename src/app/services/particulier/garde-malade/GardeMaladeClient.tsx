@@ -71,6 +71,7 @@ export default function GardeMaladeClient() {
     const formRef = useRef<HTMLDivElement>(null);
 
     const [formData, setFormData] = useState(INITIAL_FORM_DATA);
+    const [isSubmitting, setIsSubmitting] = useState(false);
     const router = useRouter();
 
     const totalPrice = 0;
@@ -106,11 +107,25 @@ export default function GardeMaladeClient() {
 
         const priceValue = "Sur devis";
 
+        setIsSubmitting(true);
         try {
-            await sendBookingEmail("Garde Malade", bookingData, priceValue, false);
-            router.push(window.location.pathname + "/merci");
+            const result = await sendBookingEmail("Garde Malade", bookingData, priceValue, false);
+            
+            if (result.success) {
+                setShowConfirmation(true);
+            } else {
+                if (result.emailSent) {
+                    toast.warning("Demande envoyée par email, mais l'enregistrement automatique a échoué. Nous vous contacterons rapidement.");
+                    setShowConfirmation(true);
+                } else {
+                    toast.error("Une erreur est survenue lors de l'enregistrement. Veuillez nous contacter via WhatsApp.");
+                }
+            }
         } catch (error) {
+            console.error(error);
             toast.error("Une erreur est survenue lors de l'envoi de votre demande.");
+        } finally {
+            setIsSubmitting(false);
         }
     };
 
@@ -119,6 +134,7 @@ export default function GardeMaladeClient() {
         if (!open) {
             setWasValidated(false);
             setFormData(INITIAL_FORM_DATA);
+            router.push(window.location.pathname + "/merci");
         }
     };
 
@@ -745,9 +761,17 @@ Nos auxiliaires de vie assurent une présence 24h/24, 7j/7, selon les besoins en
                                         <div className="flex justify-center pt-8">
                                             <Button
                                                 type="submit"
-                                                className="bg-primary hover:bg-primary/90 text-white px-8 py-4 text-base font-bold shadow-lg shadow-primary/20 h-auto rounded-full w-full md:w-auto md:min-w-[260px] transition-all hover:scale-105 active:scale-95"
+                                                disabled={isSubmitting}
+                                                className="bg-primary hover:bg-primary/90 text-white px-8 py-4 text-base font-bold shadow-lg shadow-primary/20 h-auto rounded-full w-full md:w-auto md:min-w-[260px] transition-all hover:scale-105 active:scale-95 disabled:opacity-70 disabled:cursor-not-allowed"
                                             >
-                                                Demander un devis
+                                                {isSubmitting ? (
+                                                    <div className="flex items-center gap-2">
+                                                        <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                                                        Envoi en cours...
+                                                    </div>
+                                                ) : (
+                                                    "Demander un devis"
+                                                )}
                                             </Button>
                                         </div>
                                     </div>

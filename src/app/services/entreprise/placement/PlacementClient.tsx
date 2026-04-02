@@ -68,6 +68,7 @@ export default function PlacementClient() {
     const formRef = useRef<HTMLDivElement>(null);
 
     const [formData, setFormData] = useState(INITIAL_FORM_DATA);
+    const [isSubmitting, setIsSubmitting] = useState(false);
     const router = useRouter();
 
     const scrollToForm = () => {
@@ -102,11 +103,25 @@ export default function PlacementClient() {
                 : `${formData.whatsappPrefix} ${formData.whatsappNumber}`
         };
 
+        setIsSubmitting(true);
         try {
-            await sendBookingEmail("Placement & Gestion de Propreté", bookingData, "Sur devis", true);
-            router.push(window.location.pathname + "/merci");
+            const result = await sendBookingEmail("Placement & Gestion de Propreté", bookingData, "Sur devis", true);
+
+            if (result.success) {
+                setShowConfirmation(true);
+            } else {
+                if (result.emailSent) {
+                    toast.warning("Demande envoyée par email, mais l'enregistrement automatique a échoué. Nous vous contacterons rapidement.");
+                    setShowConfirmation(true);
+                } else {
+                    toast.error("Une erreur est survenue lors de l'envoi de votre demande. Veuillez nous contacter via WhatsApp.");
+                }
+            }
         } catch (error) {
+            console.error(error);
             toast.error("Une erreur est survenue lors de l'envoi de votre demande.");
+        } finally {
+            setIsSubmitting(false);
         }
     };
 
@@ -115,6 +130,7 @@ export default function PlacementClient() {
         if (!open) {
             setWasValidated(false);
             setFormData(INITIAL_FORM_DATA);
+            router.push(window.location.pathname + "/merci");
         }
     };
 
@@ -570,9 +586,17 @@ export default function PlacementClient() {
                                             <div className="flex justify-center pt-8">
                                                 <Button
                                                     type="submit"
-                                                    className="bg-primary hover:bg-primary/90 text-slate-800 px-8 py-4 text-base font-bold shadow-lg shadow-primary/20 h-auto rounded-full w-full md:w-auto md:min-w-[260px] transition-all hover:scale-105 active:scale-95"
+                                                    disabled={isSubmitting}
+                                                    className="bg-primary hover:bg-primary/90 text-slate-800 px-8 py-4 text-base font-bold shadow-lg shadow-primary/20 h-auto rounded-full w-full md:w-auto md:min-w-[260px] transition-all hover:scale-105 active:scale-95 disabled:opacity-70 disabled:cursor-not-allowed"
                                                 >
-                                                    Demander un devis
+                                                    {isSubmitting ? (
+                                                        <div className="flex items-center gap-2">
+                                                            <div className="w-4 h-4 border-2 border-slate-800/30 border-t-slate-800 rounded-full animate-spin" />
+                                                            Envoi en cours...
+                                                        </div>
+                                                    ) : (
+                                                        "Demander un devis"
+                                                    )}
                                                 </Button>
                                             </div>
                                         </div>

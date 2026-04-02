@@ -25,9 +25,10 @@ const INITIAL_FORM_DATA = {
 export default function ContactClient() {
     const router = useRouter();
     const [wasValidated, setWasValidated] = useState(false);
+    const [isSubmitting, setIsSubmitting] = useState(false);
     const [formData, setFormData] = useState(INITIAL_FORM_DATA);
 
-    const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         setWasValidated(true);
 
@@ -44,17 +45,25 @@ export default function ContactClient() {
                 : `${formData.whatsappPrefix} ${formData.whatsappNumber}`
         };
 
-        // Send email copy via Resend (async)
-        sendContactEmail(processedData).catch(console.error);
+        setIsSubmitting(true);
+        try {
+            // Send email copy via Resend
+            await sendContactEmail(processedData);
 
-        toast.success("Votre message a été bien envoyé. Notre équipe vous contactera sous peu.");
+            toast.success("Votre message a été bien envoyé. Notre équipe vous contactera sous peu.");
 
-        // Reset form
-        setFormData(INITIAL_FORM_DATA);
-        setWasValidated(false);
+            // Reset form
+            setFormData(INITIAL_FORM_DATA);
+            setWasValidated(false);
 
-        // Redirect to fixed confirmation page for Google Ads tracking
-        router.push('/contact/merci');
+            // Redirect to fixed confirmation page for Google Ads tracking
+            router.push('/contact/merci');
+        } catch (error) {
+            console.error(error);
+            toast.error("Une erreur est survenue lors de l'envoi de votre message. Veuillez réessayer.");
+        } finally {
+            setIsSubmitting(false);
+        }
     };
 
     return (
@@ -204,9 +213,17 @@ export default function ContactClient() {
                                     <div className="pt-4 flex justify-center">
                                         <Button
                                             type="submit"
-                                            className="bg-primary hover:bg-primary/90 text-white px-8 py-4 text-base font-bold shadow-lg shadow-primary/20 h-auto rounded-full w-full md:w-auto md:min-w-[260px] transition-all hover:scale-105 active:scale-95"
+                                            disabled={isSubmitting}
+                                            className="bg-primary hover:bg-primary/90 text-white px-8 py-4 text-base font-bold shadow-lg shadow-primary/20 h-auto rounded-full w-full md:w-auto md:min-w-[260px] transition-all hover:scale-105 active:scale-95 disabled:opacity-70 disabled:cursor-not-allowed"
                                         >
-                                            Envoyer le message
+                                            {isSubmitting ? (
+                                                <div className="flex items-center gap-2">
+                                                    <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                                                    Envoi en cours...
+                                                </div>
+                                            ) : (
+                                                "Envoyer le message"
+                                            )}
                                         </Button>
                                     </div>
                                 </form>

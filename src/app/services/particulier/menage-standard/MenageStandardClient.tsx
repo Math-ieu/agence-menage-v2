@@ -85,6 +85,7 @@ export default function MenageStandardClient() {
     const [showConfirmation, setShowConfirmation] = useState(false);
     const [isSummaryExpanded, setIsSummaryExpanded] = useState(false);
     const [formData, setFormData] = useState(INITIAL_FORM_DATA);
+    const [isSubmitting, setIsSubmitting] = useState(false);
     const router = useRouter();
 
     const baseRate = 60;
@@ -161,23 +162,40 @@ export default function MenageStandardClient() {
             return;
         }
 
-        const frequencyLabel = formData.frequency === "oneshot"
-            ? "Une fois"
-            : (frequencies.find(f => f.value === formData.subFrequency)?.label || "");
+        setIsSubmitting(true);
+        try {
+            const frequencyLabel = formData.frequency === "oneshot"
+                ? "Une fois"
+                : (frequencies.find(f => f.value === formData.subFrequency)?.label || "");
 
-        const bookingData = {
-            ...formData,
-            frequencyLabel,
-            phoneNumber: `${formData.phonePrefix} ${formData.phoneNumber}`,
-            whatsappNumber: formData.useWhatsappForPhone
-                ? `${formData.phonePrefix} ${formData.phoneNumber}`
-                : `${formData.whatsappPrefix} ${formData.whatsappNumber}`
-        };
+            const bookingData = {
+                ...formData,
+                frequencyLabel,
+                phoneNumber: `${formData.phonePrefix} ${formData.phoneNumber}`,
+                whatsappNumber: formData.useWhatsappForPhone
+                    ? `${formData.phonePrefix} ${formData.phoneNumber}`
+                    : `${formData.whatsappPrefix} ${formData.whatsappNumber}`
+            };
 
-        // Send email notification (async)
-        sendBookingEmail("Ménage Standard", bookingData, totalPrice, false).catch(console.error);
+            // Send email notification (await to ensure back-office recording)
+            const result = await sendBookingEmail("Ménage Standard", bookingData, totalPrice, false);
 
-        router.push(window.location.pathname + "/merci");
+            if (result.success) {
+                setShowConfirmation(true);
+            } else {
+                if (result.emailSent) {
+                    toast.warning("Demande envoyée par email, mais l'enregistrement automatique a échoué. Nous vous contacterons rapidement.");
+                    setShowConfirmation(true);
+                } else {
+                    toast.error("Une erreur est survenue lors de la réservation. Veuillez nous contacter via WhatsApp.");
+                }
+            }
+        } catch (error) {
+            console.error(error);
+            toast.error("Une erreur est survenue lors de la réservation.");
+        } finally {
+            setIsSubmitting(false);
+        }
     };
 
     const handleCloseConfirmation = (open: boolean) => {
@@ -185,6 +203,7 @@ export default function MenageStandardClient() {
         if (!open) {
             setFormData(INITIAL_FORM_DATA);
             setWasValidated(false);
+            router.push(window.location.pathname + "/merci");
         }
     };
 
@@ -856,9 +875,17 @@ Il comprend le :
                                     <div className="flex justify-center pt-8">
                                         <Button
                                             type="submit"
-                                            className="bg-primary hover:bg-primary/90 text-white px-8 py-4 text-base font-bold shadow-lg shadow-primary/20 h-auto rounded-full w-full md:w-auto md:min-w-[260px] transition-all hover:scale-105 active:scale-95"
+                                            disabled={isSubmitting}
+                                            className="bg-primary hover:bg-primary/90 text-white px-8 py-4 text-base font-bold shadow-lg shadow-primary/20 h-auto rounded-full w-full md:w-auto md:min-w-[260px] transition-all hover:scale-105 active:scale-95 tracking-widest disabled:opacity-70 disabled:cursor-not-allowed"
                                         >
-                                            Confirmer ma réservation
+                                            {isSubmitting ? (
+                                                <div className="flex items-center gap-2">
+                                                    <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                                                    Envoi en cours...
+                                                </div>
+                                            ) : (
+                                                "Réserver maintenant"
+                                            )}
                                         </Button>
                                     </div>
                                 </div>

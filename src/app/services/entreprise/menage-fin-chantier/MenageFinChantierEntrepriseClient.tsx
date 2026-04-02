@@ -54,6 +54,7 @@ export default function MenageFinChantierEntrepriseClient() {
     const [showConfirmation, setShowConfirmation] = useState(false);
     const [isSummaryExpanded, setIsSummaryExpanded] = useState(false);
     const [formData, setFormData] = useState(INITIAL_FORM_DATA);
+    const [isSubmitting, setIsSubmitting] = useState(false);
     const router = useRouter();
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -78,11 +79,25 @@ export default function MenageFinChantierEntrepriseClient() {
                 : `${formData.whatsappPrefix} ${formData.whatsappNumber}`
         };
 
+        setIsSubmitting(true);
         try {
-            await sendBookingEmail("Nettoyage Fin de chantier (Entreprise)", bookingData, "Sur devis", true);
-            router.push(window.location.pathname + "/merci");
+            const result = await sendBookingEmail("Nettoyage Fin de chantier (Entreprise)", bookingData, "Sur devis", true);
+
+            if (result.success) {
+                setShowConfirmation(true);
+            } else {
+                if (result.emailSent) {
+                    toast.warning("Demande envoyée par email, mais l'enregistrement automatique a échoué. Nous vous contacterons rapidement.");
+                    setShowConfirmation(true);
+                } else {
+                    toast.error("Une erreur est survenue lors de l'envoi de votre demande. Veuillez nous contacter via WhatsApp.");
+                }
+            }
         } catch (error) {
+            console.error(error);
             toast.error("Une erreur est survenue lors de l'envoi de votre demande.");
+        } finally {
+            setIsSubmitting(false);
         }
     };
 
@@ -91,8 +106,9 @@ export default function MenageFinChantierEntrepriseClient() {
         if (!open) {
             setWasValidated(false);
             setFormData(INITIAL_FORM_DATA);
+            router.push(window.location.pathname + "/merci");
         }
-    };
+     };
 
     return (
         <div className="min-h-screen flex flex-col">
@@ -370,9 +386,17 @@ La prestation comprend : L’évacuation des poussières et résidus de chantier
                                     <div className="flex justify-center pt-8">
                                         <Button
                                             type="submit"
-                                            className="bg-primary hover:bg-primary/90 text-white px-8 py-4 text-base font-bold shadow-lg shadow-primary/20 h-auto rounded-full w-full md:w-auto md:min-w-[260px] transition-all hover:scale-105 active:scale-95"
+                                            disabled={isSubmitting}
+                                            className="bg-primary hover:bg-primary/90 text-white px-8 py-4 text-base font-bold shadow-lg shadow-primary/20 h-auto rounded-full w-full md:w-auto md:min-w-[260px] transition-all hover:scale-105 active:scale-95 disabled:opacity-70 disabled:cursor-not-allowed"
                                         >
-                                            Demander un devis
+                                            {isSubmitting ? (
+                                                <div className="flex items-center gap-2">
+                                                    <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                                                    Envoi en cours...
+                                                </div>
+                                            ) : (
+                                                "Demander un devis"
+                                            )}
                                         </Button>
                                     </div>
                                 </div>

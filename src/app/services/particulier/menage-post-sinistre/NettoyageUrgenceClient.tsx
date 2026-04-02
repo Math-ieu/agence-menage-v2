@@ -63,6 +63,7 @@ const NettoyageUrgenceContent = () => {
     const [showConfirmation, setShowConfirmation] = useState(false);
     const [isSummaryExpanded, setIsSummaryExpanded] = useState(false);
     const [formData, setFormData] = useState(INITIAL_FORM_DATA);
+    const [isSubmitting, setIsSubmitting] = useState(false);
     const router = useRouter();
 
 
@@ -80,6 +81,7 @@ const NettoyageUrgenceContent = () => {
             return;
         }
 
+        setIsSubmitting(true);
         try {
             const bookingData = {
                 ...formData,
@@ -95,15 +97,24 @@ const NettoyageUrgenceContent = () => {
             const price = "Sur DEVIS";
             const message = formatBookingMessage("Ménage Post-sinistre", bookingData, price, isEntrepriseStatus);
 
-            // Send Email
-            await sendBookingEmail("Ménage Post-sinistre", bookingData, price, isEntrepriseStatus);
+            // Send Email & Record Demand
+            const result = await sendBookingEmail("Ménage Post-sinistre", bookingData, price, isEntrepriseStatus);
 
-            // Open WhatsApp
-            const whatsappLink = createWhatsAppLink(DESTINATION_PHONE_NUMBER, message);
-
-            router.push(window.location.pathname + "/merci");
+            if (result.success) {
+                setShowConfirmation(true);
+            } else {
+                if (result.emailSent) {
+                    toast.warning("Demande envoyée par email, mais l'enregistrement automatique a échoué. Nous vous contacterons rapidement.");
+                    setShowConfirmation(true);
+                } else {
+                    toast.error("Une erreur est survenue. Veuillez nous contacter via WhatsApp.");
+                }
+            }
         } catch (error) {
+            console.error(error);
             toast.error("Une erreur est survenue. Veuillez réessayer.");
+        } finally {
+            setIsSubmitting(false);
         }
     };
 
@@ -112,6 +123,7 @@ const NettoyageUrgenceContent = () => {
         if (!open) {
             setWasValidated(false);
             setFormData(INITIAL_FORM_DATA);
+            router.push(window.location.pathname + "/merci");
         }
     };
 
@@ -577,9 +589,17 @@ Les interventions d’urgence couvrent exclusivement les cas suivants :
                                         <div className="flex justify-center pt-8">
                                             <Button
                                                 type="submit"
-                                                className="bg-primary hover:bg-primary/90 text-white px-8 py-4 text-base font-bold shadow-lg shadow-primary/20 h-auto rounded-full w-full md:w-auto md:min-w-[260px] transition-all hover:scale-105 active:scale-95 tracking-widest"
+                                                disabled={isSubmitting}
+                                                className="bg-primary hover:bg-primary/90 text-white px-8 py-4 text-base font-bold shadow-lg shadow-primary/20 h-auto rounded-full w-full md:w-auto md:min-w-[260px] transition-all hover:scale-105 active:scale-95 tracking-widest disabled:opacity-70 disabled:cursor-not-allowed"
                                             >
-                                                Demander un devis
+                                                {isSubmitting ? (
+                                                    <div className="flex items-center gap-2">
+                                                        <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                                                        Envoi en cours...
+                                                    </div>
+                                                ) : (
+                                                    "Demander un devis"
+                                                )}
                                             </Button>
                                         </div>
                                     </div>
