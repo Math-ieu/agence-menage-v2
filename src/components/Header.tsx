@@ -22,7 +22,7 @@ const Header = () => {
     { label: "Services pour particuliers", href: "/", active: isParticulier, services: particulierServices },
     { label: "Services pour entreprises", href: "/entreprise", active: isEntreprise, services: entrepriseServices },
     { label: "Espace employé", href: "/espace-employe", active: pathname === "/espace-employe" },
-    //{ label: "Blog", href: "/blog", active: pathname.startsWith("/blog") },
+    { label: "Blog", href: "/blog", active: pathname.startsWith("/blog") },
     { label: "Contactez-nous", href: "/contact", active: pathname === "/contact" },
     { label: "À propos", href: "/a-propos", active: pathname === "/a-propos" },
   ];

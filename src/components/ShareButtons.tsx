@@ -1,7 +1,4 @@
-"use client";
-
-import { Facebook, Linkedin, Link as LinkIcon, MessageCircle } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { Facebook, Mail, MessageCircle, Link as LinkIcon, Instagram } from "lucide-react";
 import { toast } from "sonner";
 
 interface ShareButtonsProps {
@@ -10,43 +7,79 @@ interface ShareButtonsProps {
 }
 
 const ShareButtons = ({ url, title }: ShareButtonsProps) => {
-  const encUrl = encodeURIComponent(url);
-  const encTitle = encodeURIComponent(title);
+  const encodedUrl = encodeURIComponent(url);
+  const encodedTitle = encodeURIComponent(title);
 
-  const copyLink = async () => {
-    try {
-      await navigator.clipboard.writeText(url);
-      toast.success("Lien copié dans le presse-papiers");
-    } catch (e) {
-      toast.error("Erreur lors de la copie du lien");
-    }
+  const copyLink = () => {
+    navigator.clipboard.writeText(url);
+    toast.success("Lien copié !");
   };
 
+  const buttons = [
+    {
+      label: "WhatsApp",
+      icon: MessageCircle,
+      href: `https://wa.me/?text=${encodedTitle}%20${encodedUrl}`,
+      color: "hover:bg-green-100 hover:text-green-600",
+    },
+    {
+      label: "Facebook",
+      icon: Facebook,
+      href: `https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}`,
+      color: "hover:bg-blue-100 hover:text-blue-600",
+    },
+    {
+      label: "Instagram",
+      icon: Instagram,
+      href: `https://www.instagram.com/`,
+      color: "hover:bg-pink-100 hover:text-pink-600",
+    },
+    {
+      label: "Email",
+      icon: Mail,
+      href: `mailto:?subject=${encodedTitle}&body=${encodedUrl}`,
+      color: "hover:bg-red-100 hover:text-red-500",
+    },
+    {
+      label: "Copier le lien",
+      icon: LinkIcon,
+      onClick: copyLink,
+      color: "hover:bg-muted hover:text-foreground",
+    },
+  ];
+
   return (
-    <div className="flex flex-wrap items-center gap-2 mt-4">
-      <span className="text-sm font-semibold text-muted-foreground mr-2">Partager :</span>
-      <a href={`https://www.facebook.com/sharer/sharer.php?u=${encUrl}`} target="_blank" rel="noopener noreferrer">
-        <Button variant="outline" size="icon" className="rounded-full hover:bg-[#1877F2] hover:text-white hover:border-[#1877F2] border-border shadow-sm transition-all">
-          <Facebook className="w-4 h-4" />
-          <span className="sr-only">Facebook</span>
-        </Button>
-      </a>
-      <a href={`https://www.linkedin.com/shareArticle?mini=true&url=${encUrl}&title=${encTitle}`} target="_blank" rel="noopener noreferrer">
-        <Button variant="outline" size="icon" className="rounded-full hover:bg-[#0A66C2] hover:text-white hover:border-[#0A66C2] border-border shadow-sm transition-all">
-          <Linkedin className="w-4 h-4" />
-          <span className="sr-only">LinkedIn</span>
-        </Button>
-      </a>
-      <a href={`https://wa.me/?text=${encTitle}%20${encUrl}`} target="_blank" rel="noopener noreferrer">
-        <Button variant="outline" size="icon" className="rounded-full hover:bg-[#25D366] hover:text-white hover:border-[#25D366] border-border shadow-sm transition-all">
-          <MessageCircle className="w-4 h-4" />
-          <span className="sr-only">WhatsApp</span>
-        </Button>
-      </a>
-      <Button variant="outline" size="icon" className="rounded-full hover:bg-primary hover:text-white hover:border-primary border-border shadow-sm transition-all" onClick={copyLink}>
-        <LinkIcon className="w-4 h-4" />
-        <span className="sr-only">Copier le lien</span>
-      </Button>
+    <div className="flex items-center gap-2 flex-wrap">
+      <span className="text-sm font-medium text-muted-foreground mr-1">Partager :</span>
+      {buttons.map((btn) => {
+        const Icon = btn.icon;
+        if (btn.onClick) {
+          return (
+            <button
+              key={btn.label}
+              onClick={btn.onClick}
+              className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium text-muted-foreground border border-border transition-colors ${btn.color}`}
+              title={btn.label}
+            >
+              <Icon className="w-3.5 h-3.5" />
+              {btn.label}
+            </button>
+          );
+        }
+        return (
+          <a
+            key={btn.label}
+            href={btn.href}
+            target="_blank"
+            rel="noopener noreferrer"
+            className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium text-muted-foreground border border-border transition-colors ${btn.color}`}
+            title={btn.label}
+          >
+            <Icon className="w-3.5 h-3.5" />
+            {btn.label}
+          </a>
+        );
+      })}
     </div>
   );
 };

@@ -25,7 +25,7 @@ export async function generateMetadata(props: Props): Promise<Metadata> {
       description: post.excerpt,
       images: [
         {
-          url: post.imageUrl,
+          url: typeof post.imageUrl === "string" ? post.imageUrl : post.imageUrl.src,
           width: 1200,
           height: 630,
           alt: post.title,

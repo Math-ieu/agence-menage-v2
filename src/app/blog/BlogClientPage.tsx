@@ -1,7 +1,9 @@
 "use client";
 
-import { useState } from "react";
-import BlogCategorySection from "@/components/BlogCategorySection";
+import { useState, useEffect } from "react";
+import BlogCategorySection, { particulierServices, entrepriseServices } from "@/components/BlogCategorySection";
+import ServicesShowcase from "@/components/ServicesShowcase";
+import ContactSection from "@/components/ContactSection";
 import { getPostsByCategory } from "@/data/blogData";
 import { Users, Building2 } from "lucide-react";
 import Header from "@/components/Header";
@@ -12,30 +14,41 @@ type TabType = "particuliers" | "entreprises";
 export default function BlogClientPage() {
   const [activeTab, setActiveTab] = useState<TabType>("particuliers");
 
+  useEffect(() => {
+    const handler = (e: Event) => {
+      const tab = (e as CustomEvent).detail as TabType;
+      setActiveTab(tab);
+    };
+    window.addEventListener('switch-tab', handler);
+    return () => window.removeEventListener('switch-tab', handler);
+  }, []);
+
   const particulierPosts = getPostsByCategory("particulier");
   const entreprisePosts = getPostsByCategory("entreprise");
 
   return (
     <div className="min-h-screen flex flex-col bg-background">
       <Header />
-      <main className="flex-1 pt-24 md:pt-28">
-        <section className="py-16 md:py-24 px-4 bg-background border-b border-border/40">
+      <main className="flex-1">
+        {/* Blog Intro with Tabs */}
+        <section className="py-16 px-4 bg-background">
           <div className="max-w-4xl mx-auto text-center">
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-black text-foreground mb-6 tracking-tight">
-              Notre <span className="text-primary">Blog</span>
+            <h1 className="text-4xl md:text-5xl font-bold text-foreground mb-4">
+              Notre Blog
             </h1>
-            <p className="text-lg md:text-xl text-muted-foreground mb-12 max-w-2xl mx-auto leading-relaxed">
+            <p className="text-lg text-muted-foreground mb-10 max-w-2xl mx-auto">
               Conseils, guides et astuces pour un intérieur impeccable et des locaux
-              professionnels toujours propres. Trouvez l'inspiration selon vos besoins.
+              professionnels toujours propres. Que vous soyez un particulier ou une
+              entreprise, trouvez l'inspiration ici.
             </p>
 
-            <div className="inline-flex justify-center p-1.5 bg-muted/30 rounded-full border border-border/50 mx-auto shadow-sm backdrop-blur-sm">
+            <div className="flex justify-center gap-2 max-w-sm mx-auto">
               <button
                 onClick={() => setActiveTab("particuliers")}
-                className={`flex items-center gap-2 px-6 py-3 rounded-full text-sm font-semibold transition-all duration-300 ${
+                className={`flex items-center gap-2 px-5 py-2.5 rounded-full border text-sm font-medium transition-all ${
                   activeTab === "particuliers"
-                    ? "bg-primary text-primary-foreground shadow-md transform scale-[1.02]"
-                    : "text-muted-foreground hover:text-foreground hover:bg-muted/50"
+                    ? "border-primary bg-primary text-primary-foreground shadow-md"
+                    : "border-border bg-card text-foreground hover:bg-accent"
                 }`}
               >
                 <Users className="w-4 h-4" />
@@ -44,10 +57,10 @@ export default function BlogClientPage() {
 
               <button
                 onClick={() => setActiveTab("entreprises")}
-                className={`flex items-center gap-2 px-6 py-3 rounded-full text-sm font-semibold transition-all duration-300 ${
+                className={`flex items-center gap-2 px-5 py-2.5 rounded-full border text-sm font-medium transition-all ${
                   activeTab === "entreprises"
-                    ? "bg-primary text-primary-foreground shadow-md transform scale-[1.02]"
-                    : "text-muted-foreground hover:text-foreground hover:bg-muted/50"
+                    ? "border-primary bg-primary text-primary-foreground shadow-md"
+                    : "border-border bg-card text-foreground hover:bg-accent"
                 }`}
               >
                 <Building2 className="w-4 h-4" />
@@ -57,38 +70,40 @@ export default function BlogClientPage() {
           </div>
         </section>
 
-        <div className="transition-opacity duration-500 ease-in-out">
-          {activeTab === "particuliers" && (
-             <BlogCategorySection
-               id="particuliers"
-               title="Pour les particuliers"
-               icon={<Users className="w-8 h-8 text-primary" />}
-               description="Des conseils pratiques pour simplifier votre quotidien et maintenir une maison saine."
-               posts={particulierPosts}
-               services={[]}
-               ctaButtons={[
-                 { label: "Réserver mon ménage", url: "/services/particulier", variant: "default" },
-               ]}
-               bgColor="#F8FAFC"
-             />
-          )}
+        {/* Tab Content */}
+        {activeTab === "particuliers" && (
+          <BlogCategorySection
+            id="particuliers"
+            title="Pour les particuliers"
+            icon={<Users className="w-8 h-8 text-primary" />}
+            description="Conseils, guides et astuces pour un intérieur toujours propre et un quotidien simplifié."
+            posts={particulierPosts}
+            services={particulierServices}
+            ctaButtons={[
+              { label: "Réserver mon ménage", url: "", action: "show-services" },
+            ]}
+            bgColor="#EFF3F8"
+          />
+        )}
 
-          {activeTab === "entreprises" && (
-             <BlogCategorySection
-               id="entreprises"
-               title="Pour les entreprises"
-               icon={<Building2 className="w-8 h-8 text-primary" />}
-               description="Tout ce que les professionnels doivent savoir sur l'entretien et l'hygiène au travail."
-               posts={entreprisePosts}
-               services={[]}
-               ctaButtons={[
-                 { label: "Contacter un conseiller", url: "/contact", variant: "default" },
-                 { label: "Demander un devis", url: "/entreprise", variant: "outline" },
-               ]}
-               bgColor="#F0F9FF"
-             />
-          )}
-        </div>
+        {activeTab === "entreprises" && (
+          <BlogCategorySection
+            id="entreprises"
+            title="Pour les entreprises"
+            icon={<Building2 className="w-8 h-8 text-primary" />}
+            description="Bureaux, normes d'hygiène, externalisation : tout ce que les entreprises doivent savoir."
+            posts={entreprisePosts}
+            services={entrepriseServices}
+            ctaButtons={[
+              { label: "Contacter un conseiller", url: "https://www.agencemenage.ma/contact" },
+              { label: "Demander un devis", url: "https://www.agencemenage.ma/devis", variant: "outline" },
+            ]}
+            bgColor="#F0F9FF"
+          />
+        )}
+
+        <ServicesShowcase activeTab={activeTab} />
+        <ContactSection />
       </main>
       <Footer />
     </div>
