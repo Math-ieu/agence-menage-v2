@@ -9,6 +9,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
         '/a-propos',
         '/contact',
         '/espace-employe',
+        '/blog',
         '/services/particulier/menage-standard',
         '/services/particulier/grand-menage',
         '/services/particulier/menage-demenagement',
