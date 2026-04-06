@@ -17,7 +17,9 @@ export default function BlogArticleClient({ initialPost }: { initialPost: any })
   const [showAllServices, setShowAllServices] = useState(false);
   const [activeTab, setActiveTab] = useState<"particuliers" | "entreprises">("particuliers");
 
-  const isEntreprise = (initialPost.category_name || "").toLowerCase().includes("entreprise");
+  const isEntreprise = 
+    initialPost.category === 2 || 
+    (initialPost.category_name || "").toLowerCase().includes("entreprise");
 
   const post = {
     ...initialPost,
@@ -36,12 +38,7 @@ export default function BlogArticleClient({ initialPost }: { initialPost: any })
       : (isEntreprise ? "#67E8F9" : "#93C5FD")
   };
 
-  // Adjust category based on actual category_name
-  if ((initialPost.category_name || "").toLowerCase().includes("entreprise")) {
-    post.category = "entreprise";
-  } else {
-    post.category = "particulier";
-  }
+  // Unified category handling using isEntreprise
 
   useEffect(() => {
     if (post) {
@@ -59,7 +56,47 @@ export default function BlogArticleClient({ initialPost }: { initialPost: any })
   }, []);
 
   const articleUrl = `https://www.agencemenage.ma/blog/${post.slug}`;
-  const allServices = post.category === "particulier" ? particulierServices : entrepriseServices;
+
+  // Helper to find full service object by name with robust normalization
+  const findService = (name: string) => {
+    const normalize = (str: string) => 
+      (str || "").normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().trim();
+    
+    const normName = normalize(name);
+    const allAvailable = [...particulierServices, ...entrepriseServices];
+    
+    return allAvailable.find(s => normalize(s.name) === normName);
+  };
+
+  // Filter services into sections and DEDUPLICATE by normalized name
+  const uniqueServices = (post.services || []).reduce((acc: any[], current: any) => {
+    if (!current || !current.name) return acc;
+    
+    const normalize = (str: string) => 
+      (str || "").normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().trim();
+    
+    const currNorm = normalize(current.name);
+    const existing = acc.find(s => normalize(s.name) === currNorm);
+    
+    if (existing) {
+      if (current.is_recommended || current.is_recommended === undefined) existing.is_recommended = true;
+    } else {
+      const isRecommended = current.is_recommended !== false; 
+      acc.push({ ...current, is_recommended: isRecommended });
+    }
+    return acc;
+  }, []);
+
+  const recommendedServicesData = uniqueServices
+    .filter((s: any) => s.is_recommended)
+    .map((s: any) => ({ ...s, ...findService(s.name) }));
+
+  const extraServicesData = uniqueServices
+    .filter((s: any) => !s.is_recommended)
+    .map((s: any) => ({ ...s, ...findService(s.name) }));
+
+  // Always show all services for the category in the "Other Services" grid
+  const finalExtraServices = post.category === "particulier" ? particulierServices : entrepriseServices;
 
   const renderContent = (text: string) => {
     // Check if the content is HTML (from Tiptap) or plain text with Markdown-style formatting
@@ -136,14 +173,14 @@ export default function BlogArticleClient({ initialPost }: { initialPost: any })
           {post.gallery.length > 0 && <ArticleGallery images={post.gallery} />}
 
           {/* Services liés */}
-          {post.services.length > 0 && (
+          {recommendedServicesData.length > 0 && (
             <div className="mt-12 p-6 rounded-2xl border border-border bg-card">
               <h3 className="text-lg font-bold text-foreground mb-4">Nos services recommandés</h3>
               <div className="flex flex-wrap gap-3">
-                {post.services.map((service: any) => (
+                {recommendedServicesData.map((service: any) => (
                   <a
                     key={service.name}
-                    href={service.url}
+                    href={service.url || "#"}
                     target="_blank"
                     rel="noopener noreferrer"
                   >
@@ -160,22 +197,23 @@ export default function BlogArticleClient({ initialPost }: { initialPost: any })
             <h3 className="text-xl font-bold text-foreground mb-2">Prêt à passer à l'action ?</h3>
             <p className="text-foreground font-medium text-lg mb-8">Faites confiance à Agence Ménage pour un intérieur impeccable.</p>
             <div className="flex flex-wrap justify-center gap-3">
-              {post.services.map((service: any) => (
+              {recommendedServicesData.map((service: any) => (
                 <a
                   key={service.name}
-                  href={service.url}
+                  href={service.url || post.cta_contact_link || "/contact"}
                   target="_blank"
                   rel="noopener noreferrer"
                 >
-                  <Button className="rounded-full" size="lg">
-                    {service.ctaLabel}
+                  <Button className="rounded-full gap-2" size="lg">
+                    {service.icon && <span className="w-5 h-5">{service.icon}</span>}
+                    {service.name}
                   </Button>
                 </a>
               ))}
-              <a href="/contact">
+              <a href={post.cta_contact_link || "/contact"}>
                 <Button variant="outline" className="rounded-full" size="lg">
                   <Phone className="w-4 h-4 mr-2" />
-                  Contactez-nous
+                  {post.cta_phone || "Contactez-nous"}
                 </Button>
               </a>
             </div>
@@ -194,10 +232,12 @@ export default function BlogArticleClient({ initialPost }: { initialPost: any })
 
               {showAllServices && (
                 <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-2">
-                  {allServices.map((service) => (
+                  {finalExtraServices.map((service: any) => (
                     <a
                       key={service.name}
                       href={service.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
                       className="flex items-center gap-3 p-3 rounded-xl bg-card border border-border hover:border-primary/30 hover:bg-accent transition-colors text-left"
                     >
                       <div className="w-9 h-9 rounded-full bg-primary/10 flex items-center justify-center text-primary shrink-0">
