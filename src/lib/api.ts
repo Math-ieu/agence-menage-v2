@@ -24,6 +24,44 @@ export interface DemandePayload {
   formulaire_data?: any;
 }
 
+export interface GalleryItem {
+  id: number;
+  image: string;
+  alt: string;
+  caption: string;
+  order: number;
+}
+
+export interface Tag {
+  id: number;
+  name: string;
+  slug: string;
+}
+
+export interface RelatedService {
+  name: string;
+  url: string;
+  ctaLabel: string;
+}
+
+export interface BlogPost {
+  id: number;
+  title: string;
+  slug: string;
+  excerpt: string;
+  content: string;
+  featured_image: string | null;
+  banner_color: string;
+  category: number | null;
+  category_name: string;
+  author_name: string;
+  published_at: string | null;
+  created_at: string;
+  tags: Tag[];
+  gallery?: GalleryItem[];
+  related_services?: RelatedService[];
+}
+
 export async function createDemande(payload: DemandePayload) {
   try {
     const response = await fetch(`${API_URL}/api/public/demandes/`, {
@@ -42,5 +80,32 @@ export async function createDemande(payload: DemandePayload) {
   } catch (error) {
     console.error('Fetch error during createDemande:', error);
     throw error;
+  }
+}
+
+export async function getBlogPosts(): Promise<BlogPost[]> {
+  try {
+    const response = await fetch(`${API_URL}/api/public/blog/posts/`, {
+      cache: 'no-store',
+    });
+    if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+    const data = await response.json();
+    return data.results || data;
+  } catch (error) {
+    console.error('Error fetching blog posts:', error);
+    return [];
+  }
+}
+
+export async function getBlogPostBySlug(slug: string): Promise<BlogPost | null> {
+  try {
+    const response = await fetch(`${API_URL}/api/public/blog/posts/${slug}/`, {
+      cache: 'no-store',
+    });
+    if (!response.ok) return null;
+    return await response.json();
+  } catch (error) {
+    console.error(`Error fetching blog post ${slug}:`, error);
+    return null;
   }
 }

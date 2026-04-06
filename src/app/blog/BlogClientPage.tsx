@@ -4,14 +4,17 @@ import { useState, useEffect } from "react";
 import BlogCategorySection, { particulierServices, entrepriseServices } from "@/components/BlogCategorySection";
 import ServicesShowcase from "@/components/ServicesShowcase";
 import ContactSection from "@/components/ContactSection";
-import { getPostsByCategory } from "@/data/blogData";
 import { Users, Building2 } from "lucide-react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 
 type TabType = "particuliers" | "entreprises";
 
-export default function BlogClientPage() {
+interface BlogClientPageProps {
+  initialPosts?: any[];
+}
+
+export default function BlogClientPage({ initialPosts = [] }: BlogClientPageProps) {
   const [activeTab, setActiveTab] = useState<TabType>("particuliers");
 
   useEffect(() => {
@@ -23,8 +26,35 @@ export default function BlogClientPage() {
     return () => window.removeEventListener('switch-tab', handler);
   }, []);
 
-  const particulierPosts = getPostsByCategory("particulier");
-  const entreprisePosts = getPostsByCategory("entreprise");
+  // Map API posts to the format expected by the frontend components
+  const mappedPosts = initialPosts.map(post => {
+    const isEntreprise = (post.category_name || "").toLowerCase().includes("entreprise");
+    const category = isEntreprise ? "entreprise" : "particulier";
+    
+    // Better fallbacks for aesthetics
+    const tags = (post.tags && post.tags.length > 0) 
+      ? post.tags.map((t: any) => typeof t === 'string' ? t : t.name)
+      : (isEntreprise ? ["Entreprise", "Conseils"] : ["Ménage", "Astuces"]);
+
+    const bannerColor = post.banner_color && post.banner_color !== "#BCC6D0" 
+      ? post.banner_color 
+      : (isEntreprise ? "#67E8F9" : "#93C5FD"); // Sky or Blue default
+
+    return {
+      ...post,
+      id: post.id.toString(),
+      category,
+      imageUrl: post.featured_image,
+      description: post.excerpt,
+      tags,
+      gallery: post.gallery || [],
+      services: post.related_services || [],
+      bannerColor
+    };
+  });
+
+  const particulierPosts = mappedPosts.filter(p => p.category === "particulier");
+  const entreprisePosts = mappedPosts.filter(p => p.category === "entreprise");
 
   return (
     <div className="min-h-screen flex flex-col bg-background">

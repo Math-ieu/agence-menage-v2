@@ -21,7 +21,8 @@ const HeroSection = () => {
           src={heroImage}
           alt="Background Desktop"
           loading="lazy"
-         fill
+          fill
+          sizes="100vw"
           fetchPriority="high"
           style={{ objectFit: "cover", objectPosition: "center" }}
         />
@@ -34,6 +35,7 @@ const HeroSection = () => {
           src={heroImageMobile}
           alt="Background Mobile"
           fill
+          sizes="100vw"
           priority
           fetchPriority="high"
           style={{ objectFit: "cover", objectPosition: "center" }}

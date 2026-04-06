@@ -1,5 +1,6 @@
 import { Metadata } from "next";
 import BlogClientPage from "./BlogClientPage";
+import { getBlogPosts } from "@/lib/api";
 
 export const metadata: Metadata = {
   title: "Blog Agence Ménage | Astuces & Conseils Entretien",
@@ -13,6 +14,7 @@ export const metadata: Metadata = {
   },
 };
 
-export default function Blog() {
-  return <BlogClientPage />;
+export default async function Blog() {
+  const posts = await getBlogPosts();
+  return <BlogClientPage initialPosts={posts} />;
 }

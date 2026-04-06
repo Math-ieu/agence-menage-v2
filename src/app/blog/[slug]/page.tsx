@@ -1,6 +1,6 @@
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { getPostBySlug } from "@/data/blogData";
+import { getBlogPostBySlug } from "@/lib/api";
 import BlogArticleClient from "./BlogArticleClient";
 
 type Props = {
@@ -9,7 +9,7 @@ type Props = {
 
 export async function generateMetadata(props: Props): Promise<Metadata> {
   const params = await props.params;
-  const post = getPostBySlug(params.slug);
+  const post = await getBlogPostBySlug(params.slug);
 
   if (!post) {
     return {
@@ -25,7 +25,7 @@ export async function generateMetadata(props: Props): Promise<Metadata> {
       description: post.excerpt,
       images: [
         {
-          url: typeof post.imageUrl === "string" ? post.imageUrl : post.imageUrl.src,
+          url: post.featured_image || "",
           width: 1200,
           height: 630,
           alt: post.title,
@@ -37,11 +37,11 @@ export async function generateMetadata(props: Props): Promise<Metadata> {
 
 export default async function BlogArticlePage(props: Props) {
   const params = await props.params;
-  const post = getPostBySlug(params.slug);
+  const post = await getBlogPostBySlug(params.slug);
 
   if (!post) {
     notFound();
   }
 
-  return <BlogArticleClient slug={params.slug} />;
+  return <BlogArticleClient initialPost={post} />;
 }

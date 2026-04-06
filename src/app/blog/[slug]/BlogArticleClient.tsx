@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { getPostBySlug } from "@/data/blogData";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import ShareButtons from "@/components/ShareButtons";
@@ -13,18 +12,42 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import ServicesShowcase from "@/components/ServicesShowcase";
 import ContactSection from "@/components/ContactSection";
-import { notFound } from "next/navigation";
 
-export default function BlogArticleClient({ slug }: { slug: string }) {
-  const post = getPostBySlug(slug);
+export default function BlogArticleClient({ initialPost }: { initialPost: any }) {
   const [showAllServices, setShowAllServices] = useState(false);
   const [activeTab, setActiveTab] = useState<"particuliers" | "entreprises">("particuliers");
+
+  const isEntreprise = (initialPost.category_name || "").toLowerCase().includes("entreprise");
+
+  const post = {
+    ...initialPost,
+    category: isEntreprise ? "entreprise" : "particulier",
+    imageUrl: initialPost.featured_image,
+    fullContent: initialPost.content,
+    tags: (initialPost.tags || []).map((t: any) => typeof t === 'string' ? t : t.name),
+    gallery: (initialPost.gallery || []).map((img: any) => ({
+      src: img.image,
+      alt: img.alt,
+      caption: img.caption
+    })),
+    services: initialPost.related_services || [],
+    bannerColor: (initialPost.banner_color && initialPost.banner_color !== "#BCC6D0")
+      ? initialPost.banner_color
+      : (isEntreprise ? "#67E8F9" : "#93C5FD")
+  };
+
+  // Adjust category based on actual category_name
+  if ((initialPost.category_name || "").toLowerCase().includes("entreprise")) {
+    post.category = "entreprise";
+  } else {
+    post.category = "particulier";
+  }
 
   useEffect(() => {
     if (post) {
       setActiveTab(post.category === "particulier" ? "particuliers" : "entreprises");
     }
-  }, [post]);
+  }, [post.category]);
 
   useEffect(() => {
     const handler = (e: Event) => {
@@ -35,14 +58,15 @@ export default function BlogArticleClient({ slug }: { slug: string }) {
     return () => window.removeEventListener('switch-tab', handler);
   }, []);
 
-  if (!post) {
-    notFound();
-  }
-
   const articleUrl = `https://www.agencemenage.ma/blog/${post.slug}`;
   const allServices = post.category === "particulier" ? particulierServices : entrepriseServices;
 
   const renderContent = (text: string) => {
+    // Check if the content is HTML (from Tiptap) or plain text with Markdown-style formatting
+    if (text.trim().startsWith("<")) {
+      return <div className="rich-text-content" dangerouslySetInnerHTML={{ __html: text }} />;
+    }
+
     return text.split("\n").map((line, i) => {
       if (line.startsWith("**") && line.endsWith("**")) {
         return <h3 key={i} className="text-lg font-bold text-foreground mt-6 mb-2">{line.replace(/\*\*/g, "")}</h3>;
@@ -76,8 +100,8 @@ export default function BlogArticleClient({ slug }: { slug: string }) {
     <div className="min-h-screen bg-background flex flex-col">
       <Header />
       <main className="flex-1">
-        {/* Banner */}
-        <div className="h-3 w-full" style={{ backgroundColor: post.bannerColor }} />
+        {/* Banner Sync with Card */}
+        <div className="h-5 w-full shadow-sm relative z-10" style={{ backgroundColor: post.bannerColor }} />
 
         <div className="max-w-3xl mx-auto px-4 py-8">
           {/* Back link */}
@@ -88,7 +112,7 @@ export default function BlogArticleClient({ slug }: { slug: string }) {
 
           {/* Tags */}
           <div className="flex flex-wrap gap-2 mb-4">
-            {post.tags.map((tag) => (
+            {post.tags.map((tag: string) => (
               <Badge key={tag} variant="secondary" className="text-xs font-medium rounded-full">
                 {tag}
               </Badge>
@@ -109,32 +133,34 @@ export default function BlogArticleClient({ slug }: { slug: string }) {
           </article>
 
           {/* Gallery */}
-          <ArticleGallery images={post.gallery} />
+          {post.gallery.length > 0 && <ArticleGallery images={post.gallery} />}
 
           {/* Services liés */}
-          <div className="mt-12 p-6 rounded-2xl border border-border bg-card">
-            <h3 className="text-lg font-bold text-foreground mb-4">Nos services recommandés</h3>
-            <div className="flex flex-wrap gap-3">
-              {post.services.map((service) => (
-                <a
-                  key={service.name}
-                  href={service.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  <Button variant="outline" className="rounded-full">
-                    {service.name}
-                  </Button>
-                </a>
-              ))}
+          {post.services.length > 0 && (
+            <div className="mt-12 p-6 rounded-2xl border border-border bg-card">
+              <h3 className="text-lg font-bold text-foreground mb-4">Nos services recommandés</h3>
+              <div className="flex flex-wrap gap-3">
+                {post.services.map((service: any) => (
+                  <a
+                    key={service.name}
+                    href={service.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <Button variant="outline" className="rounded-full">
+                      {service.name}
+                    </Button>
+                  </a>
+                ))}
+              </div>
             </div>
-          </div>
+          )}
 
           <div className="mt-8 p-8 rounded-2xl text-center" style={{ backgroundColor: post.bannerColor + "20" }}>
             <h3 className="text-xl font-bold text-foreground mb-2">Prêt à passer à l'action ?</h3>
             <p className="text-foreground font-medium text-lg mb-8">Faites confiance à Agence Ménage pour un intérieur impeccable.</p>
             <div className="flex flex-wrap justify-center gap-3">
-              {post.services.map((service) => (
+              {post.services.map((service: any) => (
                 <a
                   key={service.name}
                   href={service.url}

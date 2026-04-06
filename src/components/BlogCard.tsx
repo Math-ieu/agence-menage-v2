@@ -11,7 +11,7 @@ interface BlogCardProps {
 
 const BlogCard = ({ slug, title, description, tags, bannerColor }: BlogCardProps) => {
   return (
-    <Link 
+    <Link
       href={`/blog/${slug}`}
       className="min-w-[280px] max-w-sm bg-card rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-all flex flex-col group"
     >
