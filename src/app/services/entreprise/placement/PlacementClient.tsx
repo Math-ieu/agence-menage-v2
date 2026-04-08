@@ -29,6 +29,7 @@ import {
     DialogDescription,
     DialogFooter,
 } from "@/components/ui/dialog";
+import { CASABLANCA_NEIGHBORHOODS, DEFAULT_CITY } from "@/constants/locations";
 
 const INITIAL_FORM_DATA = {
     serviceType: "flexible",
@@ -36,7 +37,7 @@ const INITIAL_FORM_DATA = {
     frequency: "oneshot",
     subFrequency: "",
     numberOfPeople: 1,
-    city: "Casablanca",
+    city: DEFAULT_CITY,
     neighborhood: "",
     schedulingTime: "morning",
     schedulingDate: "",
@@ -559,20 +560,34 @@ export default function PlacementClient() {
                                                     Où aura lieu votre ménage ?
                                                 </h3>
                                                 <div className="grid md:grid-cols-2 gap-4">
-                                                    <Input
-                                                        placeholder="Ville (ex: Casablanca)"
-                                                        required
-                                                        value={formData.city}
-                                                        onChange={(e) => setFormData({ ...formData, city: e.target.value })}
-                                                        className="bg-white"
-                                                    />
-                                                    <Input
-                                                        placeholder="Adresse"
-                                                        required
-                                                        value={formData.neighborhood}
-                                                        onChange={(e) => setFormData({ ...formData, neighborhood: e.target.value })}
-                                                        className="bg-white"
-                                                    />
+                                                    <div className="space-y-1">
+                                                        <Label className="text-[10px] font-bold text-primary uppercase ml-1">Ville</Label>
+                                                        <Input
+                                                            placeholder="Ville (ex: Casablanca)"
+                                                            required
+                                                            value={formData.city}
+                                                            onChange={(e) => setFormData({ ...formData, city: e.target.value })}
+                                                            className="bg-white"
+                                                        />
+                                                    </div>
+                                                    <div className="space-y-1">
+                                                        <Label className="text-[10px] font-bold text-primary uppercase ml-1">Quartier</Label>
+                                                        <Select
+                                                            value={formData.neighborhood}
+                                                            onValueChange={(value) => setFormData({ ...formData, neighborhood: value })}
+                                                        >
+                                                            <SelectTrigger className="bg-white">
+                                                                <SelectValue placeholder="Sélectionner un quartier" />
+                                                            </SelectTrigger>
+                                                            <SelectContent>
+                                                                {CASABLANCA_NEIGHBORHOODS.map((q) => (
+                                                                    <SelectItem key={q} value={q}>
+                                                                        {q}
+                                                                    </SelectItem>
+                                                                ))}
+                                                            </SelectContent>
+                                                        </Select>
+                                                    </div>
                                                 </div>
                                                 <Textarea
                                                     placeholder="Champs de repère (Mosquée, École...)"

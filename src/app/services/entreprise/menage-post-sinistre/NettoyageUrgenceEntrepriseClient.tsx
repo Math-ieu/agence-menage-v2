@@ -13,8 +13,9 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Textarea } from "@/components/ui/textarea";
-import { Switch } from "@/components/ui/switch";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { toast } from "sonner";
+import { CASABLANCA_NEIGHBORHOODS, DEFAULT_CITY } from "@/constants/locations";
 import { ChevronDown, ChevronUp } from "lucide-react";
 import { useSearchParams } from "next/navigation";
 import { createWhatsAppLink, formatBookingMessage, DESTINATION_PHONE_NUMBER, getConfirmationMessage } from "@/lib/whatsapp";
@@ -42,7 +43,7 @@ const INITIAL_FORM_DATA = {
         produitsEtOutils: false,
         torchonsEtSerpierres: false
     },
-    city: "Casablanca",
+    city: DEFAULT_CITY,
     neighborhood: "",
     changeRepereNotes: "",
     phoneNumber: "",
@@ -377,14 +378,22 @@ Nos équipes interviennent en urgence pour :
                                                     />
                                                 </div>
                                                 <div className="space-y-1">
-                                                    <Label className="text-[10px] font-bold text-primary uppercase ml-1 underline">Adresse professionnelle*</Label>
-                                                    <Input
-                                                        required
-                                                        placeholder="Adresse complète"
+                                                    <Label className="text-[10px] font-bold text-primary uppercase ml-1 underline">Quartier*</Label>
+                                                    <Select
                                                         value={formData.neighborhood}
-                                                        onChange={(e) => setFormData({ ...formData, neighborhood: e.target.value })}
-                                                        className="h-12 font-medium border-primary/20"
-                                                    />
+                                                        onValueChange={(value) => setFormData({ ...formData, neighborhood: value })}
+                                                    >
+                                                        <SelectTrigger className="h-12 font-medium border-primary/20 bg-white">
+                                                            <SelectValue placeholder="Sélectionner un quartier" />
+                                                        </SelectTrigger>
+                                                        <SelectContent>
+                                                            {CASABLANCA_NEIGHBORHOODS.map((q) => (
+                                                                <SelectItem key={q} value={q}>
+                                                                    {q}
+                                                                </SelectItem>
+                                                            ))}
+                                                        </SelectContent>
+                                                    </Select>
                                                 </div>
                                             </div>
                                             <div className="p-4 border rounded-xl bg-white shadow-sm">

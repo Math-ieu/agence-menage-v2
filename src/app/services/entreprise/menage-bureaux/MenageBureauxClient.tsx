@@ -31,6 +31,7 @@ import {
     DialogDescription,
     DialogFooter,
 } from "@/components/ui/dialog";
+import { CASABLANCA_NEIGHBORHOODS, DEFAULT_CITY } from "@/constants/locations";
 
 const INITIAL_FORM_DATA = {
     officeSurface: "0-70",
@@ -38,7 +39,7 @@ const INITIAL_FORM_DATA = {
     subFrequency: "",
     duration: 2,
     numberOfPeople: 1,
-    city: "Casablanca",
+    city: DEFAULT_CITY,
     neighborhood: "",
     schedulingTime: "morning",
     schedulingDate: "",
@@ -506,14 +507,22 @@ export default function MenageBureauxClient() {
                                                     />
                                                 </div>
                                                 <div className="space-y-2">
-                                                    <Label className="text-xs font-bold text-muted-foreground uppercase">Adresse (Quartier)</Label>
-                                                    <Input
-                                                        placeholder="Quartier"
-                                                        required
+                                                    <Label className="text-xs font-bold text-muted-foreground uppercase">Quartier</Label>
+                                                    <Select
                                                         value={formData.neighborhood}
-                                                        onChange={(e) => setFormData({ ...formData, neighborhood: e.target.value })}
-                                                        className="bg-white"
-                                                    />
+                                                        onValueChange={(value) => setFormData({ ...formData, neighborhood: value })}
+                                                    >
+                                                        <SelectTrigger className="bg-white">
+                                                            <SelectValue placeholder="Sélectionner un quartier" />
+                                                        </SelectTrigger>
+                                                        <SelectContent>
+                                                            {CASABLANCA_NEIGHBORHOODS.map((q) => (
+                                                                <SelectItem key={q} value={q}>
+                                                                    {q}
+                                                                </SelectItem>
+                                                            ))}
+                                                        </SelectContent>
+                                                    </Select>
                                                 </div>
                                             </div>
                                             <div className="space-y-2">

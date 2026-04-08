@@ -29,6 +29,7 @@ import {
     DialogDescription,
     DialogFooter,
 } from "@/components/ui/dialog";
+import { CASABLANCA_NEIGHBORHOODS, DEFAULT_CITY } from "@/constants/locations";
 
 // New assets
 import gardeMaladeHero from "@/assets/service-garde-malade.webp";
@@ -42,7 +43,7 @@ const INITIAL_FORM_DATA = {
     numberOfPeople: 1,
     careLocation: "domicile",
     careAddress: "",
-    city: "Casablanca",
+    city: DEFAULT_CITY,
     neighborhood: "",
     patientAge: "",
     patientGender: "",
@@ -631,13 +632,21 @@ Nos auxiliaires de vie assurent une présence 24h/24, 7j/7, selon les besoins en
                                                     </div>
                                                     <div className="space-y-2">
                                                         <Label className="text-sm font-bold text-slate-600">Adresse (Quartier)</Label>
-                                                        <Input
-                                                            placeholder="Quartier"
-                                                            required
+                                                        <Select
                                                             value={formData.neighborhood}
-                                                            onChange={(e) => setFormData({ ...formData, neighborhood: e.target.value })}
-                                                            className="h-10"
-                                                        />
+                                                            onValueChange={(value) => setFormData({ ...formData, neighborhood: value })}
+                                                        >
+                                                            <SelectTrigger className="h-10">
+                                                                <SelectValue placeholder="Sélectionner un quartier" />
+                                                            </SelectTrigger>
+                                                            <SelectContent>
+                                                                {CASABLANCA_NEIGHBORHOODS.map((q) => (
+                                                                    <SelectItem key={q} value={q}>
+                                                                        {q}
+                                                                    </SelectItem>
+                                                                ))}
+                                                            </SelectContent>
+                                                        </Select>
                                                     </div>
                                                 </div>
                                                 <div className="space-y-2">

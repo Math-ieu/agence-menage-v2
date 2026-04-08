@@ -13,7 +13,9 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Textarea } from "@/components/ui/textarea";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { toast } from "sonner";
+import { CASABLANCA_NEIGHBORHOODS, DEFAULT_CITY } from "@/constants/locations";
 import serviceChantier from "@/assets/service-fin-chantier-entreprise.webp";
 import { getConfirmationMessage } from "@/lib/whatsapp";
 import { sendBookingEmail } from "@/lib/email";
@@ -31,7 +33,7 @@ import {
 const INITIAL_FORM_DATA = {
     propertyType: "studio",
     surfaceArea: 50,
-    city: "Casablanca",
+    city: DEFAULT_CITY,
     neighborhood: "",
     schedulingTime: "morning",
     schedulingHours: "09:00 - 12:00",
@@ -360,14 +362,22 @@ La prestation comprend : L’évacuation des poussières et résidus de chantier
                                                     />
                                                 </div>
                                                 <div className="space-y-2">
-                                                    <Label className="text-xs font-bold text-muted-foreground uppercase">Adresse</Label>
-                                                    <Input
-                                                        placeholder="Adresse"
-                                                        required
+                                                    <Label className="text-xs font-bold text-muted-foreground uppercase">Quartier</Label>
+                                                    <Select
                                                         value={formData.neighborhood}
-                                                        onChange={(e) => setFormData({ ...formData, neighborhood: e.target.value })}
-                                                        className="bg-white"
-                                                    />
+                                                        onValueChange={(value) => setFormData({ ...formData, neighborhood: value })}
+                                                    >
+                                                        <SelectTrigger className="bg-white">
+                                                            <SelectValue placeholder="Sélectionner un quartier" />
+                                                        </SelectTrigger>
+                                                        <SelectContent>
+                                                            {CASABLANCA_NEIGHBORHOODS.map((q) => (
+                                                                <SelectItem key={q} value={q}>
+                                                                    {q}
+                                                                </SelectItem>
+                                                            ))}
+                                                        </SelectContent>
+                                                    </Select>
                                                 </div>
                                             </div>
                                             <div className="space-y-2">

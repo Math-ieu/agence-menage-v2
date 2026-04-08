@@ -12,6 +12,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Textarea } from "@/components/ui/textarea";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { toast } from "sonner";
 import serviceChantier from "@/assets/service-fin-chantier-particulier.webp";
 import { createWhatsAppLink, formatBookingMessage, DESTINATION_PHONE_NUMBER, getConfirmationMessage } from "@/lib/whatsapp";
@@ -26,11 +27,12 @@ import {
     DialogDescription,
     DialogFooter,
 } from "@/components/ui/dialog";
+import { CASABLANCA_NEIGHBORHOODS, DEFAULT_CITY } from "@/constants/locations";
 
 const INITIAL_FORM_DATA = {
     propertyType: "studio",
     surfaceArea: 50,
-    city: "",
+    city: DEFAULT_CITY,
     neighborhood: "",
     schedulingTime: "morning",
     schedulingHours: "09:00 - 12:00",
@@ -238,20 +240,34 @@ La prestation comprend : L’évacuation des poussières et résidus de chantier
                                             Où aura lieu votre ménage ?
                                         </h3>
                                         <div className="grid md:grid-cols-2 gap-4 p-4 border rounded-xl bg-white mb-4">
-                                            <Input
-                                                placeholder="Ville , Casablanca"
-                                                required
-                                                value={formData.city}
-                                                onChange={(e) => setFormData({ ...formData, city: e.target.value })}
-                                                className="border-slate-300"
-                                            />
-                                            <Input
-                                                placeholder="Adresse"
-                                                required
-                                                value={formData.neighborhood}
-                                                onChange={(e) => setFormData({ ...formData, neighborhood: e.target.value })}
-                                                className="border-slate-300"
-                                            />
+                                            <div className="space-y-2">
+                                                <Label className="text-xs font-bold text-slate-400">Ville</Label>
+                                                <Input
+                                                    placeholder="Ville , Casablanca"
+                                                    required
+                                                    value={formData.city}
+                                                    onChange={(e) => setFormData({ ...formData, city: e.target.value })}
+                                                    className="border-slate-300"
+                                                />
+                                            </div>
+                                            <div className="space-y-2">
+                                                <Label className="text-xs font-bold text-slate-400">Quartier</Label>
+                                                <Select
+                                                    value={formData.neighborhood}
+                                                    onValueChange={(value) => setFormData({ ...formData, neighborhood: value })}
+                                                >
+                                                    <SelectTrigger className="border-slate-300">
+                                                        <SelectValue placeholder="Sélectionner un quartier" />
+                                                    </SelectTrigger>
+                                                    <SelectContent>
+                                                        {CASABLANCA_NEIGHBORHOODS.map((q) => (
+                                                            <SelectItem key={q} value={q}>
+                                                                {q}
+                                                            </SelectItem>
+                                                        ))}
+                                                    </SelectContent>
+                                                </Select>
+                                            </div>
                                         </div>
                                         <div className="p-4 border rounded-xl bg-white">
                                             <Label className="font-bold text-slate-700">Champs de repère</Label>

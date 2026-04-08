@@ -32,6 +32,7 @@ import {
     DialogDescription,
     DialogFooter,
 } from "@/components/ui/dialog";
+import { CASABLANCA_NEIGHBORHOODS, DEFAULT_CITY } from "@/constants/locations";
 import { FREQUENCES } from "@/app/frequences";
 
 const PRODUCTS_LIST = [
@@ -49,7 +50,7 @@ const INITIAL_FORM_DATA = {
     surfaceArea: 70,
     duration: 6,
     numberOfPeople: 1,
-    city: "",
+    city: DEFAULT_CITY,
     neighborhood: "",
     schedulingTime: "morning",
     schedulingDate: "",
@@ -682,20 +683,34 @@ Il comprend le :
                                             où aura lieu votre ménage ?
                                         </h3>
                                         <div className="grid md:grid-cols-2 gap-4 p-4 border rounded-xl bg-white mb-4 shadow-sm">
-                                            <Input
-                                                placeholder="Ville , Casablanca"
-                                                required
-                                                value={formData.city}
-                                                onChange={(e) => setFormData({ ...formData, city: e.target.value })}
-                                                className="border-slate-300 h-11"
-                                            />
-                                            <Input
-                                                placeholder="Adresse"
-                                                required
-                                                value={formData.neighborhood}
-                                                onChange={(e) => setFormData({ ...formData, neighborhood: e.target.value })}
-                                                className="border-slate-300 h-11"
-                                            />
+                                            <div className="space-y-2">
+                                                <Label className="text-xs font-bold text-slate-400">Ville</Label>
+                                                <Input
+                                                    placeholder="Ville , Casablanca"
+                                                    required
+                                                    value={formData.city}
+                                                    onChange={(e) => setFormData({ ...formData, city: e.target.value })}
+                                                    className="border-slate-300 h-11"
+                                                />
+                                            </div>
+                                            <div className="space-y-2">
+                                                <Label className="text-xs font-bold text-slate-400">Quartier</Label>
+                                                <Select
+                                                    value={formData.neighborhood}
+                                                    onValueChange={(value) => setFormData({ ...formData, neighborhood: value })}
+                                                >
+                                                    <SelectTrigger className="border-slate-300 h-11">
+                                                        <SelectValue placeholder="Sélectionner un quartier" />
+                                                    </SelectTrigger>
+                                                    <SelectContent>
+                                                        {CASABLANCA_NEIGHBORHOODS.map((q) => (
+                                                            <SelectItem key={q} value={q}>
+                                                                {q}
+                                                            </SelectItem>
+                                                        ))}
+                                                    </SelectContent>
+                                                </Select>
+                                            </div>
                                         </div>
                                         <div className="p-4 border rounded-xl bg-white shadow-sm">
                                             <Label className="font-bold text-primary text-xs uppercase mb-2 block">Champs de repère</Label>
