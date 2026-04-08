@@ -31,7 +31,7 @@ const particulierServices = [
   {
     title: "Auxiliaire de vie / Garde malade",
     description: "Un accompagnement professionnel et bienveillant pour les personnes âgées ou en convalescence à domicile.",
-    url: "/services/particulier/auxiliaire-de-vie",
+    url: "/services/particulier/garde-malade",
     dotColor: "#9B59B6",
   },
   {
