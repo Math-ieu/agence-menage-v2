@@ -16,6 +16,19 @@ export const metadata: Metadata = {
       "x-default": "/a-propos",
     },
   },
+  openGraph: {
+    title: "À propos d'Agence Ménage | Notre Histoire et Nos Fondateurs",
+    description: "Découvrez l'histoire d'Agence Ménage, notre mission et l'expertise de nos fondateurs.",
+    images: [
+      {
+        url: "/og-a-propos.png",
+        width: 1200,
+        height: 630,
+        alt: "À propos d'Agence Ménage",
+      },
+    ],
+    type: "website",
+  },
 };
 
 export default function AboutPage() {
