@@ -28,7 +28,7 @@ import {
     DialogDescription,
     DialogFooter,
 } from "@/components/ui/dialog";
-import { CASABLANCA_NEIGHBORHOODS, DEFAULT_CITY } from "@/constants/locations";
+import { CASABLANCA_NEIGHBORHOODS, DEFAULT_CITY, CITIES, SURCHARGE_CITIES, NEIGHBORHOODS_BY_CITY } from "@/constants/locations";
 
 const frequencies = FREQUENCES;
 
@@ -418,13 +418,21 @@ Il comprend le :
                                         <div className="grid md:grid-cols-2 gap-4 p-4 border rounded-xl bg-white mb-4">
                                             <div className="space-y-2">
                                                 <Label className="text-xs font-bold text-slate-400">Ville</Label>
-                                                <Input
-                                                    placeholder="Ville , Casablanca"
-                                                    required
+                                                <Select
                                                     value={formData.city}
-                                                    onChange={(e) => setFormData({ ...formData, city: e.target.value })}
-                                                    className="border-slate-300"
-                                                />
+                                                    onValueChange={(value) => setFormData({ ...formData, city: value, neighborhood: "" })}
+                                                >
+                                                    <SelectTrigger className="border-slate-300">
+                                                        <SelectValue placeholder="Sélectionner une ville" />
+                                                    </SelectTrigger>
+                                                    <SelectContent>
+                                                        {CITIES.map((c) => (
+                                                            <SelectItem key={c} value={c}>
+                                                                {c}
+                                                            </SelectItem>
+                                                        ))}
+                                                    </SelectContent>
+                                                </Select>
                                             </div>
                                             <div className="space-y-2">
                                                 <Label className="text-xs font-bold text-slate-400">Quartier</Label>
@@ -436,7 +444,7 @@ Il comprend le :
                                                         <SelectValue placeholder="Sélectionner un quartier" />
                                                     </SelectTrigger>
                                                     <SelectContent>
-                                                        {CASABLANCA_NEIGHBORHOODS.map((q) => (
+                                                        {(NEIGHBORHOODS_BY_CITY[formData.city] || ["Autre"]).map((q) => (
                                                             <SelectItem key={q} value={q}>
                                                                 {q}
                                                             </SelectItem>
@@ -444,6 +452,18 @@ Il comprend le :
                                                     </SelectContent>
                                                 </Select>
                                             </div>
+                                        </div>
+                                        <div className="flex items-start gap-3 p-3 mt-4 mb-4 bg-orange-50 border border-orange-100 rounded-xl shadow-sm">
+                                            <div className="mt-0.5 text-orange-500 flex-shrink-0">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                                                    <circle cx="12" cy="12" r="10" />
+                                                    <line x1="12" y1="8" x2="12" y2="12" />
+                                                    <line x1="12" y1="16" x2="12.01" y2="16" />
+                                                </svg>
+                                            </div>
+                                            <p className="text-xs font-medium text-orange-800 leading-relaxed">
+                                                Si vous êtes dans les zones <span className="font-bold">Bouskoura, Dar Bouazza, Mansouria, Almaz, Sidi Rahal, Benslimane, Mohammédia, Ville Verte...</span> un supplément de <span className="font-bold whitespace-nowrap px-1 bg-orange-200/50 rounded-md text-orange-700">50 MAD</span> vous sera facturé pour faciliter le déplacement.
+                                            </p>
                                         </div>
                                         <div className="p-4 border rounded-xl bg-white">
                                             <Label className="font-bold text-primary">Champs de repère</Label>

@@ -31,7 +31,7 @@ import {
     DialogDescription,
     DialogFooter,
 } from "@/components/ui/dialog";
-import { CASABLANCA_NEIGHBORHOODS, DEFAULT_CITY } from "@/constants/locations";
+import { CASABLANCA_NEIGHBORHOODS, DEFAULT_CITY, CITIES, SURCHARGE_CITIES, NEIGHBORHOODS_BY_CITY } from "@/constants/locations";
 
 const INITIAL_FORM_DATA = {
     propertyType: "appartement",
@@ -476,7 +476,7 @@ Les interventions d’urgence couvrent exclusivement les cas suivants :
                                                             <SelectValue placeholder="Sélectionner un quartier" />
                                                         </SelectTrigger>
                                                         <SelectContent>
-                                                            {CASABLANCA_NEIGHBORHOODS.map((q) => (
+                                                            {(NEIGHBORHOODS_BY_CITY[formData.city] || ["Autre"]).map((q) => (
                                                                 <SelectItem key={q} value={q}>
                                                                     {q}
                                                                 </SelectItem>

@@ -29,7 +29,7 @@ import {
     DialogDescription,
     DialogFooter,
 } from "@/components/ui/dialog";
-import { CASABLANCA_NEIGHBORHOODS, DEFAULT_CITY } from "@/constants/locations";
+import { CASABLANCA_NEIGHBORHOODS, DEFAULT_CITY, CITIES, SURCHARGE_CITIES, NEIGHBORHOODS_BY_CITY } from "@/constants/locations";
 
 // New assets
 import gardeMaladeHero from "@/assets/service-garde-malade.webp";
@@ -621,14 +621,22 @@ Nos auxiliaires de vie assurent une présence 24h/24, 7j/7, selon les besoins en
                                             <div className="p-6 bg-slate-50/50 rounded-xl border border-slate-100 space-y-6">
                                                 <div className="grid md:grid-cols-2 gap-6">
                                                     <div className="space-y-2">
-                                                        <Label className="text-sm font-bold text-slate-600">Ville</Label>
-                                                        <Input
-                                                            placeholder="ex: Casablanca"
-                                                            required
-                                                            value={formData.city}
-                                                            onChange={(e) => setFormData({ ...formData, city: e.target.value })}
-                                                            className="h-10"
-                                                        />
+                                                        <Label className="text-xs font-bold text-slate-400">Ville</Label>
+                                                <Select
+                                                    value={formData.city}
+                                                    onValueChange={(value) => setFormData({ ...formData, city: value, neighborhood: "" })}
+                                                >
+                                                    <SelectTrigger className="border-slate-300">
+                                                        <SelectValue placeholder="Sélectionner une ville" />
+                                                    </SelectTrigger>
+                                                    <SelectContent>
+                                                        {CITIES.map((c) => (
+                                                            <SelectItem key={c} value={c}>
+                                                                {c}
+                                                            </SelectItem>
+                                                        ))}
+                                                    </SelectContent>
+                                                </Select>
                                                     </div>
                                                     <div className="space-y-2">
                                                         <Label className="text-sm font-bold text-slate-600">Adresse (Quartier)</Label>
@@ -640,7 +648,7 @@ Nos auxiliaires de vie assurent une présence 24h/24, 7j/7, selon les besoins en
                                                                 <SelectValue placeholder="Sélectionner un quartier" />
                                                             </SelectTrigger>
                                                             <SelectContent>
-                                                                {CASABLANCA_NEIGHBORHOODS.map((q) => (
+                                                                {(NEIGHBORHOODS_BY_CITY[formData.city] || ["Autre"]).map((q) => (
                                                                     <SelectItem key={q} value={q}>
                                                                         {q}
                                                                     </SelectItem>

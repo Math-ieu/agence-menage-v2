@@ -15,7 +15,7 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { toast } from "sonner";
-import { CASABLANCA_NEIGHBORHOODS, DEFAULT_CITY } from "@/constants/locations";
+import { CASABLANCA_NEIGHBORHOODS, DEFAULT_CITY, CITIES, SURCHARGE_CITIES, NEIGHBORHOODS_BY_CITY } from "@/constants/locations";
 import { ChevronDown, ChevronUp } from "lucide-react";
 import { useSearchParams } from "next/navigation";
 import { createWhatsAppLink, formatBookingMessage, DESTINATION_PHONE_NUMBER, getConfirmationMessage } from "@/lib/whatsapp";
@@ -387,7 +387,7 @@ Nos équipes interviennent en urgence pour :
                                                             <SelectValue placeholder="Sélectionner un quartier" />
                                                         </SelectTrigger>
                                                         <SelectContent>
-                                                            {CASABLANCA_NEIGHBORHOODS.map((q) => (
+                                                            {(NEIGHBORHOODS_BY_CITY[formData.city] || ["Autre"]).map((q) => (
                                                                 <SelectItem key={q} value={q}>
                                                                     {q}
                                                                 </SelectItem>
