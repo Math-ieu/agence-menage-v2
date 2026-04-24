@@ -84,7 +84,7 @@ export default function Home() {
             },
             {
                 "@type": "Person",
-                "name": "Julien CONTAN"
+                "name": "Julien COSTAN ZANON"
             }
         ]
     };

@@ -8,7 +8,7 @@ const Footer = dynamic(() => import("@/components/Footer"));
 
 export const metadata: Metadata = {
   title: "À propos d'Agence Ménage | Notre Histoire et Nos Fondateurs",
-  description: "Découvrez l'histoire d'Agence Ménage, notre mission et l'expertise de nos fondateurs Mehdi HARIT et Julien CONTAN. Le nettoyage professionnel accessible à tous au Maroc.",
+  description: "Découvrez l'histoire d'Agence Ménage, notre mission et l'expertise de nos fondateurs Mehdi HARIT et Julien COSTAN ZANON. Le nettoyage professionnel accessible à tous au Maroc.",
   alternates: {
     canonical: "/a-propos",
     languages: {
@@ -47,7 +47,7 @@ export default function AboutPage() {
       },
       {
         "@type": "Person",
-        "name": "Julien CONTAN",
+        "name": "Julien COSTAN ZANON",
         "jobTitle": "Co-fondateur"
       }
     ],
@@ -120,16 +120,16 @@ export default function AboutPage() {
                 </div>
               </div>
 
-              {/* Julien CONTAN */}
+              {/* Julien COSTAN ZANON */}
               <div className="group bg-white border border-slate-100 p-8 rounded-3xl shadow-sm hover:shadow-xl hover:border-primary/20 transition-all duration-500">
                 <div className="bg-primary/10 w-16 h-16 rounded-2xl flex items-center justify-center mb-6 text-primary group-hover:scale-110 transition-transform">
-                  <span className="text-2xl font-black">JC</span>
+                  <span className="text-2xl font-black">JCZ</span>
                 </div>
-                <h3 className="text-2xl font-black text-slate-900 mb-2">Julien CONTAN</h3>
+                <h3 className="text-2xl font-black text-slate-900 mb-2">Julien COSTAN ZANON</h3>
                 <p className="text-primary font-bold mb-6 text-lg">Co-fondateur</p>
                 <div className="space-y-4 text-slate-600 leading-relaxed font-medium">
                   <p>
-                    Julien CONTAN apporte plus de 20 ans d&apos;expérience internationale dans la gestion d&apos;entreprises de nettoyage professionnel, acquise en Suisse et aux États-Unis. Il a opéré dans des secteurs exigeants : entreprises, régies immobilières, hôtels, hôpitaux.
+                    Julien COSTAN ZANON apporte plus de 20 ans d&apos;expérience internationale dans la gestion d&apos;entreprises de nettoyage professionnel, acquise en Suisse et aux États-Unis. Il a opéré dans des secteurs exigeants : entreprises, régies immobilières, hôtels, hôpitaux.
                   </p>
                   <p>
                     De retour au Maroc avec sa famille, he met son expertise au service d&apos;Agence Ménage pour imposer les standards internationaux du nettoyage professionnel sur le marché marocain.
