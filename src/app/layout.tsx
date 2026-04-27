@@ -74,6 +74,9 @@ export default function RootLayout({
 }>) {
     return (
         <html lang="fr-MA" className={`${workSans.variable}`} suppressHydrationWarning>
+            <head>
+                <meta name="google-site-verification" content="aIvUpt-vH6Kct-44tIJYPYciubL4YDEMnoc24z0MrJA" />
+            </head>
             <body className="antialiased min-h-screen flex flex-col overflow-x-hidden" suppressHydrationWarning>
                 <Script
                     id="google-ads-gtag-src"
