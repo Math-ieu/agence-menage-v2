@@ -58,23 +58,6 @@ export default function TrackingScripts() {
                     `,
                 }}
             />
-            <Script
-                id="ga-script"
-                strategy="afterInteractive"
-                src={`https://www.googletagmanager.com/gtag/js?id=AW-17907112455`}
-            />
-            <Script
-                id="ga-config"
-                strategy="afterInteractive"
-                dangerouslySetInnerHTML={{
-                    __html: `
-                        window.dataLayer = window.dataLayer || [];
-                        function gtag(){dataLayer.push(arguments);}
-                        gtag('js', new Date());
-                        gtag('config', 'AW-17907112455');
-                    `,
-                }}
-            />
         </>
     );
 }

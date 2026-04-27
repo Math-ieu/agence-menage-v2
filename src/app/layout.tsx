@@ -43,7 +43,7 @@ export const metadata: Metadata = {
     },
     metadataBase: new URL("https://www.agencemenage.ma"),
     alternates: {
-        canonical: "/",
+        canonical: "/", 
         languages: {
             "fr-MA": "/",
             "x-default": "/",
@@ -75,6 +75,23 @@ export default function RootLayout({
     return (
         <html lang="fr-MA" className={`${workSans.variable}`} suppressHydrationWarning>
             <body className="antialiased min-h-screen flex flex-col overflow-x-hidden" suppressHydrationWarning>
+                <Script
+                    id="google-ads-gtag-src"
+                    strategy="afterInteractive"
+                    src="https://www.googletagmanager.com/gtag/js?id=AW-17907112455"
+                />
+                <Script
+                    id="google-ads-gtag-config"
+                    strategy="afterInteractive"
+                    dangerouslySetInnerHTML={{
+                        __html: `
+                            window.dataLayer = window.dataLayer || [];
+                            function gtag(){dataLayer.push(arguments);}
+                            gtag('js', new Date());
+                            gtag('config', 'AW-17907112455');
+                        `,
+                    }}
+                />
                 <TrackingScripts />
                 <QueryProvider>
                     <TooltipProvider>
