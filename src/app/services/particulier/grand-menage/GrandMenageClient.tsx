@@ -704,21 +704,12 @@ Il comprend le :
                                             </div>
                                             <div className="space-y-2">
                                                 <Label className="text-xs font-bold text-slate-400">Quartier</Label>
-                                                <Select
+                                                <Input
+                                                    placeholder="Votre quartier"
                                                     value={formData.neighborhood}
-                                                    onValueChange={(value) => setFormData({ ...formData, neighborhood: value })}
-                                                >
-                                                    <SelectTrigger className="border-slate-300 h-11">
-                                                        <SelectValue placeholder="Sélectionner un quartier" />
-                                                    </SelectTrigger>
-                                                    <SelectContent>
-                                                        {(NEIGHBORHOODS_BY_CITY[formData.city] || ["Autre"]).map((q) => (
-                                                            <SelectItem key={q} value={q}>
-                                                                {q}
-                                                            </SelectItem>
-                                                        ))}
-                                                    </SelectContent>
-                                                </Select>
+                                                    onChange={(e) => setFormData({ ...formData, neighborhood: e.target.value })}
+                                                    className="border-slate-300 h-11"
+                                                />
                                             </div>
                                         </div>
                                         <div className="flex items-start gap-3 p-3 mt-4 mb-4 bg-orange-50 border border-orange-100 rounded-xl shadow-sm">

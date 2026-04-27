@@ -640,21 +640,12 @@ Nos auxiliaires de vie assurent une présence 24h/24, 7j/7, selon les besoins en
                                                     </div>
                                                     <div className="space-y-2">
                                                         <Label className="text-sm font-bold text-slate-600">Adresse (Quartier)</Label>
-                                                        <Select
+                                                        <Input
+                                                            placeholder="Votre quartier"
                                                             value={formData.neighborhood}
-                                                            onValueChange={(value) => setFormData({ ...formData, neighborhood: value })}
-                                                        >
-                                                            <SelectTrigger className="h-10">
-                                                                <SelectValue placeholder="Sélectionner un quartier" />
-                                                            </SelectTrigger>
-                                                            <SelectContent>
-                                                                {(NEIGHBORHOODS_BY_CITY[formData.city] || ["Autre"]).map((q) => (
-                                                                    <SelectItem key={q} value={q}>
-                                                                        {q}
-                                                                    </SelectItem>
-                                                                ))}
-                                                            </SelectContent>
-                                                        </Select>
+                                                            onChange={(e) => setFormData({ ...formData, neighborhood: e.target.value })}
+                                                            className="border-slate-300 h-10"
+                                                        />
                                                     </div>
                                                 </div>
                                                 <div className="space-y-2">

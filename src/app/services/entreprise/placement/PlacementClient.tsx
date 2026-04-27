@@ -580,21 +580,12 @@ export default function PlacementClient() {
                                                     </div>
                                                     <div className="space-y-1">
                                                         <Label className="text-[10px] font-bold text-primary uppercase ml-1">Quartier</Label>
-                                                        <Select
+                                                        <Input
+                                                            placeholder="Votre quartier"
                                                             value={formData.neighborhood}
-                                                            onValueChange={(value) => setFormData({ ...formData, neighborhood: value })}
-                                                        >
-                                                            <SelectTrigger className="bg-white">
-                                                                <SelectValue placeholder="Sélectionner un quartier" />
-                                                            </SelectTrigger>
-                                                            <SelectContent>
-                                                                {(NEIGHBORHOODS_BY_CITY[formData.city] || ["Autre"]).map((q) => (
-                                                                    <SelectItem key={q} value={q}>
-                                                                        {q}
-                                                                    </SelectItem>
-                                                                ))}
-                                                            </SelectContent>
-                                                        </Select>
+                                                            onChange={(e) => setFormData({ ...formData, neighborhood: e.target.value })}
+                                                            className="bg-white"
+                                                        />
                                                     </div>
                                                 </div>
                                         <div className="flex items-start gap-3 p-3 mt-4 mb-4 bg-orange-50 border border-orange-100 rounded-xl shadow-sm">

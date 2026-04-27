@@ -379,21 +379,12 @@ Nos équipes interviennent en urgence pour :
                                                 </div>
                                                 <div className="space-y-1">
                                                     <Label className="text-[10px] font-bold text-primary uppercase ml-1 underline">Quartier*</Label>
-                                                    <Select
+                                                    <Input
+                                                        placeholder="Votre quartier"
                                                         value={formData.neighborhood}
-                                                        onValueChange={(value) => setFormData({ ...formData, neighborhood: value })}
-                                                    >
-                                                        <SelectTrigger className="h-12 font-medium border-primary/20 bg-white">
-                                                            <SelectValue placeholder="Sélectionner un quartier" />
-                                                        </SelectTrigger>
-                                                        <SelectContent>
-                                                            {(NEIGHBORHOODS_BY_CITY[formData.city] || ["Autre"]).map((q) => (
-                                                                <SelectItem key={q} value={q}>
-                                                                    {q}
-                                                                </SelectItem>
-                                                            ))}
-                                                        </SelectContent>
-                                                    </Select>
+                                                        onChange={(e) => setFormData({ ...formData, neighborhood: e.target.value })}
+                                                        className="h-12 font-medium border-primary/20 bg-white"
+                                                    />
                                                 </div>
                                             </div>
                                             <div className="p-4 border rounded-xl bg-white shadow-sm">
