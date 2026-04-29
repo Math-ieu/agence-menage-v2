@@ -23,12 +23,6 @@ const particulierServices = [
     dotColor: "#E67E22",
   },
   {
-    title: "Nettoyage post-déménagement",
-    description: "Un nettoyage complet après votre déménagement pour rendre ou accueillir un logement impeccable.",
-    url: "/services/particulier/menage-demenagement",
-    dotColor: "#F1C40F",
-  },
-  {
     title: "Auxiliaire de vie / Garde malade",
     description: "Un accompagnement professionnel et bienveillant pour les personnes âgées ou en convalescence à domicile.",
     url: "/services/particulier/garde-malade",

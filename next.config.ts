@@ -25,6 +25,15 @@ const nextConfig: NextConfig = {
             },
         ];
     },
+    async redirects() {
+        return [
+            {
+                source: "/services/particulier/menage-demenagement",
+                destination: "/",
+                permanent: false,
+            },
+        ];
+    },
 };
 
 export default nextConfig;

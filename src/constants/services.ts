@@ -1,7 +1,6 @@
 import imgStandard from "@/assets/service-menage-standard.webp";
 import imgGrand from "@/assets/service-grand-menage.webp";
 import imgAirbnb from "@/assets/service-menage-airbnb.webp";
-import imgDemenagement from "@/assets/service-menage-demenagement.webp";
 import imgChantier from "@/assets/service-fin-chantier-particulier.webp";
 import imgAuxiliaire from "@/assets/service-garde-malade.webp";
 import imgUrgence from "@/assets/service-nettoyage-urgence.webp";
@@ -40,13 +39,6 @@ export const particulierServices: ServiceData[] = [
         image: imgAirbnb.src,
         color: SERVICE_COLORS.AIRBNB.hex,
         url: "/services/particulier/menage-airbnb"
-    },
-    {
-        title: "Nettoyage post-déménagement",
-        description: "Un nettoyage complet après votre déménagement pour rendre ou accueillir un logement impeccable.",
-        image: imgDemenagement.src,
-        color: SERVICE_COLORS.DEMENAGEMENT.hex,
-        url: "/services/particulier/menage-demenagement"
     },
     {
         title: "Ménage fin de chantier",

@@ -12,7 +12,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
         '/blog',
         '/services/particulier/menage-standard',
         '/services/particulier/grand-menage',
-        '/services/particulier/menage-demenagement',
         '/services/particulier/menage-airbnb',
         '/services/particulier/menage-fin-chantier',
         '/services/particulier/garde-malade',
