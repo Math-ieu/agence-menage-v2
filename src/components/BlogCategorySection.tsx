@@ -3,7 +3,7 @@ import { useIsMobile } from "@/hooks/use-mobile";
 import BlogCard from "./BlogCard";
 import { Button } from "@/components/ui/button";
 import { BlogPost } from "@/data/blogData";
-import { Users, Building2, Sparkles, Shield, Clock, Home, Briefcase, UserCheck, Settings, FileText, ChevronDown, ChevronUp, Plus } from "lucide-react";
+import { Building2, Sparkles, Shield, Clock, Home, UserCheck, Settings,ChevronDown, ChevronUp, Plus } from "lucide-react";
 
 interface ServiceReminder {
   icon: React.ReactNode;
