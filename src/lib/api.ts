@@ -64,7 +64,7 @@ export interface BlogPost {
 
 export async function createDemande(payload: DemandePayload) {
   try {
-    const response = await fetch(`${API_URL}/api/public/demandes/`, {
+    const response = await fetch(`${API_URL}/api/public/`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(payload),
