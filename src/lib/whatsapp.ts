@@ -88,7 +88,7 @@ export const formatBookingMessage = (serviceName: string, data: any, price: numb
     if (surface) details.push(`*Surface :* ${surface} m2`);
 
     // Service Specific Details
-    if (serviceName === "Nettoyage d'urgence") {
+    if (serviceName === "Nettoyage d'urgence" || serviceName.toLowerCase().includes("post-sinistre")) {
         const natureLabels: Record<string, string> = {
             'sinistre': 'Nettoyage après sinistre',
             'event': 'Nettoyage post/après évènement',

@@ -175,7 +175,7 @@ export async function sendBookingEmailResend(serviceName: string, data: any, pri
     const formattedSurface = surfaceValue ? `${surfaceValue} m²` : "";
 
     let natureLabel = "-";
-    if (serviceName === "Nettoyage d'urgence") {
+    if (serviceName === "Nettoyage d'urgence" || serviceName.toLowerCase().includes("post-sinistre")) {
       const natureLabels: Record<string, string> = {
         'sinistre': 'Nettoyage après sinistre',
         'event': 'Nettoyage post/après évènement',
@@ -249,7 +249,7 @@ export async function sendBookingEmailResend(serviceName: string, data: any, pri
     // General mapping for other services if not already set (for back-office list view)
     if (!data.type_habitation && !data.structure_type) {
       const pType = data.propertyType || data.structureType || data.careLocation;
-      const surface = data.officeSurface || (data.surfaceArea ? `${data.surfaceArea} m²` : "");
+      const surface = data.officeSurface || (data.surfaceArea ? `${data.surfaceArea} m²` : (data.surface ? `${data.surface} m²` : ""));
       
       if (pType || surface) {
         const label = typeof pType === 'string' && pType ? pType.charAt(0).toUpperCase() + pType.slice(1) : "";

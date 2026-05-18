@@ -35,6 +35,7 @@ import {
 const INITIAL_FORM_DATA = {
     propertyType: "bureau",
     interventionNature: "sinistre",
+    surface: "50",
     schedulingType: "flexible",
     fixedTime: "14:00",
     schedulingTime: "morning",
@@ -187,8 +188,12 @@ Nos équipes interviennent en urgence pour :
 
                                                 <div className={`space-y-3 ${!isSummaryExpanded ? 'max-lg:hidden' : ''}`}>
                                                     <div className="flex justify-between gap-4 border-b border-primary/10 pb-2">
-                                                        <span className="text-muted-foreground text-sm">Type:</span>
+                                                        <span className="text-muted-foreground text-sm">Type de local:</span>
                                                         <span className="font-medium text-right text-sm capitalize">{formData.propertyType}</span>
+                                                    </div>
+                                                    <div className="flex justify-between gap-4 border-b border-primary/10 pb-2">
+                                                        <span className="text-muted-foreground text-sm">Surface:</span>
+                                                        <span className="font-medium text-right text-sm">{formData.surface} m²</span>
                                                     </div>
                                                     <div className="flex justify-between gap-4 border-b border-primary/10 pb-2">
                                                         <span className="text-muted-foreground text-sm">Date:</span>
@@ -252,30 +257,24 @@ Nos équipes interviennent en urgence pour :
                                             <RadioGroup
                                                 value={formData.interventionNature}
                                                 onValueChange={(val) => setFormData({ ...formData, interventionNature: val })}
-                                                className="grid grid-cols-1 md:grid-cols-2 gap-4 p-4"
+                                                className="grid grid-cols-1 md:grid-cols-3 gap-4 p-4"
                                             >
                                                 <div className="flex flex-col p-6 border-2 rounded-xl cursor-pointer hover:border-primary/20 hover:bg-primary/5 transition-all duration-300 bg-white shadow-sm relative min-h-[120px] justify-center text-center">
                                                     <div className="flex items-center justify-center space-x-3">
-                                                        <RadioGroupItem value="sinistre" id="sinistre" className="border-primary text-primary" />
-                                                        <Label htmlFor="sinistre" className="font-bold text-lg cursor-pointer text-primary leading-tight">Dégât des eaux / Incendie</Label>
+                                                        <RadioGroupItem value="degat_des_eaux" id="degat_des_eaux" className="border-primary text-primary" />
+                                                        <Label htmlFor="degat_des_eaux" className="font-bold text-lg cursor-pointer text-primary">Dégât des eaux</Label>
                                                     </div>
                                                 </div>
                                                 <div className="flex flex-col p-6 border-2 rounded-xl cursor-pointer hover:border-primary/20 hover:bg-primary/5 transition-all duration-300 bg-white shadow-sm relative min-h-[120px] justify-center text-center">
                                                     <div className="flex items-center justify-center space-x-3">
-                                                        <RadioGroupItem value="event" id="event" className="border-primary text-primary" />
-                                                        <Label htmlFor="event" className="font-bold text-lg cursor-pointer text-primary leading-tight">Post-événement pro</Label>
+                                                        <RadioGroupItem value="incendie" id="incendie" className="border-primary text-primary" />
+                                                        <Label htmlFor="incendie" className="font-bold text-lg cursor-pointer text-primary leading-tight">Incendie</Label>
                                                     </div>
                                                 </div>
                                                 <div className="flex flex-col p-6 border-2 rounded-xl cursor-pointer hover:border-primary/20 hover:bg-primary/5 transition-all duration-300 bg-white shadow-sm relative min-h-[120px] justify-center text-center">
                                                     <div className="flex items-center justify-center space-x-3">
-                                                        <RadioGroupItem value="express" id="express" className="border-primary text-primary" />
-                                                        <Label htmlFor="express" className="font-bold text-lg cursor-pointer text-primary leading-tight">Remise en état inaugurale</Label>
-                                                    </div>
-                                                </div>
-                                                <div className="flex flex-col p-6 border-2 rounded-xl cursor-pointer hover:border-primary/20 hover:bg-primary/5 transition-all duration-300 bg-white shadow-sm relative min-h-[120px] justify-center text-center">
-                                                    <div className="flex items-center justify-center space-x-3">
-                                                        <RadioGroupItem value="autre" id="autre" className="border-primary text-primary" />
-                                                        <Label htmlFor="autre" className="font-bold text-lg cursor-pointer text-primary leading-tight">Autre besoin immédiat</Label>
+                                                        <RadioGroupItem value="inondation" id="inondation" className="border-primary text-primary" />
+                                                        <Label htmlFor="inondation" className="font-bold text-lg cursor-pointer text-primary">Inondation</Label>
                                                     </div>
                                                 </div>
                                             </RadioGroup>
@@ -286,6 +285,26 @@ Nos équipes interviennent en urgence pour :
                                                     value={formData.additionalInfo}
                                                     onChange={(e) => setFormData({ ...formData, additionalInfo: e.target.value })}
                                                     className="min-h-[100px] border-primary/20"
+                                                />
+                                            </div>
+                                        </div>
+
+                                        {/* Superficie de l'espace */}
+                                        <div>
+                                            <h3 className="text-xl font-bold bg-primary text-white p-3 rounded-lg mb-4 text-center">
+                                                Indiquez la superficie de votre espace en m²
+                                            </h3>
+                                            <div className="p-6 border border-primary/20 rounded-xl bg-white shadow-none flex items-center justify-start gap-4">
+                                                <Label htmlFor="surface" className="font-bold text-slate-700 text-base shrink-0">
+                                                    Surface (m²) :
+                                                </Label>
+                                                <Input
+                                                    id="surface"
+                                                    type="number"
+                                                    min="1"
+                                                    value={formData.surface}
+                                                    onChange={(e) => setFormData({ ...formData, surface: e.target.value })}
+                                                    className="w-32 text-center font-bold text-lg border-primary/20 focus-visible:ring-primary h-11"
                                                 />
                                             </div>
                                         </div>

@@ -36,6 +36,7 @@ import { CASABLANCA_NEIGHBORHOODS, DEFAULT_CITY, CITIES, SURCHARGE_CITIES, NEIGH
 const INITIAL_FORM_DATA = {
     propertyType: "appartement",
     interventionNature: "sinistre",
+    surface: "50",
     schedulingType: "flexible",
     fixedTime: "14:00",
     schedulingTime: "morning",
@@ -193,15 +194,19 @@ Les interventions d’urgence couvrent exclusivement les cas suivants :
                                                 {/* Detailed info - hidden on mobile when collapsed */}
                                                 <div className={`space-y-3 ${!isSummaryExpanded ? 'max-lg:hidden' : ''}`}>
                                                     <div className="flex justify-between gap-4 border-b border-primary/10 pb-2">
-                                                        <span className="text-muted-foreground text-sm">Type:</span>
+                                                        <span className="text-muted-foreground text-sm">Type d'habitation:</span>
                                                         <span className="font-medium text-right text-sm capitalize">{formData.propertyType}</span>
+                                                    </div>
+                                                    <div className="flex justify-between gap-4 border-b border-primary/10 pb-2">
+                                                        <span className="text-muted-foreground text-sm">Surface:</span>
+                                                        <span className="font-medium text-right text-sm">{formData.surface} m²</span>
                                                     </div>
                                                     <div className="flex justify-between gap-4 border-b border-primary/10 pb-2">
                                                         <span className="text-muted-foreground text-sm">Nature:</span>
                                                         <span className="font-medium text-right text-sm">
-                                                            {formData.interventionNature === 'sinistre' ? 'Après sinistre' :
-                                                                formData.interventionNature === 'event' ? 'Post évènement' :
-                                                                    formData.interventionNature === 'express' ? 'Remise en état' : 'Autre situation'}
+                                                            {formData.interventionNature === 'degat_des_eaux' ? 'Dégât des eaux' :
+                                                                formData.interventionNature === 'incendie' ? 'Incendie' :
+                                                                    formData.interventionNature === 'inondation' ? 'Inondation' : 'Non précisé'}
                                                         </span>
                                                     </div>
                                                     <div className="flex justify-between gap-4 border-b border-primary/10 pb-2">
@@ -215,23 +220,7 @@ Les interventions d’urgence couvrent exclusivement les cas suivants :
                                                         </span>
                                                     </div>
 
-                                                    {(formData.additionalServices.produitsEtOutils || formData.additionalServices.torchonsEtSerpierres) && (
-                                                        <div className="space-y-2 pt-2">
-                                                            <span className="text-muted-foreground text-xs font-bold uppercase">Options:</span>
-                                                            {formData.additionalServices.produitsEtOutils && (
-                                                                <div className="flex justify-between gap-4 text-xs">
-                                                                    <span>Produits:</span>
-                                                                    <span className="font-medium">+90 MAD</span>
-                                                                </div>
-                                                            )}
-                                                            {formData.additionalServices.torchonsEtSerpierres && (
-                                                                <div className="flex justify-between gap-4 text-xs">
-                                                                    <span>Torchons:</span>
-                                                                    <span className="font-medium">+40 MAD</span>
-                                                                </div>
-                                                            )}
-                                                        </div>
-                                                    )}
+
                                                 </div>
                                             </div>
 
@@ -285,33 +274,24 @@ Les interventions d’urgence couvrent exclusivement les cas suivants :
                                             <RadioGroup
                                                 value={formData.interventionNature}
                                                 onValueChange={(val) => setFormData({ ...formData, interventionNature: val })}
-                                                className="grid grid-cols-1 md:grid-cols-2 gap-4 p-4"
+                                                className="grid grid-cols-1 md:grid-cols-3 gap-4 p-4"
                                             >
                                                 <div className="flex flex-col p-6 border-2 rounded-xl cursor-pointer hover:border-primary/20 hover:bg-primary/5 transition-all duration-300 bg-white shadow-sm relative min-h-[120px] justify-center text-center">
-                                                    <div className="flex flex-col items-center gap-2">
-                                                        <div className="flex items-center space-x-3">
-                                                            <RadioGroupItem value="sinistre" id="sinistre" className="border-primary text-primary" />
-                                                            <Label htmlFor="sinistre" className="font-bold text-lg cursor-pointer text-primary">Nettoyage après sinistre</Label>
-                                                        </div>
-                                                        <p className="text-sm text-red-600 font-semibold">(incendie, inondation...)</p>
+                                                    <div className="flex items-center justify-center space-x-3">
+                                                        <RadioGroupItem value="degat_des_eaux" id="degat_des_eaux" className="border-primary text-primary" />
+                                                        <Label htmlFor="degat_des_eaux" className="font-bold text-lg cursor-pointer text-primary">Dégât des eaux</Label>
                                                     </div>
                                                 </div>
                                                 <div className="flex flex-col p-6 border-2 rounded-xl cursor-pointer hover:border-primary/20 hover:bg-primary/5 transition-all duration-300 bg-white shadow-sm relative min-h-[120px] justify-center text-center">
                                                     <div className="flex items-center justify-center space-x-3">
-                                                        <RadioGroupItem value="event" id="event" className="border-primary text-primary" />
-                                                        <Label htmlFor="event" className="font-bold text-lg cursor-pointer text-primary leading-tight">Nettoyage post/après évènement</Label>
+                                                        <RadioGroupItem value="incendie" id="incendie" className="border-primary text-primary" />
+                                                        <Label htmlFor="incendie" className="font-bold text-lg cursor-pointer text-primary leading-tight">Incendie</Label>
                                                     </div>
                                                 </div>
                                                 <div className="flex flex-col p-6 border-2 rounded-xl cursor-pointer hover:border-primary/20 hover:bg-primary/5 transition-all duration-300 bg-white shadow-sm relative min-h-[120px] justify-center text-center">
                                                     <div className="flex items-center justify-center space-x-3">
-                                                        <RadioGroupItem value="express" id="express" className="border-primary text-primary" />
-                                                        <Label htmlFor="express" className="font-bold text-lg cursor-pointer text-primary">Remise en état express</Label>
-                                                    </div>
-                                                </div>
-                                                <div className="flex flex-col p-6 border-2 rounded-xl cursor-pointer hover:border-primary/20 hover:bg-primary/5 transition-all duration-300 bg-white shadow-sm relative min-h-[120px] justify-center text-center">
-                                                    <div className="flex items-center justify-center space-x-3">
-                                                        <RadioGroupItem value="autre" id="autre" className="border-primary text-primary" />
-                                                        <Label htmlFor="autre" className="font-bold text-lg cursor-pointer text-primary leading-tight">Autre situation urgente (à préciser)</Label>
+                                                        <RadioGroupItem value="inondation" id="inondation" className="border-primary text-primary" />
+                                                        <Label htmlFor="inondation" className="font-bold text-lg cursor-pointer text-primary">Inondation</Label>
                                                     </div>
                                                 </div>
                                             </RadioGroup>
@@ -322,6 +302,26 @@ Les interventions d’urgence couvrent exclusivement les cas suivants :
                                                     value={formData.additionalInfo}
                                                     onChange={(e) => setFormData({ ...formData, additionalInfo: e.target.value })}
                                                     className="min-h-[100px] border-primary/20"
+                                                />
+                                            </div>
+                                        </div>
+
+                                        {/* Superficie de l'espace */}
+                                        <div>
+                                            <h3 className="text-xl font-bold bg-primary text-white p-3 rounded-lg mb-4 text-center">
+                                                Indiquez la superficie de votre espace en m²
+                                            </h3>
+                                            <div className="p-6 border border-primary/20 rounded-xl bg-white shadow-none flex items-center justify-start gap-4">
+                                                <Label htmlFor="surface" className="font-bold text-slate-700 text-base shrink-0">
+                                                    Surface (m²) :
+                                                </Label>
+                                                <Input
+                                                    id="surface"
+                                                    type="number"
+                                                    min="1"
+                                                    value={formData.surface}
+                                                    onChange={(e) => setFormData({ ...formData, surface: e.target.value })}
+                                                    className="w-32 text-center font-bold text-lg border-primary/20 focus-visible:ring-primary h-11"
                                                 />
                                             </div>
                                         </div>
@@ -400,55 +400,7 @@ Les interventions d’urgence couvrent exclusivement les cas suivants :
                                             </div>
                                         </div>
 
-                                        {/* Service Optionnels */}
-                                        <div>
-                                            <h3 className="text-xl font-bold bg-primary text-white p-3 rounded-lg mb-4 text-center">
-                                                Service Optionnels
-                                            </h3>
-                                            <div className="bg-primary/5 border-2 border-dashed rounded-xl p-8 space-y-6">
-                                                <p className="text-center text-sm font-bold text-slate-600 uppercase tracking-widest">Produits fournis par l'agence :</p>
-                                                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                                                    <div className="flex items-center justify-between p-4 bg-white rounded-xl border-2 shadow-sm transition-all hover:border-primary/20">
-                                                        <div className="flex items-center gap-4">
-                                                            <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center text-2xl">
-                                                                🧴
-                                                            </div>
-                                                            <div>
-                                                                <p className="font-black text-sm text-primary">Produits : 90 MAD</p>
-                                                                <p className="text-[10px] text-muted-foreground uppercase font-bold">Kit complet</p>
-                                                            </div>
-                                                        </div>
-                                                        <Switch
-                                                            checked={formData.additionalServices.produitsEtOutils}
-                                                            onCheckedChange={(val) => setFormData({
-                                                                ...formData,
-                                                                additionalServices: { ...formData.additionalServices, produitsEtOutils: val }
-                                                            })}
-                                                            className="data-[state=checked]:bg-primary"
-                                                        />
-                                                    </div>
-                                                    <div className="flex items-center justify-between p-4 bg-white rounded-xl border-2 shadow-sm transition-all hover:border-primary/20">
-                                                        <div className="flex items-center gap-4">
-                                                            <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center text-2xl">
-                                                                🧹
-                                                            </div>
-                                                            <div>
-                                                                <p className="font-black text-sm text-primary">Chiffons : 40 MAD</p>
-                                                                <p className="text-[10px] text-muted-foreground uppercase font-bold">Torchons et serpillères</p>
-                                                            </div>
-                                                        </div>
-                                                        <Switch
-                                                            checked={formData.additionalServices.torchonsEtSerpierres}
-                                                            onCheckedChange={(val) => setFormData({
-                                                                ...formData,
-                                                                additionalServices: { ...formData.additionalServices, torchonsEtSerpierres: val }
-                                                            })}
-                                                            className="data-[state=checked]:bg-primary"
-                                                        />
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
+
 
                                         {/* Où aura lieu votre ménage */}
                                         <div>
