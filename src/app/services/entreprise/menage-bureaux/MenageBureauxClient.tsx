@@ -13,7 +13,6 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Textarea } from "@/components/ui/textarea";
-import { Switch } from "@/components/ui/switch";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { toast } from "sonner";
 import serviceBureaux from "@/assets/service-menage-bureaux.webp";
@@ -623,56 +622,7 @@ export default function MenageBureauxClient() {
                                         </div>
                                     </div>
 
-                                    <div>
-                                        <h3 className="text-xl font-bold bg-primary text-white p-3 rounded-lg text-center mb-4 uppercase">
-                                            Services optionnels
-                                        </h3>
-                                        <div className="p-6 bg-muted/30 rounded-xl border border-muted space-y-6">
-                                            <div className="bg-white p-6 rounded-xl border border-muted flex flex-col items-center gap-4 text-center">
-                                                <div className="flex flex-col items-center">
-                                                    <p className="text-sm font-bold text-slate-800 mb-1">Produit fournis par l'agence ménage :</p>
-                                                    <p className="text-[10px] text-slate-500 italic max-w-xs">• Nettoyant multi-usage • Nettoyant vitres • Désinfectants • Produit sols • Kit de nettoyage complet</p>
-                                                </div>
-                                                <div className="flex items-center justify-between w-full pt-4 border-t">
-                                                    <div className="flex items-center gap-4">
-                                                        <div className="w-12 h-12 rounded-lg bg-pink-50/50 border border-pink-100 flex items-center justify-center">
-                                                            <span className="text-2xl">🧴</span>
-                                                        </div>
-                                                        <div className="text-left">
-                                                            <p className="text-sm font-bold text-slate-700 leading-tight">Prix HT : 90 MAD</p>
-                                                        </div>
-                                                    </div>
-                                                    <Switch
-                                                        checked={formData.additionalServices.produitsEtOutils}
-                                                        onCheckedChange={(checked) =>
-                                                            setFormData({
-                                                                ...formData,
-                                                                additionalServices: { ...formData.additionalServices, produitsEtOutils: checked }
-                                                            })
-                                                        }
-                                                    />
-                                                </div>
-                                            </div>
 
-                                            <div className="bg-primary/5 p-4 rounded-xl border border-primary/20 flex items-center justify-between">
-                                                <div className="flex items-center gap-4">
-                                                    <div className="w-12 h-12 rounded-lg bg-blue-100 flex items-center justify-center">
-                                                        <span className="text-2xl">🧹</span>
-                                                    </div>
-                                                    <p className="text-sm font-bold text-slate-700">Torchons et serpières : + 40 MAD</p>
-                                                </div>
-                                                <Switch
-                                                    checked={formData.additionalServices.torchonsEtSerpierres}
-                                                    onCheckedChange={(checked) =>
-                                                        setFormData({
-                                                            ...formData,
-                                                            additionalServices: { ...formData.additionalServices, torchonsEtSerpierres: checked }
-                                                        })
-                                                    }
-                                                />
-                                            </div>
-                                        </div>
-                                    </div>
 
                                     <div className="bg-muted/30 rounded-xl p-6 border border-muted">
                                         <h3 className="text-xl font-bold bg-primary text-white p-3 rounded-lg text-center mb-6 uppercase">

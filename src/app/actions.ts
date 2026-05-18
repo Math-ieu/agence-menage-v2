@@ -147,6 +147,12 @@ export async function sendBookingEmailResend(serviceName: string, data: any, pri
       optionalServices.push("Baies Vitrées : Sur devis");
     }
     if (data.intensiveOption || data.cleanlinessType === "intensif") optionalServices.push("Option Intensif");
+    if (data.additionalServices?.reassortConso) {
+      optionalServices.push("Réassort consommables : 25 MAD");
+    }
+    if (data.additionalServices?.setsDeLinge && data.additionalServices?.setsDeLingeCount > 0) {
+      optionalServices.push(`Sets de linge supplémentaires (${data.additionalServices.setsDeLingeCount}) : ${data.additionalServices.setsDeLingeCount * 90} MAD`);
+    }
 
     // Format date with day name
     let formattedDateWithDay = data.schedulingDate || "-";
@@ -333,6 +339,17 @@ export async function sendBookingEmailResend(serviceName: string, data: any, pri
       ${data.serviceType ? `<tr><td style="padding: 5px 0;"><strong>Offre:</strong></td><td style="text-transform: capitalize;">${data.serviceType}</td></tr>` : ""}
       ${data.structureType ? `<tr><td style="padding: 5px 0;"><strong>Structure:</strong></td><td style="text-transform: capitalize;">${data.structureType}</td></tr>` : ""}
       ${data.propertyType ? `<tr><td style="padding: 5px 0;"><strong>Type de bien:</strong></td><td style="text-transform: capitalize;">${data.propertyType}</td></tr>` : ""}
+      ${data.sizeTier ? `<tr><td style="padding: 5px 0;"><strong>Type:</strong></td><td>${(() => {
+        const sizeLabels: Record<string, string> = {
+          studio: "Studio",
+          "1chambre": "1 chambre",
+          "2chambres": "2 chambres",
+          "3chambres": "3 chambres",
+          "4chambres": "4 chambres",
+          villa: "Villa"
+        };
+        return sizeLabels[data.sizeTier] || data.sizeTier;
+      })()}</td></tr>` : ""}
       ${!["nettoyage fin de chantier", "nettoyage fin de chantier (entreprise)", "ménage post-sinistre", "nettoyage d'urgence"].includes(serviceName.toLowerCase()) ? `<tr><td style="padding: 5px 0;"><strong>Fréquence:</strong></td><td>${frequency}</td></tr>` : ""}
       ${data.recommendedDuration && data.recommendedDuration > 0 ? `<tr><td style="padding: 5px 0; width: 40%;"><strong>Durée recommandée:</strong></td><td>${data.recommendedDuration}h</td></tr>` : ""}
       ${data.duration && data.duration !== "-" ? `<tr><td style="padding: 5px 0;"><strong>Durée optée:</strong></td><td>${data.duration}h</td></tr>` : ""}

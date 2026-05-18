@@ -77,6 +77,10 @@ export const formatBookingMessage = (serviceName: string, data: any, price: numb
     if (data.additionalServices?.nettoyageTerrasse) options.push("Nettoyage Terrasse (+500 MAD)");
     if (data.additionalServices?.baiesVitrees) options.push("Baies Vitrées (Sur devis)");
     if (data.intensiveOption || data.cleanlinessType === "intensif") options.push("Option Intensif");
+    if (data.additionalServices?.reassortConso) options.push("Réassort consommables (+25 MAD)");
+    if (data.additionalServices?.setsDeLinge && data.additionalServices?.setsDeLingeCount > 0) {
+        options.push(`Sets de linge supplémentaires (${data.additionalServices.setsDeLingeCount} sets, +${data.additionalServices.setsDeLingeCount * 90} MAD)`);
+    }
     if (options.length > 0) details.push(`*Services optionnels :* ${options.join(", ")}`);
 
     // Surface

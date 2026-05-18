@@ -33,18 +33,17 @@ import { CASABLANCA_NEIGHBORHOODS, DEFAULT_CITY, CITIES, SURCHARGE_CITIES, NEIGH
 const frequencies = FREQUENCES;
 
 const INITIAL_FORM_DATA = {
-    propertyType: "studio",
-    frequency: "oneshot",
-    subFrequency: "",
-    duration: 4,
-    numberOfPeople: 1,
+    propertyType: "appartement",
+    formula: "A",
+    sizeTier: "1chambre",
+    conso: false,
+    linenSets: 0,
     city: DEFAULT_CITY,
     neighborhood: "",
     schedulingTime: "morning",
     schedulingDate: "",
     schedulingType: "flexible",
     fixedTime: "14:00",
-    additionalServices: {},
     phoneNumber: "",
     phonePrefix: "+212",
     useWhatsappForPhone: true,
@@ -63,6 +62,46 @@ export default function MenageAirbnbClient() {
     const [isSubmitting, setIsSubmitting] = useState(false);
     const router = useRouter();
 
+    const AIRBNB_PRICES = {
+        A: {
+            studio: 130,
+            "1chambre": 165,
+            "2chambres": 195,
+            "3chambres": 260,
+            "4chambres": 325,
+            villa: 390
+        },
+        B: {
+            studio: 220,
+            "1chambre": 255,
+            "2chambres": 285,
+            "3chambres": 350,
+            "4chambres": 415,
+            villa: 480
+        }
+    } as const;
+
+    const SIZE_LABELS: Record<string, string> = {
+        studio: "Studio",
+        "1chambre": "1 chambre",
+        "2chambres": "2 chambres",
+        "3chambres": "3 chambres",
+        "4chambres": "4 chambres",
+        villa: "Villa"
+    };
+
+    const basePrice = AIRBNB_PRICES[formData.formula as "A" | "B"][formData.sizeTier as keyof typeof AIRBNB_PRICES.A];
+    let totalPrice = basePrice;
+    if (formData.conso) {
+        totalPrice += 25;
+    }
+    if (formData.formula === "B" && formData.linenSets > 0) {
+        totalPrice += formData.linenSets * 90;
+    }
+    if (SURCHARGE_CITIES.includes(formData.city)) {
+        totalPrice += 50;
+    }
+
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         setWasValidated(true);
@@ -79,24 +118,30 @@ export default function MenageAirbnbClient() {
 
         setIsSubmitting(true);
         try {
-            const frequencyLabel = formData.frequency === "oneshot"
-                ? "Une fois"
-                : (frequencies.find(f => f.value === formData.subFrequency)?.label || "");
-
             const bookingData = {
                 ...formData,
-                frequencyLabel,
+                frequency: "oneshot",
+                frequencyLabel: "Une fois",
+                numberOfPeople: 1,
+                propertyType: formData.propertyType.charAt(0).toUpperCase() + formData.propertyType.slice(1),
+                serviceType: formData.formula === "A" ? "Formule A — Ménage seul" : "Formule B — Ménage + set de linge",
+                type_habitation: `${formData.propertyType.charAt(0).toUpperCase() + formData.propertyType.slice(1)} (${SIZE_LABELS[formData.sizeTier]})`,
+                additionalServices: {
+                    reassortConso: formData.conso,
+                    setsDeLinge: formData.formula === "B" && formData.linenSets > 0,
+                    setsDeLingeCount: formData.formula === "B" ? formData.linenSets : 0
+                },
                 phoneNumber: `${formData.phonePrefix} ${formData.phoneNumber}`,
                 whatsappNumber: formData.useWhatsappForPhone
                     ? `${formData.phonePrefix} ${formData.phoneNumber}`
                     : `${formData.whatsappPrefix} ${formData.whatsappNumber}`
             };
 
-            const message = formatBookingMessage("Ménage Airbnb", bookingData, "Sur devis", false);
+            const message = formatBookingMessage("Ménage Airbnb", bookingData, totalPrice, false);
             const whatsappLink = createWhatsAppLink(DESTINATION_PHONE_NUMBER, message);
 
             // Send email notification (await to ensure back-office recording)
-            const result = await sendBookingEmail("Ménage Airbnb", bookingData, "Sur devis", false);
+            const result = await sendBookingEmail("Ménage Airbnb", bookingData, totalPrice, false);
 
             if (result.success) {
                 setShowConfirmation(true);
@@ -124,9 +169,6 @@ export default function MenageAirbnbClient() {
             router.push(window.location.pathname + "/merci");
         }
     };
-
-    const incrementPeople = () => setFormData({ ...formData, numberOfPeople: formData.numberOfPeople + 1 });
-    const decrementPeople = () => setFormData({ ...formData, numberOfPeople: Math.max(1, formData.numberOfPeople - 1) });
 
     return (
         <div className="min-h-screen flex flex-col">
@@ -182,45 +224,67 @@ Il comprend le :
                         <form id="booking-form" onSubmit={handleSubmit} noValidate className={`flex flex-col lg:grid lg:grid-cols-3 gap-8 ${wasValidated ? 'was-validated' : ''}`}>
                             <div className="lg:col-span-1 lg:order-last sticky-reservation-summary-container">
                                 <div className="lg:sticky lg:top-24 space-y-6">
-                                    <div className="bg-primary/5 rounded-lg border shadow-sm p-6 space-y-4 relative">
-                                        <h3 className="text-xl font-bold text-primary border-b pb-2 text-center">
+                                    <div className="bg-white rounded-2xl border border-slate-200 p-6 space-y-4 relative">
+                                        <h3 className="text-lg font-bold bg-primary text-white py-2 px-4 rounded-lg text-center tracking-wide">
                                             Ma Réservation
                                         </h3>
                                         <div className="space-y-3">
-                                            <div className="flex justify-between gap-4 border-b border-primary/10 pb-2">
-                                                <span className="text-muted-foreground">Service:</span>
-                                                <span className="font-medium text-right text-slate-700">Ménage Airbnb</span>
+                                            <div className="flex justify-between gap-4 border-b border-slate-100 pb-3 text-sm">
+                                                <span className="text-slate-500">Service:</span>
+                                                <span className="font-bold text-slate-800 text-right">Ménage Airbnb</span>
                                             </div>
 
                                             {/* Detailed info - hidden on mobile when collapsed */}
                                             <div className={`space-y-3 ${!isSummaryExpanded ? 'max-lg:hidden' : ''}`}>
-                                                <div className="flex justify-between gap-4">
-                                                    <span className="text-muted-foreground">Fréquence:</span>
-                                                    <span className="font-medium text-right text-slate-700">
-                                                        {formData.frequency === "oneshot" ? "Une fois" : `Abonnement (${frequencies.find(f => f.value === formData.subFrequency)?.label || ""})`}
+                                                <div className="flex justify-between gap-4 border-b border-slate-100 pb-3 text-sm">
+                                                    <span className="text-slate-500">Type d'habitation:</span>
+                                                    <span className="font-bold text-slate-800 text-right capitalize">
+                                                        {formData.propertyType}
                                                     </span>
                                                 </div>
-                                                <div className="flex justify-between gap-4">
-                                                    <span className="text-muted-foreground">Personnes:</span>
-                                                    <span className="font-medium text-right text-slate-700">{formData.numberOfPeople}</span>
+                                                <div className="flex justify-between gap-4 border-b border-slate-100 pb-3 text-sm">
+                                                    <span className="text-slate-500">Formule:</span>
+                                                    <span className="font-bold text-slate-800 text-right">
+                                                        {formData.formula === "A" ? "A — Ménage seul" : "B — Ménage + set de linge"}
+                                                    </span>
                                                 </div>
-                                                <div className="flex justify-between gap-4 border-t border-primary/10 pt-2">
-                                                    <span className="text-muted-foreground">Date:</span>
-                                                    <span className="font-medium text-right text-slate-700">{formData.schedulingDate || "Non définie"}</span>
+                                                <div className="flex justify-between gap-4 border-b border-slate-100 pb-3 text-sm">
+                                                    <span className="text-slate-500">Type:</span>
+                                                    <span className="font-bold text-slate-800 text-right">
+                                                        {SIZE_LABELS[formData.sizeTier]}
+                                                    </span>
                                                 </div>
-                                                <div className="flex justify-between gap-4">
-                                                    <span className="text-muted-foreground">Heure:</span>
-                                                    <span className="font-medium text-right text-slate-700">
+                                                {formData.conso && (
+                                                    <div className="flex justify-between gap-4 border-b border-slate-100 pb-3 text-sm">
+                                                        <span className="text-slate-500">Réassort:</span>
+                                                        <span className="font-bold text-slate-800 text-right">+25 DH</span>
+                                                    </div>
+                                                )}
+                                                {formData.formula === "B" && formData.linenSets > 0 && (
+                                                    <div className="flex justify-between gap-4 border-b border-slate-100 pb-3 text-sm">
+                                                        <span className="text-slate-500">Sets de linge:</span>
+                                                        <span className="font-bold text-slate-800 text-right">
+                                                            {formData.linenSets} × 90 = {formData.linenSets * 90} DH
+                                                        </span>
+                                                    </div>
+                                                )}
+                                                <div className="flex justify-between gap-4 border-b border-slate-100 pb-3 text-sm">
+                                                    <span className="text-slate-500">Date:</span>
+                                                    <span className="font-bold text-slate-800 text-right">{formData.schedulingDate || "Non définie"}</span>
+                                                </div>
+                                                <div className="flex justify-between gap-4 pb-1 text-sm">
+                                                    <span className="text-slate-500">Heure:</span>
+                                                    <span className="font-bold text-slate-800 text-right">
                                                         {formData.schedulingType === "fixed" ? formData.fixedTime : (formData.schedulingTime === "morning" ? "Le matin" : "L'après midi")}
                                                     </span>
                                                 </div>
                                             </div>
                                         </div>
 
-                                        <div className="pt-4 border-t">
+                                        <div className="pt-4 border-t border-slate-100">
                                             <div className="flex justify-between items-center">
-                                                <span className="text-lg font-bold">Total</span>
-                                                <span className="text-xl font-bold text-primary italic">Sur devis</span>
+                                                <span className="text-lg font-extrabold text-slate-800">Total</span>
+                                                <span className="text-2xl font-black text-primary">{totalPrice} DH</span>
                                             </div>
                                         </div>
 
@@ -228,7 +292,7 @@ Il comprend le :
                                         <button
                                             type="button"
                                             onClick={() => setIsSummaryExpanded(!isSummaryExpanded)}
-                                            className="lg:hidden absolute -bottom-3 left-1/2 -translate-x-1/2 w-8 h-8 rounded-full bg-primary text-white flex items-center justify-center shadow-lg border-2 border-white z-20 hover:bg-primary/90 transition-transform active:scale-90"
+                                            className="lg:hidden absolute -bottom-3 left-1/2 -translate-x-1/2 w-8 h-8 rounded-full bg-primary text-white flex items-center justify-center border-2 border-white z-20 hover:bg-primary/90 transition-transform active:scale-90"
                                         >
                                             {isSummaryExpanded ? <ChevronUp size={20} /> : <ChevronDown size={20} />}
                                         </button>
@@ -237,244 +301,308 @@ Il comprend le :
                             </div>
 
                             <div className="lg:col-span-2 space-y-8">
-
-                                <div className="bg-card rounded-lg p-4 md:p-6 border shadow-sm space-y-6">
+                                <div className="space-y-8">
+                                    {/* Type d'habitation */}
                                     <div>
-                                        <h3 className="text-xl font-bold bg-primary text-white p-3 rounded-lg mb-4 text-center">
+                                        <h3 className="text-lg font-bold bg-primary text-white py-2.5 px-4 rounded-lg mb-4 text-center tracking-wide">
                                             Type d'habitation
                                         </h3>
-                                        <RadioGroup
-                                            value={formData.propertyType}
-                                            onValueChange={(value) => setFormData({ ...formData, propertyType: value })}
-                                            className="flex flex-wrap gap-8 p-4"
-                                        >
-                                            {["Studio", "Appartement", "Duplex", "Villa", "Maison"].map((type) => (
-                                                <div key={type} className="flex items-center space-x-3">
-                                                    <RadioGroupItem value={type.toLowerCase()} id={type} className="border-primary text-primary" />
-                                                    <Label htmlFor={type} className="font-medium text-slate-700">{type}</Label>
-                                                </div>
-                                            ))}
-                                        </RadioGroup>
+                                        <div className="bg-white rounded-2xl border border-slate-200 p-6">
+                                            <RadioGroup
+                                                value={formData.propertyType}
+                                                onValueChange={(value) => setFormData({ ...formData, propertyType: value })}
+                                                className="flex flex-wrap gap-8 justify-start"
+                                            >
+                                                {["Studio", "Appartement", "Duplex", "Villa", "Maison"].map((type) => (
+                                                    <div key={type} className="flex items-center space-x-3">
+                                                        <RadioGroupItem value={type.toLowerCase()} id={type} className="border-primary text-primary" />
+                                                        <Label htmlFor={type} className="font-extrabold text-slate-700 cursor-pointer select-none text-sm">{type}</Label>
+                                                    </div>
+                                                ))}
+                                            </RadioGroup>
+                                        </div>
                                     </div>
 
+                                    {/* Nos formules, room size grid, and options */}
                                     <div>
-                                        <h3 className="text-xl font-bold bg-primary text-white p-3 rounded-lg mb-4 text-center">
-                                            Choisissez la fréquence
+                                        <h3 className="text-lg font-bold bg-primary text-white py-2.5 px-4 rounded-lg mb-4 text-center tracking-wide">
+                                            Nos formules
                                         </h3>
-                                        <div className="p-4 space-y-4">
-                                            <div className="flex flex-col items-center gap-4">
-                                                <div className="flex bg-slate-100 p-1 rounded-full w-full max-w-md mx-auto">
-                                                    <button
-                                                        type="button"
-                                                        className={`flex-1 py-3 px-6 rounded-full font-bold transition-all ${formData.frequency === "oneshot"
-                                                            ? "bg-primary text-white shadow-sm"
-                                                            : "text-slate-500 hover:text-primary"
-                                                            }`}
-                                                        onClick={() => setFormData({ ...formData, frequency: "oneshot" })}
-                                                    >
-                                                        Une fois
-                                                    </button>
-                                                    <button
-                                                        type="button"
-                                                        className={`flex-1 py-3 px-6 rounded-full font-bold transition-all ${formData.frequency === "subscription"
-                                                            ? "bg-primary text-white shadow-sm"
-                                                            : "text-slate-500 hover:text-primary"
-                                                            }`}
-                                                        onClick={() => setFormData({ ...formData, frequency: "subscription" })}
-                                                    >
-                                                        Abonnement
-                                                    </button>
-                                                </div>
-                                                {formData.frequency === "subscription" && (
-                                                    <div className="w-full max-w-md mx-auto animate-in fade-in slide-in-from-top-2 duration-300">
-                                                        <Select
-                                                            value={formData.subFrequency}
-                                                            onValueChange={(value) => setFormData({ ...formData, subFrequency: value })}
+                                        <div className="bg-white rounded-2xl border border-slate-200 p-6 space-y-6">
+                                            {/* Formula cards selector */}
+                                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                                {/* Formula A */}
+                                                <button
+                                                    type="button"
+                                                    onClick={() => setFormData({ ...formData, formula: "A" })}
+                                                    className={`p-6 rounded-2xl border-2 text-center transition-all duration-300 ${formData.formula === "A"
+                                                        ? "bg-primary border-transparent text-white scale-[1.01]"
+                                                        : "bg-white border-slate-200 text-slate-700 hover:bg-slate-50"
+                                                        }`}
+                                                >
+                                                    <div className={`text-xs font-bold uppercase tracking-wider mb-1 ${formData.formula === "A" ? "text-white/80" : "text-slate-400"}`}>
+                                                        FORMULE A
+                                                    </div>
+                                                    <div className="text-2xl font-extrabold">
+                                                        Ménage seul
+                                                    </div>
+                                                </button>
+
+                                                {/* Formula B */}
+                                                <button
+                                                    type="button"
+                                                    onClick={() => setFormData({ ...formData, formula: "B" })}
+                                                    className={`p-6 rounded-2xl border-2 text-center transition-all duration-300 ${formData.formula === "B"
+                                                        ? "bg-primary border-transparent text-white scale-[1.01]"
+                                                        : "bg-white border-slate-200 text-slate-700 hover:bg-slate-50"
+                                                        }`}
+                                                >
+                                                    <div className={`text-xs font-bold uppercase tracking-wider mb-1 ${formData.formula === "B" ? "text-white/80" : "text-slate-400"}`}>
+                                                        FORMULE B
+                                                    </div>
+                                                    <div className="text-2xl font-extrabold">
+                                                        Ménage + set de linge
+                                                    </div>
+                                                </button>
+                                            </div>
+
+                                            {/* Size cards grid */}
+                                            <div className="grid grid-cols-2 md:grid-cols-3 gap-4 pt-2">
+                                                {Object.keys(AIRBNB_PRICES.A).map((sizeKey) => {
+                                                    const sizeLabel = SIZE_LABELS[sizeKey];
+                                                    const cardPrice = AIRBNB_PRICES[formData.formula as "A" | "B"][sizeKey as keyof typeof AIRBNB_PRICES.A];
+                                                    const isSelected = formData.sizeTier === sizeKey;
+                                                    return (
+                                                        <button
+                                                            key={sizeKey}
+                                                            type="button"
+                                                            onClick={() => setFormData({ ...formData, sizeTier: sizeKey })}
+                                                            className={`p-4 rounded-2xl border transition-all duration-300 text-left ${isSelected
+                                                                ? "border-primary bg-white ring-2 ring-primary ring-offset-0 scale-[1.01]"
+                                                                : "border-slate-200 bg-white hover:bg-slate-50"
+                                                                }`}
                                                         >
-                                                            <SelectTrigger className="w-full">
-                                                                <SelectValue placeholder="Sélectionnez un abonnement" />
-                                                            </SelectTrigger>
-                                                            <SelectContent>
-                                                                {frequencies.map((freq) => (
-                                                                    <SelectItem key={freq.value} value={freq.value}>
-                                                                        {freq.label}
-                                                                    </SelectItem>
-                                                                ))}
-                                                            </SelectContent>
-                                                        </Select>
+                                                            <div className={`font-bold text-sm ${isSelected ? "text-primary" : "text-slate-500"}`}>
+                                                                {sizeLabel}
+                                                            </div>
+                                                            <div className="font-extrabold text-lg mt-1 text-slate-800">
+                                                                {cardPrice} DH
+                                                            </div>
+                                                        </button>
+                                                    );
+                                                })}
+                                            </div>
+
+                                            {/* Divider */}
+                                            <div className="border-t border-slate-100 pt-2" />
+
+                                            {/* Checkbox & count options */}
+                                            <div className="space-y-4">
+                                                <div className="flex items-center justify-between py-2">
+                                                    <div className="flex items-center gap-3">
+                                                        <Checkbox
+                                                            id="reassort"
+                                                            checked={formData.conso}
+                                                            onCheckedChange={(checked) => setFormData({ ...formData, conso: !!checked })}
+                                                            className="data-[state=checked]:bg-primary border-primary h-5 w-5 rounded"
+                                                        />
+                                                        <label htmlFor="reassort" className="font-extrabold text-slate-800 text-sm cursor-pointer select-none">
+                                                            Réassort consommables
+                                                        </label>
+                                                    </div>
+                                                    <span className="font-bold text-primary text-sm">
+                                                        +25 DH
+                                                    </span>
+                                                </div>
+
+                                                {formData.formula === "B" && (
+                                                    <div className="p-4 border border-dashed border-primary/20 rounded-2xl bg-primary/5 space-y-3 animate-in fade-in duration-300">
+                                                        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                                                            <div className="space-y-1">
+                                                                <div className="font-extrabold text-primary text-sm md:text-base">
+                                                                    — Ajout de set de linge : +90 DH / set
+                                                                </div>
+                                                                <p className="text-xs text-slate-500 leading-relaxed max-w-md">
+                                                                    2 grandes serviettes, 2 moyennes serviettes, 1 drap housse, 1 housse de couette, 1 drap lit, 2 tales d'oreiller
+                                                                </p>
+                                                            </div>
+                                                            <div className="flex items-center gap-2 bg-white shrink-0 self-end md:self-auto">
+                                                                <button
+                                                                    type="button"
+                                                                    className="h-8 w-8 rounded-lg border border-primary text-primary bg-white hover:bg-primary/5 flex items-center justify-center font-bold text-lg transition-colors active:scale-95"
+                                                                    onClick={() => setFormData(prev => ({ ...prev, linenSets: Math.max(0, prev.linenSets - 1) }))}
+                                                                >
+                                                                    -
+                                                                </button>
+                                                                <div className="w-12 h-8 flex items-center justify-center border border-slate-200 rounded-lg text-slate-800 font-extrabold text-sm bg-white">
+                                                                    {formData.linenSets}
+                                                                </div>
+                                                                <button
+                                                                    type="button"
+                                                                    className="h-8 w-8 rounded-lg border border-primary text-primary bg-white hover:bg-primary/5 flex items-center justify-center font-bold text-lg transition-colors active:scale-95"
+                                                                    onClick={() => setFormData(prev => ({ ...prev, linenSets: prev.linenSets + 1 }))}
+                                                                >
+                                                                    +
+                                                                </button>
+                                                            </div>
+                                                        </div>
                                                     </div>
                                                 )}
                                             </div>
                                         </div>
                                     </div>
 
+                                    {/* Planning */}
                                     <div>
-                                        <h3 className="text-xl font-bold bg-primary text-white p-3 rounded-lg text-center mb-4">
-                                            Nombre de personne
-                                        </h3>
-                                        <div className="flex items-center justify-center gap-8 p-4">
-                                            <Button
-                                                type="button"
-                                                variant="outline"
-                                                size="icon"
-                                                className="h-10 w-10 rounded-full border-primary text-primary hover:bg-primary/10"
-                                                onClick={decrementPeople}
-                                            >
-                                                <span className="text-2xl">-</span>
-                                            </Button>
-                                            <span className="text-2xl font-bold text-primary min-w-[40px] text-center">
-                                                {formData.numberOfPeople}
-                                            </span>
-                                            <Button
-                                                type="button"
-                                                variant="outline"
-                                                size="icon"
-                                                className="h-10 w-10 rounded-full border-primary text-primary hover:bg-primary/10"
-                                                onClick={incrementPeople}
-                                            >
-                                                <span className="text-2xl">+</span>
-                                            </Button>
-                                        </div>
-                                    </div>
-
-                                    <div>
-                                        <h3 className="text-xl font-bold bg-primary text-white p-3 rounded-lg mb-4 text-center">
+                                        <h3 className="text-lg font-bold bg-primary text-white py-2.5 px-4 rounded-lg mb-4 text-center tracking-wide">
                                             Planning pour votre demande
                                         </h3>
-                                        <div className="grid md:grid-cols-3 gap-6 p-4 border rounded-xl bg-white shadow-sm">
-                                            {/* Heure fixe */}
-                                            <div className="text-center space-y-3">
-                                                <div className="flex items-center justify-center space-x-2">
-                                                    <input
-                                                        type="radio"
-                                                        id="fixed"
-                                                        name="schedulingType"
-                                                        checked={formData.schedulingType === "fixed"}
-                                                        onChange={() => setFormData({ ...formData, schedulingType: "fixed" })}
-                                                        className="w-4 h-4 text-primary"
-                                                    />
-                                                    <Label htmlFor="fixed" className="font-bold text-primary text-sm cursor-pointer text-center">Je souhaite une heure fixe</Label>
-                                                </div>
-                                                <div className="flex justify-center">
+                                        <div className="bg-white rounded-2xl border border-slate-200 p-6">
+                                            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                                                {/* Column 1: Fixed Time */}
+                                                <div className="space-y-3">
+                                                    <div className="flex items-center space-x-2.5">
+                                                        <input
+                                                            type="radio"
+                                                            id="fixed"
+                                                            name="schedulingType"
+                                                            checked={formData.schedulingType === "fixed"}
+                                                            onChange={() => setFormData({ ...formData, schedulingType: "fixed" })}
+                                                            className="w-4 h-4 text-primary focus:ring-primary border-slate-300"
+                                                        />
+                                                        <label htmlFor="fixed" className="font-extrabold text-slate-800 text-sm cursor-pointer">
+                                                            Je souhaite une heure fixe
+                                                        </label>
+                                                    </div>
                                                     <Input
                                                         type="time"
                                                         required
                                                         value={formData.fixedTime}
                                                         onChange={(e) => setFormData({ ...formData, fixedTime: e.target.value })}
                                                         disabled={formData.schedulingType !== "fixed"}
-                                                        className="w-32 text-center text-xl font-bold h-12 border-primary/30"
+                                                        className="w-full max-w-[160px] text-center text-lg font-extrabold h-11 border-slate-200 rounded-xl"
                                                     />
                                                 </div>
-                                            </div>
 
-                                            {/* Flexible */}
-                                            <div className="text-center space-y-3">
-                                                <div className="flex items-center justify-center space-x-2">
-                                                    <input
-                                                        type="radio"
-                                                        id="flexible"
-                                                        name="schedulingType"
-                                                        checked={formData.schedulingType === "flexible"}
-                                                        onChange={() => setFormData({ ...formData, schedulingType: "flexible" })}
-                                                        className="w-4 h-4 text-primary"
-                                                    />
-                                                    <Label htmlFor="flexible" className="font-bold text-primary text-sm cursor-pointer text-center">Je suis flexible</Label>
+                                                {/* Column 2: Flexible */}
+                                                <div className="space-y-3">
+                                                    <div className="flex items-center space-x-2.5">
+                                                        <input
+                                                            type="radio"
+                                                            id="flexible"
+                                                            name="schedulingType"
+                                                            checked={formData.schedulingType === "flexible"}
+                                                            onChange={() => setFormData({ ...formData, schedulingType: "flexible" })}
+                                                            className="w-4 h-4 text-primary focus:ring-primary border-slate-300"
+                                                        />
+                                                        <label htmlFor="flexible" className="font-extrabold text-slate-800 text-sm cursor-pointer">
+                                                            Je suis flexible
+                                                        </label>
+                                                    </div>
+                                                    <RadioGroup
+                                                        value={formData.schedulingTime}
+                                                        onValueChange={(value) => setFormData({ ...formData, schedulingTime: value })}
+                                                        disabled={formData.schedulingType !== "flexible"}
+                                                        className="space-y-2 pl-6"
+                                                    >
+                                                        <div className="flex items-center space-x-2.5">
+                                                            <RadioGroupItem value="morning" id="morning" className="border-primary text-primary" />
+                                                            <label htmlFor="morning" className="text-sm font-bold text-slate-700 cursor-pointer">
+                                                                Le matin
+                                                            </label>
+                                                        </div>
+                                                        <div className="flex items-center space-x-2.5">
+                                                            <RadioGroupItem value="afternoon" id="afternoon" className="border-primary text-primary" />
+                                                            <label htmlFor="afternoon" className="text-sm font-bold text-slate-700 cursor-pointer">
+                                                                L'après midi
+                                                            </label>
+                                                        </div>
+                                                    </RadioGroup>
                                                 </div>
-                                                <RadioGroup
-                                                    value={formData.schedulingTime}
-                                                    onValueChange={(value) => setFormData({ ...formData, schedulingTime: value })}
-                                                    disabled={formData.schedulingType !== "flexible"}
-                                                    className="space-y-2 text-left inline-block"
-                                                >
-                                                    <div className="flex items-center space-x-2">
-                                                        <RadioGroupItem value="morning" id="morning" className="border-primary text-primary" />
-                                                        <Label htmlFor="morning" className="text-sm font-medium">Le matin</Label>
-                                                    </div>
-                                                    <div className="flex items-center space-x-2">
-                                                        <RadioGroupItem value="afternoon" id="afternoon" className="border-primary text-primary" />
-                                                        <Label htmlFor="afternoon" className="text-sm font-medium">L'après midi</Label>
-                                                    </div>
-                                                </RadioGroup>
-                                            </div>
 
-                                            {/* Date */}
-                                            <div className="text-center space-y-3">
-                                                <div className="font-bold text-primary text-sm">Date</div>
-                                                <Input
-                                                    type="date"
-                                                    required
-                                                    value={formData.schedulingDate}
-                                                    onChange={(e) => setFormData({ ...formData, schedulingDate: e.target.value })}
-                                                    className="w-full border-slate-300"
-                                                />
+                                                {/* Column 3: Date */}
+                                                <div className="space-y-3">
+                                                    <div className="font-extrabold text-slate-800 text-sm">Date</div>
+                                                    <Input
+                                                        type="date"
+                                                        required
+                                                        value={formData.schedulingDate}
+                                                        onChange={(e) => setFormData({ ...formData, schedulingDate: e.target.value })}
+                                                        className="w-full border-slate-200 rounded-xl h-11 text-slate-700 font-medium"
+                                                    />
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
 
+                                    {/* Location */}
                                     <div>
-                                        <h3 className="text-xl font-bold bg-primary text-white p-3 rounded-lg mb-4 text-center">
+                                        <h3 className="text-lg font-bold bg-primary text-white py-2.5 px-4 rounded-lg mb-4 text-center tracking-wide">
                                             Où aura lieu votre ménage ?
                                         </h3>
-                                        <div className="grid md:grid-cols-2 gap-4 p-4 border rounded-xl bg-white mb-4">
-                                            <div className="space-y-2">
-                                                <Label className="text-xs font-bold text-slate-400">Ville</Label>
-                                                <Select
-                                                    value={formData.city}
-                                                    onValueChange={(value) => setFormData({ ...formData, city: value, neighborhood: "" })}
-                                                >
-                                                    <SelectTrigger className="border-slate-300">
-                                                        <SelectValue placeholder="Sélectionner une ville" />
-                                                    </SelectTrigger>
-                                                    <SelectContent>
-                                                        {CITIES.map((c) => (
-                                                            <SelectItem key={c} value={c}>
-                                                                {c}
-                                                            </SelectItem>
-                                                        ))}
-                                                    </SelectContent>
-                                                </Select>
+                                        <div className="bg-white rounded-2xl border border-slate-200 p-6 space-y-6">
+                                            <div className="grid md:grid-cols-2 gap-4">
+                                                <div className="space-y-2">
+                                                    <Label className="text-xs font-bold text-slate-400">Ville</Label>
+                                                    <Select
+                                                        value={formData.city}
+                                                        onValueChange={(value) => setFormData({ ...formData, city: value, neighborhood: "" })}
+                                                    >
+                                                        <SelectTrigger className="border-slate-200 rounded-xl h-11">
+                                                            <SelectValue placeholder="Sélectionner une ville" />
+                                                        </SelectTrigger>
+                                                        <SelectContent>
+                                                            {CITIES.map((c) => (
+                                                                <SelectItem key={c} value={c}>
+                                                                    {c}
+                                                                </SelectItem>
+                                                            ))}
+                                                        </SelectContent>
+                                                    </Select>
+                                                </div>
+                                                <div className="space-y-2">
+                                                    <Label className="text-xs font-bold text-slate-400">Quartier</Label>
+                                                    <Input
+                                                        placeholder="Votre quartier"
+                                                        value={formData.neighborhood}
+                                                        onChange={(e) => setFormData({ ...formData, neighborhood: e.target.value })}
+                                                        className="border-slate-200 h-11 rounded-xl"
+                                                    />
+                                                </div>
+                                            </div>
+                                            <div className="flex items-start gap-3 p-3 bg-orange-50 border border-orange-100 rounded-xl">
+                                                <div className="mt-0.5 text-orange-500 flex-shrink-0">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                                                        <circle cx="12" cy="12" r="10" />
+                                                        <line x1="12" y1="8" x2="12" y2="12" />
+                                                        <line x1="12" y1="16" x2="12.01" y2="16" />
+                                                    </svg>
+                                                </div>
+                                                <p className="text-xs font-medium text-orange-800 leading-relaxed">
+                                                    Si vous êtes dans les zones <span className="font-bold">Bouskoura, Dar Bouazza, Mansouria, Almaz, Sidi Rahal, Benslimane, Mohammédia, Ville Verte...</span> un supplément de <span className="font-bold whitespace-nowrap px-1 bg-orange-200/50 rounded-md text-orange-700">50 MAD</span> vous sera facturé pour faciliter le déplacement.
+                                                </p>
                                             </div>
                                             <div className="space-y-2">
-                                                <Label className="text-xs font-bold text-slate-400">Quartier</Label>
-                                                <Input
-                                                    placeholder="Votre quartier"
-                                                    value={formData.neighborhood}
-                                                    onChange={(e) => setFormData({ ...formData, neighborhood: e.target.value })}
-                                                    className="border-slate-300 h-11"
+                                                <Label className="font-extrabold text-slate-700 text-sm">Champs de repère</Label>
+                                                <Textarea
+                                                    placeholder="Donnez-nous des repères pour faciliter le travail de ménage (points de référence pour la tournée du nettoyeur) après les points de repère"
+                                                    required
+                                                    value={formData.changeRepereNotes}
+                                                    onChange={(e) => setFormData({ ...formData, changeRepereNotes: e.target.value })}
+                                                    className="border-slate-200 rounded-xl"
                                                 />
                                             </div>
                                         </div>
-                                        <div className="flex items-start gap-3 p-3 mt-4 mb-4 bg-orange-50 border border-orange-100 rounded-xl shadow-sm">
-                                            <div className="mt-0.5 text-orange-500 flex-shrink-0">
-                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                                                    <circle cx="12" cy="12" r="10" />
-                                                    <line x1="12" y1="8" x2="12" y2="12" />
-                                                    <line x1="12" y1="16" x2="12.01" y2="16" />
-                                                </svg>
-                                            </div>
-                                            <p className="text-xs font-medium text-orange-800 leading-relaxed">
-                                                Si vous êtes dans les zones <span className="font-bold">Bouskoura, Dar Bouazza, Mansouria, Almaz, Sidi Rahal, Benslimane, Mohammédia, Ville Verte...</span> un supplément de <span className="font-bold whitespace-nowrap px-1 bg-orange-200/50 rounded-md text-orange-700">50 MAD</span> vous sera facturé pour faciliter le déplacement.
-                                            </p>
-                                        </div>
-                                        <div className="p-4 border rounded-xl bg-white">
-                                            <Label className="font-bold text-primary">Champs de repère</Label>
-                                            <Textarea
-                                                placeholder="Donnez-nous des repères pour faciliter le travail de ménage (points de référence pour la tournée du nettoyeur) après les points de repère"
-                                                required
-                                                value={formData.changeRepereNotes}
-                                                onChange={(e) => setFormData({ ...formData, changeRepereNotes: e.target.value })}
-                                                className="mt-2 border-slate-300"
-                                            />
-                                        </div>
                                     </div>
 
-                                    <div className="bg-white border border-slate-200 rounded-xl overflow-hidden shadow-sm">
-                                        <h3 className="text-xl font-bold bg-primary text-white p-3 text-center">
+                                    {/* Client info */}
+                                    <div className="bg-white border border-slate-200 rounded-2xl overflow-hidden">
+                                        <h3 className="text-lg font-bold bg-primary text-white py-2.5 px-4 text-center tracking-wide">
                                             Mes informations
                                         </h3>
                                         <div className="p-6 grid md:grid-cols-2 gap-4">
                                             <div className="space-y-2">
-                                                <Label className="font-bold text-primary text-sm">Numéro de téléphone*</Label>
+                                                <Label className="font-extrabold text-slate-700 text-sm">Numéro de téléphone*</Label>
                                                 <div className="space-y-3">
                                                     <div className="flex gap-2">
                                                         <Input
@@ -484,7 +612,7 @@ Il comprend le :
                                                                 phonePrefix: e.target.value,
                                                                 whatsappPrefix: prev.useWhatsappForPhone ? e.target.value : prev.whatsappPrefix
                                                             }))}
-                                                            className="w-24 border-slate-300 font-bold text-primary text-center"
+                                                            className="w-24 border-slate-200 font-bold text-primary text-center rounded-xl"
                                                             placeholder="+212"
                                                         />
                                                         <Input
@@ -499,7 +627,7 @@ Il comprend le :
                                                                 }));
                                                             }}
                                                             required
-                                                            className="border-slate-300 h-11 flex-1"
+                                                            className="border-slate-200 h-11 flex-1 rounded-xl"
                                                         />
                                                     </div>
                                                     <div className="flex items-center space-x-2">
@@ -518,7 +646,7 @@ Il comprend le :
                                                         />
                                                         <label
                                                             htmlFor="useWhatsapp"
-                                                            className="text-xs font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 text-slate-600"
+                                                            className="text-xs font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 text-slate-600 cursor-pointer select-none"
                                                         >
                                                             Utilisez-vous ce numéro pour WhatsApp ?
                                                         </label>
@@ -526,12 +654,12 @@ Il comprend le :
                                                 </div>
                                             </div>
                                             <div className="space-y-2">
-                                                <Label className="font-bold text-primary text-sm">Numéro whatsapp</Label>
+                                                <Label className="font-extrabold text-slate-700 text-sm">Numéro whatsapp</Label>
                                                 <div className="flex gap-2">
                                                     <Input
                                                         value={formData.whatsappPrefix}
                                                         onChange={(e) => setFormData({ ...formData, whatsappPrefix: e.target.value })}
-                                                        className="w-20 border-slate-300 font-bold text-primary text-center"
+                                                        className="w-20 border-slate-200 font-bold text-primary text-center rounded-xl"
                                                         placeholder="+212"
                                                         disabled={formData.useWhatsappForPhone}
                                                     />
@@ -539,28 +667,28 @@ Il comprend le :
                                                         placeholder="6 12 00 00 00"
                                                         value={formData.whatsappNumber}
                                                         onChange={(e) => setFormData({ ...formData, whatsappNumber: e.target.value })}
-                                                        className="border-slate-300 h-11"
+                                                        className="border-slate-200 h-11 rounded-xl"
                                                         disabled={formData.useWhatsappForPhone}
                                                     />
                                                 </div>
                                             </div>
                                             <div className="space-y-2">
-                                                <Label className="font-bold text-primary text-sm">Nom*</Label>
+                                                <Label className="font-extrabold text-slate-700 text-sm">Nom*</Label>
                                                 <Input
                                                     value={formData.lastName}
                                                     onChange={(e) => setFormData({ ...formData, lastName: e.target.value })}
                                                     required
-                                                    className="mt-1 border-slate-300 h-11"
+                                                    className="mt-1 border-slate-200 h-11 rounded-xl"
                                                     placeholder="Votre nom"
                                                 />
                                             </div>
                                             <div className="space-y-2">
-                                                <Label className="font-bold text-primary text-sm">Prénom*</Label>
+                                                <Label className="font-extrabold text-slate-700 text-sm">Prénom*</Label>
                                                 <Input
                                                     value={formData.firstName}
                                                     onChange={(e) => setFormData({ ...formData, firstName: e.target.value })}
                                                     required
-                                                    className="mt-1 border-slate-300 h-11"
+                                                    className="mt-1 border-slate-200 h-11 rounded-xl"
                                                     placeholder="Votre prénom"
                                                 />
                                             </div>
@@ -571,7 +699,7 @@ Il comprend le :
                                         <Button
                                             type="submit"
                                             disabled={isSubmitting}
-                                            className="bg-primary hover:bg-primary/90 text-white px-8 py-4 text-base font-bold shadow-lg shadow-primary/20 h-auto rounded-full w-full md:w-auto md:min-w-[260px] transition-all hover:scale-105 active:scale-95 disabled:opacity-70 disabled:cursor-not-allowed"
+                                            className="bg-primary hover:bg-primary/90 text-white px-8 py-4 text-base font-bold h-auto rounded-full w-full md:w-auto md:min-w-[260px] transition-all hover:scale-105 active:scale-95 disabled:opacity-70 disabled:cursor-not-allowed"
                                         >
                                             {isSubmitting ? (
                                                 <div className="flex items-center gap-2">
@@ -579,7 +707,7 @@ Il comprend le :
                                                     Envoi en cours...
                                                 </div>
                                             ) : (
-                                                "Demander un devis"
+                                                "Réserver maintenant"
                                             )}
                                         </Button>
                                     </div>
@@ -598,13 +726,13 @@ Il comprend le :
                     <DialogHeader>
                         <DialogTitle className="text-primary text-2xl font-bold">Confirmation</DialogTitle>
                         <DialogDescription className="text-slate-700 text-lg mt-4 leading-relaxed">
-                            {getConfirmationMessage(`${formData.firstName} ${formData.lastName}`, true)}
+                            {getConfirmationMessage(`${formData.firstName} ${formData.lastName}`, false)}
                         </DialogDescription>
                     </DialogHeader>
                     <DialogFooter className="mt-6">
                         <Button
                             onClick={() => handleCloseConfirmation(false)}
-                            className="bg-primary hover:bg-primary/90 text-white rounded-full px-8"
+                            className="bg-primary hover:bg-primary/90 text-white rounded-full px-8 font-bold"
                         >
                             Fermer
                         </Button>
