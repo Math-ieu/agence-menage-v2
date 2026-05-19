@@ -193,15 +193,7 @@ export async function sendBookingEmailResend(serviceName: string, data: any, pri
     const client_name = data.contactPerson || individual_name || data.entityName || "Client";
     const frequency = data.frequency === "oneshot" ? "Une fois" : `Abonnement ( ${data.frequencyLabel || data.subFrequency || ""} )`;
 
-    // Services that don't have a time selection field
-    const servicesWithoutTime = [
-      "placement & gestion de propreté",
-      "nettoyage fin de chantier",
-      "nettoyage fin de chantier (entreprise)"
-    ];
-
-    const showSchedulingTime = !servicesWithoutTime.includes(serviceName.toLowerCase());
-    const scheduling_time = showSchedulingTime ? (data.schedulingType === 'fixed' || !data.schedulingType ? data.fixedTime : (data.schedulingTime === 'morning' ? 'Le matin' : data.schedulingTime === 'afternoon' ? "L'après midi" : data.schedulingTime)) : null;
+    const scheduling_time = data.schedulingType === 'fixed' || (!data.schedulingType && data.fixedTime) ? data.fixedTime : (data.schedulingTime === 'morning' ? 'Le matin' : data.schedulingTime === 'afternoon' ? "L'après midi" : data.schedulingTime);
 
     // Dynamic fields
     const isGardeMalade = serviceName.toLowerCase().includes("garde malade");
