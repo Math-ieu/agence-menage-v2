@@ -49,7 +49,7 @@ const Footer = () => {
                 <div className="flex flex-col">
                   <a href="tel:+212664226790" className="hover:text-white transition-colors">06 64 22 67 90</a>
                   <a href="tel:+212664331463" className="hover:text-white transition-colors">06 64 33 14 63</a>
-                  <a href="tel:+212522200177" className="hover:text-white transition-colors opacity-90">05 22 20 01 77 (Fixe)</a>
+                  <a href="tel:+212522200177" className="hover:text-white transition-colors opacity-90">05 22 20 02 39 (Fixe)</a>
                 </div>
               </li>
               <li className="flex items-center gap-3 text-primary-foreground font-bold text-sm lg:text-base">
