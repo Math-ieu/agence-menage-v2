@@ -423,11 +423,27 @@ export async function sendBookingEmailResend(serviceName: string, data: any, pri
 
         // 1. To Client
         if (data.phoneNumber) {
+          const waDuration = data.duration && data.duration !== "-" 
+            ? `${data.duration} ${Number(data.duration) > 1 ? 'heures' : 'heure'}` 
+            : "-";
+          const waPeople = data.numberOfPeople ? String(data.numberOfPeople) : "-";
+          const waOptionalServices = optionalServices.length > 0 ? optionalServices.join(", ") : "Aucun";
+
           waPromises.push(
             sendAutomatedWhatsAppMessage(
               data.phoneNumber,
               "confirmation_reservation",
-              [client_name, serviceName, formattedDate, formattedHour]
+              [
+                client_name,
+                serviceName,
+                frequency,
+                waDuration,
+                waPeople,
+                formattedDate,
+                formattedHour,
+                waOptionalServices,
+                fallbackPrice
+              ]
             ).catch(err => console.error("Client WA Error:", err))
           );
         }
