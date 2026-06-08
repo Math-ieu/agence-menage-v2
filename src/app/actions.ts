@@ -134,10 +134,19 @@ export async function sendEmployeeEmail(formData: {
 export async function sendBookingEmailResend(serviceName: string, data: any, price: string | number, isEntreprise: boolean = false) {
   try {
     const optionalServices = [];
-    if (data.additionalServices?.produitsEtOutils) {
-      optionalServices.push("Produits de ménage : 90 MAD");
+    const isBureaux = serviceName.toLowerCase().includes("bureaux");
+    if (isBureaux) {
+      if (data.additionalServices?.produitsEtOutils) {
+        optionalServices.push("Ménage avec produits");
+      } else {
+        optionalServices.push("Ménage sans produits");
+      }
+    } else {
+      if (data.additionalServices?.produitsEtOutils) {
+        optionalServices.push("Produits de ménage : 90 MAD");
+      }
     }
-    if (data.additionalServices?.torchonsEtSerpierres) {
+    if (data.additionalServices?.torchonsEtSerpierres && !isBureaux) {
       optionalServices.push("Torchons et serpillères : 40 MAD");
     }
     if (data.additionalServices?.nettoyageTerrasse) {

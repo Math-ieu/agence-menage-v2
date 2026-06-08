@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { SERVICE_COLORS } from "@/constants/service-colors";
 import { ChevronDown, ChevronUp } from "lucide-react";
@@ -67,6 +67,10 @@ export default function MenageBureauxClient() {
     const [isSubmitting, setIsSubmitting] = useState(false);
     const router = useRouter();
 
+    const getMinDuration = (frequency: string) => {
+        return frequency === "oneshot" ? 4 : 2;
+    };
+
     const calculateResources = (range: string) => {
         switch (range) {
             case "0-70": return { duration: 2, people: 1 };
@@ -79,10 +83,11 @@ export default function MenageBureauxClient() {
 
     const handleSurfaceChange = (range: string) => {
         const { duration, people } = calculateResources(range);
+        const minDur = getMinDuration(formData.frequency);
         setFormData({
             ...formData,
             officeSurface: range,
-            duration,
+            duration: Math.max(duration, minDur),
             numberOfPeople: people
         });
     };
@@ -92,8 +97,8 @@ export default function MenageBureauxClient() {
     };
 
     const handleDecrementDuration = () => {
-        const minResources = calculateResources(formData.officeSurface);
-        if (formData.duration > minResources.duration) {
+        const minDur = getMinDuration(formData.frequency);
+        if (formData.duration > minDur) {
             setFormData(prev => ({ ...prev, duration: prev.duration - 1 }));
         }
     };
@@ -109,6 +114,13 @@ export default function MenageBureauxClient() {
         }
     };
 
+    useEffect(() => {
+        const minDur = getMinDuration(formData.frequency);
+        if (formData.duration < minDur) {
+            setFormData(prev => ({ ...prev, duration: minDur }));
+        }
+    }, [formData.frequency]);
+
     const multiplier = calculateSurchargeMultiplier(
         formData.schedulingDate,
         formData.schedulingType,
@@ -116,10 +128,9 @@ export default function MenageBureauxClient() {
         formData.schedulingTime
     );
 
-    const perVisitBasePrice = formData.duration * formData.numberOfPeople * 60 * multiplier;
-    const productsPrice = formData.additionalServices.produitsEtOutils ? 90 : 0;
-    const torchonsPrice = formData.additionalServices.torchonsEtSerpierres ? 40 : 0;
-    const perVisitTotal = perVisitBasePrice + productsPrice + torchonsPrice;
+    const hourlyRate = formData.additionalServices.produitsEtOutils ? 70 : 60;
+    const perVisitBasePrice = formData.duration * formData.numberOfPeople * hourlyRate * multiplier;
+    const perVisitTotal = perVisitBasePrice;
 
     let totalPrice = 0;
     let discountAmount = 0;
@@ -280,18 +291,18 @@ export default function MenageBureauxClient() {
                                                     <span className="text-muted-foreground">Durée:</span>
                                                     <span className="font-medium text-right">{formData.duration}h</span>
                                                 </div>
-                                                {formData.additionalServices.produitsEtOutils && (
-                                                    <div className="flex justify-between gap-4 text-xs">
-                                                        <span className="text-muted-foreground">Produits:</span>
-                                                        <span className="font-medium text-right text-slate-700">+90 MAD</span>
-                                                    </div>
-                                                )}
-                                                {formData.additionalServices.torchonsEtSerpierres && (
-                                                    <div className="flex justify-between gap-4 text-xs">
-                                                        <span className="text-muted-foreground">Torchons:</span>
-                                                        <span className="font-medium text-right text-slate-700">+40 MAD</span>
-                                                    </div>
-                                                )}
+                                                <div className="flex justify-between gap-4">
+                                                    <span className="text-muted-foreground">Formule:</span>
+                                                    <span className="font-medium text-right text-sm">
+                                                        {formData.additionalServices.produitsEtOutils ? "Avec produit" : "Sans produit"}
+                                                    </span>
+                                                </div>
+                                                <div className="flex justify-between gap-4">
+                                                    <span className="text-muted-foreground">Tarif horaire:</span>
+                                                    <span className="font-medium text-right text-sm">
+                                                        {formData.additionalServices.produitsEtOutils ? "70 DH/h" : "60 DH/h"}
+                                                    </span>
+                                                </div>
                                                 <div className="flex justify-between gap-4 border-t border-primary/10 pt-2">
                                                     <span className="text-muted-foreground">Date:</span>
                                                     <span className="font-medium text-right">{formData.schedulingDate || "Non définie"}</span>
@@ -370,6 +381,52 @@ export default function MenageBureauxClient() {
                                     </div>
 
                                     <div>
+                                        <h3 className="text-xl font-bold bg-primary text-white p-3 rounded-lg text-center mb-4 uppercase">
+                                            Service
+                                        </h3>
+                                        <div className="p-6 bg-muted/30 rounded-xl border border-muted">
+                                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                                {[
+                                                    {
+                                                        value: false,
+                                                        title: "Ménage sans produit",
+                                                        desc: "Vous fournissez vous-même les produits de nettoyage. Notre équipe se déplace uniquement pour réaliser la prestation."
+                                                    },
+                                                    {
+                                                        value: true,
+                                                        title: "Ménage avec produit",
+                                                        desc: "Notre équipe apporte les produits de ménage, torchons et serpillères nécessaires à la prestation."
+                                                    }
+                                                ].map((item) => (
+                                                    <div
+                                                        key={item.title}
+                                                        className={`flex flex-col items-start p-6 rounded-xl border-2 transition-all cursor-pointer group bg-white ${formData.additionalServices.produitsEtOutils === item.value ? 'border-primary shadow-md' : 'border-transparent hover:shadow-sm'}`}
+                                                        onClick={() => setFormData({
+                                                            ...formData,
+                                                            additionalServices: {
+                                                                ...formData.additionalServices,
+                                                                produitsEtOutils: item.value
+                                                            }
+                                                        })}
+                                                    >
+                                                        <div className="flex items-center gap-3 mb-2">
+                                                            <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${formData.additionalServices.produitsEtOutils === item.value ? 'border-primary bg-primary' : 'border-muted-foreground'}`}>
+                                                                {formData.additionalServices.produitsEtOutils === item.value && <div className="w-2 h-2 rounded-full bg-white" />}
+                                                            </div>
+                                                            <span className={`font-bold text-base ${formData.additionalServices.produitsEtOutils === item.value ? 'text-primary' : 'text-slate-800'}`}>
+                                                                {item.title}
+                                                            </span>
+                                                        </div>
+                                                        <p className="text-xs text-muted-foreground leading-relaxed">
+                                                            {item.desc}
+                                                        </p>
+                                                    </div>
+                                                ))}
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div>
                                         <h3 className="text-xl font-bold bg-primary text-white p-3 rounded-lg mb-4">
                                             Choisissez la fréquence
                                         </h3>
@@ -427,7 +484,7 @@ export default function MenageBureauxClient() {
                                         <h3 className="text-xl font-bold bg-primary text-white p-3 rounded-lg text-center mb-4 uppercase">
                                             Durée estimée
                                         </h3>
-                                        <div className="flex items-center justify-center p-6 bg-muted/30 rounded-xl border border-muted">
+                                        <div className="flex flex-col items-center justify-center p-6 bg-muted/30 rounded-xl border border-muted gap-4">
                                             <div className="flex items-center gap-6">
                                                 <Button
                                                     type="button"
@@ -435,7 +492,7 @@ export default function MenageBureauxClient() {
                                                     size="icon"
                                                     className="h-12 w-12 rounded-full bg-white border border-slate-200 text-primary hover:bg-slate-50 shadow-sm"
                                                     onClick={handleDecrementDuration}
-                                                    disabled={formData.duration <= calculateResources(formData.officeSurface).duration}
+                                                    disabled={formData.duration <= getMinDuration(formData.frequency)}
                                                 >
                                                     <span className="text-2xl font-bold pb-1">-</span>
                                                 </Button>
@@ -453,6 +510,11 @@ export default function MenageBureauxClient() {
                                                     <span className="text-2xl font-bold pb-1">+</span>
                                                 </Button>
                                             </div>
+                                            {formData.frequency === "oneshot" && (
+                                                <p className="text-xs text-slate-500 italic text-center font-medium">
+                                                    Pour une prestation ponctuelle, la durée minimale est de 4 heures.
+                                                </p>
+                                            )}
                                         </div>
                                     </div>
 
