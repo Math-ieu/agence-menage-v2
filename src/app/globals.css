@@ -97,7 +97,7 @@
 
   body {
     @apply bg-background text-foreground font-sans;
-    font-family: "Work Sans", "Work Sans - fallback", Arial, sans-serif;
+    font-family: var(--font-sans), Arial, sans-serif;
   }
 
   h1,
@@ -106,7 +106,7 @@
   h4,
   h5,
   h6 {
-    font-family: "Work Sans", "Work Sans - fallback", Arial, sans-serif;
+    font-family: var(--font-sans), Arial, sans-serif;
   }
 }
 

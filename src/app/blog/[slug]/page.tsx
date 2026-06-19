@@ -1,6 +1,6 @@
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { getBlogPostBySlug } from "@/lib/api";
+import { getBlogPostBySlug, getBlogPosts } from "@/lib/api";
 import BlogArticleClient from "./BlogArticleClient";
 
 type Props = {
@@ -44,4 +44,11 @@ export default async function BlogArticlePage(props: Props) {
   }
 
   return <BlogArticleClient initialPost={post} />;
+}
+
+export async function generateStaticParams() {
+  const posts = await getBlogPosts();
+  return posts.map((post) => ({
+    slug: post.slug,
+  }));
 }

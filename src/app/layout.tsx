@@ -1,5 +1,5 @@
 import { Metadata } from "next";
-import Script from "next/script";
+import { Work_Sans } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
@@ -13,10 +13,12 @@ const WhatsAppSidebar = dynamic(() => import("@/components/WhatsAppSidebar"));
 const ScrollToTop = dynamic(() => import("@/components/ScrollToTop"));
 import TrackingScripts from "@/components/TrackingScripts";
 
-// Work Sans loaded via standard stylesheet link in layout head
-const workSans = {
-    variable: "font-sans",
-};
+const workSans = Work_Sans({
+    subsets: ["latin"],
+    variable: "--font-sans",
+    display: "swap",
+    weight: ["300", "400", "500", "600", "700", "800"],
+});
 
 export const metadata: Metadata = {
     authors: [{ name: "Agence Ménage" }],
@@ -74,28 +76,8 @@ export default function RootLayout({
         <html lang="fr-MA" className={`${workSans.variable}`} suppressHydrationWarning>
             <head>
                 <meta name="google-site-verification" content="aIvUpt-vH6Kct-44tIJYPYciubL4YDEMnoc24z0MrJA" />
-                <link rel="preconnect" href="https://fonts.googleapis.com" />
-                <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-                <link href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
             </head>
             <body className="antialiased min-h-screen flex flex-col overflow-x-hidden" suppressHydrationWarning>
-                <Script
-                    id="google-ads-gtag-src"
-                    strategy="afterInteractive"
-                    src="https://www.googletagmanager.com/gtag/js?id=AW-17907112455"
-                />
-                <Script
-                    id="google-ads-gtag-config"
-                    strategy="afterInteractive"
-                    dangerouslySetInnerHTML={{
-                        __html: `
-                            window.dataLayer = window.dataLayer || [];
-                            function gtag(){dataLayer.push(arguments);}
-                            gtag('js', new Date());
-                            gtag('config', 'AW-17907112455');
-                        `,
-                    }}
-                />
                 <TrackingScripts />
                 <QueryProvider>
                     <TooltipProvider>

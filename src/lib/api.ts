@@ -86,7 +86,7 @@ export async function createDemande(payload: DemandePayload) {
 export async function getBlogPosts(): Promise<BlogPost[]> {
   try {
     const response = await fetch(`${API_URL}/api/public/blog/posts/`, {
-      cache: 'no-store',
+      next: { revalidate: 3600 },
     });
     if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
     const data = await response.json();
@@ -100,7 +100,7 @@ export async function getBlogPosts(): Promise<BlogPost[]> {
 export async function getBlogPostBySlug(slug: string): Promise<BlogPost | null> {
   try {
     const response = await fetch(`${API_URL}/api/public/blog/posts/${slug}/`, {
-      cache: 'no-store',
+      next: { revalidate: 3600 },
     });
     if (!response.ok) return null;
     return await response.json();
