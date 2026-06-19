@@ -31,7 +31,7 @@ import {
 } from "@/components/ui/dialog";
 
 const INITIAL_FORM_DATA = {
-    propertyType: "studio",
+    propertyType: "Bureaux",
     surfaceArea: 50,
     city: DEFAULT_CITY,
     neighborhood: "",
@@ -167,6 +167,10 @@ La prestation comprend : L’évacuation des poussières et résidus de chantier
 
                                             {/* Detailed info - hidden on mobile when collapsed */}
                                             <div className={`space-y-3 ${!isSummaryExpanded ? 'max-lg:hidden' : ''}`}>
+                                                <div className="flex justify-between gap-4 border-b border-primary/10 pb-2">
+                                                    <span className="text-muted-foreground text-sm">Type de locaux:</span>
+                                                    <span className="font-medium text-right text-slate-700 text-xs">{formData.propertyType}</span>
+                                                </div>
                                                 <div className="flex justify-between gap-4">
                                                     <span className="text-muted-foreground">Surface:</span>
                                                     <span className="font-medium text-right text-slate-700">{formData.surfaceArea} m²</span>
@@ -208,17 +212,28 @@ La prestation comprend : L’évacuation des poussières et résidus de chantier
                                 <div className="bg-card rounded-lg p-4 md:p-6 border shadow-sm space-y-6">
                                     <div>
                                         <h3 className="text-xl font-bold bg-primary/10 text-primary p-3 rounded-lg mb-4 text-center">
-                                            Type d'habitation
+                                            Type de locaux
                                         </h3>
                                         <RadioGroup
                                             value={formData.propertyType}
                                             onValueChange={(value) => setFormData({ ...formData, propertyType: value })}
-                                            className="flex flex-wrap gap-8 p-4"
+                                            className="grid grid-cols-1 md:grid-cols-2 gap-4 p-4"
                                         >
-                                            {["Studio", "Appartement", "Duplex", "Villa", "Maison"].map((type) => (
+                                            {[
+                                                "Bureaux",
+                                                "Usines",
+                                                "Entrepôts : stockage de marchandises et logistique.",
+                                                "Magasins / Boutiques/showrooms",
+                                                "Établissements de santé",
+                                                "Établissements d'enseignement",
+                                                "Restaurants",
+                                                "Hôtels / Hébergements",
+                                                "Laboratoires",
+                                                "Agences : banques, immobilières…"
+                                            ].map((type, idx) => (
                                                 <div key={type} className="flex items-center space-x-3">
-                                                    <RadioGroupItem value={type.toLowerCase()} id={type} className="border-primary text-primary" />
-                                                    <Label htmlFor={type} className="font-medium text-slate-700">{type}</Label>
+                                                    <RadioGroupItem value={type} id={`type-${idx}`} className="border-primary text-primary" />
+                                                    <Label htmlFor={`type-${idx}`} className="font-medium text-slate-700 cursor-pointer">{type}</Label>
                                                 </div>
                                             ))}
                                         </RadioGroup>
