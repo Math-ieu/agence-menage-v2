@@ -1,16 +1,15 @@
-"use client";
 import Header from "@/components/Header";
 import HeroSection from "@/components/HeroSection";
-import ServicesSection from "@/components/ServicesSection";
+import PresentationSection from "@/components/PresentationSection";
+import WhyChooseUs from "@/components/WhyChooseUs";
+import TrustSection from "@/components/TrustSection";
+import PartnersSection from "@/components/PartnersSection";
+import Footer from "@/components/Footer";
 import dynamic from "next/dynamic";
 
+const ServicesSection = dynamic(() => import("@/components/ServicesSection"));
 const AboutSectionParticulier = dynamic(() => import("@/components/AboutSectionParliculier"));
-const PresentationSection = dynamic(() => import("@/components/PresentationSection"));
-const WhyChooseUs = dynamic(() => import("@/components/WhyChooseUs"));
 const TeamReviews = dynamic(() => import("@/components/TeamReviews"));
-const TrustSection = dynamic(() => import("@/components/TrustSection"));
-const PartnersSection = dynamic(() => import("@/components/PartnersSection"));
-const Footer = dynamic(() => import("@/components/Footer"));
 
 export default function HomeClient() {
     return (

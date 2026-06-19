@@ -5,8 +5,6 @@ import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { Analytics } from "@vercel/analytics/react";
-import QueryProvider from "@/components/QueryProvider";
-import WhyChooseUs from "@/components/WhyChooseUs";
 import dynamic from "next/dynamic";
 
 const WhatsAppSidebar = dynamic(() => import("@/components/WhatsAppSidebar"));
@@ -17,7 +15,7 @@ const workSans = Work_Sans({
     subsets: ["latin"],
     variable: "--font-sans",
     display: "swap",
-    weight: ["300", "400", "500", "600", "700", "800"],
+    weight: ["400", "500", "600", "700", "800"],
 });
 
 export const metadata: Metadata = {
@@ -79,18 +77,16 @@ export default function RootLayout({
             </head>
             <body className="antialiased min-h-screen flex flex-col overflow-x-hidden" suppressHydrationWarning>
                 <TrackingScripts />
-                <QueryProvider>
-                    <TooltipProvider>
-                        <ScrollToTop />
-                        <WhatsAppSidebar />
-                        <div className="flex-1 w-full relative">
-                            {children}
-                        </div>
-                        <Toaster />
-                        <Sonner />
-                        <Analytics />
-                    </TooltipProvider>
-                </QueryProvider>
+                <TooltipProvider>
+                    <ScrollToTop />
+                    <WhatsAppSidebar />
+                    <div className="flex-1 w-full relative">
+                        {children}
+                    </div>
+                    <Toaster />
+                    <Sonner />
+                    <Analytics />
+                </TooltipProvider>
             </body>
         </html>
     );

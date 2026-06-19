@@ -3,6 +3,13 @@ import type { NextConfig } from "next";
 const nextConfig: NextConfig = {
     experimental: {
         optimizeCss: true,
+        optimizePackageImports: [
+            "lucide-react",
+            "recharts",
+            "date-fns",
+            "embla-carousel-react",
+            "embla-carousel-autoplay",
+        ],
     },
     async headers() {
         return [

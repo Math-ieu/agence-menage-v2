@@ -1,4 +1,3 @@
-"use client";
 import { Users, Phone, Monitor, ShieldCheck, MapPin, Settings2 } from "lucide-react";
 import Link from "next/link";
 import { Button } from "./ui/button";
