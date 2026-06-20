@@ -9,6 +9,16 @@
     "start": "next start",
     "lint": "next lint"
   },
+  "browserslist": [
+    "Chrome >= 93",
+    "Edge >= 93",
+    "Firefox >= 92",
+    "Safari >= 15.4",
+    "iOS >= 15.4",
+    "Opera >= 80",
+    "Samsung >= 17",
+    "not dead"
+  ],
   "dependencies": {
     "@hookform/resolvers": "^3.10.0",
     "@next/third-parties": "^16.1.6",

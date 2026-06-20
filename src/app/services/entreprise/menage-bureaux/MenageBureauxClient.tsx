@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { SERVICE_COLORS } from "@/constants/service-colors";
 import { ChevronDown, ChevronUp } from "lucide-react";
@@ -65,7 +65,20 @@ export default function MenageBureauxClient() {
     const [isSummaryExpanded, setIsSummaryExpanded] = useState(false);
     const [formData, setFormData] = useState(INITIAL_FORM_DATA);
     const [isSubmitting, setIsSubmitting] = useState(false);
+    const [customerName, setCustomerName] = useState("");
     const router = useRouter();
+
+    // Champs texte non-contrôlés (lus au submit) pour éviter de re-rendre tout
+    // le formulaire à chaque frappe (optimisation INP).
+    const entityNameRef = useRef<HTMLInputElement>(null);
+    const contactPersonRef = useRef<HTMLInputElement>(null);
+    const emailRef = useRef<HTMLInputElement>(null);
+    const phonePrefixRef = useRef<HTMLInputElement>(null);
+    const phoneNumberRef = useRef<HTMLInputElement>(null);
+    const whatsappPrefixRef = useRef<HTMLInputElement>(null);
+    const whatsappNumberRef = useRef<HTMLInputElement>(null);
+    const neighborhoodRef = useRef<HTMLInputElement>(null);
+    const changeRepereNotesRef = useRef<HTMLTextAreaElement>(null);
 
     const getMinDuration = (frequency: string) => {
         return frequency === "oneshot" ? 4 : 2;
@@ -167,18 +180,37 @@ export default function MenageBureauxClient() {
             return;
         }
 
-        if (!formData.entityName || !formData.contactPerson || !formData.phoneNumber || !formData.city || !formData.neighborhood || !formData.schedulingDate) {
+        const entityName = entityNameRef.current?.value.trim() ?? "";
+        const contactPerson = contactPersonRef.current?.value.trim() ?? "";
+        const email = emailRef.current?.value.trim() ?? "";
+        const phonePrefix = phonePrefixRef.current?.value.trim() || "+212";
+        const phoneNumber = phoneNumberRef.current?.value.trim() ?? "";
+        const whatsappPrefix = whatsappPrefixRef.current?.value.trim() || "+212";
+        const whatsappNumber = whatsappNumberRef.current?.value.trim() ?? "";
+        const neighborhood = neighborhoodRef.current?.value.trim() ?? "";
+        const changeRepereNotes = changeRepereNotesRef.current?.value.trim() ?? "";
+
+        if (!entityName || !contactPerson || !phoneNumber || !formData.city || !neighborhood || !formData.schedulingDate) {
             toast.error("Veuillez remplir tous les champs obligatoires");
             return;
         }
 
         const bookingData = {
             ...formData,
-            phoneNumber: `${formData.phonePrefix} ${formData.phoneNumber}`,
+            entityName,
+            contactPerson,
+            email,
+            neighborhood,
+            changeRepereNotes,
+            phonePrefix,
+            whatsappPrefix,
+            phoneNumber: `${phonePrefix} ${phoneNumber}`,
             whatsappNumber: formData.useWhatsappForPhone
-                ? `${formData.phonePrefix} ${formData.phoneNumber}`
-                : `${formData.whatsappPrefix} ${formData.whatsappNumber}`
+                ? `${phonePrefix} ${phoneNumber}`
+                : `${whatsappPrefix} ${whatsappNumber}`
         };
+
+        setCustomerName(contactPerson);
 
         setIsSubmitting(true);
         try {
@@ -561,7 +593,10 @@ export default function MenageBureauxClient() {
                                                     <Label className="text-xs font-bold text-slate-400">Ville</Label>
                                                 <Select
                                                     value={formData.city}
-                                                    onValueChange={(value) => setFormData({ ...formData, city: value, neighborhood: "" })}
+                                                    onValueChange={(value) => {
+                                                        setFormData({ ...formData, city: value });
+                                                        if (neighborhoodRef.current) neighborhoodRef.current.value = "";
+                                                    }}
                                                 >
                                                     <SelectTrigger className="border-slate-300">
                                                         <SelectValue placeholder="Sélectionner une ville" />
@@ -579,8 +614,7 @@ export default function MenageBureauxClient() {
                                                     <Label className="text-xs font-bold text-muted-foreground uppercase">Quartier</Label>
                                                     <Input
                                                         placeholder="Votre quartier"
-                                                        value={formData.neighborhood}
-                                                        onChange={(e) => setFormData({ ...formData, neighborhood: e.target.value })}
+                                                        ref={neighborhoodRef}
                                                         className="bg-white h-10 border-slate-300"
                                                     />
                                                 </div>
@@ -602,8 +636,7 @@ export default function MenageBureauxClient() {
                                                 <Textarea
                                                     placeholder="Donnez-nous des repères visuels proches (Mosquée, École, Pharmacie...)"
                                                     required
-                                                    value={formData.changeRepereNotes}
-                                                    onChange={(e) => setFormData({ ...formData, changeRepereNotes: e.target.value })}
+                                                    ref={changeRepereNotesRef}
                                                     className="bg-white min-h-[80px] text-sm resize-none"
                                                 />
                                             </div>
@@ -698,8 +731,7 @@ export default function MenageBureauxClient() {
                                                 <Label className="text-xs font-bold text-muted-foreground uppercase">Nom de l'entreprise*</Label>
                                                 <Input
                                                     placeholder="Nom de votre société"
-                                                    value={formData.entityName}
-                                                    onChange={(e) => setFormData({ ...formData, entityName: e.target.value })}
+                                                    ref={entityNameRef}
                                                     required
                                                     className="bg-white h-12"
                                                 />
@@ -708,8 +740,7 @@ export default function MenageBureauxClient() {
                                                 <Label className="text-xs font-bold text-muted-foreground uppercase">Personne à contacter*</Label>
                                                 <Input
                                                     placeholder="Votre nom complet"
-                                                    value={formData.contactPerson}
-                                                    onChange={(e) => setFormData({ ...formData, contactPerson: e.target.value })}
+                                                    ref={contactPersonRef}
                                                     required
                                                     className="bg-white h-12"
                                                 />
@@ -719,26 +750,14 @@ export default function MenageBureauxClient() {
                                                 <div className="space-y-3">
                                                     <div className="flex gap-2">
                                                         <Input
-                                                            value={formData.phonePrefix}
-                                                            onChange={(e) => setFormData(prev => ({
-                                                                ...prev,
-                                                                phonePrefix: e.target.value,
-                                                                whatsappPrefix: prev.useWhatsappForPhone ? e.target.value : prev.whatsappPrefix
-                                                            }))}
+                                                            ref={phonePrefixRef}
+                                                            defaultValue="+212"
                                                             className="w-24 border-slate-300 font-bold text-primary text-center"
                                                             placeholder="+212"
                                                         />
                                                         <Input
                                                             placeholder="6 12 00 00 00"
-                                                            value={formData.phoneNumber}
-                                                            onChange={(e) => {
-                                                                const newVal = e.target.value;
-                                                                setFormData(prev => ({
-                                                                    ...prev,
-                                                                    phoneNumber: newVal,
-                                                                    whatsappNumber: prev.useWhatsappForPhone ? newVal : prev.whatsappNumber
-                                                                }));
-                                                            }}
+                                                            ref={phoneNumberRef}
                                                             required
                                                             className="bg-white h-12 flex-1"
                                                         />
@@ -748,12 +767,7 @@ export default function MenageBureauxClient() {
                                                             id="useWhatsapp"
                                                             checked={formData.useWhatsappForPhone}
                                                             onCheckedChange={(checked) => {
-                                                                setFormData(prev => ({
-                                                                    ...prev,
-                                                                    useWhatsappForPhone: !!checked,
-                                                                    whatsappNumber: checked ? prev.phoneNumber : prev.whatsappNumber,
-                                                                    whatsappPrefix: checked ? prev.phonePrefix : prev.whatsappPrefix
-                                                                }));
+                                                                setFormData(prev => ({ ...prev, useWhatsappForPhone: !!checked }));
                                                             }}
                                                             className="data-[state=checked]:bg-primary border-primary"
                                                         />
@@ -770,16 +784,15 @@ export default function MenageBureauxClient() {
                                                 <Label className="text-xs font-bold text-muted-foreground uppercase">Numéro whatsapp*</Label>
                                                 <div className="flex gap-2">
                                                     <Input
-                                                        value={formData.whatsappPrefix}
-                                                        onChange={(e) => setFormData({ ...formData, whatsappPrefix: e.target.value })}
+                                                        ref={whatsappPrefixRef}
+                                                        defaultValue="+212"
                                                         className="bg-slate-100 border rounded-lg w-20 text-center font-bold text-primary"
                                                         placeholder="+212"
                                                         disabled={formData.useWhatsappForPhone}
                                                     />
                                                     <Input
                                                         placeholder="6 12 00 00 00"
-                                                        value={formData.whatsappNumber}
-                                                        onChange={(e) => setFormData({ ...formData, whatsappNumber: e.target.value })}
+                                                        ref={whatsappNumberRef}
                                                         className="bg-white h-12"
                                                         disabled={formData.useWhatsappForPhone}
                                                     />
@@ -790,8 +803,7 @@ export default function MenageBureauxClient() {
                                                 <Input
                                                     type="email"
                                                     placeholder="votre@email.com"
-                                                    value={formData.email}
-                                                    onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                                                    ref={emailRef}
                                                     required
                                                     className="bg-white h-12"
                                                 />
@@ -831,7 +843,7 @@ export default function MenageBureauxClient() {
                     <DialogHeader>
                         <DialogTitle className="text-primary text-2xl font-bold">Confirmation</DialogTitle>
                         <DialogDescription className="text-slate-700 text-lg mt-4 leading-relaxed whitespace-pre-line">
-                            {getConfirmationMessage(formData.contactPerson, false)}
+                            {getConfirmationMessage(customerName, false)}
                         </DialogDescription>
                     </DialogHeader>
                     <DialogFooter className="mt-6">

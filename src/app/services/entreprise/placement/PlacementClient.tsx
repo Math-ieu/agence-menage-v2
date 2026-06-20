@@ -71,7 +71,20 @@ export default function PlacementClient() {
 
     const [formData, setFormData] = useState(INITIAL_FORM_DATA);
     const [isSubmitting, setIsSubmitting] = useState(false);
+    const [customerName, setCustomerName] = useState("");
     const router = useRouter();
+
+    // Champs texte non-contrôlés (lus au submit) pour éviter de re-rendre tout
+    // le formulaire à chaque frappe (optimisation INP).
+    const entityNameRef = useRef<HTMLInputElement>(null);
+    const contactPersonRef = useRef<HTMLInputElement>(null);
+    const emailRef = useRef<HTMLInputElement>(null);
+    const phonePrefixRef = useRef<HTMLInputElement>(null);
+    const phoneNumberRef = useRef<HTMLInputElement>(null);
+    const whatsappPrefixRef = useRef<HTMLInputElement>(null);
+    const whatsappNumberRef = useRef<HTMLInputElement>(null);
+    const neighborhoodRef = useRef<HTMLInputElement>(null);
+    const changeRepereNotesRef = useRef<HTMLTextAreaElement>(null);
 
     const scrollToForm = () => {
         setShowForm(true);
@@ -89,7 +102,17 @@ export default function PlacementClient() {
             return;
         }
 
-        if (!formData.entityName || !formData.contactPerson || !formData.phoneNumber || !formData.city || !formData.neighborhood || !formData.email) {
+        const entityName = entityNameRef.current?.value.trim() ?? "";
+        const contactPerson = contactPersonRef.current?.value.trim() ?? "";
+        const email = emailRef.current?.value.trim() ?? "";
+        const phonePrefix = phonePrefixRef.current?.value.trim() || "+212";
+        const phoneNumber = phoneNumberRef.current?.value.trim() ?? "";
+        const whatsappPrefix = whatsappPrefixRef.current?.value.trim() || "+212";
+        const whatsappNumber = whatsappNumberRef.current?.value.trim() ?? "";
+        const neighborhood = neighborhoodRef.current?.value.trim() ?? "";
+        const changeRepereNotes = changeRepereNotesRef.current?.value.trim() ?? "";
+
+        if (!entityName || !contactPerson || !phoneNumber || !formData.city || !neighborhood || !email) {
             toast.error("Veuillez remplir tous les champs obligatoires");
             return;
         }
@@ -98,12 +121,21 @@ export default function PlacementClient() {
 
         const bookingData = {
             ...formData,
+            entityName,
+            contactPerson,
+            email,
+            neighborhood,
+            changeRepereNotes,
+            phonePrefix,
+            whatsappPrefix,
             frequencyLabel,
-            phoneNumber: `${formData.phonePrefix} ${formData.phoneNumber}`,
+            phoneNumber: `${phonePrefix} ${phoneNumber}`,
             whatsappNumber: formData.useWhatsappForPhone
-                ? `${formData.phonePrefix} ${formData.phoneNumber}`
-                : `${formData.whatsappPrefix} ${formData.whatsappNumber}`
+                ? `${phonePrefix} ${phoneNumber}`
+                : `${whatsappPrefix} ${whatsappNumber}`
         };
+
+        setCustomerName(contactPerson);
 
         setIsSubmitting(true);
         try {
@@ -464,8 +496,7 @@ export default function PlacementClient() {
                                                         <Label className="text-xs font-black text-slate-500 uppercase">Nom de l'entreprise*</Label>
                                                         <Input
                                                             placeholder="Votre société"
-                                                            value={formData.entityName}
-                                                            onChange={(e) => setFormData({ ...formData, entityName: e.target.value })}
+                                                            ref={entityNameRef}
                                                             required
                                                             className="bg-white border-slate-200 focus:border-primary h-10"
                                                         />
@@ -474,8 +505,7 @@ export default function PlacementClient() {
                                                         <Label className="text-xs font-black text-slate-500 uppercase">Personne à contacter*</Label>
                                                         <Input
                                                             placeholder="Nom complet"
-                                                            value={formData.contactPerson}
-                                                            onChange={(e) => setFormData({ ...formData, contactPerson: e.target.value })}
+                                                            ref={contactPersonRef}
                                                             required
                                                             className="bg-white border-slate-200 focus:border-primary h-10"
                                                         />
@@ -485,26 +515,14 @@ export default function PlacementClient() {
                                                         <div className="space-y-3">
                                                             <div className="flex gap-2">
                                                                 <Input
-                                                                    value={formData.phonePrefix}
-                                                                    onChange={(e) => setFormData(prev => ({
-                                                                        ...prev,
-                                                                        phonePrefix: e.target.value,
-                                                                        whatsappPrefix: prev.useWhatsappForPhone ? e.target.value : prev.whatsappPrefix
-                                                                    }))}
+                                                                    ref={phonePrefixRef}
+                                                                    defaultValue="+212"
                                                                     className="w-24 border-slate-300 font-bold text-primary text-center"
                                                                     placeholder="+212"
                                                                 />
                                                                 <Input
                                                                     placeholder="6 00 00 00 00"
-                                                                    value={formData.phoneNumber}
-                                                                    onChange={(e) => {
-                                                                        const newVal = e.target.value;
-                                                                        setFormData(prev => ({
-                                                                            ...prev,
-                                                                            phoneNumber: newVal,
-                                                                            whatsappNumber: prev.useWhatsappForPhone ? newVal : prev.whatsappNumber
-                                                                        }));
-                                                                    }}
+                                                                    ref={phoneNumberRef}
                                                                     required
                                                                     className="h-10 flex-1"
                                                                 />
@@ -514,12 +532,7 @@ export default function PlacementClient() {
                                                                     id="useWhatsapp"
                                                                     checked={formData.useWhatsappForPhone}
                                                                     onCheckedChange={(checked) => {
-                                                                        setFormData(prev => ({
-                                                                            ...prev,
-                                                                            useWhatsappForPhone: !!checked,
-                                                                            whatsappNumber: checked ? prev.phoneNumber : prev.whatsappNumber,
-                                                                            whatsappPrefix: checked ? prev.phonePrefix : prev.whatsappPrefix
-                                                                        }));
+                                                                        setFormData(prev => ({ ...prev, useWhatsappForPhone: !!checked }));
                                                                     }}
                                                                     className="data-[state=checked]:bg-primary border-primary"
                                                                 />
@@ -536,16 +549,15 @@ export default function PlacementClient() {
                                                         <Label className="text-xs font-black text-slate-500 uppercase">WhatsApp</Label>
                                                         <div className="flex gap-2">
                                                             <Input
-                                                                value={formData.whatsappPrefix}
-                                                                onChange={(e) => setFormData({ ...formData, whatsappPrefix: e.target.value })}
+                                                                ref={whatsappPrefixRef}
+                                                                defaultValue="+212"
                                                                 className="bg-slate-50 border rounded-lg w-20 text-center font-bold text-primary text-xs"
                                                                 placeholder="+212"
                                                                 disabled={formData.useWhatsappForPhone}
                                                             />
                                                             <Input
                                                                 placeholder="6 00 00 00 00"
-                                                                value={formData.whatsappNumber}
-                                                                onChange={(e) => setFormData({ ...formData, whatsappNumber: e.target.value })}
+                                                                ref={whatsappNumberRef}
                                                                 className="h-10"
                                                                 disabled={formData.useWhatsappForPhone}
                                                             />
@@ -556,8 +568,7 @@ export default function PlacementClient() {
                                                         <Input
                                                             type="email"
                                                             placeholder="votre@email.com"
-                                                            value={formData.email}
-                                                            onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                                                            ref={emailRef}
                                                             required
                                                             className="bg-white border-slate-200 focus:border-primary h-10"
                                                         />
@@ -658,7 +669,10 @@ export default function PlacementClient() {
                                                         <Label className="text-xs font-bold text-slate-400">Ville</Label>
                                                 <Select
                                                     value={formData.city}
-                                                    onValueChange={(value) => setFormData({ ...formData, city: value, neighborhood: "" })}
+                                                    onValueChange={(value) => {
+                                                        setFormData({ ...formData, city: value });
+                                                        if (neighborhoodRef.current) neighborhoodRef.current.value = "";
+                                                    }}
                                                 >
                                                     <SelectTrigger className="border-slate-300">
                                                         <SelectValue placeholder="Sélectionner une ville" />
@@ -676,8 +690,7 @@ export default function PlacementClient() {
                                                         <Label className="text-[10px] font-bold text-primary uppercase ml-1">Quartier</Label>
                                                         <Input
                                                             placeholder="Votre quartier"
-                                                            value={formData.neighborhood}
-                                                            onChange={(e) => setFormData({ ...formData, neighborhood: e.target.value })}
+                                                            ref={neighborhoodRef}
                                                             className="bg-white"
                                                         />
                                                     </div>
@@ -697,8 +710,7 @@ export default function PlacementClient() {
                                                 <Textarea
                                                     placeholder="Champs de repère (Mosquée, École...)"
                                                     required
-                                                    value={formData.changeRepereNotes}
-                                                    onChange={(e) => setFormData({ ...formData, changeRepereNotes: e.target.value })}
+                                                    ref={changeRepereNotesRef}
                                                     className="bg-white h-20 resize-none"
                                                 />
                                             </div>
@@ -736,7 +748,7 @@ export default function PlacementClient() {
                     <DialogHeader>
                         <DialogTitle className="text-primary text-2xl font-bold">Confirmation</DialogTitle>
                         <DialogDescription className="text-slate-700 text-lg mt-4 leading-relaxed whitespace-pre-line">
-                            {getConfirmationMessage(formData.contactPerson, true)}
+                            {getConfirmationMessage(customerName, true)}
                         </DialogDescription>
                     </DialogHeader>
                     <DialogFooter className="mt-6">

@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { useRouter } from "next/navigation";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
@@ -11,22 +11,21 @@ import { toast } from "sonner";
 import { Checkbox } from "@/components/ui/checkbox";
 import { sendContactEmail } from "@/app/actions";
 
-const INITIAL_FORM_DATA = {
-    name: "",
-    email: "",
-    phonePrefix: "+212",
-    phoneNumber: "",
-    useWhatsappForPhone: true,
-    whatsappPrefix: "+212",
-    whatsappNumber: "",
-    message: ""
-};
-
 export default function ContactClient() {
     const router = useRouter();
     const [wasValidated, setWasValidated] = useState(false);
     const [isSubmitting, setIsSubmitting] = useState(false);
-    const [formData, setFormData] = useState(INITIAL_FORM_DATA);
+    const [useWhatsappForPhone, setUseWhatsappForPhone] = useState(true);
+
+    // Champs non-contrôlés (lus au submit) pour éviter de re-rendre tout le
+    // formulaire à chaque frappe (optimisation INP).
+    const nameRef = useRef<HTMLInputElement>(null);
+    const emailRef = useRef<HTMLInputElement>(null);
+    const phonePrefixRef = useRef<HTMLInputElement>(null);
+    const phoneNumberRef = useRef<HTMLInputElement>(null);
+    const whatsappPrefixRef = useRef<HTMLInputElement>(null);
+    const whatsappNumberRef = useRef<HTMLInputElement>(null);
+    const messageRef = useRef<HTMLTextAreaElement>(null);
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
@@ -37,12 +36,20 @@ export default function ContactClient() {
             return;
         }
 
+        const phonePrefix = phonePrefixRef.current?.value.trim() || "+212";
+        const phoneNumber = phoneNumberRef.current?.value.trim() ?? "";
+        const whatsappPrefix = whatsappPrefixRef.current?.value.trim() || "+212";
+        const whatsappNumber = whatsappNumberRef.current?.value.trim() ?? "";
+
         const processedData = {
-            ...formData,
-            phoneNumber: `${formData.phonePrefix} ${formData.phoneNumber}`,
-            whatsappNumber: formData.useWhatsappForPhone
-                ? `${formData.phonePrefix} ${formData.phoneNumber}`
-                : `${formData.whatsappPrefix} ${formData.whatsappNumber}`
+            name: nameRef.current?.value.trim() ?? "",
+            email: emailRef.current?.value.trim() ?? "",
+            useWhatsappForPhone,
+            message: messageRef.current?.value.trim() ?? "",
+            phoneNumber: `${phonePrefix} ${phoneNumber}`,
+            whatsappNumber: useWhatsappForPhone
+                ? `${phonePrefix} ${phoneNumber}`
+                : `${whatsappPrefix} ${whatsappNumber}`
         };
 
         setIsSubmitting(true);
@@ -52,8 +59,6 @@ export default function ContactClient() {
 
             toast.success("Votre message a été bien envoyé. Notre équipe vous contactera sous peu.");
 
-            // Reset form
-            setFormData(INITIAL_FORM_DATA);
             setWasValidated(false);
 
             // Redirect to fixed confirmation page for Google Ads tracking
@@ -102,8 +107,7 @@ export default function ContactClient() {
                                         <Input
                                             id="name"
                                             required
-                                            value={formData.name}
-                                            onChange={e => setFormData({ ...formData, name: e.target.value })}
+                                            ref={nameRef}
                                             className="border-slate-200 h-12 rounded-xl focus:ring-primary focus:border-primary transition-all"
                                             placeholder="Votre nom"
                                         />
@@ -114,8 +118,7 @@ export default function ContactClient() {
                                             id="email"
                                             type="email"
                                             required
-                                            value={formData.email}
-                                            onChange={e => setFormData({ ...formData, email: e.target.value })}
+                                            ref={emailRef}
                                             className="border-slate-200 h-12 rounded-xl focus:ring-primary focus:border-primary transition-all"
                                             placeholder="votre@email.com"
                                         />
@@ -127,12 +130,8 @@ export default function ContactClient() {
                                             <div className="space-y-3">
                                                 <div className="flex gap-2">
                                                     <Input
-                                                        value={formData.phonePrefix}
-                                                        onChange={e => setFormData(prev => ({
-                                                            ...prev,
-                                                            phonePrefix: e.target.value,
-                                                            whatsappPrefix: prev.useWhatsappForPhone ? e.target.value : prev.whatsappPrefix
-                                                        }))}
+                                                        ref={phonePrefixRef}
+                                                        defaultValue="+212"
                                                         className="w-20 border-slate-200 h-12 rounded-xl text-center font-bold text-slate-600 focus:ring-primary focus:border-primary transition-all"
                                                         placeholder="+212"
                                                     />
@@ -140,30 +139,15 @@ export default function ContactClient() {
                                                         id="phone"
                                                         required
                                                         placeholder="6XXXXXXXX"
-                                                        value={formData.phoneNumber}
-                                                        onChange={e => {
-                                                            const val = e.target.value;
-                                                            setFormData(prev => ({
-                                                                ...prev,
-                                                                phoneNumber: val,
-                                                                whatsappNumber: prev.useWhatsappForPhone ? val : prev.whatsappNumber
-                                                            }));
-                                                        }}
+                                                        ref={phoneNumberRef}
                                                         className="border-slate-200 h-12 rounded-xl focus:ring-primary focus:border-primary transition-all flex-1"
                                                     />
                                                 </div>
                                                 <div className="flex items-center space-x-2">
                                                     <Checkbox
                                                         id="useWhatsapp"
-                                                        checked={formData.useWhatsappForPhone}
-                                                        onCheckedChange={(checked) => {
-                                                            setFormData(prev => ({
-                                                                ...prev,
-                                                                useWhatsappForPhone: !!checked,
-                                                                whatsappNumber: checked ? prev.phoneNumber : prev.whatsappNumber,
-                                                                whatsappPrefix: checked ? prev.phonePrefix : prev.whatsappPrefix
-                                                            }));
-                                                        }}
+                                                        checked={useWhatsappForPhone}
+                                                        onCheckedChange={(checked) => setUseWhatsappForPhone(!!checked)}
                                                         className="data-[state=checked]:bg-primary border-primary rounded"
                                                     />
                                                     <label
@@ -179,19 +163,18 @@ export default function ContactClient() {
                                             <Label htmlFor="whatsapp" className="font-semibold text-slate-700">Numéro whatsapp</Label>
                                             <div className="flex gap-2">
                                                 <Input
-                                                    value={formData.whatsappPrefix}
-                                                    onChange={e => setFormData({ ...formData, whatsappPrefix: e.target.value })}
+                                                    ref={whatsappPrefixRef}
+                                                    defaultValue="+212"
                                                     className="w-20 border-slate-200 h-12 rounded-xl text-center font-bold text-slate-600 focus:ring-primary focus:border-primary transition-all"
                                                     placeholder="+212"
-                                                    disabled={formData.useWhatsappForPhone}
+                                                    disabled={useWhatsappForPhone}
                                                 />
                                                 <Input
                                                     id="whatsapp"
                                                     placeholder="6XXXXXXXX"
-                                                    value={formData.whatsappNumber}
-                                                    onChange={e => setFormData({ ...formData, whatsappNumber: e.target.value })}
+                                                    ref={whatsappNumberRef}
                                                     className="border-slate-200 h-12 rounded-xl focus:ring-primary focus:border-primary transition-all flex-1"
-                                                    disabled={formData.useWhatsappForPhone}
+                                                    disabled={useWhatsappForPhone}
                                                 />
                                             </div>
                                         </div>
@@ -203,8 +186,7 @@ export default function ContactClient() {
                                             id="message"
                                             required
                                             rows={6}
-                                            value={formData.message}
-                                            onChange={e => setFormData({ ...formData, message: e.target.value })}
+                                            ref={messageRef}
                                             className="border-slate-200 rounded-2xl resize-none focus:ring-primary focus:border-primary transition-all p-4"
                                             placeholder="Comment pouvons-nous vous aider ?"
                                         />

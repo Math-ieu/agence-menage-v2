@@ -73,7 +73,22 @@ export default function GardeMaladeClient() {
 
     const [formData, setFormData] = useState(INITIAL_FORM_DATA);
     const [isSubmitting, setIsSubmitting] = useState(false);
+    const [customerName, setCustomerName] = useState("");
     const router = useRouter();
+
+    // Champs texte non-contrôlés (lus au submit) pour éviter de re-rendre tout
+    // le formulaire à chaque frappe (optimisation INP).
+    const firstNameRef = useRef<HTMLInputElement>(null);
+    const lastNameRef = useRef<HTMLInputElement>(null);
+    const phonePrefixRef = useRef<HTMLInputElement>(null);
+    const phoneNumberRef = useRef<HTMLInputElement>(null);
+    const whatsappPrefixRef = useRef<HTMLInputElement>(null);
+    const whatsappNumberRef = useRef<HTMLInputElement>(null);
+    const neighborhoodRef = useRef<HTMLInputElement>(null);
+    const patientAgeRef = useRef<HTMLInputElement>(null);
+    const careAddressRef = useRef<HTMLTextAreaElement>(null);
+    const healthIssuesRef = useRef<HTMLTextAreaElement>(null);
+    const additionalNotesRef = useRef<HTMLTextAreaElement>(null);
 
     const totalPrice = 0;
 
@@ -93,18 +108,41 @@ export default function GardeMaladeClient() {
             return;
         }
 
-        if (!formData.firstName || !formData.lastName || !formData.phoneNumber || !formData.city || !formData.neighborhood || !formData.schedulingDate) {
+        const firstName = firstNameRef.current?.value.trim() ?? "";
+        const lastName = lastNameRef.current?.value.trim() ?? "";
+        const phonePrefix = phonePrefixRef.current?.value.trim() || "+212";
+        const phoneNumber = phoneNumberRef.current?.value.trim() ?? "";
+        const whatsappPrefix = whatsappPrefixRef.current?.value.trim() || "+212";
+        const whatsappNumber = whatsappNumberRef.current?.value.trim() ?? "";
+        const neighborhood = neighborhoodRef.current?.value.trim() ?? "";
+        const patientAge = patientAgeRef.current?.value.trim() ?? "";
+        const careAddress = careAddressRef.current?.value.trim() ?? "";
+        const healthIssues = healthIssuesRef.current?.value.trim() ?? "";
+        const additionalNotes = additionalNotesRef.current?.value.trim() ?? "";
+
+        if (!firstName || !lastName || !phoneNumber || !formData.city || !neighborhood || !formData.schedulingDate) {
             toast.error("Veuillez remplir tous les champs obligatoires");
             return;
         }
 
         const bookingData = {
             ...formData,
-            phoneNumber: `${formData.phonePrefix} ${formData.phoneNumber}`,
+            firstName,
+            lastName,
+            neighborhood,
+            patientAge,
+            careAddress,
+            healthIssues,
+            additionalNotes,
+            phonePrefix,
+            whatsappPrefix,
+            phoneNumber: `${phonePrefix} ${phoneNumber}`,
             whatsappNumber: formData.useWhatsappForPhone
-                ? `${formData.phonePrefix} ${formData.phoneNumber}`
-                : `${formData.whatsappPrefix} ${formData.whatsappNumber}`
+                ? `${phonePrefix} ${phoneNumber}`
+                : `${whatsappPrefix} ${whatsappNumber}`
         };
+
+        setCustomerName(`${firstName} ${lastName}`);
 
         const priceValue = "Sur devis";
 
@@ -521,8 +559,7 @@ Nos auxiliaires de vie assurent une présence 24h/24, 7j/7, selon les besoins en
                                                         <div className="relative">
                                                             <Input
                                                                 placeholder="Âge de la personne"
-                                                                value={formData.patientAge}
-                                                                onChange={(e) => setFormData({ ...formData, patientAge: e.target.value })}
+                                                                ref={patientAgeRef}
                                                                 className="pr-12"
                                                             />
                                                             <span className="absolute right-3 top-1/2 -translate-y-1/2 text-[10px] font-bold text-slate-400">ANS</span>
@@ -573,8 +610,7 @@ Nos auxiliaires de vie assurent une présence 24h/24, 7j/7, selon les besoins en
                                                         <Label className="text-sm font-bold text-slate-600">Pathologie :</Label>
                                                         <Textarea
                                                             required
-                                                            value={formData.healthIssues}
-                                                            onChange={(e) => setFormData({ ...formData, healthIssues: e.target.value })}
+                                                            ref={healthIssuesRef}
                                                             className="flex-1 min-h-[120px] text-sm resize-none"
                                                             placeholder="Détaillez ici la situation médicale..."
                                                         />
@@ -591,8 +627,7 @@ Nos auxiliaires de vie assurent une présence 24h/24, 7j/7, selon les besoins en
                                             <div className="p-4 bg-slate-50/50 rounded-xl border border-slate-100">
                                                 <Textarea
                                                     required
-                                                    value={formData.additionalNotes}
-                                                    onChange={(e) => setFormData({ ...formData, additionalNotes: e.target.value })}
+                                                    ref={additionalNotesRef}
                                                     className="min-h-[80px] text-sm resize-none"
                                                     placeholder="Ex: besoin d'un auxiliaire de vie homme, barrière de langue, régime particulier..."
                                                 />
@@ -649,8 +684,7 @@ Nos auxiliaires de vie assurent une présence 24h/24, 7j/7, selon les besoins en
                                                         <Label className="text-sm font-bold text-slate-600">Adresse (Quartier)</Label>
                                                         <Input
                                                             placeholder="Votre quartier"
-                                                            value={formData.neighborhood}
-                                                            onChange={(e) => setFormData({ ...formData, neighborhood: e.target.value })}
+                                                            ref={neighborhoodRef}
                                                             className="border-slate-300 h-10"
                                                         />
                                                     </div>
@@ -660,8 +694,7 @@ Nos auxiliaires de vie assurent une présence 24h/24, 7j/7, selon les besoins en
                                                     <Textarea
                                                         placeholder="Donnez-nous des repères visuels proches (Mosquée, École, Pharmacie...)"
                                                         required
-                                                        value={formData.careAddress}
-                                                        onChange={(e) => setFormData({ ...formData, careAddress: e.target.value })}
+                                                        ref={careAddressRef}
                                                         className="min-h-[60px] text-sm resize-none"
                                                     />
                                                 </div>
@@ -683,26 +716,14 @@ Nos auxiliaires de vie assurent une présence 24h/24, 7j/7, selon les besoins en
                                                         <div className="space-y-3">
                                                             <div className="flex gap-2">
                                                                 <Input
-                                                                    value={formData.phonePrefix}
-                                                                    onChange={(e) => setFormData(prev => ({
-                                                                        ...prev,
-                                                                        phonePrefix: e.target.value,
-                                                                        whatsappPrefix: prev.useWhatsappForPhone ? e.target.value : prev.whatsappPrefix
-                                                                    }))}
+                                                                    ref={phonePrefixRef}
+                                                                    defaultValue="+212"
                                                                     className="w-20 font-bold text-primary text-xs text-center"
                                                                     placeholder="+212"
                                                                 />
                                                                 <Input
                                                                     placeholder="6 00 00 00 00"
-                                                                    value={formData.phoneNumber}
-                                                                    onChange={(e) => {
-                                                                        const newVal = e.target.value;
-                                                                        setFormData(prev => ({
-                                                                            ...prev,
-                                                                            phoneNumber: newVal,
-                                                                            whatsappNumber: prev.useWhatsappForPhone ? newVal : prev.whatsappNumber
-                                                                        }));
-                                                                    }}
+                                                                    ref={phoneNumberRef}
                                                                     required
                                                                     className="h-10 flex-1"
                                                                 />
@@ -712,12 +733,7 @@ Nos auxiliaires de vie assurent une présence 24h/24, 7j/7, selon les besoins en
                                                                     id="useWhatsapp"
                                                                     checked={formData.useWhatsappForPhone}
                                                                     onCheckedChange={(checked) => {
-                                                                        setFormData(prev => ({
-                                                                            ...prev,
-                                                                            useWhatsappForPhone: !!checked,
-                                                                            whatsappNumber: checked ? prev.phoneNumber : prev.whatsappNumber,
-                                                                            whatsappPrefix: checked ? prev.phonePrefix : prev.whatsappPrefix
-                                                                        }));
+                                                                        setFormData(prev => ({ ...prev, useWhatsappForPhone: !!checked }));
                                                                     }}
                                                                     className="data-[state=checked]:bg-primary border-primary"
                                                                 />
@@ -734,16 +750,15 @@ Nos auxiliaires de vie assurent une présence 24h/24, 7j/7, selon les besoins en
                                                         <Label className="text-sm font-bold text-slate-600">WhatsApp*</Label>
                                                         <div className="flex gap-2">
                                                             <Input
-                                                                value={formData.whatsappPrefix}
-                                                                onChange={(e) => setFormData({ ...formData, whatsappPrefix: e.target.value })}
+                                                                ref={whatsappPrefixRef}
+                                                                defaultValue="+212"
                                                                 className="bg-slate-100 border rounded-lg w-20 text-center font-bold text-primary text-xs"
                                                                 placeholder="+212"
                                                                 disabled={formData.useWhatsappForPhone}
                                                             />
                                                             <Input
                                                                 placeholder="6 00 00 00 00"
-                                                                value={formData.whatsappNumber}
-                                                                onChange={(e) => setFormData({ ...formData, whatsappNumber: e.target.value })}
+                                                                ref={whatsappNumberRef}
                                                                 className="h-10"
                                                                 disabled={formData.useWhatsappForPhone}
                                                             />
@@ -753,8 +768,7 @@ Nos auxiliaires de vie assurent une présence 24h/24, 7j/7, selon les besoins en
                                                         <Label className="text-sm font-bold text-slate-600">Nom*</Label>
                                                         <Input
                                                             placeholder="Votre nom"
-                                                            value={formData.lastName}
-                                                            onChange={(e) => setFormData({ ...formData, lastName: e.target.value })}
+                                                            ref={lastNameRef}
                                                             required
                                                             className="h-10"
                                                         />
@@ -763,8 +777,7 @@ Nos auxiliaires de vie assurent une présence 24h/24, 7j/7, selon les besoins en
                                                         <Label className="text-sm font-bold text-slate-600">Prénom*</Label>
                                                         <Input
                                                             placeholder="Votre prénom"
-                                                            value={formData.firstName}
-                                                            onChange={(e) => setFormData({ ...formData, firstName: e.target.value })}
+                                                            ref={firstNameRef}
                                                             required
                                                             className="h-10"
                                                         />
@@ -805,7 +818,7 @@ Nos auxiliaires de vie assurent une présence 24h/24, 7j/7, selon les besoins en
                     <DialogHeader>
                         <DialogTitle className="text-primary text-2xl font-bold">Confirmation</DialogTitle>
                         <DialogDescription className="text-slate-700 text-lg mt-4 leading-relaxed whitespace-pre-line">
-                            {getConfirmationMessage(`${formData.firstName} ${formData.lastName}`, totalPrice === 0)}
+                            {getConfirmationMessage(customerName, totalPrice === 0)}
                         </DialogDescription>
                     </DialogHeader>
                     <DialogFooter className="mt-6">

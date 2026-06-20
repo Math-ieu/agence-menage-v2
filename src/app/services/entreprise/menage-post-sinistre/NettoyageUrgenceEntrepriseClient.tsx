@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, Suspense } from "react";
+import { useState, Suspense, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { SERVICE_COLORS } from "@/constants/service-colors";
 import Link from "next/link";
@@ -66,8 +66,20 @@ const NettoyageUrgenceContent = () => {
     const [isSummaryExpanded, setIsSummaryExpanded] = useState(false);
     const [formData, setFormData] = useState(INITIAL_FORM_DATA);
     const [isSubmitting, setIsSubmitting] = useState(false);
+    const [customerName, setCustomerName] = useState("");
     const router = useRouter();
 
+    // Champs texte non-contrôlés (lus au submit) pour éviter de re-rendre tout
+    // le formulaire à chaque frappe (optimisation INP).
+    const firstNameRef = useRef<HTMLInputElement>(null);
+    const lastNameRef = useRef<HTMLInputElement>(null);
+    const phonePrefixRef = useRef<HTMLInputElement>(null);
+    const phoneNumberRef = useRef<HTMLInputElement>(null);
+    const whatsappPrefixRef = useRef<HTMLInputElement>(null);
+    const whatsappNumberRef = useRef<HTMLInputElement>(null);
+    const neighborhoodRef = useRef<HTMLInputElement>(null);
+    const changeRepereNotesRef = useRef<HTMLTextAreaElement>(null);
+    const additionalInfoRef = useRef<HTMLTextAreaElement>(null);
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
@@ -78,7 +90,17 @@ const NettoyageUrgenceContent = () => {
             return;
         }
 
-        if (!formData.firstName || !formData.lastName || !formData.phoneNumber || !formData.neighborhood || !formData.schedulingDate) {
+        const firstName = firstNameRef.current?.value.trim() ?? "";
+        const lastName = lastNameRef.current?.value.trim() ?? "";
+        const phonePrefix = phonePrefixRef.current?.value.trim() || "+212";
+        const phoneNumber = phoneNumberRef.current?.value.trim() ?? "";
+        const whatsappPrefix = whatsappPrefixRef.current?.value.trim() || "+212";
+        const whatsappNumber = whatsappNumberRef.current?.value.trim() ?? "";
+        const neighborhood = neighborhoodRef.current?.value.trim() ?? "";
+        const changeRepereNotes = changeRepereNotesRef.current?.value.trim() ?? "";
+        const additionalInfo = additionalInfoRef.current?.value.trim() ?? "";
+
+        if (!firstName || !lastName || !phoneNumber || !neighborhood || !formData.schedulingDate) {
             toast.error("Veuillez remplir tous les champs obligatoires.");
             return;
         }
@@ -87,14 +109,23 @@ const NettoyageUrgenceContent = () => {
         try {
             const bookingData = {
                 ...formData,
-                phoneNumber: `${formData.phonePrefix} ${formData.phoneNumber}`,
+                firstName,
+                lastName,
+                neighborhood,
+                changeRepereNotes,
+                additionalInfo,
+                phonePrefix,
+                whatsappPrefix,
+                phoneNumber: `${phonePrefix} ${phoneNumber}`,
                 whatsappNumber: formData.useWhatsappForPhone
-                    ? `${formData.phonePrefix} ${formData.phoneNumber}`
-                    : `${formData.whatsappPrefix} ${formData.whatsappNumber}`,
+                    ? `${phonePrefix} ${phoneNumber}`
+                    : `${whatsappPrefix} ${whatsappNumber}`,
                 schedulingTime: formData.schedulingType === "fixed"
                     ? formData.fixedTime
                     : (formData.schedulingTime === "morning" ? "Matin (8h-13h)" : "Journée (10h+)")
             };
+
+            setCustomerName(`${firstName} ${lastName}`);
 
             const price = "Sur DEVIS";
             const message = formatBookingMessage("Ménage Post-sinistre (Entreprise)", bookingData, price, true);
@@ -282,8 +313,7 @@ Nos équipes interviennent en urgence pour :
                                                 <Label className="font-bold text-primary text-sm mb-2 block">Donnez-nous plus d’informations sur votre demande</Label>
                                                 <Textarea
                                                     placeholder="Détaillez ici votre besoin spécifique (type de sinistre, surface concernée, urgence particulière...)"
-                                                    value={formData.additionalInfo}
-                                                    onChange={(e) => setFormData({ ...formData, additionalInfo: e.target.value })}
+                                                    ref={additionalInfoRef}
                                                     className="min-h-[100px] border-primary/20"
                                                 />
                                             </div>
@@ -412,8 +442,7 @@ Nos équipes interviennent en urgence pour :
                                                     <Label className="text-[10px] font-bold text-primary uppercase ml-1 underline">Quartier*</Label>
                                                     <Input
                                                         placeholder="Votre quartier"
-                                                        value={formData.neighborhood}
-                                                        onChange={(e) => setFormData({ ...formData, neighborhood: e.target.value })}
+                                                        ref={neighborhoodRef}
                                                         className="h-12 font-medium border-primary/20 bg-white"
                                                     />
                                                 </div>
@@ -422,8 +451,7 @@ Nos équipes interviennent en urgence pour :
                                                 <Label className="font-bold text-primary text-sm mb-2 block">Notes spécifiques pour l'intervention</Label>
                                                 <Textarea
                                                     placeholder="Précisez ici les accès, les contraintes horaires professionnelles ou toute information utile pour notre équipe d'intervention..."
-                                                    value={formData.changeRepereNotes}
-                                                    onChange={(e) => setFormData({ ...formData, changeRepereNotes: e.target.value })}
+                                                    ref={changeRepereNotesRef}
                                                     className="min-h-[120px] font-medium leading-relaxed border-slate-200"
                                                 />
                                             </div>
@@ -440,26 +468,14 @@ Nos équipes interviennent en urgence pour :
                                                     <div className="space-y-3">
                                                         <div className="flex gap-2">
                                                             <Input
-                                                                value={formData.phonePrefix}
-                                                                onChange={(e) => setFormData(prev => ({
-                                                                    ...prev,
-                                                                    phonePrefix: e.target.value,
-                                                                    whatsappPrefix: prev.useWhatsappForPhone ? e.target.value : prev.whatsappPrefix
-                                                                }))}
+                                                                ref={phonePrefixRef}
+                                                                defaultValue="+212"
                                                                 className="w-24 border-slate-300 font-bold text-primary text-center"
                                                                 placeholder="+212"
                                                             />
                                                             <Input
                                                                 placeholder="6 12 00 00 00"
-                                                                value={formData.phoneNumber}
-                                                                onChange={(e) => {
-                                                                    const newVal = e.target.value;
-                                                                    setFormData(prev => ({
-                                                                        ...prev,
-                                                                        phoneNumber: newVal,
-                                                                        whatsappNumber: prev.useWhatsappForPhone ? newVal : prev.whatsappNumber
-                                                                    }));
-                                                                }}
+                                                                ref={phoneNumberRef}
                                                                 required
                                                                 className="border-slate-300 h-11 flex-1"
                                                             />
@@ -469,12 +485,7 @@ Nos équipes interviennent en urgence pour :
                                                                 id="useWhatsapp"
                                                                 checked={formData.useWhatsappForPhone}
                                                                 onCheckedChange={(checked) => {
-                                                                    setFormData(prev => ({
-                                                                        ...prev,
-                                                                        useWhatsappForPhone: !!checked,
-                                                                        whatsappNumber: checked ? prev.phoneNumber : prev.whatsappNumber,
-                                                                        whatsappPrefix: checked ? prev.phonePrefix : prev.whatsappPrefix
-                                                                    }));
+                                                                    setFormData(prev => ({ ...prev, useWhatsappForPhone: !!checked }));
                                                                 }}
                                                                 className="data-[state=checked]:bg-primary border-primary"
                                                             />
@@ -491,16 +502,15 @@ Nos équipes interviennent en urgence pour :
                                                     <Label className="font-bold text-primary text-sm"> WhatsApp professionnel</Label>
                                                     <div className="flex gap-2">
                                                         <Input
-                                                            value={formData.whatsappPrefix}
-                                                            onChange={(e) => setFormData({ ...formData, whatsappPrefix: e.target.value })}
+                                                            ref={whatsappPrefixRef}
+                                                            defaultValue="+212"
                                                             className="w-24 border-slate-300 font-bold text-primary text-center"
                                                             placeholder="+212"
                                                             disabled={formData.useWhatsappForPhone}
                                                         />
                                                         <Input
                                                             placeholder="6 12 00 00 00"
-                                                            value={formData.whatsappNumber}
-                                                            onChange={(e) => setFormData({ ...formData, whatsappNumber: e.target.value })}
+                                                            ref={whatsappNumberRef}
                                                             className="border-slate-300 h-11 flex-1"
                                                             disabled={formData.useWhatsappForPhone}
                                                         />
@@ -509,8 +519,7 @@ Nos équipes interviennent en urgence pour :
                                                 <div className="space-y-2">
                                                     <Label className="font-bold text-primary text-sm">Nom du contact*</Label>
                                                     <Input
-                                                        value={formData.lastName}
-                                                        onChange={(e) => setFormData({ ...formData, lastName: e.target.value })}
+                                                        ref={lastNameRef}
                                                         required
                                                         className="h-11 border-slate-300 font-bold"
                                                         placeholder="Nom"
@@ -519,8 +528,7 @@ Nos équipes interviennent en urgence pour :
                                                 <div className="space-y-2">
                                                     <Label className="font-bold text-primary text-sm">Prénom du contact*</Label>
                                                     <Input
-                                                        value={formData.firstName}
-                                                        onChange={(e) => setFormData({ ...formData, firstName: e.target.value })}
+                                                        ref={firstNameRef}
                                                         required
                                                         className="h-11 border-slate-300 capitalize font-bold"
                                                         placeholder="Prénom"
@@ -560,7 +568,7 @@ Nos équipes interviennent en urgence pour :
                     <DialogHeader>
                         <DialogTitle className="text-primary text-2xl font-bold">Confirmation</DialogTitle>
                         <DialogDescription className="text-slate-700 text-lg mt-4 leading-relaxed">
-                            {getConfirmationMessage(formData.firstName, true)}
+                            {getConfirmationMessage(customerName, true)}
                         </DialogDescription>
                     </DialogHeader>
                     <DialogFooter className="mt-6">

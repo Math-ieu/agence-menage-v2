@@ -1,5 +1,5 @@
 "use client";
-import { useState, Suspense } from "react";
+import { useState, Suspense, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { SERVICE_COLORS } from "@/constants/service-colors";
 import { ChevronDown, ChevronUp } from "lucide-react";
@@ -56,7 +56,19 @@ const MenageFinChantierContent = () => {
     const [isSummaryExpanded, setIsSummaryExpanded] = useState(false);
     const [formData, setFormData] = useState(INITIAL_FORM_DATA);
     const [isSubmitting, setIsSubmitting] = useState(false);
+    const [customerName, setCustomerName] = useState("");
     const router = useRouter();
+
+    // Champs texte non-contrôlés (lus au submit) pour éviter de re-rendre tout
+    // le formulaire à chaque frappe (optimisation INP).
+    const firstNameRef = useRef<HTMLInputElement>(null);
+    const lastNameRef = useRef<HTMLInputElement>(null);
+    const phonePrefixRef = useRef<HTMLInputElement>(null);
+    const phoneNumberRef = useRef<HTMLInputElement>(null);
+    const whatsappPrefixRef = useRef<HTMLInputElement>(null);
+    const whatsappNumberRef = useRef<HTMLInputElement>(null);
+    const neighborhoodRef = useRef<HTMLInputElement>(null);
+    const changeRepereNotesRef = useRef<HTMLTextAreaElement>(null);
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
@@ -67,7 +79,16 @@ const MenageFinChantierContent = () => {
             return;
         }
 
-        if (!formData.firstName || !formData.lastName || !formData.phoneNumber || !formData.city || !formData.neighborhood) {
+        const firstName = firstNameRef.current?.value.trim() ?? "";
+        const lastName = lastNameRef.current?.value.trim() ?? "";
+        const phonePrefix = phonePrefixRef.current?.value.trim() || "+212";
+        const phoneNumber = phoneNumberRef.current?.value.trim() ?? "";
+        const whatsappPrefix = whatsappPrefixRef.current?.value.trim() || "+212";
+        const whatsappNumber = whatsappNumberRef.current?.value.trim() ?? "";
+        const neighborhood = neighborhoodRef.current?.value.trim() ?? "";
+        const changeRepereNotes = changeRepereNotesRef.current?.value.trim() ?? "";
+
+        if (!firstName || !lastName || !phoneNumber || !formData.city || !neighborhood) {
             toast.error("Veuillez remplir tous les champs obligatoires");
             return;
         }
@@ -76,11 +97,19 @@ const MenageFinChantierContent = () => {
         try {
             const bookingData = {
                 ...formData,
-                phoneNumber: `${formData.phonePrefix} ${formData.phoneNumber}`,
+                firstName,
+                lastName,
+                neighborhood,
+                changeRepereNotes,
+                phonePrefix,
+                whatsappPrefix,
+                phoneNumber: `${phonePrefix} ${phoneNumber}`,
                 whatsappNumber: formData.useWhatsappForPhone
-                    ? `${formData.phonePrefix} ${formData.phoneNumber}`
-                    : `${formData.whatsappPrefix} ${formData.whatsappNumber}`
+                    ? `${phonePrefix} ${phoneNumber}`
+                    : `${whatsappPrefix} ${whatsappNumber}`
             };
+
+            setCustomerName(`${firstName} ${lastName}`);
 
             const message = formatBookingMessage("Nettoyage Fin de chantier", bookingData, "Sur devis", false);
             const whatsappLink = createWhatsAppLink(DESTINATION_PHONE_NUMBER, message);
@@ -338,7 +367,10 @@ La prestation comprend : L’évacuation des poussières et résidus de chantier
                                                 <Label className="text-xs font-bold text-slate-400">Ville</Label>
                                                 <Select
                                                     value={formData.city}
-                                                    onValueChange={(value) => setFormData({ ...formData, city: value, neighborhood: "" })}
+                                                    onValueChange={(value) => {
+                                                        setFormData({ ...formData, city: value });
+                                                        if (neighborhoodRef.current) neighborhoodRef.current.value = "";
+                                                    }}
                                                 >
                                                     <SelectTrigger className="border-slate-300">
                                                         <SelectValue placeholder="Sélectionner une ville" />
@@ -356,8 +388,7 @@ La prestation comprend : L’évacuation des poussières et résidus de chantier
                                                 <Label className="text-xs font-bold text-slate-400">Quartier</Label>
                                                 <Input
                                                     placeholder="Votre quartier"
-                                                    value={formData.neighborhood}
-                                                    onChange={(e) => setFormData({ ...formData, neighborhood: e.target.value })}
+                                                    ref={neighborhoodRef}
                                                     className="border-slate-300 h-11"
                                                 />
                                             </div>
@@ -379,8 +410,7 @@ La prestation comprend : L’évacuation des poussières et résidus de chantier
                                             <Textarea
                                                 placeholder="Donnez-nous des repères pour faciliter le travail de ménage (points de référence pour la tournée du nettoyeur) après les points de repère"
                                                 required
-                                                value={formData.changeRepereNotes}
-                                                onChange={(e) => setFormData({ ...formData, changeRepereNotes: e.target.value })}
+                                                ref={changeRepereNotesRef}
                                                 className="mt-2 border-slate-300"
                                             />
                                         </div>
@@ -401,26 +431,14 @@ La prestation comprend : L’évacuation des poussières et résidus de chantier
                                                 <div className="space-y-3">
                                                     <div className="flex gap-2">
                                                         <Input
-                                                            value={formData.phonePrefix}
-                                                            onChange={(e) => setFormData(prev => ({
-                                                                ...prev,
-                                                                phonePrefix: e.target.value,
-                                                                whatsappPrefix: prev.useWhatsappForPhone ? e.target.value : prev.whatsappPrefix
-                                                            }))}
+                                                            ref={phonePrefixRef}
+                                                            defaultValue="+212"
                                                             className="w-24 border-slate-300 font-bold text-slate-600 text-center"
                                                             placeholder="+212"
                                                         />
                                                         <Input
                                                             placeholder="6 12 00 00 00"
-                                                            value={formData.phoneNumber}
-                                                            onChange={(e) => {
-                                                                const newVal = e.target.value;
-                                                                setFormData(prev => ({
-                                                                    ...prev,
-                                                                    phoneNumber: newVal,
-                                                                    whatsappNumber: prev.useWhatsappForPhone ? newVal : prev.whatsappNumber
-                                                                }));
-                                                            }}
+                                                            ref={phoneNumberRef}
                                                             required
                                                             className="border-slate-300 h-11 flex-1"
                                                         />
@@ -430,12 +448,7 @@ La prestation comprend : L’évacuation des poussières et résidus de chantier
                                                             id="useWhatsapp"
                                                             checked={formData.useWhatsappForPhone}
                                                             onCheckedChange={(checked) => {
-                                                                setFormData(prev => ({
-                                                                    ...prev,
-                                                                    useWhatsappForPhone: !!checked,
-                                                                    whatsappNumber: checked ? prev.phoneNumber : prev.whatsappNumber,
-                                                                    whatsappPrefix: checked ? prev.phonePrefix : prev.whatsappPrefix
-                                                                }));
+                                                                setFormData(prev => ({ ...prev, useWhatsappForPhone: !!checked }));
                                                             }}
                                                         />
                                                         <label
@@ -451,16 +464,15 @@ La prestation comprend : L’évacuation des poussières et résidus de chantier
                                                 <Label className="font-bold text-slate-700 text-sm">Numéro whatsapp</Label>
                                                 <div className="flex gap-2">
                                                     <Input
-                                                        value={formData.whatsappPrefix}
-                                                        onChange={(e) => setFormData({ ...formData, whatsappPrefix: e.target.value })}
+                                                        ref={whatsappPrefixRef}
+                                                        defaultValue="+212"
                                                         className="bg-slate-100 border rounded-lg w-24 text-center font-bold text-primary"
                                                         placeholder="+212"
                                                         disabled={formData.useWhatsappForPhone}
                                                     />
                                                     <Input
                                                         placeholder="6 12 00 00 00"
-                                                        value={formData.whatsappNumber}
-                                                        onChange={(e) => setFormData({ ...formData, whatsappNumber: e.target.value })}
+                                                        ref={whatsappNumberRef}
                                                         className="border-slate-300 h-11"
                                                         disabled={formData.useWhatsappForPhone}
                                                     />
@@ -469,8 +481,7 @@ La prestation comprend : L’évacuation des poussières et résidus de chantier
                                             <div className="space-y-2">
                                                 <Label className="font-bold text-slate-700 text-sm">Nom*</Label>
                                                 <Input
-                                                    value={formData.lastName}
-                                                    onChange={(e) => setFormData({ ...formData, lastName: e.target.value })}
+                                                    ref={lastNameRef}
                                                     required
                                                     className="mt-1 border-slate-300 h-11"
                                                     placeholder="Votre nom"
@@ -479,8 +490,7 @@ La prestation comprend : L’évacuation des poussières et résidus de chantier
                                             <div className="space-y-2">
                                                 <Label className="font-bold text-slate-700 text-sm">Prénom*</Label>
                                                 <Input
-                                                    value={formData.firstName}
-                                                    onChange={(e) => setFormData({ ...formData, firstName: e.target.value })}
+                                                    ref={firstNameRef}
                                                     required
                                                     className="mt-1 border-slate-300 h-11"
                                                     placeholder="Votre prénom"
@@ -520,7 +530,7 @@ La prestation comprend : L’évacuation des poussières et résidus de chantier
                     <DialogHeader>
                         <DialogTitle className="text-primary text-2xl font-bold">Confirmation</DialogTitle>
                         <DialogDescription className="text-slate-700 text-lg mt-4 leading-relaxed">
-                            {getConfirmationMessage(`${formData.firstName} ${formData.lastName}`, true)}
+                            {getConfirmationMessage(customerName, true)}
                         </DialogDescription>
                     </DialogHeader>
                     <DialogFooter className="mt-6">
