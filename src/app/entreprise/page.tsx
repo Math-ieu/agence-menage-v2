@@ -13,8 +13,8 @@ const WhyChooseUs = dynamic(() => import("@/components/WhyChooseUs"));
 const Footer = dynamic(() => import("@/components/Footer"));
 
 export const metadata: Metadata = {
-  title: "Nettoyage Entreprise Casablanca | Agence Ménage Pro",
-  description: "Solutions de nettoyage entreprise à Casablanca. Notre agence de ménage propose des services professionnels de femmes de ménage pour bureaux et commerces.",
+  title: "Nettoyage Entreprise Casablanca & Rabat | Agence Ménage Pro",
+  description: "Solutions de nettoyage entreprise à Casablanca et Rabat. Notre agence de ménage propose des services professionnels de femmes de ménage pour bureaux et commerces.",
   alternates: {
     canonical: "/entreprise",
     languages: {
@@ -23,8 +23,8 @@ export const metadata: Metadata = {
     },
   },
   openGraph: {
-    title: "Nettoyage Entreprise Casablanca | Agence Ménage Pro",
-    description: "Solutions de nettoyage entreprise à Casablanca. Notre agence de ménage propose des services professionnels de femmes de ménage pour bureaux et commerces.",
+    title: "Nettoyage Entreprise Casablanca & Rabat | Agence Ménage Pro",
+    description: "Solutions de nettoyage entreprise à Casablanca et Rabat. Notre agence de ménage propose des services professionnels de femmes de ménage pour bureaux et commerces.",
     url: "https://www.agencemenage.ma/entreprise",
     type: "website",
     images: [
@@ -32,7 +32,7 @@ export const metadata: Metadata = {
         url: "/og-entreprise.png",
         width: 1200,
         height: 630,
-        alt: "Services Entreprise Agence de Ménage Casablanca",
+        alt: "Services Entreprise Agence de Ménage Casablanca et Rabat",
       },
     ],
   },

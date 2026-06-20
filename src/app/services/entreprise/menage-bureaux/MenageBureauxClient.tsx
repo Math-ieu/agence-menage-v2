@@ -264,7 +264,7 @@ export default function MenageBureauxClient() {
                     faqs={[
                         {
                             question: "Vos agents peuvent-ils intervenir en dehors de nos heures d'ouverture ?",
-                            answer: "Oui, absolument. L'entretien de vos locaux ne doit jamais perturber la productivité de vos collaborateurs. C'est pourquoi nos équipes de nettoyage de bureaux à Casablanca sont opérationnelles 24h/24 et 7j/7. Nous pouvons intervenir très tôt le matin avant l'arrivée de vos équipes, tard le soir après la fermeture, ou même durant le week-end, selon votre cahier des charges."
+                            answer: "Oui, absolument. L'entretien de vos locaux ne doit jamais perturber la productivité de vos collaborateurs. C'est pourquoi nos équipes de nettoyage de bureaux à Casablanca et Rabat sont opérationnelles 24h/24 et 7j/7. Nous pouvons intervenir très tôt le matin avant l'arrivée de vos équipes, tard le soir après la fermeture, ou même durant le week-end, selon votre cahier des charges."
                         },
                         {
                             question: "Fournissez-vous les consommables sanitaires (papier toilette, savon) ?",

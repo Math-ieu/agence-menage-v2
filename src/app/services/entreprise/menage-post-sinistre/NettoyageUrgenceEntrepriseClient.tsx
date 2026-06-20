@@ -182,7 +182,7 @@ Nos équipes interviennent en urgence pour :
                         faqs={[
                             {
                                 question: "Quelle est votre réactivité pour une intervention en entreprise ?",
-                                answer: "Pour un sinistre en milieu professionnel, chaque heure compte. Nous mobilisons nos équipes en priorité pour Casablanca afin de minimiser l'arrêt de votre activité. Notre objectif est une intervention dans les plus brefs délais après validation du devis."
+                                answer: "Pour un sinistre en milieu professionnel, chaque heure compte. Nous mobilisons nos équipes en priorité pour Casablanca et Rabat afin de minimiser l'arrêt de votre activité. Notre objectif est une intervention dans les plus brefs délais après validation du devis."
                             },
                             {
                                 question: "Disposez-vous d'équipements adaptés aux grands volumes ?",
@@ -435,7 +435,7 @@ Nos équipes interviennent en urgence pour :
                                                         value={formData.city}
                                                         onChange={(e) => setFormData({ ...formData, city: e.target.value })}
                                                         className="h-12 font-medium border-primary/20"
-                                                        placeholder="Ex: Casablanca"
+                                                        placeholder="Ex: Casablanca, Rabat"
                                                     />
                                                 </div>
                                                 <div className="space-y-1">

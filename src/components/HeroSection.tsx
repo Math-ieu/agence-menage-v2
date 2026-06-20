@@ -47,7 +47,7 @@ const HeroSection = () => {
         {/* Texte centré verticalement à gauche sur desktop, centré sur mobile */}
         <div className="animate-fade-in mb-auto mt-auto text-center bg-black/40 p-6 md:p-8 rounded-2xl md:max-w-4xl backdrop-blur-sm mx-auto">
           <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-primary-foreground leading-tight mb-4 drop-shadow-lg">
-            {isEntreprise ? "Nettoyage d'Entreprise à Casablanca : L'Exigence et la Propreté Premium" : "Agence Ménage Casablanca : Services de Nettoyage Professionnel"}
+            {isEntreprise ? "Nettoyage d'Entreprise à Casablanca & Rabat : L'Exigence et la Propreté Premium" : "Agence Ménage Casablanca & Rabat : Services de Nettoyage Professionnel"}
           </h1>
           <h2 className="text-xl md:text-2xl text-primary-foreground/90 font-medium drop-shadow-md">
             {isEntreprise ? "Des solutions sur-mesure pour l'entretien de vos bureaux, la gestion de propreté et le nettoyage de fin de chantier." : "Des professionnels de confiance pour faire briller vos espaces de vie, vos bureaux et vos locations Airbnb."}
@@ -57,7 +57,7 @@ const HeroSection = () => {
         {/* Toggle centré en bas */}
         <div className="mt-auto flex justify-center animate-fade-in" style={{ animationDelay: "0.2s" }}>
           <div className="flex flex-col items-center">
-            <h2 className="text-primary font-bold text-xl md:text-2xl mb-4 bg-white rounded-lg px-4 py-2 inline-block shadow-md text-center">Zone de couverture actuelle : Grand Casablanca</h2>
+            <h2 className="text-primary font-bold text-xl md:text-2xl mb-4 bg-white rounded-lg px-4 py-2 inline-block shadow-md text-center">Zone de couverture : Casablanca & Rabat</h2>
             <div className="inline-flex rounded-full overflow-hidden bg-background/95 p-1 shadow-xl">
               <Link href="/">
                 <button

@@ -168,7 +168,7 @@ La prestation comprend : L’évacuation des poussières et résidus de chantier
                         },
                         {
                             question: "Pouvez-vous mobiliser une équipe en urgence pour respecter nos délais de livraison ?",
-                            answer: "Nous connaissons parfaitement la pression des délais dans le secteur de la construction et de l'aménagement à Casablanca. Agence Ménage est capable de dimensionner rapidement ses équipes et d'intervenir avec une grande flexibilité, y compris en horaires décalés (soir, week-end), pour s'adapter au planning de vos autres corps d'état et garantir la livraison de votre projet en temps et en heure."
+                            answer: "Nous connaissons parfaitement la pression des délais dans le secteur de la construction et de l'aménagement à Casablanca et Rabat. Agence Ménage est capable de dimensionner rapidement ses équipes et d'intervenir avec une grande flexibilité, y compris en horaires décalés (soir, week-end), pour s'adapter au planning de vos autres corps d'état et garantir la livraison de votre projet en temps et en heure."
                         },
                         {
                             question: "Prenez-vous en charge l'évacuation des emballages volumineux et des gravats ?",

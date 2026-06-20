@@ -302,7 +302,7 @@ Il comprend le :
                             answer: "Absolument pas ! Notre objectif est de vous soulager intégralement. Nos professionnels s'occupent de tout sur place. Vous n'avez pas besoin de préparer les pièces à l'avance ni de vider vos placards, nos équipes s'en chargent avec le plus grand soin pendant la prestation."
                         },
                         {
-                            question: "Combien de temps à l'avance dois-je réserver mon Grand Ménage à Casablanca ?",
+                            question: "Combien de temps à l'avance dois-je réserver mon Grand Ménage à Casablanca ou Rabat ?",
                             answer: "Nous savons que certains besoins ne peuvent pas attendre. Grâce à notre grande flexibilité et à la taille de nos équipes, vous avez la possibilité de réserver votre intervention d'urgence jusqu'à 12 heures seulement avant le début de la prestation."
                         }
                     ]}

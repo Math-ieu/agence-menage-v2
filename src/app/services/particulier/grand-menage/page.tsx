@@ -2,8 +2,8 @@ import { Metadata } from "next";
 import GrandMenageClient from "./GrandMenageClient";
 
 export const metadata: Metadata = {
-  title: "Grand Ménage Casablanca | Agence de Ménage & Nettoyage",
-  description: "Grand ménage à Casablanca par une agence de ménage experte. Nettoyage en profondeur par nos femmes de ménage pour une hygiène irréprochable de votre foyer.",
+  title: "Grand Ménage Casablanca & Rabat | Agence de Ménage & Nettoyage",
+  description: "Grand ménage à Casablanca et Rabat par une agence de ménage experte. Nettoyage en profondeur par nos femmes de ménage pour une hygiène irréprochable de votre foyer.",
   alternates: {
     canonical: "/services/particulier/grand-menage",
     languages: {
@@ -12,8 +12,8 @@ export const metadata: Metadata = {
     },
   },
   openGraph: {
-    title: "Grand Ménage Casablanca | Agence de Ménage & Nettoyage",
-    description: "Grand ménage à Casablanca par une agence de ménage experte. Nettoyage en profondeur par nos femmes de ménage pour une hygiène irréprochable de votre foyer.",
+    title: "Grand Ménage Casablanca & Rabat | Agence de Ménage & Nettoyage",
+    description: "Grand ménage à Casablanca et Rabat par une agence de ménage experte. Nettoyage en profondeur par nos femmes de ménage pour une hygiène irréprochable de votre foyer.",
     url: "https://www.agencemenage.ma/services/particulier/grand-menage",
     type: "website",
     images: [
@@ -21,7 +21,7 @@ export const metadata: Metadata = {
         url: "/og-main.png",
         width: 1200,
         height: 630,
-        alt: "Grand Ménage Agence de Ménage Casablanca",
+        alt: "Grand Ménage Agence de Ménage Casablanca et Rabat",
       },
     ],
   },
@@ -35,8 +35,8 @@ export default function GrandMenagePage() {
     "provider": {
       "@id": "https://www.agencemenage.ma/#organization"
     },
-    "areaServed": "Casablanca",
-    "description": "Service de grand ménage en profondeur pour particuliers à Casablanca"
+    "areaServed": ["Casablanca", "Rabat"],
+    "description": "Service de grand ménage en profondeur pour particuliers à Casablanca et Rabat"
   };
 
   return (

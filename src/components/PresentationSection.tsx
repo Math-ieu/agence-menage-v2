@@ -51,7 +51,7 @@ const PresentationSection = ({ isEntreprise = false }: { isEntreprise?: boolean 
                                     {isEntreprise ? (
                                         <>
                                             <p>
-                                                À Casablanca, l'image de votre entreprise passe d'abord par l'accueil et la propreté de vos locaux. Vos collaborateurs et vos clients méritent un environnement sain, respectueux de vos standards et de votre rythme de travail.
+                                                À Casablanca et Rabat, l'image de votre entreprise passe d'abord par l'accueil et la propreté de vos locaux. Vos collaborateurs et vos clients méritent un environnement sain, respectueux de vos standards et de votre rythme de travail.
                                             </p>
                                             <p>
                                                 Forts de notre appartenance au groupe Agence Premium (Nounou.ma) et appuyés par 15 ans d'expertise aux standards de qualité suisses, nous appliquons une méthode rigoureuse avec un contrôle qualité constant.

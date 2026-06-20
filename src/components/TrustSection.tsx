@@ -2,11 +2,11 @@ const TrustSection = () => {
   const trustItems = [
     {
       title: "VOTRE PARTENAIRE",
-      content: "Agence Ménage est votre partenaire de confiance pour tous vos besoins en nettoyage et entretien à Casablanca et dans le Grand Casablanca. Que vous soyez un particulier ou une entreprise, nous proposons des prestations professionnelles adaptées à vos besoins et à votre budget."
+      content: "Agence Ménage est votre partenaire de confiance pour tous vos besoins en nettoyage et entretien à Casablanca, Rabat et leurs régions. Que vous soyez un particulier ou une entreprise, nous proposons des prestations professionnelles adaptées à vos besoins et à votre budget."
     },
     {
       title: "SERVICES DE NETTOYAGE",
-      content: "Nos services de nettoyage à Casablanca Nous intervenons pour le nettoyage de domiciles, d'appartements, de bureaux et de locaux commerciaux. Notre équipe qualifiée utilise des produits certifiés pour garantir un résultat impeccable à chaque intervention."
+      content: "Nos services de nettoyage à Casablanca et Rabat Nous intervenons pour le nettoyage de domiciles, d'appartements, de bureaux et de locaux commerciaux. Notre équipe qualifiée utilise des produits certifiés pour garantir un résultat impeccable à chaque intervention."
     },
     {
       title: "DISPONIBILITÉ 7J/7",

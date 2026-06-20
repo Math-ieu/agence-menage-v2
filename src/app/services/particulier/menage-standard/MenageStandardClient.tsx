@@ -307,11 +307,11 @@ Il comprend le :
                     faqs={[
                         {
                             question: "Fournissez-vous le matériel et les produits de nettoyage ?",
-                            answer: "Pour des raisons d'hygiène strictes et pour respecter les spécificités de vos surfaces, nos intervenantes utilisent votre propre équipement de base (aspirateur, balai, seau). Toutefois, pour vous simplifier totalement le quotidien, nous proposons un Pack Entretien en option. Ce kit complet et prêt à l'emploi inclut 6 produits de nettoyage efficaces, des torchons adaptés et une serpillière neuve. Il vous suffit de cocher cette option lors de votre réservation pour que notre équipe s'occupe de tout lors de son passage chez vous à Casablanca."
+                            answer: "Pour des raisons d'hygiène strictes et pour respecter les spécificités de vos surfaces, nos intervenantes utilisent votre propre équipement de base (aspirateur, balai, seau). Toutefois, pour vous simplifier totalement le quotidien, nous proposons un Pack Entretien en option. Ce kit complet et prêt à l'emploi inclut 6 produits de nettoyage efficaces, des torchons adaptés et une serpillière neuve. Il vous suffit de cocher cette option lors de votre réservation pour que notre équipe s'occupe de tout lors de son passage chez vous à Casablanca ou Rabat."
                         },
                         {
                             question: "Dois-je obligatoirement être présent(e) à mon domicile pendant la prestation ?",
-                            answer: "Non, votre présence n'est absolument pas requise. La majorité de nos clients à Casablanca nous confient l'accès (clés laissées au concierge, boîte à clés ou ouverture en début de séance) pour que nous puissions intervenir en leur absence. Nos femmes de ménage sont rigoureusement sélectionnées pour leur fiabilité et formées à travailler en toute autonomie et discrétion. Vous pouvez donc partir l'esprit tranquille et retrouver votre intérieur impeccable à votre retour."
+                            answer: "Non, votre présence n'est absolument pas requise. La majorité de nos clients à Casablanca et Rabat nous confient l'accès (clés laissées au concierge, boîte à clés ou ouverture en début de séance) pour que nous puissions intervenir en leur absence. Nos femmes de ménage sont rigoureusement sélectionnées pour leur fiabilité et formées à travailler en toute autonomie et discrétion. Vous pouvez donc partir l'esprit tranquille et retrouver votre intérieur impeccable à votre retour."
                         },
                         {
                             question: "Aurai-je toujours la même femme de ménage à chaque intervention ?",

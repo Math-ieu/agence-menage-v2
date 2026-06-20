@@ -2,8 +2,8 @@ import { Metadata } from "next";
 import MenageFinChantierClient from "./MenageFinChantierClient";
 
 export const metadata: Metadata = {
-    title: "Nettoyage Fin de Chantier Casablanca | Remise en État",
-    description: "Nettoyage complet après travaux à Casablanca. Élimination de poussière et résidus de chantier pour emménager dans un espace propre et sain.",
+    title: "Nettoyage Fin de Chantier Casablanca & Rabat | Remise en État",
+    description: "Nettoyage complet après travaux à Casablanca et Rabat. Élimination de poussière et résidus de chantier pour emménager dans un espace propre et sain.",
     alternates: {
         canonical: "/services/particulier/menage-fin-chantier",
         languages: {
@@ -12,8 +12,8 @@ export const metadata: Metadata = {
         },
     },
     openGraph: {
-        title: "Nettoyage Fin de Chantier Casablanca | Remise en État",
-        description: "Nettoyage complet après travaux à Casablanca. Élimination de poussière et résidus de chantier pour emménager dans un espace propre et sain.",
+        title: "Nettoyage Fin de Chantier Casablanca & Rabat | Remise en État",
+        description: "Nettoyage complet après travaux à Casablanca et Rabat. Élimination de poussière et résidus de chantier pour emménager dans un espace propre et sain.",
         url: "https://www.agencemenage.ma/services/particulier/menage-fin-chantier",
         type: "website",
         images: [
@@ -21,7 +21,7 @@ export const metadata: Metadata = {
                 url: "/og-main.png",
                 width: 1200,
                 height: 630,
-                alt: "Nettoyage Fin de Chantier Agence de Ménage Casablanca",
+                alt: "Nettoyage Fin de Chantier Agence de Ménage Casablanca et Rabat",
             },
         ],
     },
@@ -35,8 +35,8 @@ export default function MenageFinChantier() {
         "provider": {
             "@id": "https://www.agencemenage.ma/#organization"
         },
-        "areaServed": "Casablanca",
-        "description": "Service de nettoyage fin de chantier pour particuliers à Casablanca"
+        "areaServed": ["Casablanca", "Rabat"],
+        "description": "Service de nettoyage fin de chantier pour particuliers à Casablanca et Rabat"
     };
 
     return (

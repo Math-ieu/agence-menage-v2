@@ -198,7 +198,7 @@ export default function GardeMaladeClient() {
             <main className="flex-1 flex flex-col bg-[hsl(var(--primary)/0.05)]" style={{ "--primary": SERVICE_COLORS.GARDE_MALADE.hsl } as React.CSSProperties}>
                 <ServiceHeroSection
                     title="Auxiliaires de vie / Garde malade"
-                    description={`Le service d'auxiliaires de vie / garde malade à domicile à Casablanca, proposé par Agence Ménage, met à votre disposition des auxiliaires de vie à domicile expérimentées pour accompagner les patients dans leur quotidien, avec sérieux, discrétion et bienveillance.
+                    description={`Le service d'auxiliaires de vie / garde malade à domicile à Casablanca et Rabat, proposé par Agence Ménage, met à votre disposition des auxiliaires de vie à domicile expérimentées pour accompagner les patients dans leur quotidien, avec sérieux, discrétion et bienveillance.
 
 Nos auxiliaires de vie assurent une présence 24h/24, 7j/7, selon les besoins en journée, la nuit, ou en continu. Elles interviennent auprès des personnes âgées ou en situation de dépendance.`}
                     image={gardeMaladeHero.src}

@@ -234,7 +234,7 @@ Il comprend le :
                         },
                         {
                             question: "Pouvez-vous intervenir le dimanche entre deux réservations (check-out / check-in) ?",
-                            answer: "Absolument. Nous connaissons les contraintes de la location courte durée à Casablanca et savons que les rotations n'attendent pas. Nos équipes spécialisées Airbnb sont pleinement opérationnelles 7 jours sur 7, du lundi au dimanche inclus, pour assurer des transitions parfaites et ponctuelles entre le départ d'un locataire et l'arrivée du suivant."
+                            answer: "Absolument. Nous connaissons les contraintes de la location courte durée à Casablanca comme à Rabat et savons que les rotations n'attendent pas. Nos équipes spécialisées Airbnb sont pleinement opérationnelles 7 jours sur 7, du lundi au dimanche inclus, pour assurer des transitions parfaites et ponctuelles entre le départ d'un locataire et l'arrivée du suivant."
                         },
                         {
                             question: "Que se passe-t-il si votre équipe constate des dégradations laissées par les voyageurs ?",

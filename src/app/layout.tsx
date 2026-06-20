@@ -21,7 +21,7 @@ const workSans = Work_Sans({
 export const metadata: Metadata = {
     authors: [{ name: "Agence Ménage" }],
     title: {
-        default: "Agence de Ménage Casablanca | Nettoyage Professionnel & Fiable",
+        default: "Agence de Ménage Casablanca & Rabat | Nettoyage Professionnel & Fiable",
         template: "%s",
     },
     description: "Agence Ménage — femmes de ménage qualifiées pour particuliers et entreprises au Maroc. Nettoyage standard, grand ménage, Airbnb et post-chantier. Disponible 7j/7.",
@@ -35,7 +35,7 @@ export const metadata: Metadata = {
                 url: "/og-main.png",
                 width: 1200,
                 height: 630,
-                alt: "Agence de Ménage Casablanca",
+                alt: "Agence de Ménage Casablanca et Rabat",
             },
         ],
     },

@@ -2,8 +2,8 @@ import { Metadata } from "next";
 import MenageDemenagementClient from "./MenageDemenagementClient";
 
 export const metadata: Metadata = {
-    title: "Ménage Post-Déménagement Casablanca | Nettoyage Pro",
-    description: "Préparez votre emménagement ou libérez votre ancien logement avec notre service de nettoyage post-déménagement à Casablanca. Propreté garantie.",
+    title: "Ménage Post-Déménagement Casablanca & Rabat | Nettoyage Pro",
+    description: "Préparez votre emménagement ou libérez votre ancien logement avec notre service de nettoyage post-déménagement à Casablanca et Rabat. Propreté garantie.",
     alternates: {
         canonical: "/services/particulier/menage-demenagement",
         languages: {
@@ -12,8 +12,8 @@ export const metadata: Metadata = {
         },
     },
     openGraph: {
-        title: "Ménage Post-Déménagement Casablanca | Nettoyage Pro",
-        description: "Préparez votre emménagement ou libérez votre ancien logement avec notre service de nettoyage post-déménagement à Casablanca. Propreté garantie.",
+        title: "Ménage Post-Déménagement Casablanca & Rabat | Nettoyage Pro",
+        description: "Préparez votre emménagement ou libérez votre ancien logement avec notre service de nettoyage post-déménagement à Casablanca et Rabat. Propreté garantie.",
         url: "https://www.agencemenage.ma/services/particulier/menage-demenagement",
         type: "website",
         images: [
@@ -21,7 +21,7 @@ export const metadata: Metadata = {
                 url: "/og-main.png",
                 width: 1200,
                 height: 630,
-                alt: "Ménage après Déménagement Agence de Ménage Casablanca",
+                alt: "Ménage après Déménagement Agence de Ménage Casablanca et Rabat",
             },
         ],
     },
@@ -35,8 +35,8 @@ export default function MenageDemenagementPage() {
         "provider": {
             "@id": "https://www.agencemenage.ma/#organization"
         },
-        "areaServed": "Casablanca",
-        "description": "Service de nettoyage complet après déménagement à Casablanca"
+        "areaServed": ["Casablanca", "Rabat"],
+        "description": "Service de nettoyage complet après déménagement à Casablanca et Rabat"
     };
 
     return (

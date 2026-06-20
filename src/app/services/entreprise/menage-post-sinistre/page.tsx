@@ -2,8 +2,8 @@ import { Metadata } from "next";
 import NettoyageUrgenceEntrepriseClient from "./NettoyageUrgenceEntrepriseClient";
 
 export const metadata: Metadata = {
-    title: "Ménage Post-sinistre Entreprise Casablanca | Intervention Rapide 24/7",
-    description: "Intervention de ménage rapide pour entreprises à Casablanca après sinistre : dégât des eaux, incendie ou imprévus. Réactivité maximale pour vos locaux.",
+    title: "Ménage Post-sinistre Entreprise Casablanca & Rabat | Intervention Rapide 24/7",
+    description: "Intervention de ménage rapide pour entreprises à Casablanca et Rabat après sinistre : dégât des eaux, incendie ou imprévus. Réactivité maximale pour vos locaux.",
     alternates: {
         canonical: "/services/entreprise/menage-post-sinistre",
         languages: {
@@ -12,8 +12,8 @@ export const metadata: Metadata = {
         },
     },
     openGraph: {
-        title: "Ménage Post-sinistre Entreprise Casablanca | Intervention Rapide 24/7",
-        description: "Intervention de ménage rapide pour entreprises à Casablanca après sinistre : dégât des eaux, incendie ou imprévus. Réactivité maximale pour vos locaux.",
+        title: "Ménage Post-sinistre Entreprise Casablanca & Rabat | Intervention Rapide 24/7",
+        description: "Intervention de ménage rapide pour entreprises à Casablanca et Rabat après sinistre : dégât des eaux, incendie ou imprévus. Réactivité maximale pour vos locaux.",
         url: "https://www.agencemenage.ma/services/entreprise/menage-post-sinistre",
         type: "website",
         images: [
@@ -21,7 +21,7 @@ export const metadata: Metadata = {
                 url: "/og-entreprise.png",
                 width: 1200,
                 height: 630,
-                alt: "Ménage Post-sinistre Entreprise Agence de Ménage Casablanca",
+                alt: "Ménage Post-sinistre Entreprise Agence de Ménage Casablanca et Rabat",
             },
         ],
     },

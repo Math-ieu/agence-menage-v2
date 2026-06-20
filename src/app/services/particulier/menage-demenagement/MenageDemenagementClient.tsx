@@ -248,7 +248,7 @@ Options possibles : vitres extérieures/grandes baies, terrasse.`}
                         },
                         {
                             question: "Faut-il que l'eau et l'électricité soient toujours activées ?",
-                            answer: "Oui, c'est un point indispensable. Pour pouvoir utiliser notre matériel électrique et procéder au lessivage et à la désinfection de vos surfaces, l'eau courante et l'électricité doivent impérativement être actives le jour de notre intervention à Casablanca."
+                            answer: "Oui, c'est un point indispensable. Pour pouvoir utiliser notre matériel électrique et procéder au lessivage et à la désinfection de vos surfaces, l'eau courante et l'électricité doivent impérativement être actives le jour de notre intervention à Casablanca et Rabat."
                         }
                     ]}
                 />

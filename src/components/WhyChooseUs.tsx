@@ -12,7 +12,7 @@ const WhyChooseUs = ({ isEntreprise = false }: { isEntreprise?: boolean }) => {
     {
       icon: MapPin,
       title: "Proximité",
-      description: "Une agence locale, implantée à la Résidence Anafe A, toujours réactive sur l'ensemble de Casablanca.",
+      description: "Une agence locale, implantée à la Résidence Anafe A, avec des équipes à Casablanca et Rabat, toujours réactives.",
     },
     {
       icon: Settings2,

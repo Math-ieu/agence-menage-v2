@@ -2,8 +2,8 @@ import { Metadata } from "next";
 import GardeMaladeClient from "./GardeMaladeClient";
 
 export const metadata: Metadata = {
-  title: "Garde Malade & Auxiliaire de Vie Casablanca | Aide",
-  description: "Service d'auxiliaire de vie et garde malade à Casablanca. Accompagnement bienveillant et sécurisé pour personnes âgées ou dépendantes à domicile 24h/24.",
+  title: "Garde Malade & Auxiliaire de Vie Casablanca & Rabat | Aide",
+  description: "Service d'auxiliaire de vie et garde malade à Casablanca et Rabat. Accompagnement bienveillant et sécurisé pour personnes âgées ou dépendantes à domicile 24h/24.",
   alternates: {
     canonical: "/services/particulier/garde-malade",
     languages: {
@@ -12,8 +12,8 @@ export const metadata: Metadata = {
     },
   },
   openGraph: {
-    title: "Garde Malade & Auxiliaire de Vie Casablanca | Aide",
-    description: "Service d'auxiliaire de vie et garde malade à Casablanca. Accompagnement bienveillant et sécurisé pour personnes âgées ou dépendantes à domicile 24h/24.",
+    title: "Garde Malade & Auxiliaire de Vie Casablanca & Rabat | Aide",
+    description: "Service d'auxiliaire de vie et garde malade à Casablanca et Rabat. Accompagnement bienveillant et sécurisé pour personnes âgées ou dépendantes à domicile 24h/24.",
     url: "https://www.agencemenage.ma/services/particulier/garde-malade",
     type: "website",
     images: [
@@ -21,7 +21,7 @@ export const metadata: Metadata = {
         url: "/og-main.png",
         width: 1200,
         height: 630,
-        alt: "Garde Malade Agence de Ménage Casablanca",
+        alt: "Garde Malade Agence de Ménage Casablanca et Rabat",
       },
     ],
   },
@@ -35,8 +35,8 @@ export default function GardeMaladePage() {
     "provider": {
       "@id": "https://www.agencemenage.ma/#organization"
     },
-    "areaServed": "Casablanca",
-    "description": "Service d'auxiliaire de vie et garde malade à domicile à Casablanca"
+    "areaServed": ["Casablanca", "Rabat"],
+    "description": "Service d'auxiliaire de vie et garde malade à domicile à Casablanca et Rabat"
   };
 
   return (

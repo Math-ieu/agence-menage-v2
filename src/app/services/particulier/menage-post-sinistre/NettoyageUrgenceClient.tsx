@@ -195,7 +195,7 @@ Les interventions d’urgence couvrent exclusivement les cas suivants :
                             },
                             {
                                 question: "Pouvez-vous intervenir très rapidement pour un nettoyage après une fête ?",
-                                answer: "La réactivité est au cœur de ce service. Que ce soit pour masquer les traces d'un dégât des eaux ou pour remettre à neuf votre villa après une grande réception, nous mobilisons nos équipes en urgence sur tout Casablanca. Nous agissons avec une totale discrétion et une efficacité redoutable pour que vous retrouviez un intérieur impeccable dans les plus brefs délais."
+                                answer: "La réactivité est au cœur de ce service. Que ce soit pour masquer les traces d'un dégât des eaux ou pour remettre à neuf votre villa après une grande réception, nous mobilisons nos équipes en urgence sur Casablanca et Rabat. Nous agissons avec une totale discrétion et une efficacité redoutable pour que vous retrouviez un intérieur impeccable dans les plus brefs délais."
                             }
                         ]}
                     />
@@ -454,7 +454,7 @@ Les interventions d’urgence couvrent exclusivement les cas suivants :
                                                         value={formData.city}
                                                         onChange={(e) => setFormData({ ...formData, city: e.target.value })}
                                                         className="h-12 font-medium border-primary/20"
-                                                        placeholder="Ex: Casablanca"
+                                                        placeholder="Ex: Casablanca, Rabat"
                                                     />
                                                 </div>
                                                 <div className="space-y-1">

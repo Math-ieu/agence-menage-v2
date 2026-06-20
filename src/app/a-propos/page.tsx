@@ -51,7 +51,7 @@ export default function AboutPage() {
         "jobTitle": "Co-fondateur"
       }
     ],
-    "areaServed": "Casablanca",
+    "areaServed": ["Casablanca", "Rabat"],
     "numberOfEmployees": "10"
   };
 
@@ -82,7 +82,7 @@ export default function AboutPage() {
           <div className="container mx-auto px-6 max-w-4xl">
             <div className="bg-white p-8 md:p-12 rounded-3xl shadow-xl shadow-slate-200/50 border border-slate-100">
               <p className="text-lg md:text-xl leading-relaxed text-slate-700">
-                Agence Ménage est née d&apos;une conviction simple : le nettoyage professionnel de qualité doit être accessible à tous les Marocains, particuliers comme entreprises. Fondée en 2025 à Casablanca, nous cumulons déjà une vingtaine d&apos;interventions par semaine après seulement 3 mois d&apos;activité effective.
+                Agence Ménage est née d&apos;une conviction simple : le nettoyage professionnel de qualité doit être accessible à tous les Marocains, particuliers comme entreprises. Fondée en 2025 à Casablanca, désormais présente à Rabat, nous cumulons déjà une vingtaine d&apos;interventions par semaine après seulement 3 mois d&apos;activité effective.
               </p>
             </div>
           </div>
@@ -156,7 +156,7 @@ export default function AboutPage() {
               Offrir un service de nettoyage professionnel fiable, transparent et accessible.
             </h2>
             <p className="text-xl md:text-2xl opacity-90 leading-relaxed font-medium mb-12">
-              Avec des intervenantes formées et certifiées, disponibles 7j/7 dans le Grand Casablanca.
+              Avec des intervenantes formées et certifiées, disponibles 7j/7 à Casablanca et Rabat.
             </p>
           </div>
         </section>
@@ -193,8 +193,8 @@ export default function AboutPage() {
                 <p className="text-slate-500 font-bold uppercase tracking-widest text-sm">Types de prestations</p>
               </div>
               <div className="bg-white p-8 rounded-3xl border border-slate-100 shadow-sm text-center transform hover:-translate-y-2 transition-transform duration-300">
-                <div className="text-5xl font-black text-primary mb-4 tracking-tighter">3</div>
-                <p className="text-slate-500 font-bold uppercase tracking-widest text-sm">Villes (Bientôt)</p>
+                <div className="text-5xl font-black text-primary mb-4 tracking-tighter">2</div>
+                <p className="text-slate-500 font-bold uppercase tracking-widest text-sm">Villes (Casablanca &amp; Rabat)</p>
               </div>
             </div>
           </div>

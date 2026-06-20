@@ -2,8 +2,8 @@ import { Metadata } from "next";
 import HomeClient from "./HomeClient";
 
 export const metadata: Metadata = {
-    title: "Agence Ménage Casablanca | Femme de Ménage & Nettoyage",
-    description: "Agence Ménage — Service de nettoyage professionnel pour particuliers et entreprises. Disponible 7j/7. Devis gratuit via WhatsApp.",
+    title: "Agence Ménage Casablanca & Rabat | Femme de Ménage & Nettoyage",
+    description: "Agence Ménage — Service de nettoyage professionnel pour particuliers et entreprises à Casablanca et Rabat. Disponible 7j/7. Devis gratuit via WhatsApp.",
     alternates: {
         canonical: "/",
         languages: {
@@ -12,8 +12,8 @@ export const metadata: Metadata = {
         },
     },
     openGraph: {
-        title: "Agence Ménage Casablanca | Femme de Ménage & Nettoyage",
-        description: "Agence Ménage — Service de nettoyage professionnel pour particuliers et entreprises. Disponible 7j/7. Devis gratuit via WhatsApp.",
+        title: "Agence Ménage Casablanca & Rabat | Femme de Ménage & Nettoyage",
+        description: "Agence Ménage — Service de nettoyage professionnel pour particuliers et entreprises à Casablanca et Rabat. Disponible 7j/7. Devis gratuit via WhatsApp.",
         url: "https://www.agencemenage.ma",
         type: "website",
         images: [
@@ -21,7 +21,7 @@ export const metadata: Metadata = {
                 url: "/og-main.png",
                 width: 1200,
                 height: 630,
-                alt: "Agence de Ménage Casablanca",
+                alt: "Agence de Ménage Casablanca et Rabat",
             },
         ],
     },
@@ -53,6 +53,10 @@ export default function Home() {
             {
                 "@type": "City",
                 "name": "Casablanca"
+            },
+            {
+                "@type": "City",
+                "name": "Rabat"
             },
             {
                 "@type": "GeoCircle",

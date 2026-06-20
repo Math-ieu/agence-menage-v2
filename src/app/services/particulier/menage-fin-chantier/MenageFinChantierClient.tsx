@@ -159,7 +159,7 @@ La prestation comprend : L’évacuation des poussières et résidus de chantier
                     faqs={[
                         {
                             question: "Intervenez-vous avec du matériel industriel spécifique ?",
-                            answer: "Oui, un nettoyage post-travaux exige un équipement lourd et professionnel. Nos équipes interviennent sur votre site avec l'intégralité du matériel industriel nécessaire (aspirateurs de chantier à eau et poussière, monobrosses, raclettes professionnelles) pour garantir une remise en état parfaite de vos espaces fraîchement construits ou rénovés à Casablanca."
+                            answer: "Oui, un nettoyage post-travaux exige un équipement lourd et professionnel. Nos équipes interviennent sur votre site avec l'intégralité du matériel industriel nécessaire (aspirateurs de chantier à eau et poussière, monobrosses, raclettes professionnelles) pour garantir une remise en état parfaite de vos espaces fraîchement construits ou rénovés à Casablanca et Rabat."
                         },
                         {
                             question: "Êtes-vous capables d'éliminer les traces tenaces (ciment, colle, peinture) ?",
