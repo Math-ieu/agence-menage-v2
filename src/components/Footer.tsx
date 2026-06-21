@@ -32,6 +32,15 @@ const bottomLinks = [
   { href: "/contact", label: "Contact" },
 ];
 
+const usefulLinks = [
+  { href: "/", label: "Accueil" },
+  { href: "/entreprise", label: "Services Entreprises" },
+  { href: "/a-propos", label: "À propos" },
+  { href: "/blog", label: "Notre Blog" },
+  { href: "/espace-employe", label: "Espace employé" },
+  { href: "/contact", label: "Contact" },
+];
+
 const ColumnTitle = ({ children }: { children: React.ReactNode }) => (
   <>
     <h3 className="font-black text-base lg:text-lg uppercase tracking-wide">{children}</h3>
@@ -69,7 +78,7 @@ const Footer = () => {
 
       {/* Main */}
       <div className="mx-auto max-w-[1400px] w-full px-6 md:px-12 lg:px-20 py-14">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10 lg:gap-12">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-10 lg:gap-12">
           {/* Brand */}
           <div className="flex flex-col items-start">
             <Image
@@ -137,6 +146,23 @@ const Footer = () => {
             </Link>
             <ul className="space-y-3">
               {entrepriseLinks.map((link) => (
+                <li key={link.href}>
+                  <Link
+                    href={link.href}
+                    className="text-primary-foreground/85 hover:text-white transition-colors font-medium text-sm lg:text-base"
+                  >
+                    {link.label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          {/* Liens utiles */}
+          <div>
+            <ColumnTitle>Liens utiles</ColumnTitle>
+            <ul className="space-y-3">
+              {usefulLinks.map((link) => (
                 <li key={link.href}>
                   <Link
                     href={link.href}
