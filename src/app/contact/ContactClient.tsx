@@ -285,7 +285,7 @@ export default function ContactClient() {
                                                     : "text-slate-600 hover:text-slate-900"
                                             }`}
                                         >
-                                            Agence de Casablanca
+                                            Bureau de Casablanca
                                         </button>
                                         <button
                                             type="button"
@@ -296,7 +296,7 @@ export default function ContactClient() {
                                                     : "text-slate-600 hover:text-slate-900"
                                             }`}
                                         >
-                                            Agence de Rabat
+                                            Bureau de Rabat
                                         </button>
                                     </div>
 
