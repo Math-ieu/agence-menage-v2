@@ -16,6 +16,7 @@ export default function ContactClient() {
     const [wasValidated, setWasValidated] = useState(false);
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [useWhatsappForPhone, setUseWhatsappForPhone] = useState(true);
+    const [activeMap, setActiveMap] = useState<"casablanca" | "rabat">("casablanca");
 
     // Champs non-contrôlés (lus au submit) pour éviter de re-rendre tout le
     // formulaire à chaque frappe (optimisation INP).
@@ -226,11 +227,17 @@ export default function ContactClient() {
                                                 </svg>
                                             </div>
                                             <div>
-                                                <h4 className="font-bold text-slate-800">Notre Adresse</h4>
-                                                <p className="text-slate-600 mt-1">
-                                                    36 boulevard d’anfa, résidence Anafe A,<br />
-                                                    etage 7, Casablanca
-                                                </p>
+                                                <h4 className="font-bold text-slate-800">Nos Adresses</h4>
+                                                <div className="text-slate-600 mt-2 space-y-3">
+                                                    <p className="leading-relaxed text-sm sm:text-base">
+                                                        <span className="font-extrabold text-slate-800 block text-sm">Bureau Casablanca</span>
+                                                        36 boulevard d’anfa, résidence Anafe A, etage 7
+                                                    </p>
+                                                    <p className="leading-relaxed text-sm sm:text-base">
+                                                        <span className="font-extrabold text-slate-800 block text-sm">Bureau Rabat</span>
+                                                        Avenue Hassan II, centre commercial Reda, porte G, appt. 49
+                                                    </p>
+                                                </div>
                                             </div>
                                         </div>
 
@@ -266,17 +273,49 @@ export default function ContactClient() {
                                 </div>
 
                                 {/* Map */}
-                                <div className="bg-white p-2 rounded-2xl shadow-sm border border-slate-100 flex-1 min-h-[400px] overflow-hidden">
-                                    <iframe
-                                        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3323.4846067727145!2d-7.6324838!3d33.5932599!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMzPCsDM1JzM1LjciTiA3wrAzNyc1Ni45Ilc!5e0!3m2!1sfr!2sma!4v1635848529285!5m2!1sfr!2sma"
-                                        width="100%"
-                                        height="100%"
-                                        style={{ border: 0 }}
-                                        allowFullScreen
-                                        loading="lazy"
-                                        className="rounded-xl w-full h-full"
-                                        title="Localisation Agence"
-                                    ></iframe>
+                                <div className="flex-1 flex flex-col space-y-3">
+                                    {/* Map tabs */}
+                                    <div className="flex gap-2 bg-slate-100 p-1 rounded-xl">
+                                        <button
+                                            type="button"
+                                            onClick={() => setActiveMap("casablanca")}
+                                            className={`flex-1 py-2 text-sm font-bold rounded-lg transition-all ${
+                                                activeMap === "casablanca"
+                                                    ? "bg-white text-primary shadow-sm"
+                                                    : "text-slate-600 hover:text-slate-900"
+                                            }`}
+                                        >
+                                            Agence de Casablanca
+                                        </button>
+                                        <button
+                                            type="button"
+                                            onClick={() => setActiveMap("rabat")}
+                                            className={`flex-1 py-2 text-sm font-bold rounded-lg transition-all ${
+                                                activeMap === "rabat"
+                                                    ? "bg-white text-primary shadow-sm"
+                                                    : "text-slate-600 hover:text-slate-900"
+                                            }`}
+                                        >
+                                            Agence de Rabat
+                                        </button>
+                                    </div>
+
+                                    <div className="bg-white p-2 rounded-2xl shadow-sm border border-slate-100 flex-1 min-h-[400px] overflow-hidden">
+                                        <iframe
+                                            src={
+                                                activeMap === "casablanca"
+                                                    ? "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3323.4846067727145!2d-7.6324838!3d33.5932599!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMzPCsDM1JzM1LjciTiA3wrAzNyc1Ni45Ilc!5e0!3m2!1sfr!2sma!4v1635848529285!5m2!1sfr!2sma"
+                                                    : "https://maps.google.com/maps?q=34.020882,-6.836218(Agence%20M%C3%A9nage%20Rabat)&z=15&output=embed"
+                                            }
+                                            width="100%"
+                                            height="100%"
+                                            style={{ border: 0 }}
+                                            allowFullScreen
+                                            loading="lazy"
+                                            className="rounded-xl w-full h-full"
+                                            title={`Localisation Agence ${activeMap === "casablanca" ? "Casablanca" : "Rabat"}`}
+                                        ></iframe>
+                                    </div>
                                 </div>
                             </div>
                         </div>
