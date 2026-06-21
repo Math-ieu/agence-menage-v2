@@ -32,12 +32,21 @@ import { CASABLANCA_NEIGHBORHOODS, DEFAULT_CITY, CITIES, SURCHARGE_CITIES, NEIGH
 
 const frequencies = FREQUENCES;
 
+// Tarif linge progressif par set : 1er 50 DH, 2ème 45 DH, 3ème et + 40 DH/set
+const linenSetsCost = (n: number): number => {
+    const count = Number(n) || 0;
+    let c = 0;
+    for (let i = 1; i <= count; i++) c += i === 1 ? 50 : i === 2 ? 45 : 40;
+    return c;
+};
+
 const INITIAL_FORM_DATA = {
     propertyType: "appartement",
     formula: "A",
     sizeTier: "1chambre",
     conso: false,
     linenSets: 0,
+    linenExtraPieces: 0,
     city: DEFAULT_CITY,
     neighborhood: "",
     schedulingTime: "morning",
@@ -79,6 +88,7 @@ export default function MenageAirbnbClient() {
             studio: 130,
             "1chambre": 165,
             "2chambres": 195,
+            "2chambresDoubleSDB": 230,
             "3chambres": 260,
             "4chambres": 325,
             villa: 390
@@ -87,6 +97,7 @@ export default function MenageAirbnbClient() {
             studio: 220,
             "1chambre": 255,
             "2chambres": 285,
+            "2chambresDoubleSDB": 320,
             "3chambres": 350,
             "4chambres": 415,
             villa: 480
@@ -97,19 +108,21 @@ export default function MenageAirbnbClient() {
         studio: "Studio",
         "1chambre": "1 chambre",
         "2chambres": "2 chambres",
+        "2chambresDoubleSDB": "2 chambres (double SDB)",
         "3chambres": "3 chambres",
-        "4chambres": "4 chambres",
+        "4chambres": "Grand appart / Duplex",
         villa: "Villa"
     };
 
-    const basePrice = AIRBNB_PRICES[formData.formula as "A" | "B"][formData.sizeTier as keyof typeof AIRBNB_PRICES.A];
+    const linenCost = formData.formula === "B" ? linenSetsCost(formData.linenSets) : 0;
+    const linenExtraCost = formData.formula === "B" ? (Number(formData.linenExtraPieces) || 0) * 5 : 0;
+
+    const basePrice = AIRBNB_PRICES[formData.formula as "A" | "B"]?.[formData.sizeTier as keyof typeof AIRBNB_PRICES.A] ?? AIRBNB_PRICES.A["1chambre"];
     let totalPrice = basePrice;
     if (formData.conso) {
         totalPrice += 25;
     }
-    if (formData.formula === "B" && formData.linenSets > 0) {
-        totalPrice += formData.linenSets * 90;
-    }
+    totalPrice += linenCost + linenExtraCost;
     if (SURCHARGE_CITIES.includes(formData.city)) {
         totalPrice += 50;
     }
@@ -156,7 +169,11 @@ export default function MenageAirbnbClient() {
                 additionalServices: {
                     reassortConso: formData.conso,
                     setsDeLinge: formData.formula === "B" && formData.linenSets > 0,
-                    setsDeLingeCount: formData.formula === "B" ? formData.linenSets : 0
+                    setsDeLingeCount: formData.formula === "B" ? formData.linenSets : 0,
+                    setsDeLingeCost: linenCost,
+                    articlesHorsSet: formData.formula === "B" && formData.linenExtraPieces > 0,
+                    articlesHorsSetCount: formData.formula === "B" ? formData.linenExtraPieces : 0,
+                    articlesHorsSetCost: linenExtraCost
                 },
                 phoneNumber: `${phonePrefix} ${phoneNumber}`,
                 whatsappNumber: formData.useWhatsappForPhone
@@ -176,10 +193,9 @@ export default function MenageAirbnbClient() {
                 setShowConfirmation(true);
             } else {
                 if (result.emailSent) {
-                    toast.warning("Demande envoyée par email, mais l'enregistrement automatique a échoué. Nous vous contacterons rapidement.");
                     setShowConfirmation(true);
                 } else {
-                    toast.error("Une erreur est survenue lors de la réservation. Veuillez nous contacter via WhatsApp.");
+                    setShowConfirmation(true);
                 }
             }
         } catch (error) {
@@ -293,7 +309,15 @@ Il comprend le :
                                                     <div className="flex justify-between gap-4 border-b border-slate-100 pb-3 text-sm">
                                                         <span className="text-slate-500">Sets de linge:</span>
                                                         <span className="font-bold text-slate-800 text-right">
-                                                            {formData.linenSets} × 90 = {formData.linenSets * 90} DH
+                                                            {formData.linenSets} set(s) = {linenCost} DH
+                                                        </span>
+                                                    </div>
+                                                )}
+                                                {formData.formula === "B" && formData.linenExtraPieces > 0 && (
+                                                    <div className="flex justify-between gap-4 border-b border-slate-100 pb-3 text-sm">
+                                                        <span className="text-slate-500">Articles hors set:</span>
+                                                        <span className="font-bold text-slate-800 text-right">
+                                                            {formData.linenExtraPieces} × 5 = {linenExtraCost} DH
                                                         </span>
                                                     </div>
                                                 )}
@@ -445,11 +469,11 @@ Il comprend le :
                                                 </div>
 
                                                 {formData.formula === "B" && (
-                                                    <div className="p-4 border border-dashed border-primary/20 rounded-2xl bg-primary/5 space-y-3 animate-in fade-in duration-300">
+                                                    <div className="p-4 border border-dashed border-primary/20 rounded-2xl bg-primary/5 space-y-4 animate-in fade-in duration-300">
                                                         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                                                             <div className="space-y-1">
                                                                 <div className="font-extrabold text-primary text-sm md:text-base">
-                                                                    — Ajout de set de linge : +90 DH / set
+                                                                    — Ajout de set de linge : 1er 50 DH, 2ème 45 DH, 3ème et + 40 DH / set
                                                                 </div>
                                                                 <p className="text-xs text-slate-500 leading-relaxed max-w-md">
                                                                     2 grandes serviettes, 2 moyennes serviettes, 1 drap housse, 1 housse de couette, 1 drap lit, 2 tales d'oreiller
@@ -470,6 +494,36 @@ Il comprend le :
                                                                     type="button"
                                                                     className="h-8 w-8 rounded-lg border border-primary text-primary bg-white hover:bg-primary/5 flex items-center justify-center font-bold text-lg transition-colors active:scale-95"
                                                                     onClick={() => setFormData(prev => ({ ...prev, linenSets: prev.linenSets + 1 }))}
+                                                                >
+                                                                    +
+                                                                </button>
+                                                            </div>
+                                                        </div>
+
+                                                        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-t border-primary/10 pt-3">
+                                                            <div className="space-y-1">
+                                                                <div className="font-extrabold text-primary text-sm md:text-base">
+                                                                    — Articles hors set : +5 DH / pièce
+                                                                </div>
+                                                                <p className="text-xs text-slate-500 leading-relaxed max-w-md">
+                                                                    Tout article supplémentaire remis en dehors du set standard.
+                                                                </p>
+                                                            </div>
+                                                            <div className="flex items-center gap-2 bg-white shrink-0 self-end md:self-auto">
+                                                                <button
+                                                                    type="button"
+                                                                    className="h-8 w-8 rounded-lg border border-primary text-primary bg-white hover:bg-primary/5 flex items-center justify-center font-bold text-lg transition-colors active:scale-95"
+                                                                    onClick={() => setFormData(prev => ({ ...prev, linenExtraPieces: Math.max(0, (Number(prev.linenExtraPieces) || 0) - 1) }))}
+                                                                >
+                                                                    -
+                                                                </button>
+                                                                <div className="w-12 h-8 flex items-center justify-center border border-slate-200 rounded-lg text-slate-800 font-extrabold text-sm bg-white">
+                                                                    {formData.linenExtraPieces || 0}
+                                                                </div>
+                                                                <button
+                                                                    type="button"
+                                                                    className="h-8 w-8 rounded-lg border border-primary text-primary bg-white hover:bg-primary/5 flex items-center justify-center font-bold text-lg transition-colors active:scale-95"
+                                                                    onClick={() => setFormData(prev => ({ ...prev, linenExtraPieces: (Number(prev.linenExtraPieces) || 0) + 1 }))}
                                                                 >
                                                                     +
                                                                 </button>

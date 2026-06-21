@@ -160,7 +160,12 @@ export async function sendBookingEmailResend(serviceName: string, data: any, pri
       optionalServices.push("Réassort consommables : 25 MAD");
     }
     if (data.additionalServices?.setsDeLinge && data.additionalServices?.setsDeLingeCount > 0) {
-      optionalServices.push(`Sets de linge supplémentaires (${data.additionalServices.setsDeLingeCount}) : ${data.additionalServices.setsDeLingeCount * 90} MAD`);
+      const setsCost = data.additionalServices.setsDeLingeCost ?? data.additionalServices.setsDeLingeCount * 90;
+      optionalServices.push(`Sets de linge supplémentaires (${data.additionalServices.setsDeLingeCount}) : ${setsCost} MAD`);
+    }
+    if (data.additionalServices?.articlesHorsSet && data.additionalServices?.articlesHorsSetCount > 0) {
+      const extraCost = data.additionalServices.articlesHorsSetCost ?? data.additionalServices.articlesHorsSetCount * 5;
+      optionalServices.push(`Articles hors set (${data.additionalServices.articlesHorsSetCount}) : ${extraCost} MAD`);
     }
 
     // Format date with day name

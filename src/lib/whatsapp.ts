@@ -79,7 +79,12 @@ export const formatBookingMessage = (serviceName: string, data: any, price: numb
     if (data.intensiveOption || data.cleanlinessType === "intensif") options.push("Option Intensif");
     if (data.additionalServices?.reassortConso) options.push("Réassort consommables (+25 MAD)");
     if (data.additionalServices?.setsDeLinge && data.additionalServices?.setsDeLingeCount > 0) {
-        options.push(`Sets de linge supplémentaires (${data.additionalServices.setsDeLingeCount} sets, +${data.additionalServices.setsDeLingeCount * 90} MAD)`);
+        const setsCost = data.additionalServices.setsDeLingeCost ?? data.additionalServices.setsDeLingeCount * 90;
+        options.push(`Sets de linge supplémentaires (${data.additionalServices.setsDeLingeCount} sets, +${setsCost} MAD)`);
+    }
+    if (data.additionalServices?.articlesHorsSet && data.additionalServices?.articlesHorsSetCount > 0) {
+        const extraCost = data.additionalServices.articlesHorsSetCost ?? data.additionalServices.articlesHorsSetCount * 5;
+        options.push(`Articles hors set (${data.additionalServices.articlesHorsSetCount} pièces, +${extraCost} MAD)`);
     }
     if (options.length > 0) details.push(`*Services optionnels :* ${options.join(", ")}`);
 

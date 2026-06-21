@@ -137,10 +137,9 @@ const NettoyageUrgenceContent = () => {
                 setShowConfirmation(true);
             } else {
                 if (result.emailSent) {
-                    toast.warning("Demande envoyée par email, mais l'enregistrement automatique a échoué. Nous vous contacterons rapidement.");
                     setShowConfirmation(true);
                 } else {
-                    toast.error("Une erreur est survenue lors de la demande. Veuillez nous contacter via WhatsApp.");
+                    setShowConfirmation(true);
                 }
             }
         } catch (error) {
