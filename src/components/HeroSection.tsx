@@ -5,7 +5,6 @@ import heroParticulier from "@/assets/hero-home-particulier.webp";
 import heroEntreprise from "@/assets/hero-home-entreprise.webp";
 import heroParticulierMobile from "@/assets/couverture-particulier-mobile.webp";
 import heroEntrepriseMobile from "@/assets/couverture-entreprise-mobile.webp";
-import Image from "next/image";
 
 const HeroSection = () => {
   const pathname = usePathname();
@@ -15,33 +14,24 @@ const HeroSection = () => {
 
   return (
     <section className="relative h-[700px] md:h-[650px] overflow-hidden">
-      {/* Desktop Background */}
-      <div className="absolute inset-0 hidden md:block">
-        <Image
-          src={heroImage}
-          alt="Background Desktop"
-          priority
-          fill
-          sizes="100vw"
+      {/* Background Picture with Responsive Art Direction */}
+      <picture className="absolute inset-0 w-full h-full">
+        <source media="(max-width: 768px)" srcSet={heroImageMobile.src} />
+        <source media="(min-width: 769px)" srcSet={heroImage.src} />
+        <img
+          src={heroImage.src}
+          alt="Background Hero"
+          className="w-full h-full object-cover object-center"
           fetchPriority="high"
-          style={{ objectFit: "cover", objectPosition: "center" }}
+          decoding="sync"
         />
-        <div className="absolute inset-0 bg-gradient-to-r from-foreground/60 to-transparent" />
-      </div>
+      </picture>
 
-      {/* Mobile Background */}
-      <div className="absolute inset-0 block md:hidden">
-        <Image
-          src={heroImageMobile}
-          alt="Background Mobile"
-          fill
-          sizes="100vw"
-          priority
-          fetchPriority="high"
-          style={{ objectFit: "cover", objectPosition: "center" }}
-        />
-        <div className="absolute inset-0 bg-gradient-to-b from-foreground/40 via-transparent to-transparent" />
-      </div>
+      {/* Desktop Gradient Overlay */}
+      <div className="absolute inset-0 hidden md:block bg-gradient-to-r from-foreground/60 to-transparent" />
+
+      {/* Mobile Gradient Overlay */}
+      <div className="absolute inset-0 block md:hidden bg-gradient-to-b from-foreground/40 via-transparent to-transparent" />
 
       <div className="relative container h-full flex flex-col justify-center py-12">
         {/* Texte centré verticalement à gauche sur desktop, centré sur mobile */}
