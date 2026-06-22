@@ -260,7 +260,7 @@ La prestation comprend : L’évacuation des poussières et résidus de chantier
                                                 "Restaurants",
                                                 "Hôtels / Hébergements",
                                                 "Laboratoires",
-                                                "Agences : banques, immobilières…"
+                                                "Agences : banques, immobilières..."
                                             ].map((type, idx) => (
                                                 <div key={type} className="flex items-center space-x-3">
                                                     <RadioGroupItem value={type} id={`type-${idx}`} className="border-primary text-primary" />
