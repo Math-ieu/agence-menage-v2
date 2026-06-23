@@ -41,6 +41,10 @@ export const CASABLANCA_NEIGHBORHOODS = [
 export const CITIES = [
     "Casablanca",
     "Rabat",
+    "Salé",
+    "Temara",
+    "Ain Aouda",
+    "El Harhoura",
     "Bouskoura",
     "Dar Bouazza",
     "Mansouria",
@@ -68,6 +72,10 @@ export const NEIGHBORHOODS_BY_CITY: Record<string, string[]> = {
         "Agdal", "Hassan", "Hay Riad", "Souissi", "L'Océan", "Les Orangers", 
         "Quartier des Ministères", "Yacoub El Mansour", "Médina", "Akkari", "Diour Jamaa"
     ],
+    "Salé": ["Tabriquet", "Sala Al Jadida", "Bettana", "Hay Karima", "Hay Salam", "Centre-ville"],
+    "Temara": ["Wifaq", "Massira", "Oulad Mtaa", "Harhoura", "Centre-ville"],
+    "Ain Aouda": ["Centre", "Quartier Administratif"],
+    "El Harhoura": ["Plage", "Centre-ville", "Résidences Côtières"],
     Bouskoura: [
         "Ville Verte", "Victoria", "CGI", "Golf", "Centre-ville", "Quartier Industriel"
     ],
