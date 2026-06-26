@@ -16,6 +16,7 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { toast } from "sonner";
+import PromoCodeInput from "@/components/PromoCodeInput";
 import { getConfirmationMessage } from "@/lib/whatsapp";
 import { sendBookingEmail } from "@/lib/email";
 import "@/styles/sticky-summary.css";
@@ -74,6 +75,7 @@ export default function GardeMaladeClient() {
     const [formData, setFormData] = useState(INITIAL_FORM_DATA);
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [customerName, setCustomerName] = useState("");
+    const [promoCode, setPromoCode] = useState<any>(null);
     const router = useRouter();
 
     // Champs texte non-contrôlés (lus au submit) pour éviter de re-rendre tout
@@ -139,7 +141,9 @@ export default function GardeMaladeClient() {
             phoneNumber: `${phonePrefix} ${phoneNumber}`,
             whatsappNumber: formData.useWhatsappForPhone
                 ? `${phonePrefix} ${phoneNumber}`
-                : `${whatsappPrefix} ${whatsappNumber}`
+                : `${whatsappPrefix} ${whatsappNumber}`,
+            promoCodeId: promoCode ? promoCode.id : undefined,
+            promoCodeInput: promoCode ? promoCode.code : undefined
         };
 
         setCustomerName(`${firstName} ${lastName}`);
@@ -333,6 +337,12 @@ Nos auxiliaires de vie assurent une présence 24h/24, 7j/7, selon les besoins en
                                             </div>
 
                                             <div className="pt-4 border-t border-primary/20">
+                                                {promoCode && (
+                                                    <div className="flex justify-between text-emerald-600 font-medium mb-2 text-sm">
+                                                        <span>Code promo :</span>
+                                                        <span className="font-bold">{promoCode.code}</span>
+                                                    </div>
+                                                )}
                                                 <div className="flex justify-between items-center bg-primary/5 p-3 rounded-lg border border-primary/10">
                                                     <span className="text-xs font-bold text-primary uppercase tracking-wider">
                                                         Estimation
@@ -785,6 +795,13 @@ Nos auxiliaires de vie assurent une présence 24h/24, 7j/7, selon les besoins en
                                             </div>
                                         </div>
 
+                                        <PromoCodeInput
+                                            segment="particulier"
+                                            service="auxiliaires de vie / garde malade"
+                                            onApplyPromo={setPromoCode}
+                                            getPhoneNumber={() => `${phonePrefixRef.current?.value.trim() || '+212'} ${phoneNumberRef.current?.value.trim() || ''}`.trim()}
+                                        />
+ 
                                         <div className="flex justify-center pt-8">
                                             <Button
                                                 type="submit"

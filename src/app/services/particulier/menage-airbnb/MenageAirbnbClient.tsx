@@ -14,6 +14,7 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { toast } from "sonner";
+import PromoCodeInput from "@/components/PromoCodeInput";
 import serviceAirbnb from "@/assets/service-menage-airbnb.webp";
 import { createWhatsAppLink, formatBookingMessage, DESTINATION_PHONE_NUMBER, getConfirmationMessage } from "@/lib/whatsapp";
 import { sendBookingEmail } from "@/lib/email";
@@ -70,6 +71,7 @@ export default function MenageAirbnbClient() {
     const [formData, setFormData] = useState(INITIAL_FORM_DATA);
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [customerName, setCustomerName] = useState("");
+    const [promoCode, setPromoCode] = useState<any>(null);
     const router = useRouter();
 
     // Champs texte non-contrôlés (lus au submit) pour éviter de re-rendre tout
@@ -118,14 +120,23 @@ export default function MenageAirbnbClient() {
     const linenExtraCost = formData.formula === "B" ? (Number(formData.linenExtraPieces) || 0) * 5 : 0;
 
     const basePrice = AIRBNB_PRICES[formData.formula as "A" | "B"]?.[formData.sizeTier as keyof typeof AIRBNB_PRICES.A] ?? AIRBNB_PRICES.A["1chambre"];
-    let totalPrice = basePrice;
+    let computedPrice: number = basePrice;
     if (formData.conso) {
-        totalPrice += 25;
+        computedPrice += 25;
     }
-    totalPrice += linenCost + linenExtraCost;
+    computedPrice += linenCost + linenExtraCost;
     if (SURCHARGE_CITIES.includes(formData.city)) {
-        totalPrice += 50;
+        computedPrice += 50;
     }
+
+    if (promoCode) {
+        if (promoCode.reduction_type === 'pourcentage') {
+            computedPrice = computedPrice * (1 - promoCode.reduction / 100);
+        } else if (promoCode.reduction_type === 'montant_fixe') {
+            computedPrice = Math.max(0, computedPrice - promoCode.reduction);
+        }
+    }
+    const totalPrice = Math.round(computedPrice);
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
@@ -178,7 +189,9 @@ export default function MenageAirbnbClient() {
                 phoneNumber: `${phonePrefix} ${phoneNumber}`,
                 whatsappNumber: formData.useWhatsappForPhone
                     ? `${phonePrefix} ${phoneNumber}`
-                    : `${whatsappPrefix} ${whatsappNumber}`
+                    : `${whatsappPrefix} ${whatsappNumber}`,
+                promoCodeId: promoCode ? promoCode.id : undefined,
+                promoCodeInput: promoCode ? promoCode.code : undefined
             };
 
             setCustomerName(`${firstName} ${lastName}`);
@@ -335,6 +348,12 @@ Il comprend le :
                                         </div>
 
                                         <div className="pt-4 border-t border-slate-100">
+                                            {promoCode && (
+                                                <div className="flex justify-between text-emerald-600 font-medium mb-2 text-sm">
+                                                    <span>Réduction ({promoCode.code}) :</span>
+                                                    <span>-{promoCode.reduction_type === 'pourcentage' ? `${promoCode.reduction}%` : `${promoCode.reduction} DH`}</span>
+                                                </div>
+                                            )}
                                             <div className="flex justify-between items-center">
                                                 <span className="text-lg font-extrabold text-slate-800">Total</span>
                                                 <span className="text-2xl font-black text-primary">{totalPrice} DH</span>
@@ -756,6 +775,13 @@ Il comprend le :
                                         </div>
                                     </div>
 
+                                    <PromoCodeInput
+                                        segment="particulier"
+                                        service="ménage airbnb"
+                                        onApplyPromo={setPromoCode}
+                                        getPhoneNumber={() => `${phonePrefixRef.current?.value.trim() || '+212'} ${phoneNumberRef.current?.value.trim() || ''}`.trim()}
+                                    />
+ 
                                     <div className="flex justify-center pt-8">
                                         <Button
                                             type="submit"

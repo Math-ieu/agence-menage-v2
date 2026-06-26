@@ -19,6 +19,7 @@ import serviceBureaux from "@/assets/service-menage-bureaux.webp";
 import { getConfirmationMessage } from "@/lib/whatsapp";
 import { sendBookingEmail } from "@/lib/email";
 import { calculateSurchargeMultiplier } from "@/lib/pricing";
+import PromoCodeInput from "@/components/PromoCodeInput";
 import "@/styles/sticky-summary.css";
 import { FREQUENCES } from "@/app/frequences";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -66,6 +67,7 @@ export default function MenageBureauxClient() {
     const [formData, setFormData] = useState(INITIAL_FORM_DATA);
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [customerName, setCustomerName] = useState("");
+    const [promoCode, setPromoCode] = useState<any>(null);
     const router = useRouter();
 
     // Champs texte non-contrôlés (lus au submit) pour éviter de re-rendre tout
@@ -171,6 +173,14 @@ export default function MenageBureauxClient() {
         totalPrice = perVisitTotal;
     }
 
+    if (promoCode) {
+        if (promoCode.reduction_type === 'pourcentage') {
+            totalPrice = totalPrice * (1 - promoCode.reduction / 100);
+        } else if (promoCode.reduction_type === 'montant_fixe') {
+            totalPrice = Math.max(0, totalPrice - promoCode.reduction);
+        }
+    }
+
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         setWasValidated(true);
@@ -207,7 +217,9 @@ export default function MenageBureauxClient() {
             phoneNumber: `${phonePrefix} ${phoneNumber}`,
             whatsappNumber: formData.useWhatsappForPhone
                 ? `${phonePrefix} ${phoneNumber}`
-                : `${whatsappPrefix} ${whatsappNumber}`
+                : `${whatsappPrefix} ${whatsappNumber}`,
+            promoCodeId: promoCode ? promoCode.id : undefined,
+            promoCodeInput: promoCode ? promoCode.code : undefined
         };
 
         setCustomerName(contactPerson);
@@ -352,6 +364,12 @@ export default function MenageBureauxClient() {
                                                 <div className="flex justify-between gap-4 text-red-600 font-bold bg-red-50 p-2 rounded mb-4 text-xs">
                                                     <span>Réduction (10%):</span>
                                                     <span>-{Math.round(discountAmount)} MAD</span>
+                                                </div>
+                                            )}
+                                            {promoCode && (
+                                                <div className="flex justify-between text-emerald-600 font-medium mb-2 text-sm">
+                                                    <span>Réduction ({promoCode.code}) :</span>
+                                                    <span>-{promoCode.reduction_type === 'pourcentage' ? `${promoCode.reduction}%` : `${promoCode.reduction} MAD`}</span>
                                                 </div>
                                             )}
                                             <div className="flex justify-between items-center">
@@ -809,6 +827,13 @@ export default function MenageBureauxClient() {
                                             </div>
                                         </div>
                                     </div>
+
+                                    <PromoCodeInput
+                                        segment="entreprise"
+                                        service="ménage bureaux"
+                                        onApplyPromo={setPromoCode}
+                                        getPhoneNumber={() => `${phonePrefixRef.current?.value.trim() || '+212'} ${phoneNumberRef.current?.value.trim() || ''}`.trim()}
+                                    />
 
                                     <div className="flex justify-center pt-8">
                                         <Button

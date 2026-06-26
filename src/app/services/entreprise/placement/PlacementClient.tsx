@@ -18,6 +18,7 @@ import { toast } from "sonner";
 import { getConfirmationMessage } from "@/lib/whatsapp";
 import { sendBookingEmail } from "@/lib/email";
 import { Checkbox } from "@/components/ui/checkbox";
+import PromoCodeInput from "@/components/PromoCodeInput";
 import serviceMenagePonctuel from "@/assets/service-placement-gestion.webp";
 import "@/styles/sticky-summary.css";
 import { FREQUENCES } from "@/app/frequences";
@@ -72,6 +73,7 @@ export default function PlacementClient() {
     const [formData, setFormData] = useState(INITIAL_FORM_DATA);
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [customerName, setCustomerName] = useState("");
+    const [promoCode, setPromoCode] = useState<any>(null);
     const router = useRouter();
 
     // Champs texte non-contrôlés (lus au submit) pour éviter de re-rendre tout
@@ -132,7 +134,9 @@ export default function PlacementClient() {
             phoneNumber: `${phonePrefix} ${phoneNumber}`,
             whatsappNumber: formData.useWhatsappForPhone
                 ? `${phonePrefix} ${phoneNumber}`
-                : `${whatsappPrefix} ${whatsappNumber}`
+                : `${whatsappPrefix} ${whatsappNumber}`,
+            promoCodeId: promoCode ? promoCode.id : undefined,
+            promoCodeInput: promoCode ? promoCode.code : undefined
         };
 
         setCustomerName(contactPerson);
@@ -335,6 +339,12 @@ export default function PlacementClient() {
                                                 </div>
 
                                                 <div className="pt-4 border-t border-primary/20">
+                                                    {promoCode && (
+                                                        <div className="flex justify-between text-emerald-600 font-medium mb-2 text-sm">
+                                                            <span>Code promo :</span>
+                                                            <span className="font-bold">{promoCode.code}</span>
+                                                        </div>
+                                                    )}
                                                     <div className="flex justify-between items-center bg-primary/5 p-3 rounded-lg border border-primary/10">
                                                         <span className="text-xs font-bold text-primary uppercase tracking-wider">Prix HT</span>
                                                         <span className="text-lg font-black text-primary">SUR DEVIS</span>
@@ -713,6 +723,13 @@ export default function PlacementClient() {
                                                     className="bg-white h-20 resize-none"
                                                 />
                                             </div>
+
+                                            <PromoCodeInput
+                                                segment="entreprise"
+                                                service="placement"
+                                                onApplyPromo={setPromoCode}
+                                                getPhoneNumber={() => `${phonePrefixRef.current?.value.trim() || '+212'} ${phoneNumberRef.current?.value.trim() || ''}`.trim()}
+                                            />
 
                                             <div className="flex justify-center pt-8">
                                                 <Button

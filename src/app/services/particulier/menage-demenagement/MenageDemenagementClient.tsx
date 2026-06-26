@@ -17,6 +17,7 @@ import { Switch } from "@/components/ui/switch";
 import { Slider } from "@/components/ui/slider";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { toast } from "sonner";
+import PromoCodeInput from "@/components/PromoCodeInput";
 import serviceDemenagement from "@/assets/service-menage-demenagement.webp";
 import { createWhatsAppLink, formatBookingMessage, DESTINATION_PHONE_NUMBER, getConfirmationMessage } from "@/lib/whatsapp";
 import { sendBookingEmail } from "@/lib/email";
@@ -67,6 +68,7 @@ const MenageDemenagementContent = () => {
     const [formData, setFormData] = useState(INITIAL_FORM_DATA);
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [customerName, setCustomerName] = useState("");
+    const [promoCode, setPromoCode] = useState<any>(null);
     const router = useRouter();
 
     // Champs texte non-contrôlés (lus au submit) pour éviter de re-rendre tout
@@ -126,6 +128,14 @@ const MenageDemenagementContent = () => {
         totalPrice = corePrice > 0 ? corePrice + additionalCosts : 0;
     }
 
+    if (promoCode && totalPrice > 0) {
+        if (promoCode.reduction_type === 'pourcentage') {
+            totalPrice = totalPrice * (1 - promoCode.reduction / 100);
+        } else if (promoCode.reduction_type === 'montant_fixe') {
+            totalPrice = Math.max(0, totalPrice - promoCode.reduction);
+        }
+    }
+
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         setWasValidated(true);
@@ -162,7 +172,9 @@ const MenageDemenagementContent = () => {
                 phoneNumber: `${phonePrefix} ${phoneNumber}`,
                 whatsappNumber: formData.useWhatsappForPhone
                     ? `${phonePrefix} ${phoneNumber}`
-                    : `${whatsappPrefix} ${whatsappNumber}`
+                    : `${whatsappPrefix} ${whatsappNumber}`,
+                promoCodeId: promoCode ? promoCode.id : undefined,
+                promoCodeInput: promoCode ? promoCode.code : undefined
             };
 
             setCustomerName(`${firstName} ${lastName}`);
@@ -316,6 +328,12 @@ Options possibles : vitres extérieures/grandes baies, terrasse.`}
                                         </div>
 
                                         <div className="pt-4 border-t">
+                                            {promoCode && totalPrice > 0 && (
+                                                <div className="flex justify-between text-emerald-600 font-medium mb-2 text-sm">
+                                                    <span>Réduction ({promoCode.code}) :</span>
+                                                    <span>-{promoCode.reduction_type === 'pourcentage' ? `${promoCode.reduction}%` : `${promoCode.reduction} MAD`}</span>
+                                                </div>
+                                            )}
                                             <div className="flex justify-between items-center mb-4">
                                                 <span className="text-lg font-bold">Total</span>
                                                 <span className="text-2xl font-bold text-primary">
@@ -689,6 +707,13 @@ Options possibles : vitres extérieures/grandes baies, terrasse.`}
                                             </div>
                                         </div>
                                     </div>
+
+                                    <PromoCodeInput
+                                        segment="particulier"
+                                        service="ménage post-déménagement"
+                                        onApplyPromo={setPromoCode}
+                                        getPhoneNumber={() => `${phonePrefixRef.current?.value.trim() || '+212'} ${phoneNumberRef.current?.value.trim() || ''}`.trim()}
+                                    />
 
                                     <div className="flex justify-center pt-8">
                                         <Button

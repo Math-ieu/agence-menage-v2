@@ -109,3 +109,19 @@ export async function getBlogPostBySlug(slug: string): Promise<BlogPost | null> 
     return null;
   }
 }
+
+export async function validatePromoCode(code: string, segment?: string, service?: string, phone?: string) {
+  try {
+    const response = await fetch(`${API_URL}/api/public/promos/validate/`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ code, segment, service, phone }),
+    });
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error('Fetch error during validatePromoCode:', error);
+    return { valid: false, message: "Erreur de connexion au serveur." };
+  }
+}

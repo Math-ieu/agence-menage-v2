@@ -1,5 +1,4 @@
 import { Metadata } from "next";
-import { Work_Sans } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
@@ -10,13 +9,6 @@ import dynamic from "next/dynamic";
 const WhatsAppSidebar = dynamic(() => import("@/components/WhatsAppSidebar"));
 const ScrollToTop = dynamic(() => import("@/components/ScrollToTop"));
 import TrackingScripts from "@/components/TrackingScripts";
-
-const workSans = Work_Sans({
-    subsets: ["latin"],
-    variable: "--font-sans",
-    display: "swap",
-    weight: ["400", "500", "600", "700", "800"],
-});
 
 export const metadata: Metadata = {
     authors: [{ name: "Agence Ménage" }],
@@ -71,9 +63,12 @@ export default function RootLayout({
     children: React.ReactNode;
 }>) {
     return (
-        <html lang="fr-MA" className={`${workSans.variable}`} suppressHydrationWarning>
+        <html lang="fr-MA" suppressHydrationWarning>
             <head>
                 <meta name="google-site-verification" content="aIvUpt-vH6Kct-44tIJYPYciubL4YDEMnoc24z0MrJA" />
+                <link rel="preconnect" href="https://fonts.googleapis.com" />
+                <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+                <link href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
             </head>
             <body className="antialiased min-h-screen flex flex-col overflow-x-hidden" suppressHydrationWarning>
                 <TrackingScripts />

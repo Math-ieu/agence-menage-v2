@@ -15,6 +15,7 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { toast } from "sonner";
+import PromoCodeInput from "@/components/PromoCodeInput";
 import { CASABLANCA_NEIGHBORHOODS, DEFAULT_CITY, CITIES, SURCHARGE_CITIES, NEIGHBORHOODS_BY_CITY } from "@/constants/locations";
 import { ChevronDown, ChevronUp } from "lucide-react";
 import { useSearchParams } from "next/navigation";
@@ -67,6 +68,7 @@ const NettoyageUrgenceContent = () => {
     const [formData, setFormData] = useState(INITIAL_FORM_DATA);
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [customerName, setCustomerName] = useState("");
+    const [promoCode, setPromoCode] = useState<any>(null);
     const router = useRouter();
 
     // Champs texte non-contrôlés (lus au submit) pour éviter de re-rendre tout
@@ -122,7 +124,9 @@ const NettoyageUrgenceContent = () => {
                     : `${whatsappPrefix} ${whatsappNumber}`,
                 schedulingTime: formData.schedulingType === "fixed"
                     ? formData.fixedTime
-                    : (formData.schedulingTime === "morning" ? "Matin (8h-13h)" : "Journée (10h+)")
+                    : (formData.schedulingTime === "morning" ? "Matin (8h-13h)" : "Journée (10h+)"),
+                promoCodeId: promoCode ? promoCode.id : undefined,
+                promoCodeInput: promoCode ? promoCode.code : undefined
             };
 
             setCustomerName(`${firstName} ${lastName}`);
@@ -239,6 +243,12 @@ Nos équipes interviennent en urgence pour :
                                             </div>
 
                                             <div className="pt-4 border-t">
+                                                {promoCode && (
+                                                    <div className="flex justify-between text-emerald-600 font-medium mb-2 text-sm">
+                                                        <span>Code promo :</span>
+                                                        <span className="font-bold">{promoCode.code}</span>
+                                                    </div>
+                                                )}
                                                 <div className="flex justify-between items-center">
                                                     <span className="text-lg font-bold">Total</span>
                                                     <span className="text-xl font-black text-primary italic">SUR DEVIS</span>
@@ -546,6 +556,13 @@ Nos équipes interviennent en urgence pour :
                                                 </div>
                                             </div>
                                         </div>
+
+                                        <PromoCodeInput
+                                            segment="entreprise"
+                                            service="nettoyage post-sinistre"
+                                            onApplyPromo={setPromoCode}
+                                            getPhoneNumber={() => `${phonePrefixRef.current?.value.trim() || '+212'} ${phoneNumberRef.current?.value.trim() || ''}`.trim()}
+                                        />
 
                                         <div className="flex justify-center pt-8">
                                             <Button

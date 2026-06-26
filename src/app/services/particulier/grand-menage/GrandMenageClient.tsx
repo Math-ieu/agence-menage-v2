@@ -16,6 +16,7 @@ import { Switch } from "@/components/ui/switch";
 import { Slider } from "@/components/ui/slider";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { toast } from "sonner";
+import PromoCodeInput from "@/components/PromoCodeInput";
 import serviceGrandMenage from "@/assets/service-grand-menage.webp";
 import cleaningProduct from "@/assets/cleaning-product.webp";
 import cleaningClothsMop from "@/assets/cleaning-cloths-mop.webp";
@@ -77,6 +78,7 @@ export default function GrandMenageClient() {
     const [formData, setFormData] = useState(INITIAL_FORM_DATA);
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [customerName, setCustomerName] = useState("");
+    const [promoCode, setPromoCode] = useState<any>(null);
     const router = useRouter();
 
     // Champs texte non-contrôlés (lus au submit) pour éviter de re-rendre tout
@@ -133,6 +135,14 @@ export default function GrandMenageClient() {
         if (formData.additionalServices.produitsEtOutils) price += 90;
         if (SURCHARGE_CITIES.includes(formData.city)) price += 50;
         if (formData.additionalServices.torchonsEtSerpierres) price += 40;
+
+        if (promoCode) {
+            if (promoCode.reduction_type === 'pourcentage') {
+                price = price * (1 - promoCode.reduction / 100);
+            } else if (promoCode.reduction_type === 'montant_fixe') {
+                price = Math.max(0, price - promoCode.reduction);
+            }
+        }
         return price;
     };
 
@@ -174,7 +184,9 @@ export default function GrandMenageClient() {
                 phoneNumber: `${phonePrefix} ${phoneNumber}`,
                 whatsappNumber: formData.useWhatsappForPhone
                     ? `${phonePrefix} ${phoneNumber}`
-                    : `${whatsappPrefix} ${whatsappNumber}`
+                    : `${whatsappPrefix} ${whatsappNumber}`,
+                promoCodeId: promoCode ? promoCode.id : undefined,
+                promoCodeInput: promoCode ? promoCode.code : undefined
             };
 
             setCustomerName(`${firstName} ${lastName}`);
@@ -372,6 +384,12 @@ Il comprend le :
                                         </div>
 
                                         <div className="pt-4 border-t">
+                                            {promoCode && (
+                                                <div className="flex justify-between text-emerald-600 font-medium mb-2 text-sm">
+                                                    <span>Réduction ({promoCode.code}) :</span>
+                                                    <span>-{promoCode.reduction_type === 'pourcentage' ? `${promoCode.reduction}%` : `${promoCode.reduction} MAD`}</span>
+                                                </div>
+                                            )}
                                             <div className="flex justify-between items-center">
                                                 <span className="text-lg font-bold">
                                                     {formData.frequency === "subscription" ? "Total Mensuel" : "Total"}
@@ -843,6 +861,13 @@ Il comprend le :
                                             </div>
                                         </div>
                                     </div>
+
+                                    <PromoCodeInput
+                                        segment="particulier"
+                                        service="grand ménage"
+                                        onApplyPromo={setPromoCode}
+                                        getPhoneNumber={() => `${phonePrefixRef.current?.value.trim() || '+212'} ${phoneNumberRef.current?.value.trim() || ''}`.trim()}
+                                    />
 
                                     <div className="flex justify-center">
                                         <Button

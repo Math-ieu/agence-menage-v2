@@ -297,6 +297,7 @@ export async function sendBookingEmailResend(serviceName: string, data: any, pri
         is_devis: isDevis,
         prix: typeof price === "number" ? price.toString() : (!isDevis && typeof price === "string" ? price : null),
         frequency: data.frequency === "oneshot" ? 'oneshot' as const : 'abonnement' as const,
+        promo_code: data.promoCodeId || null,
         formulaire_data: data
       };
       
