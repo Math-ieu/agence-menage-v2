@@ -14,6 +14,7 @@ import { particulierServices, entrepriseServices } from "@/constants/services";
 const Header = () => {
   const pathname = usePathname();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isPhoneDropdownOpen, setIsPhoneDropdownOpen] = useState(false);
   const isParticulier = pathname === "/" || pathname.startsWith("/services/particulier");
   const isEntreprise = pathname === "/entreprise" || pathname.startsWith("/services/entreprise");
 
@@ -81,9 +82,85 @@ const Header = () => {
 
         {/* Actions wrapper */}
         <div className="flex flex-shrink-0 justify-end items-center gap-3">
-          {/* Contact Info (Desktop & Mobile next to hamburger) */}
+          {/* Contact Info (Mobile Dropdown - visible only on < sm) */}
+          <div className="relative sm:hidden">
+            <button
+              onClick={() => setIsPhoneDropdownOpen(!isPhoneDropdownOpen)}
+              className={`
+                flex items-center gap-2 px-3 py-1.5 rounded-xl border-2 transition-all duration-300 whitespace-nowrap
+                ${isEntreprise
+                  ? "border-white/30 text-white hover:bg-white/5"
+                  : "border-primary/30 text-primary hover:bg-primary/5 hover:border-primary hover:shadow-sm"}
+              `}
+            >
+              <Phone className="w-4 h-4 shrink-0" />
+              <span className="text-xs font-black tracking-tighter">
+                Appeler
+              </span>
+            </button>
+
+            {isPhoneDropdownOpen && (
+              <>
+                <div
+                  className="fixed inset-0 z-40"
+                  onClick={() => setIsPhoneDropdownOpen(false)}
+                />
+                <div className={`
+                  absolute right-0 mt-2 w-48 rounded-xl shadow-lg border p-2 z-50 animate-in fade-in-50 slide-in-from-top-2 duration-200
+                  ${isEntreprise
+                    ? "bg-primary border-white/10 text-white"
+                    : "bg-background border-slate-100 text-foreground"}
+                `}>
+                  <div className="flex flex-col gap-1">
+                    <a
+                      href="tel:+212664226790"
+                      className={`flex items-center gap-2.5 p-2.5 rounded-lg text-xs font-bold transition-colors ${
+                        isEntreprise ? "hover:bg-white/10" : "hover:bg-slate-50"
+                      }`}
+                      onClick={() => {
+                        setIsPhoneDropdownOpen(false);
+                        if (typeof window !== 'undefined') {
+                          (window as any).dataLayer = (window as any).dataLayer || [];
+                          (window as any).dataLayer.push({
+                            event: 'phone_click',
+                            phone_location: 'header_mobile_dropdown',
+                            phone_number: '0664226790'
+                          });
+                        }
+                      }}
+                    >
+                      <Phone className="w-3.5 h-3.5" />
+                      <span>06 64 22 67 90</span>
+                    </a>
+                    <a
+                      href="tel:+212664331463"
+                      className={`flex items-center gap-2.5 p-2.5 rounded-lg text-xs font-bold transition-colors ${
+                        isEntreprise ? "hover:bg-white/10" : "hover:bg-slate-50"
+                      }`}
+                      onClick={() => {
+                        setIsPhoneDropdownOpen(false);
+                        if (typeof window !== 'undefined') {
+                          (window as any).dataLayer = (window as any).dataLayer || [];
+                          (window as any).dataLayer.push({
+                            event: 'phone_click',
+                            phone_location: 'header_mobile_dropdown',
+                            phone_number: '0664331463'
+                          });
+                        }
+                      }}
+                    >
+                      <Phone className="w-3.5 h-3.5" />
+                      <span>06 64 33 14 63</span>
+                    </a>
+                  </div>
+                </div>
+              </>
+            )}
+          </div>
+
+          {/* Contact Info (Desktop & Tablet >= sm next to hamburger) */}
           <div className={`
-            flex items-center gap-2 px-3 md:px-4 py-1.5 md:py-2 rounded-xl border-2 transition-all duration-300 whitespace-nowrap group
+            hidden sm:flex items-center gap-2 px-3 md:px-4 py-1.5 md:py-2 rounded-xl border-2 transition-all duration-300 whitespace-nowrap group
             ${isEntreprise
               ? "border-white/30 text-white hover:bg-white/5"
               : "border-primary/30 text-primary hover:bg-primary/5 hover:border-primary hover:shadow-sm"}
@@ -187,6 +264,59 @@ const Header = () => {
                 )}
               </div>
             ))}
+
+            {/* Mobile Menu Phone Section */}
+            <div className={`pt-4 mt-2 border-t ${isEntreprise ? "border-white/10" : "border-slate-100"} flex flex-col gap-2`}>
+              <div className={`text-[10px] font-bold tracking-wider uppercase px-2 ${isEntreprise ? "text-white/50" : "text-muted-foreground"}`}>
+                Service Client
+              </div>
+              <div className="grid grid-cols-1 gap-2">
+                <a
+                  href="tel:+212664226790"
+                  className={`flex items-center gap-3 p-3 rounded-xl border transition-colors font-bold text-sm ${
+                    isEntreprise
+                      ? "border-white/10 text-white hover:bg-white/5 bg-white/5"
+                      : "border-slate-100 text-foreground hover:bg-slate-50 bg-slate-50/50"
+                  }`}
+                  onClick={() => {
+                    setIsMobileMenuOpen(false);
+                    if (typeof window !== 'undefined') {
+                      (window as any).dataLayer = (window as any).dataLayer || [];
+                      (window as any).dataLayer.push({
+                        event: 'phone_click',
+                        phone_location: 'mobile_menu',
+                        phone_number: '0664226790'
+                      });
+                    }
+                  }}
+                >
+                  <Phone className={`w-4 h-4 shrink-0 ${isEntreprise ? "text-white" : "text-primary"}`} />
+                  <span>06 64 22 67 90</span>
+                </a>
+                <a
+                  href="tel:+212664331463"
+                  className={`flex items-center gap-3 p-3 rounded-xl border transition-colors font-bold text-sm ${
+                    isEntreprise
+                      ? "border-white/10 text-white hover:bg-white/5 bg-white/5"
+                      : "border-slate-100 text-foreground hover:bg-slate-50 bg-slate-50/50"
+                  }`}
+                  onClick={() => {
+                    setIsMobileMenuOpen(false);
+                    if (typeof window !== 'undefined') {
+                      (window as any).dataLayer = (window as any).dataLayer || [];
+                      (window as any).dataLayer.push({
+                        event: 'phone_click',
+                        phone_location: 'mobile_menu',
+                        phone_number: '0664331463'
+                      });
+                    }
+                  }}
+                >
+                  <Phone className={`w-4 h-4 shrink-0 ${isEntreprise ? "text-white" : "text-primary"}`} />
+                  <span>06 64 33 14 63</span>
+                </a>
+              </div>
+            </div>
           </nav>
         </div>
       )}
