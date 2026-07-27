@@ -343,9 +343,15 @@ export async function sendBookingEmailResend(serviceName: string, data: any, pri
     <h3 style="color: #175e5c; border-left: 4px solid #175e5c; padding-left: 10px; margin-bottom: 10px;">Détails de la Prestation</h3>
     <table style="width: 100%; border-collapse: collapse;">
       <tr><td style="padding: 5px 0; width: 40%;"><strong>Service:</strong></td><td>${serviceName}</td></tr>
+      ${serviceName.toLowerCase() === "ménage airbnb" ? `
+        <tr><td style="padding: 5px 0; width: 40%;"><strong>Nombre de biens:</strong></td><td>${data.nombre_biens || "-"}</td></tr>
+        <tr><td style="padding: 5px 0; width: 40%;"><strong>Logements concernés:</strong></td><td>${data.types_logement || "-"}</td></tr>
+        <tr><td style="padding: 5px 0; width: 40%;"><strong>Services d'intérêt:</strong></td><td>${data.services_interet || "-"}</td></tr>
+        <tr><td style="padding: 5px 0; width: 40%;"><strong>Moment de rappel:</strong></td><td>${data.moment_rappel || "-"}</td></tr>
+      ` : ""}
       ${data.serviceType ? `<tr><td style="padding: 5px 0;"><strong>Offre:</strong></td><td style="text-transform: capitalize;">${data.serviceType}</td></tr>` : ""}
       ${data.structureType ? `<tr><td style="padding: 5px 0;"><strong>Structure:</strong></td><td style="text-transform: capitalize;">${data.structureType}</td></tr>` : ""}
-      ${data.propertyType ? `<tr><td style="padding: 5px 0;"><strong>Type de bien:</strong></td><td style="text-transform: capitalize;">${data.propertyType}</td></tr>` : ""}
+      ${data.propertyType && serviceName.toLowerCase() !== "ménage airbnb" ? `<tr><td style="padding: 5px 0;"><strong>Type de bien:</strong></td><td style="text-transform: capitalize;">${data.propertyType}</td></tr>` : ""}
       ${data.sizeTier ? `<tr><td style="padding: 5px 0;"><strong>Type:</strong></td><td>${(() => {
         const sizeLabels: Record<string, string> = {
           studio: "Studio",
@@ -357,7 +363,7 @@ export async function sendBookingEmailResend(serviceName: string, data: any, pri
         };
         return sizeLabels[data.sizeTier] || data.sizeTier;
       })()}</td></tr>` : ""}
-      ${!["nettoyage fin de chantier", "nettoyage fin de chantier (entreprise)", "ménage post-sinistre", "nettoyage d'urgence"].includes(serviceName.toLowerCase()) ? `<tr><td style="padding: 5px 0;"><strong>Fréquence:</strong></td><td>${frequency}</td></tr>` : ""}
+      ${!["nettoyage fin de chantier", "nettoyage fin de chantier (entreprise)", "ménage post-sinistre", "nettoyage d'urgence", "ménage airbnb"].includes(serviceName.toLowerCase()) ? `<tr><td style="padding: 5px 0;"><strong>Fréquence:</strong></td><td>${frequency}</td></tr>` : ""}
       ${data.recommendedDuration && data.recommendedDuration > 0 ? `<tr><td style="padding: 5px 0; width: 40%;"><strong>Durée recommandée:</strong></td><td>${data.recommendedDuration}h</td></tr>` : ""}
       ${data.duration && data.duration !== "-" ? `<tr><td style="padding: 5px 0;"><strong>Durée optée:</strong></td><td>${data.duration}h</td></tr>` : ""}
       ${data.numberOfPeople ? `<tr><td style="padding: 5px 0;"><strong>Intervenants:</strong></td><td>${data.numberOfPeople}</td></tr>` : ""}
@@ -412,7 +418,7 @@ export async function sendBookingEmailResend(serviceName: string, data: any, pri
   </div>
   ` : ""}
   <div style="text-align: right; border-top: 2px solid #edba54; padding-top: 10px; margin-top: 20px;">
-    <h3 style="margin: 0;">Total Estimé: <span style="color: #edba54;">${typeof price === "number" ? `${price} MAD` : price}</span></h3>
+    <h3 style="margin: 0;">${typeof price === "string" && price.toLowerCase().includes("rappel") ? "Type de demande:" : "Total Estimé:"} <span style="color: #edba54;">${typeof price === "number" ? `${price} MAD` : price}</span></h3>
   </div>
 </div>
         `,

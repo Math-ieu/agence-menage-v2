@@ -1,8 +1,7 @@
 "use client";
-import { useState, useRef } from "react";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { SERVICE_COLORS } from "@/constants/service-colors";
-import { ChevronDown, ChevronUp } from "lucide-react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import ServiceHeroSection from "@/components/ServiceHeroSection";
@@ -11,16 +10,12 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { toast } from "sonner";
-import PromoCodeInput from "@/components/PromoCodeInput";
 import serviceAirbnb from "@/assets/service-menage-airbnb.webp";
-import { createWhatsAppLink, formatBookingMessage, DESTINATION_PHONE_NUMBER, getConfirmationMessage } from "@/lib/whatsapp";
+import { createWhatsAppLink, DESTINATION_PHONE_NUMBER } from "@/lib/whatsapp";
 import { sendBookingEmail } from "@/lib/email";
-import "@/styles/sticky-summary.css";
 import { Checkbox } from "@/components/ui/checkbox";
-import { FREQUENCES } from "@/app/frequences";
 import {
     Dialog,
     DialogContent,
@@ -29,191 +24,102 @@ import {
     DialogDescription,
     DialogFooter,
 } from "@/components/ui/dialog";
-import { CASABLANCA_NEIGHBORHOODS, DEFAULT_CITY, CITIES, SURCHARGE_CITIES, NEIGHBORHOODS_BY_CITY } from "@/constants/locations";
-
-const frequencies = FREQUENCES;
-
-// Tarif linge progressif par set : 1er 50 DH, 2ème 45 DH, 3ème et + 40 DH/set
-const linenSetsCost = (n: number): number => {
-    const count = Number(n) || 0;
-    let c = 0;
-    for (let i = 1; i <= count; i++) c += i === 1 ? 50 : i === 2 ? 45 : 40;
-    return c;
-};
-
-const INITIAL_FORM_DATA = {
-    propertyType: "appartement",
-    formula: "A",
-    sizeTier: "1chambre",
-    conso: false,
-    linenSets: 0,
-    linenExtraPieces: 0,
-    city: DEFAULT_CITY,
-    neighborhood: "",
-    schedulingTime: "morning",
-    schedulingDate: "",
-    schedulingType: "flexible",
-    fixedTime: "14:00",
-    phoneNumber: "",
-    phonePrefix: "+212",
-    useWhatsappForPhone: true,
-    whatsappPrefix: "+212",
-    whatsappNumber: "",
-    firstName: "",
-    lastName: "",
-    changeRepereNotes: ""
-};
 
 export default function MenageAirbnbClient() {
-    const [wasValidated, setWasValidated] = useState(false);
-    const [showConfirmation, setShowConfirmation] = useState(false);
-    const [isSummaryExpanded, setIsSummaryExpanded] = useState(false);
-    const [formData, setFormData] = useState(INITIAL_FORM_DATA);
-    const [isSubmitting, setIsSubmitting] = useState(false);
-    const [customerName, setCustomerName] = useState("");
-    const [promoCode, setPromoCode] = useState<any>(null);
     const router = useRouter();
 
-    // Champs texte non-contrôlés (lus au submit) pour éviter de re-rendre tout
-    // le formulaire à chaque frappe (optimisation INP).
-    const firstNameRef = useRef<HTMLInputElement>(null);
-    const lastNameRef = useRef<HTMLInputElement>(null);
-    const phonePrefixRef = useRef<HTMLInputElement>(null);
-    const phoneNumberRef = useRef<HTMLInputElement>(null);
-    const whatsappPrefixRef = useRef<HTMLInputElement>(null);
-    const whatsappNumberRef = useRef<HTMLInputElement>(null);
-    const neighborhoodRef = useRef<HTMLInputElement>(null);
-    const changeRepereNotesRef = useRef<HTMLTextAreaElement>(null);
+    // Form states
+    const [formBiensOption, setFormBiensOption] = useState<"1-2" | "3+">("3+");
+    const [formVille, setFormVille] = useState<"Casablanca" | "Rabat">("Casablanca");
+    const [formNbBiens, setFormNbBiens] = useState<string>("3 biens");
+    const [formTypesLogement, setFormTypesLogement] = useState<string>("");
+    
+    // Services of interest checkboxes
+    const [interestReassort, setInterestReassort] = useState<boolean>(false);
+    const [interestVideo, setInterestVideo] = useState<boolean>(false);
+    const [interestMateriel, setInterestMateriel] = useState<boolean>(false);
+    const [interestLinge, setInterestLinge] = useState<boolean>(false);
 
-    const AIRBNB_PRICES = {
-        A: {
-            studio: 130,
-            "1chambre": 165,
-            "2chambres": 195,
-            "2chambresDoubleSDB": 230,
-            "3chambres": 260,
-            "4chambres": 325,
-            villa: 390
-        },
-        B: {
-            studio: 220,
-            "1chambre": 255,
-            "2chambres": 285,
-            "2chambresDoubleSDB": 320,
-            "3chambres": 350,
-            "4chambres": 415,
-            villa: 480
-        }
-    } as const;
+    // Contact info states
+    const [formTel, setFormTel] = useState<string>("");
+    const [formNom, setFormNom] = useState<string>("");
+    const [formMomentRappel, setFormMomentRappel] = useState<string>("Dès que possible");
 
-    const SIZE_LABELS: Record<string, string> = {
-        studio: "Studio",
-        "1chambre": "1 chambre",
-        "2chambres": "2 chambres",
-        "2chambresDoubleSDB": "2 chambres (double SDB)",
-        "3chambres": "3 chambres",
-        "4chambres": "Grand appart / Duplex",
-        villa: "Villa"
+    // UX states
+    const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
+    const [showConfirmation, setShowConfirmation] = useState<boolean>(false);
+    const [customerName, setCustomerName] = useState<string>("");
+
+    const handleBiensOptionChange = (value: "1-2" | "3+") => {
+        setFormBiensOption(value);
     };
 
-    const linenCost = formData.formula === "B" ? linenSetsCost(formData.linenSets) : 0;
-    const linenExtraCost = formData.formula === "B" ? (Number(formData.linenExtraPieces) || 0) * 5 : 0;
-
-    const basePrice = AIRBNB_PRICES[formData.formula as "A" | "B"]?.[formData.sizeTier as keyof typeof AIRBNB_PRICES.A] ?? AIRBNB_PRICES.A["1chambre"];
-    let computedPrice: number = basePrice;
-    if (formData.conso) {
-        computedPrice += 25;
-    }
-    computedPrice += linenCost + linenExtraCost;
-    if (SURCHARGE_CITIES.includes(formData.city)) {
-        computedPrice += 50;
-    }
-
-    if (promoCode) {
-        if (promoCode.reduction_type === 'pourcentage') {
-            computedPrice = computedPrice * (1 - promoCode.reduction / 100);
-        } else if (promoCode.reduction_type === 'montant_fixe') {
-            computedPrice = Math.max(0, computedPrice - promoCode.reduction);
-        }
-    }
-    const totalPrice = Math.round(computedPrice);
-
-    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    const handleFormSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        setWasValidated(true);
 
-        if (!e.currentTarget.checkValidity()) {
-            e.currentTarget.reportValidity();
+        if (formBiensOption === "1-2") {
+            toast.error("Pour 1 ou 2 biens, veuillez vous orienter vers notre service Ménage standard.");
             return;
         }
 
-        const firstName = firstNameRef.current?.value.trim() ?? "";
-        const lastName = lastNameRef.current?.value.trim() ?? "";
-        const phonePrefix = phonePrefixRef.current?.value.trim() || "+212";
-        const phoneNumber = phoneNumberRef.current?.value.trim() ?? "";
-        const whatsappPrefix = whatsappPrefixRef.current?.value.trim() || "+212";
-        const whatsappNumber = whatsappNumberRef.current?.value.trim() ?? "";
-        const neighborhood = neighborhoodRef.current?.value.trim() ?? "";
-        const changeRepereNotes = changeRepereNotesRef.current?.value.trim() ?? "";
-
-        if (!firstName || !lastName || !phoneNumber || !formData.city || !neighborhood || !formData.schedulingDate) {
-            toast.error("Veuillez remplir tous les champs obligatoires");
+        if (!formTel.trim() || !formNom.trim()) {
+            toast.error("Veuillez remplir tous les champs obligatoires (téléphone et nom complet)");
             return;
         }
 
         setIsSubmitting(true);
         try {
+            const selectedServices = [
+                interestReassort ? "Réassort consommables" : "",
+                interestVideo ? "Vidéo avant/après" : "",
+                interestMateriel ? "Matériel fourni" : "",
+                (formVille !== "Rabat" && interestLinge) ? "Service linge" : ""
+            ].filter(Boolean);
+
+            const servicesText = selectedServices.join(", ") || "Aucun";
+
             const bookingData = {
-                ...formData,
-                firstName,
-                lastName,
-                neighborhood,
-                changeRepereNotes,
-                phonePrefix,
-                whatsappPrefix,
+                firstName: "",
+                lastName: formNom,
+                phoneNumber: formTel,
+                whatsappNumber: formTel,
+                city: formVille,
                 frequency: "oneshot",
                 frequencyLabel: "Une fois",
                 numberOfPeople: 1,
-                propertyType: formData.propertyType.charAt(0).toUpperCase() + formData.propertyType.slice(1),
-                serviceType: formData.formula === "A" ? "Formule A — Ménage seul" : "Formule B — Ménage + set de linge",
-                type_habitation: `${formData.propertyType.charAt(0).toUpperCase() + formData.propertyType.slice(1)} (${SIZE_LABELS[formData.sizeTier]})`,
-                additionalServices: {
-                    reassortConso: formData.conso,
-                    setsDeLinge: formData.formula === "B" && formData.linenSets > 0,
-                    setsDeLingeCount: formData.formula === "B" ? formData.linenSets : 0,
-                    setsDeLingeCost: linenCost,
-                    articlesHorsSet: formData.formula === "B" && formData.linenExtraPieces > 0,
-                    articlesHorsSetCount: formData.formula === "B" ? formData.linenExtraPieces : 0,
-                    articlesHorsSetCost: linenExtraCost
-                },
-                phoneNumber: `${phonePrefix} ${phoneNumber}`,
-                whatsappNumber: formData.useWhatsappForPhone
-                    ? `${phonePrefix} ${phoneNumber}`
-                    : `${whatsappPrefix} ${whatsappNumber}`,
-                promoCodeId: promoCode ? promoCode.id : undefined,
-                promoCodeInput: promoCode ? promoCode.code : undefined
+                serviceType: "Airbnb / Conciergerie",
+                propertyType: "Airbnb / Conciergerie",
+                // Additional properties for Django CRM/lead tracing
+                nombre_biens: formNbBiens,
+                types_logement: formTypesLogement || "Non spécifié",
+                services_interet: servicesText,
+                moment_rappel: formMomentRappel,
+                source: "Site — Menage Airbnb",
+                changeRepereNotes: `Demande de rappel pour conciergerie Airbnb.
+Nombre de biens : ${formNbBiens}
+Types de logement : ${formTypesLogement || 'Non spécifié'}
+Services d'intérêt : ${servicesText}
+Moment souhaité pour le rappel : ${formMomentRappel}`
             };
 
-            setCustomerName(`${firstName} ${lastName}`);
+            setCustomerName(formNom);
 
-            const message = formatBookingMessage("Ménage Airbnb", bookingData, totalPrice, false);
-            const whatsappLink = createWhatsAppLink(DESTINATION_PHONE_NUMBER, message);
+            // Send lead data to backend
+            const result = await sendBookingEmail("Ménage Airbnb", bookingData, "Rappel conseiller", false);
 
-            // Send email notification (await to ensure back-office recording)
-            const result = await sendBookingEmail("Ménage Airbnb", bookingData, totalPrice, false);
+            if (result.success || result.emailSent) {
+                // Generate WhatsApp prepopulated link and open it
+                const msg = `Bonjour, je souhaite être rappelé pour le service Conciergerie Airbnb. Biens : ${formNbBiens}. Ville : ${formVille}. Services : ${servicesText}. Nom : ${formNom}.`;
+                const waLink = createWhatsAppLink(DESTINATION_PHONE_NUMBER, msg);
+                window.open(waLink, '_blank');
 
-            if (result.success) {
                 setShowConfirmation(true);
             } else {
-                if (result.emailSent) {
-                    setShowConfirmation(true);
-                } else {
-                    setShowConfirmation(true);
-                }
+                toast.error("Une erreur est survenue lors de l'enregistrement de votre demande.");
             }
         } catch (error) {
-            console.error(error);
-            toast.error("Une erreur est survenue lors de la réservation.");
+            console.error("Submission error:", error);
+            toast.error("Une erreur est survenue.");
         } finally {
             setIsSubmitting(false);
         }
@@ -222,8 +128,16 @@ export default function MenageAirbnbClient() {
     const handleCloseConfirmation = (open: boolean) => {
         setShowConfirmation(open);
         if (!open) {
-            setWasValidated(false);
-            setFormData(INITIAL_FORM_DATA);
+            // Reset form
+            setFormNbBiens("3 biens");
+            setFormTypesLogement("");
+            setInterestReassort(false);
+            setInterestVideo(false);
+            setInterestMateriel(false);
+            setInterestLinge(false);
+            setFormTel("");
+            setFormNom("");
+            setFormMomentRappel("Dès que possible");
             router.push(window.location.pathname + "/merci");
         }
     };
@@ -259,548 +173,419 @@ Il comprend le :
                         },
                         {
                             question: "Gérez-vous le réapprovisionnement des consommables de base (savon, papier toilette, café) ?",
-                            answer: "Actuellement, nous concentrons toute notre expertise sur notre cœur de métier : l'excellence de la propreté Premium. Nous ne gérons donc pas les achats ni le réapprovisionnement de vos consommables. Nous vous invitons à laisser votre stock à disposition sur place, et nos équipes se chargeront de les disposer harmonieusement selon vos consignes avant l'arrivée de vos locataires."
+                            answer: "Nous vous proposons l'achat et le réapprovisionnement des consommables via nos formules Réassort (Essentiel ou Confort) pour que vos voyageurs ne manquent de rien."
                         },
                         {
                             question: "Pouvez-vous intervenir le dimanche entre deux réservations (check-out / check-in) ?",
-                            answer: "Absolument. Nous connaissons les contraintes de la location courte durée à Casablanca comme à Rabat et savons que les rotations n'attendent pas. Nos équipes spécialisées Airbnb sont pleinement opérationnelles 7 jours sur 7, du lundi au dimanche inclus, pour assurer des transitions parfaites et ponctuelles entre le départ d'un locataire et l'arrivée du suivant."
+                            answer: "Absolument. Nous connaissons les contraintes de la location courte durée à Casablanca comme à Rabat et savons que les rotations n'attendent pas. Nos équipes spécialisées Airbnb sont pleinement opérationnelles 7 jours sur 7, du lundi au dimanche inclus, pour assurer des transitions parfaites et ponctuelles."
                         },
                         {
                             question: "Que se passe-t-il si votre équipe constate des dégradations laissées par les voyageurs ?",
-                            answer: "Nous sommes vos yeux sur place. Dès qu'une de nos intervenantes constate une casse, une dégradation ou toute anomalie anormale dans votre logement, notre protocole est strict : nous prenons immédiatement des photos détaillées. Nous vous partageons ces preuves en temps réel et nous mettons en attente nos opérations de nettoyage jusqu'à réception de vos consignes. Vous êtes ainsi parfaitement protégé pour formuler vos réclamations sur la plateforme de réservation."
+                            answer: "Nous sommes vos yeux sur place. Dès qu'une de nos intervenantes constate une casse, une dégradation ou toute anomalie anormale dans votre logement, notre protocole est strict : nous prenons immédiatement des photos détaillées et nous vous partageons ces preuves en temps réel."
                         }
                     ]}
                 />
 
                 <main className="flex-1 bg-transparent py-12">
-                    <div className="container max-w-5xl">
-                        <div className="bg-primary/5 rounded-lg p-6 text-center mb-8 border border-primary/20">
-                            <h2 className="text-2xl font-bold text-primary mb-2 uppercase tracking-wide">
-                                FORMULAIRE DE RESERVATION
-                            </h2>
-                        </div>
-                        <form id="booking-form" onSubmit={handleSubmit} noValidate className={`flex flex-col lg:grid lg:grid-cols-3 gap-8 ${wasValidated ? 'was-validated' : ''}`}>
-                            <div className="lg:col-span-1 lg:order-last sticky-reservation-summary-container">
-                                <div className="lg:sticky lg:top-24 space-y-6">
-                                    <div className="bg-white rounded-2xl border border-slate-200 p-6 space-y-4 relative">
-                                        <h3 className="text-lg font-bold bg-primary text-white py-2 px-4 rounded-lg text-center tracking-wide">
-                                            Ma Réservation
-                                        </h3>
-                                        <div className="space-y-3">
-                                            <div className="flex justify-between gap-4 border-b border-slate-100 pb-3 text-sm">
-                                                <span className="text-slate-500">Service:</span>
-                                                <span className="font-bold text-slate-800 text-right">Ménage Airbnb</span>
-                                            </div>
-
-                                            {/* Detailed info - hidden on mobile when collapsed */}
-                                            <div className={`space-y-3 ${!isSummaryExpanded ? 'max-lg:hidden' : ''}`}>
-                                                <div className="flex justify-between gap-4 border-b border-slate-100 pb-3 text-sm">
-                                                    <span className="text-slate-500">Type d'habitation:</span>
-                                                    <span className="font-bold text-slate-800 text-right capitalize">
-                                                        {formData.propertyType}
-                                                    </span>
-                                                </div>
-                                                <div className="flex justify-between gap-4 border-b border-slate-100 pb-3 text-sm">
-                                                    <span className="text-slate-500">Formule:</span>
-                                                    <span className="font-bold text-slate-800 text-right">
-                                                        {formData.formula === "A" ? "A — Ménage seul" : "B — Ménage + set de linge"}
-                                                    </span>
-                                                </div>
-                                                <div className="flex justify-between gap-4 border-b border-slate-100 pb-3 text-sm">
-                                                    <span className="text-slate-500">Type:</span>
-                                                    <span className="font-bold text-slate-800 text-right">
-                                                        {SIZE_LABELS[formData.sizeTier]}
-                                                    </span>
-                                                </div>
-                                                {formData.conso && (
-                                                    <div className="flex justify-between gap-4 border-b border-slate-100 pb-3 text-sm">
-                                                        <span className="text-slate-500">Réassort:</span>
-                                                        <span className="font-bold text-slate-800 text-right">+25 DH</span>
-                                                    </div>
-                                                )}
-                                                {formData.formula === "B" && formData.linenSets > 0 && (
-                                                    <div className="flex justify-between gap-4 border-b border-slate-100 pb-3 text-sm">
-                                                        <span className="text-slate-500">Sets de linge:</span>
-                                                        <span className="font-bold text-slate-800 text-right">
-                                                            {formData.linenSets} set(s) = {linenCost} DH
-                                                        </span>
-                                                    </div>
-                                                )}
-                                                {formData.formula === "B" && formData.linenExtraPieces > 0 && (
-                                                    <div className="flex justify-between gap-4 border-b border-slate-100 pb-3 text-sm">
-                                                        <span className="text-slate-500">Articles hors set:</span>
-                                                        <span className="font-bold text-slate-800 text-right">
-                                                            {formData.linenExtraPieces} × 5 = {linenExtraCost} DH
-                                                        </span>
-                                                    </div>
-                                                )}
-                                                <div className="flex justify-between gap-4 border-b border-slate-100 pb-3 text-sm">
-                                                    <span className="text-slate-500">Date:</span>
-                                                    <span className="font-bold text-slate-800 text-right">{formData.schedulingDate || "Non définie"}</span>
-                                                </div>
-                                                <div className="flex justify-between gap-4 pb-1 text-sm">
-                                                    <span className="text-slate-500">Heure:</span>
-                                                    <span className="font-bold text-slate-800 text-right">
-                                                        {formData.schedulingType === "fixed" ? formData.fixedTime : (formData.schedulingTime === "morning" ? "Le matin" : "L'après midi")}
-                                                    </span>
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <div className="pt-4 border-t border-slate-100">
-                                            {promoCode && (
-                                                <div className="flex justify-between text-emerald-600 font-medium mb-2 text-sm">
-                                                    <span>Réduction ({promoCode.code}) :</span>
-                                                    <span>-{promoCode.reduction_type === 'pourcentage' ? `${promoCode.reduction}%` : `${promoCode.reduction} DH`}</span>
-                                                </div>
-                                            )}
-                                            <div className="flex justify-between items-center">
-                                                <span className="text-lg font-extrabold text-slate-800">Total</span>
-                                                <span className="text-2xl font-black text-primary">{totalPrice} DH</span>
-                                            </div>
-                                        </div>
-
-                                        {/* Toggle Button for Mobile */}
-                                        <button
-                                            type="button"
-                                            onClick={() => setIsSummaryExpanded(!isSummaryExpanded)}
-                                            className="lg:hidden absolute -bottom-3 left-1/2 -translate-x-1/2 w-8 h-8 rounded-full bg-primary text-white flex items-center justify-center border-2 border-white z-20 hover:bg-primary/90 transition-transform active:scale-90"
-                                        >
-                                            {isSummaryExpanded ? <ChevronUp size={20} /> : <ChevronDown size={20} />}
-                                        </button>
+                    <div className="container max-w-5xl px-4 md:px-6">
+                        
+                        {/* Orientation: Combien de biens ? */}
+                        <div className="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm mb-10 max-w-3xl mx-auto">
+                            <h3 className="text-xl font-bold font-poppins text-slate-800 mb-6 text-center">
+                                Combien de biens souhaitez-vous nous confier ?
+                            </h3>
+                            <div className="space-y-4">
+                                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-4 rounded-xl bg-slate-50 border border-emerald-600">
+                                    <div className="text-slate-700 text-sm md:text-base">
+                                        <strong className="text-slate-900">1 ou 2 biens</strong> — notre offre <strong className="text-emerald-700">Ménage standard</strong> est faite pour vous
                                     </div>
+                                    <Button asChild className="bg-emerald-600 hover:bg-emerald-700 text-white shrink-0">
+                                        <a href="/services/particulier/menage-standard">
+                                            Voir le Ménage standard →
+                                        </a>
+                                    </Button>
+                                </div>
+                                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-4 rounded-xl bg-orange-50/50 border border-primary">
+                                    <div className="text-slate-700 text-sm md:text-base">
+                                        <strong className="text-slate-900">3 biens ou plus</strong> — vous bénéficiez de notre <strong className="text-primary">tarif Conciergerie</strong> ci-dessous
+                                    </div>
+                                    <Button onClick={() => document.getElementById('grid-conciergerie')?.scrollIntoView({ behavior: 'smooth' })} variant="outline" className="border-primary text-primary hover:bg-primary/5 shrink-0 font-semibold">
+                                        ↓ Voir la grille
+                                    </Button>
                                 </div>
                             </div>
+                        </div>
 
-                            <div className="lg:col-span-2 space-y-8">
-                                <div className="space-y-8">
-                                    {/* Type d'habitation */}
-                                    <div>
-                                        <h3 className="text-lg font-bold bg-primary text-white py-2.5 px-4 rounded-lg mb-4 text-center tracking-wide">
-                                            Type d'habitation
-                                        </h3>
-                                        <div className="bg-white rounded-2xl border border-slate-200 p-6">
-                                            <RadioGroup
-                                                value={formData.propertyType}
-                                                onValueChange={(value) => setFormData({ ...formData, propertyType: value })}
-                                                className="flex flex-wrap gap-8 justify-start"
+                        {/* Grille Tarif Conciergerie */}
+                        <div id="grid-conciergerie" className="mb-10 max-w-3xl mx-auto scroll-mt-24">
+                            <div className="mb-6 text-center sm:text-left">
+                                <span className="inline-block bg-primary text-white font-bold text-xs uppercase tracking-wider px-3 py-1 rounded-full mb-2">
+                                    Le plus avantageux
+                                </span>
+                                <h3 className="text-2xl font-bold font-poppins text-slate-800">
+                                    Tarif conciergerie
+                                </h3>
+                                <p className="text-slate-500 text-sm">
+                                    Réservé aux hôtes confiant 3 biens ou plus · prix fixe par intervention, tout compris
+                                </p>
+                            </div>
+                            
+                            <div className="overflow-hidden border border-slate-200 rounded-2xl shadow-sm bg-white">
+                                <table className="w-full text-left border-collapse">
+                                    <thead>
+                                        <tr className="bg-primary text-white font-poppins text-sm">
+                                            <th className="p-4 font-semibold">Type de logement</th>
+                                            <th className="p-4 font-semibold text-right">Prix par intervention</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody className="divide-y divide-slate-100 text-slate-700 text-sm md:text-base">
+                                        {[
+                                            { type: "Studio / 1 chambre", price: 130 },
+                                            { type: "2 chambres", price: 160 },
+                                            { type: "3 chambres", price: 190 },
+                                            { type: "4 chambres", price: 220 },
+                                            { type: "5 chambres", price: 250 },
+                                        ].map((item, idx) => (
+                                            <tr key={idx} className="hover:bg-slate-50/50 transition-colors">
+                                                <td className="p-4 font-medium">{item.type}</td>
+                                                <td className="p-4 text-right font-bold text-primary">{item.price} DH</td>
+                                            </tr>
+                                        ))}
+                                        <tr className="bg-slate-900 text-white hover:bg-slate-900/95 transition-colors">
+                                            <td className="p-4">
+                                                <div className="font-semibold">Villa / Riad</div>
+                                                <div className="text-xs text-orange-200/80 font-medium mt-0.5">
+                                                    Deux femmes de ménage systématiquement
+                                                </div>
+                                            </td>
+                                            <td className="p-4 text-right font-black text-lg text-primary">
+                                                300 DH
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            
+                            <div className="mt-4 bg-orange-50/40 border-l-4 border-primary rounded-r-xl p-4 text-slate-700 text-sm leading-relaxed">
+                                <strong className="text-primary font-bold">Supplément zone éloignée : +50 DH</strong> — Bouskoura, Dar Bouazza, Mansouria, Almaz, Sidi Rahal, Benslimane, Mohammédia, Ville Verte et zones assimilées.
+                            </div>
+                        </div>
+
+                        {/* Options complémentaires */}
+                        <div className="mb-10 max-w-3xl mx-auto">
+                            <div className="mb-6">
+                                <h3 className="text-2xl font-bold font-poppins text-slate-800">
+                                    Options complémentaires
+                                </h3>
+                                <p className="text-slate-500 text-sm">
+                                    À ajouter à votre convenance
+                                </p>
+                            </div>
+                            
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                {[
+                                    { name: "Réassort Essentiel", desc: "Eau, café, papier hygiénique, savon main, sacs poubelle", price: 49 },
+                                    { name: "Réassort Confort", desc: "Essentiel + shampoing, après-shampoing, gel douche", price: 79 },
+                                    { name: "Vidéo avant / après", desc: "Preuve filmée de l'état du logement", price: 10 },
+                                    { name: "Mise à disposition du matériel", desc: "Produits, torchons et serpillère fournis", price: 29 },
+                                ].map((opt, idx) => (
+                                    <div key={idx} className="flex justify-between items-start gap-4 p-5 rounded-2xl border border-slate-200 bg-white hover:border-primary/30 transition-all shadow-sm">
+                                        <div className="space-y-1">
+                                            <h4 className="font-semibold text-slate-900 text-sm md:text-base">{opt.name}</h4>
+                                            <p className="text-xs text-slate-500 leading-relaxed">{opt.desc}</p>
+                                        </div>
+                                        <div className="font-extrabold text-lg text-primary shrink-0">
+                                            {opt.price} DH
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+
+                        {/* Service Linge */}
+                        <div className="mb-14 bg-primary text-white rounded-2xl p-6 shadow-md flex flex-col md:flex-row items-center gap-6 max-w-3xl mx-auto">
+                            <div className="w-14 h-14 rounded-full bg-white/10 flex items-center justify-center text-3xl shrink-0">
+                                🧺
+                            </div>
+                            <div className="flex-1 text-center md:text-left space-y-1">
+                                <h4 className="font-bold font-poppins text-lg flex flex-wrap justify-center md:justify-start items-center gap-2">
+                                    Service linge
+                                    <span className="bg-white text-primary font-extrabold text-[10px] tracking-wide uppercase px-2 py-0.5 rounded-full">
+                                        Casablanca uniquement
+                                    </span>
+                                </h4>
+                                <p className="text-white/80 text-sm leading-relaxed">
+                                    Lavage, séchage et repassage d'un set complet (8 pièces). Ramassage et livraison inclus. Pièce supplémentaire : <strong className="text-white">+5 DH</strong>.
+                                </p>
+                            </div>
+                            <div className="text-3xl font-black font-poppins shrink-0 whitespace-nowrap text-orange-200">
+                                50 DH <span className="text-xs font-normal opacity-80">/ set</span>
+                            </div>
+                        </div>
+
+                        {/* Formulaire de rappel */}
+                        <div className="bg-white border border-slate-200 rounded-3xl p-6 md:p-10 shadow-lg max-w-3xl mx-auto">
+                            <div className="text-center mb-8">
+                                <h2 className="text-2xl md:text-3xl font-bold font-poppins text-primary">
+                                    Être rappelé par un conseiller
+                                </h2>
+                                <p className="text-slate-500 text-sm mt-1">
+                                    Un conseiller clientèle vous rappelle rapidement pour organiser vos interventions
+                                </p>
+                            </div>
+                            
+                            <form onSubmit={handleFormSubmit} className="space-y-6">
+                                {/* Combien de biens */}
+                                <div className="space-y-3">
+                                    <Label className="font-bold text-slate-800 text-sm md:text-base">
+                                        Combien de biens souhaitez-vous nous confier ?
+                                    </Label>
+                                    <RadioGroup 
+                                        value={formBiensOption} 
+                                        onValueChange={handleBiensOptionChange}
+                                        className="grid grid-cols-2 gap-4"
+                                    >
+                                        <label 
+                                            htmlFor="biens-1-2"
+                                            className={`flex items-center space-x-2 border-2 rounded-xl p-4 cursor-pointer transition-all ${formBiensOption === "1-2" ? 'border-primary bg-primary/5' : 'border-slate-200 hover:bg-slate-50'}`}
+                                        >
+                                            <RadioGroupItem value="1-2" id="biens-1-2" className="text-primary border-primary" />
+                                            <span className="font-bold text-slate-700 select-none text-sm md:text-base">
+                                                1 ou 2 biens
+                                            </span>
+                                        </label>
+                                        <label 
+                                            htmlFor="biens-3"
+                                            className={`flex items-center space-x-2 border-2 rounded-xl p-4 cursor-pointer transition-all ${formBiensOption === "3+" ? 'border-primary bg-primary/5' : 'border-slate-200 hover:bg-slate-50'}`}
+                                        >
+                                            <RadioGroupItem value="3+" id="biens-3" className="text-primary border-primary" />
+                                            <span className="font-bold text-slate-700 select-none text-sm md:text-base">
+                                                3 biens ou plus
+                                            </span>
+                                        </label>
+                                    </RadioGroup>
+                                    
+                                    {/* Orientation redirect message */}
+                                    {formBiensOption === "1-2" && (
+                                        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-4 rounded-xl bg-orange-50 border border-primary/20 animate-in fade-in slide-in-from-top-2 duration-300">
+                                            <span className="text-slate-700 text-xs md:text-sm">
+                                                Pour 1 ou 2 biens, notre offre <strong>Ménage standard</strong> est plus adaptée.
+                                            </span>
+                                            <Button asChild size="sm" className="bg-primary text-white font-semibold">
+                                                <a href="/services/particulier/menage-standard">
+                                                    Aller au Ménage standard →
+                                                </a>
+                                            </Button>
+                                        </div>
+                                    )}
+                                </div>
+                                
+                                {/* Section conditionnelle du formulaire principal */}
+                                <div className={`space-y-6 transition-all duration-300 ${formBiensOption === "1-2" ? 'opacity-35 pointer-events-none select-none' : 'opacity-100'}`}>
+                                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                        {/* Ville */}
+                                        <div className="space-y-2">
+                                            <Label htmlFor="form-ville" className="font-bold text-slate-700 text-sm">Ville</Label>
+                                            <Select 
+                                                value={formVille} 
+                                                onValueChange={(val) => {
+                                                    const v = val as 'Casablanca' | 'Rabat';
+                                                    setFormVille(v);
+                                                    if (v === "Rabat") setInterestLinge(false);
+                                                }}
                                             >
-                                                {["Studio", "Appartement", "Duplex", "Villa", "Maison"].map((type) => (
-                                                    <div key={type} className="flex items-center space-x-3">
-                                                        <RadioGroupItem value={type.toLowerCase()} id={type} className="border-primary text-primary" />
-                                                        <Label htmlFor={type} className="font-extrabold text-slate-700 cursor-pointer select-none text-sm">{type}</Label>
-                                                    </div>
-                                                ))}
-                                            </RadioGroup>
+                                                <SelectTrigger id="form-ville" className="h-11 rounded-xl border-slate-200">
+                                                    <SelectValue placeholder="Sélectionner une ville" />
+                                                </SelectTrigger>
+                                                <SelectContent>
+                                                    <SelectItem value="Casablanca">Casablanca</SelectItem>
+                                                    <SelectItem value="Rabat">Rabat</SelectItem>
+                                                </SelectContent>
+                                            </Select>
+                                        </div>
+                                        
+                                        {/* Nombre de biens */}
+                                        <div className="space-y-2">
+                                            <Label htmlFor="form-nb-biens" className="font-bold text-slate-700 text-sm">Nombre de biens à confier</Label>
+                                            <Select 
+                                                value={formNbBiens} 
+                                                onValueChange={setFormNbBiens}
+                                            >
+                                                <SelectTrigger id="form-nb-biens" className="h-11 rounded-xl border-slate-200">
+                                                    <SelectValue placeholder="Sélectionner le nombre de biens" />
+                                                </SelectTrigger>
+                                                <SelectContent>
+                                                    <SelectItem value="3 biens">3 biens</SelectItem>
+                                                    <SelectItem value="4 biens">4 biens</SelectItem>
+                                                    <SelectItem value="5 biens">5 biens</SelectItem>
+                                                    <SelectItem value="6 biens">6 biens</SelectItem>
+                                                    <SelectItem value="Plus de 6 biens">Plus de 6 biens</SelectItem>
+                                                </SelectContent>
+                                            </Select>
                                         </div>
                                     </div>
-
-                                    {/* Nos formules, room size grid, and options */}
-                                    <div>
-                                        <h3 className="text-lg font-bold bg-primary text-white py-2.5 px-4 rounded-lg mb-4 text-center tracking-wide">
-                                            Nos formules
-                                        </h3>
-                                        <div className="bg-white rounded-2xl border border-slate-200 p-6 space-y-6">
-                                            {/* Formula cards selector */}
-                                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                                {/* Formula A */}
-                                                <button
-                                                    type="button"
-                                                    onClick={() => setFormData({ ...formData, formula: "A" })}
-                                                    className={`p-6 rounded-2xl border-2 text-center transition-all duration-300 ${formData.formula === "A"
-                                                        ? "bg-primary border-transparent text-white scale-[1.01]"
-                                                        : "bg-white border-slate-200 text-slate-700 hover:bg-slate-50"
-                                                        }`}
-                                                >
-                                                    <div className={`text-xs font-bold uppercase tracking-wider mb-1 ${formData.formula === "A" ? "text-white/80" : "text-slate-400"}`}>
-                                                        FORMULE A
-                                                    </div>
-                                                    <div className="text-2xl font-extrabold">
-                                                        Ménage seul
-                                                    </div>
-                                                </button>
-
-                                                {/* Formula B */}
-                                                <button
-                                                    type="button"
-                                                    onClick={() => setFormData({ ...formData, formula: "B" })}
-                                                    className={`p-6 rounded-2xl border-2 text-center transition-all duration-300 ${formData.formula === "B"
-                                                        ? "bg-primary border-transparent text-white scale-[1.01]"
-                                                        : "bg-white border-slate-200 text-slate-700 hover:bg-slate-50"
-                                                        }`}
-                                                >
-                                                    <div className={`text-xs font-bold uppercase tracking-wider mb-1 ${formData.formula === "B" ? "text-white/80" : "text-slate-400"}`}>
-                                                        FORMULE B
-                                                    </div>
-                                                    <div className="text-2xl font-extrabold">
-                                                        Ménage + set de linge
-                                                    </div>
-                                                </button>
-                                            </div>
-
-                                            {/* Size cards grid */}
-                                            <div className="grid grid-cols-2 md:grid-cols-3 gap-4 pt-2">
-                                                {Object.keys(AIRBNB_PRICES.A).map((sizeKey) => {
-                                                    const sizeLabel = SIZE_LABELS[sizeKey];
-                                                    const cardPrice = AIRBNB_PRICES[formData.formula as "A" | "B"][sizeKey as keyof typeof AIRBNB_PRICES.A];
-                                                    const isSelected = formData.sizeTier === sizeKey;
-                                                    return (
-                                                        <button
-                                                            key={sizeKey}
-                                                            type="button"
-                                                            onClick={() => setFormData({ ...formData, sizeTier: sizeKey })}
-                                                            className={`p-4 rounded-2xl border transition-all duration-300 text-left ${isSelected
-                                                                ? "border-primary bg-white ring-2 ring-primary ring-offset-0 scale-[1.01]"
-                                                                : "border-slate-200 bg-white hover:bg-slate-50"
-                                                                }`}
-                                                        >
-                                                            <div className={`font-bold text-sm ${isSelected ? "text-primary" : "text-slate-500"}`}>
-                                                                {sizeLabel}
-                                                            </div>
-                                                            <div className="font-extrabold text-lg mt-1 text-slate-800">
-                                                                {cardPrice} DH
-                                                            </div>
-                                                        </button>
-                                                    );
-                                                })}
-                                            </div>
-
-                                            {/* Divider */}
-                                            <div className="border-t border-slate-100 pt-2" />
-
-                                            {/* Checkbox & count options */}
-                                            <div className="space-y-4">
-                                                <div className="flex items-center justify-between py-2">
-                                                    <div className="flex items-center gap-3">
-                                                        <Checkbox
-                                                            id="reassort"
-                                                            checked={formData.conso}
-                                                            onCheckedChange={(checked) => setFormData({ ...formData, conso: !!checked })}
-                                                            className="data-[state=checked]:bg-primary border-primary h-5 w-5 rounded"
-                                                        />
-                                                        <label htmlFor="reassort" className="font-extrabold text-slate-800 text-sm cursor-pointer select-none">
-                                                            Réassort consommables
-                                                        </label>
-                                                    </div>
-                                                    <span className="font-bold text-primary text-sm">
-                                                        +25 DH
+                                    
+                                    {/* Types de logement concernés (facultatif) */}
+                                    <div className="space-y-2">
+                                        <Label htmlFor="form-types-logement" className="font-bold text-slate-700 text-sm">
+                                            Types de logement concernés (facultatif)
+                                        </Label>
+                                        <Input 
+                                            id="form-types-logement"
+                                            placeholder="Ex : 2 studios et un 2 chambres à Gauthier..."
+                                            value={formTypesLogement}
+                                            onChange={(e) => setFormTypesLogement(e.target.value)}
+                                            className="h-11 rounded-xl border-slate-200"
+                                        />
+                                    </div>
+                                    
+                                    {/* Services d'intérêt */}
+                                    <div className="space-y-3">
+                                        <Label className="font-bold text-slate-700 text-sm">
+                                            Services qui vous intéressent (facultatif)
+                                        </Label>
+                                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                                            {/* Réassort */}
+                                            <label 
+                                                htmlFor="srv-reassort"
+                                                className="flex items-center space-x-2 border border-slate-200 rounded-xl p-3 bg-white hover:bg-slate-50 cursor-pointer"
+                                            >
+                                                <Checkbox 
+                                                    id="srv-reassort"
+                                                    checked={interestReassort}
+                                                    onCheckedChange={(checked) => setInterestReassort(!!checked)}
+                                                    className="data-[state=checked]:bg-primary border-slate-300"
+                                                />
+                                                <span className="font-medium text-slate-700 text-xs md:text-sm select-none">
+                                                    Réassort consommables
+                                                </span>
+                                            </label>
+                                            
+                                            {/* Vidéo */}
+                                            <label 
+                                                htmlFor="srv-video"
+                                                className="flex items-center space-x-2 border border-slate-200 rounded-xl p-3 bg-white hover:bg-slate-50 cursor-pointer"
+                                            >
+                                                <Checkbox 
+                                                    id="srv-video"
+                                                    checked={interestVideo}
+                                                    onCheckedChange={(checked) => setInterestVideo(!!checked)}
+                                                    className="data-[state=checked]:bg-primary border-slate-300"
+                                                />
+                                                <span className="font-medium text-slate-700 text-xs md:text-sm select-none">
+                                                    Vidéo avant/après
+                                                </span>
+                                            </label>
+                                            
+                                            {/* Matériel */}
+                                            <label 
+                                                htmlFor="srv-materiel"
+                                                className="flex items-center space-x-2 border border-slate-200 rounded-xl p-3 bg-white hover:bg-slate-50 cursor-pointer"
+                                            >
+                                                <Checkbox 
+                                                    id="srv-materiel"
+                                                    checked={interestMateriel}
+                                                    onCheckedChange={(checked) => setInterestMateriel(!!checked)}
+                                                    className="data-[state=checked]:bg-primary border-slate-300"
+                                                />
+                                                <span className="font-medium text-slate-700 text-xs md:text-sm select-none">
+                                                    Matériel fourni
+                                                </span>
+                                            </label>
+                                            
+                                            {/* Service Linge */}
+                                            <label 
+                                                htmlFor="srv-linge"
+                                                className={`flex items-center space-x-2 border border-slate-200 rounded-xl p-3 bg-white transition-all ${formVille === "Rabat" ? "opacity-50 select-none bg-slate-50 cursor-not-allowed" : "hover:bg-slate-50 cursor-pointer"}`}
+                                            >
+                                                <Checkbox 
+                                                    id="srv-linge"
+                                                    checked={formVille === "Rabat" ? false : interestLinge}
+                                                    onCheckedChange={(checked) => {
+                                                        if (formVille !== "Rabat") setInterestLinge(!!checked);
+                                                    }}
+                                                    disabled={formVille === "Rabat"}
+                                                    className="data-[state=checked]:bg-primary border-slate-300"
+                                                />
+                                                <span className="flex items-center justify-between w-full font-medium text-slate-700 text-xs md:text-sm select-none">
+                                                    <span>Service linge</span>
+                                                    <span className={`text-[9px] font-extrabold px-2 py-0.5 rounded-full ${formVille === "Rabat" ? "bg-slate-200 text-slate-500" : "bg-primary/10 text-primary"}`}>
+                                                        {formVille === "Rabat" ? "Bientôt disponible à Rabat" : "CASA"}
                                                     </span>
-                                                </div>
-
-                                                {formData.formula === "B" && (
-                                                    <div className="p-4 border border-dashed border-primary/20 rounded-2xl bg-primary/5 space-y-4 animate-in fade-in duration-300">
-                                                        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-                                                            <div className="space-y-1">
-                                                                <div className="font-extrabold text-primary text-sm md:text-base">
-                                                                    — Ajout de set de linge : 1er 50 DH, 2ème 45 DH, 3ème et + 40 DH / set
-                                                                </div>
-                                                                <p className="text-xs text-slate-500 leading-relaxed max-w-md">
-                                                                    2 grandes serviettes, 2 moyennes serviettes, 1 drap housse, 1 housse de couette, 1 drap lit, 2 tales d'oreiller
-                                                                </p>
-                                                            </div>
-                                                            <div className="flex items-center gap-2 bg-white shrink-0 self-end md:self-auto">
-                                                                <button
-                                                                    type="button"
-                                                                    className="h-8 w-8 rounded-lg border border-primary text-primary bg-white hover:bg-primary/5 flex items-center justify-center font-bold text-lg transition-colors active:scale-95"
-                                                                    onClick={() => setFormData(prev => ({ ...prev, linenSets: Math.max(0, prev.linenSets - 1) }))}
-                                                                >
-                                                                    -
-                                                                </button>
-                                                                <div className="w-12 h-8 flex items-center justify-center border border-slate-200 rounded-lg text-slate-800 font-extrabold text-sm bg-white">
-                                                                    {formData.linenSets}
-                                                                </div>
-                                                                <button
-                                                                    type="button"
-                                                                    className="h-8 w-8 rounded-lg border border-primary text-primary bg-white hover:bg-primary/5 flex items-center justify-center font-bold text-lg transition-colors active:scale-95"
-                                                                    onClick={() => setFormData(prev => ({ ...prev, linenSets: prev.linenSets + 1 }))}
-                                                                >
-                                                                    +
-                                                                </button>
-                                                            </div>
-                                                        </div>
-
-                                                        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-t border-primary/10 pt-3">
-                                                            <div className="space-y-1">
-                                                                <div className="font-extrabold text-primary text-sm md:text-base">
-                                                                    — Articles hors set : +5 DH / pièce
-                                                                </div>
-                                                                <p className="text-xs text-slate-500 leading-relaxed max-w-md">
-                                                                    Tout article supplémentaire remis en dehors du set standard.
-                                                                </p>
-                                                            </div>
-                                                            <div className="flex items-center gap-2 bg-white shrink-0 self-end md:self-auto">
-                                                                <button
-                                                                    type="button"
-                                                                    className="h-8 w-8 rounded-lg border border-primary text-primary bg-white hover:bg-primary/5 flex items-center justify-center font-bold text-lg transition-colors active:scale-95"
-                                                                    onClick={() => setFormData(prev => ({ ...prev, linenExtraPieces: Math.max(0, (Number(prev.linenExtraPieces) || 0) - 1) }))}
-                                                                >
-                                                                    -
-                                                                </button>
-                                                                <div className="w-12 h-8 flex items-center justify-center border border-slate-200 rounded-lg text-slate-800 font-extrabold text-sm bg-white">
-                                                                    {formData.linenExtraPieces || 0}
-                                                                </div>
-                                                                <button
-                                                                    type="button"
-                                                                    className="h-8 w-8 rounded-lg border border-primary text-primary bg-white hover:bg-primary/5 flex items-center justify-center font-bold text-lg transition-colors active:scale-95"
-                                                                    onClick={() => setFormData(prev => ({ ...prev, linenExtraPieces: (Number(prev.linenExtraPieces) || 0) + 1 }))}
-                                                                >
-                                                                    +
-                                                                </button>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                )}
-                                            </div>
+                                                </span>
+                                            </label>
                                         </div>
                                     </div>
-
-                                    {/* Planning */}
-                                    <div>
-                                        <h3 className="text-lg font-bold bg-primary text-white py-2.5 px-4 rounded-lg mb-4 text-center tracking-wide">
-                                            Planning pour votre demande
-                                        </h3>
-                                        <div className="bg-white rounded-2xl border border-slate-200 p-6">
-                                            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                                                {/* Column 1: Fixed Time */}
-                                                <div className="space-y-3">
-                                                    <div className="flex items-center space-x-2.5">
-                                                        <input
-                                                            type="radio"
-                                                            id="fixed"
-                                                            name="schedulingType"
-                                                            checked={formData.schedulingType === "fixed"}
-                                                            onChange={() => setFormData({ ...formData, schedulingType: "fixed" })}
-                                                            className="w-4 h-4 text-primary focus:ring-primary border-slate-300"
-                                                        />
-                                                        <label htmlFor="fixed" className="font-extrabold text-slate-800 text-sm cursor-pointer">
-                                                            Je souhaite une heure fixe
-                                                        </label>
-                                                    </div>
-                                                    <Input
-                                                        type="time"
-                                                        required
-                                                        value={formData.fixedTime}
-                                                        onChange={(e) => setFormData({ ...formData, fixedTime: e.target.value })}
-                                                        disabled={formData.schedulingType !== "fixed"}
-                                                        className="w-full max-w-[160px] text-center text-lg font-extrabold h-11 border-slate-200 rounded-xl"
-                                                    />
-                                                </div>
-
-                                                {/* Column 2: Flexible */}
-                                                <div className="space-y-3">
-                                                    <div className="flex items-center space-x-2.5">
-                                                        <input
-                                                            type="radio"
-                                                            id="flexible"
-                                                            name="schedulingType"
-                                                            checked={formData.schedulingType === "flexible"}
-                                                            onChange={() => setFormData({ ...formData, schedulingType: "flexible" })}
-                                                            className="w-4 h-4 text-primary focus:ring-primary border-slate-300"
-                                                        />
-                                                        <label htmlFor="flexible" className="font-extrabold text-slate-800 text-sm cursor-pointer">
-                                                            Je suis flexible
-                                                        </label>
-                                                    </div>
-                                                    <RadioGroup
-                                                        value={formData.schedulingTime}
-                                                        onValueChange={(value) => setFormData({ ...formData, schedulingTime: value })}
-                                                        disabled={formData.schedulingType !== "flexible"}
-                                                        className="space-y-2 pl-6"
-                                                    >
-                                                        <div className="flex items-center space-x-2.5">
-                                                            <RadioGroupItem value="morning" id="morning" className="border-primary text-primary" />
-                                                            <label htmlFor="morning" className="text-sm font-bold text-slate-700 cursor-pointer">
-                                                                Le matin
-                                                            </label>
-                                                        </div>
-                                                        <div className="flex items-center space-x-2.5">
-                                                            <RadioGroupItem value="afternoon" id="afternoon" className="border-primary text-primary" />
-                                                            <label htmlFor="afternoon" className="text-sm font-bold text-slate-700 cursor-pointer">
-                                                                L'après midi
-                                                            </label>
-                                                        </div>
-                                                    </RadioGroup>
-                                                </div>
-
-                                                {/* Column 3: Date */}
-                                                <div className="space-y-3">
-                                                    <div className="font-extrabold text-slate-800 text-sm">Date</div>
-                                                    <Input
-                                                        type="date"
-                                                        required
-                                                        value={formData.schedulingDate}
-                                                        onChange={(e) => setFormData({ ...formData, schedulingDate: e.target.value })}
-                                                        className="w-full border-slate-200 rounded-xl h-11 text-slate-700 font-medium"
-                                                    />
-                                                </div>
-                                            </div>
+                                    
+                                    {/* Contact info */}
+                                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                        <div className="space-y-2">
+                                            <Label htmlFor="form-tel" className="font-bold text-slate-700 text-sm">Téléphone / WhatsApp*</Label>
+                                            <Input 
+                                                id="form-tel"
+                                                placeholder="06 __ __ __ __"
+                                                required
+                                                value={formTel}
+                                                onChange={(e) => setFormTel(e.target.value)}
+                                                className="h-11 rounded-xl border-slate-200"
+                                            />
+                                        </div>
+                                        
+                                        <div className="space-y-2">
+                                            <Label htmlFor="form-nom" className="font-bold text-slate-700 text-sm">Nom complet*</Label>
+                                            <Input 
+                                                id="form-nom"
+                                                placeholder="Votre nom"
+                                                required
+                                                value={formNom}
+                                                onChange={(e) => setFormNom(e.target.value)}
+                                                className="h-11 rounded-xl border-slate-200"
+                                            />
                                         </div>
                                     </div>
-
-                                    {/* Location */}
-                                    <div>
-                                        <h3 className="text-lg font-bold bg-primary text-white py-2.5 px-4 rounded-lg mb-4 text-center tracking-wide">
-                                            Où aura lieu votre ménage ?
-                                        </h3>
-                                        <div className="bg-white rounded-2xl border border-slate-200 p-6 space-y-6">
-                                            <div className="grid md:grid-cols-2 gap-4">
-                                                <div className="space-y-2">
-                                                    <Label className="text-xs font-bold text-slate-400">Ville</Label>
-                                                    <Select
-                                                        value={formData.city}
-                                                        onValueChange={(value) => setFormData({ ...formData, city: value, neighborhood: "" })}
-                                                    >
-                                                        <SelectTrigger className="border-slate-200 rounded-xl h-11">
-                                                            <SelectValue placeholder="Sélectionner une ville" />
-                                                        </SelectTrigger>
-                                                        <SelectContent>
-                                                            {CITIES.map((c) => (
-                                                                <SelectItem key={c} value={c}>
-                                                                    {c}
-                                                                </SelectItem>
-                                                            ))}
-                                                        </SelectContent>
-                                                    </Select>
-                                                </div>
-                                                <div className="space-y-2">
-                                                    <Label className="text-xs font-bold text-slate-400">Quartier</Label>
-                                                    <Input
-                                                        placeholder="Votre quartier"
-                                                        ref={neighborhoodRef}
-                                                        className="border-slate-200 h-11 rounded-xl"
-                                                    />
-                                                </div>
-                                            </div>
-                                            <div className="flex items-start gap-3 p-3 bg-orange-50 border border-orange-100 rounded-xl">
-                                                <div className="mt-0.5 text-orange-500 flex-shrink-0">
-                                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                                                        <circle cx="12" cy="12" r="10" />
-                                                        <line x1="12" y1="8" x2="12" y2="12" />
-                                                        <line x1="12" y1="16" x2="12.01" y2="16" />
-                                                    </svg>
-                                                </div>
-                                                <p className="text-xs font-medium text-orange-800 leading-relaxed">
-                                                    Si vous êtes dans les zones <span className="font-bold">Bouskoura, Dar Bouazza, Mansouria, Almaz, Sidi Rahal, Benslimane, Mohammédia, Ville Verte...</span> un supplément de <span className="font-bold whitespace-nowrap px-1 bg-orange-200/50 rounded-md text-orange-700">50 MAD</span> vous sera facturé pour faciliter le déplacement.
-                                                </p>
-                                            </div>
-                                            <div className="space-y-2">
-                                                <Label className="font-extrabold text-slate-700 text-sm">Champs de repère</Label>
-                                                <Textarea
-                                                    placeholder="Donnez-nous des repères pour faciliter le travail de ménage (points de référence pour la tournée du nettoyeur) après les points de repère"
-                                                    required
-                                                    ref={changeRepereNotesRef}
-                                                    className="border-slate-200 rounded-xl"
-                                                />
-                                            </div>
-                                        </div>
+                                    
+                                    {/* Moment de rappel */}
+                                    <div className="space-y-2">
+                                        <Label htmlFor="form-moment-rappel" className="font-bold text-slate-700 text-sm">Meilleur moment pour être rappelé</Label>
+                                        <Select 
+                                            value={formMomentRappel} 
+                                            onValueChange={setFormMomentRappel}
+                                        >
+                                            <SelectTrigger id="form-moment-rappel" className="h-11 rounded-xl border-slate-200">
+                                                <SelectValue placeholder="Sélectionner un moment" />
+                                            </SelectTrigger>
+                                            <SelectContent>
+                                                <SelectItem value="Dès que possible">Dès que possible</SelectItem>
+                                                <SelectItem value="Matin (9h-12h)">Matin (9h-12h)</SelectItem>
+                                                <SelectItem value="Après-midi (14h-18h)">Après-midi (14h-18h)</SelectItem>
+                                                <SelectItem value="En soirée">En soirée</SelectItem>
+                                            </SelectContent>
+                                        </Select>
                                     </div>
-
-                                    {/* Client info */}
-                                    <div className="bg-white border border-slate-200 rounded-2xl overflow-hidden">
-                                        <h3 className="text-lg font-bold bg-primary text-white py-2.5 px-4 text-center tracking-wide">
-                                            Mes informations
-                                        </h3>
-                                        <div className="p-6 grid md:grid-cols-2 gap-4">
-                                            <div className="space-y-2">
-                                                <Label className="font-extrabold text-slate-700 text-sm">Numéro de téléphone*</Label>
-                                                <div className="space-y-3">
-                                                    <div className="flex gap-2">
-                                                        <Input
-                                                            ref={phonePrefixRef}
-                                                            defaultValue="+212"
-                                                            className="w-24 border-slate-200 font-bold text-primary text-center rounded-xl"
-                                                            placeholder="+212"
-                                                        />
-                                                        <Input
-                                                            placeholder="6 12 00 00 00"
-                                                            ref={phoneNumberRef}
-                                                            required
-                                                            className="border-slate-200 h-11 flex-1 rounded-xl"
-                                                        />
-                                                    </div>
-                                                    <div className="flex items-center space-x-2">
-                                                        <Checkbox
-                                                            id="useWhatsapp"
-                                                            checked={formData.useWhatsappForPhone}
-                                                            onCheckedChange={(checked) => {
-                                                                setFormData(prev => ({ ...prev, useWhatsappForPhone: !!checked }));
-                                                            }}
-                                                            className="data-[state=checked]:bg-primary border-primary"
-                                                        />
-                                                        <label
-                                                            htmlFor="useWhatsapp"
-                                                            className="text-xs font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 text-slate-600 cursor-pointer select-none"
-                                                        >
-                                                            Utilisez-vous ce numéro pour WhatsApp ?
-                                                        </label>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div className="space-y-2">
-                                                <Label className="font-extrabold text-slate-700 text-sm">Numéro whatsapp</Label>
-                                                <div className="flex gap-2">
-                                                    <Input
-                                                        ref={whatsappPrefixRef}
-                                                        defaultValue="+212"
-                                                        className="w-20 border-slate-200 font-bold text-primary text-center rounded-xl"
-                                                        placeholder="+212"
-                                                        disabled={formData.useWhatsappForPhone}
-                                                    />
-                                                    <Input
-                                                        placeholder="6 12 00 00 00"
-                                                        ref={whatsappNumberRef}
-                                                        className="border-slate-200 h-11 rounded-xl"
-                                                        disabled={formData.useWhatsappForPhone}
-                                                    />
-                                                </div>
-                                            </div>
-                                            <div className="space-y-2">
-                                                <Label className="font-extrabold text-slate-700 text-sm">Nom*</Label>
-                                                <Input
-                                                    ref={lastNameRef}
-                                                    required
-                                                    className="mt-1 border-slate-200 h-11 rounded-xl"
-                                                    placeholder="Votre nom"
-                                                />
-                                            </div>
-                                            <div className="space-y-2">
-                                                <Label className="font-extrabold text-slate-700 text-sm">Prénom*</Label>
-                                                <Input
-                                                    ref={firstNameRef}
-                                                    required
-                                                    className="mt-1 border-slate-200 h-11 rounded-xl"
-                                                    placeholder="Votre prénom"
-                                                />
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <PromoCodeInput
-                                        segment="particulier"
-                                        service="ménage airbnb"
-                                        onApplyPromo={setPromoCode}
-                                        getPhoneNumber={() => `${phonePrefixRef.current?.value.trim() || '+212'} ${phoneNumberRef.current?.value.trim() || ''}`.trim()}
-                                    />
- 
-                                    <div className="flex justify-center pt-8">
-                                        <Button
-                                            type="submit"
+                                    
+                                    <div className="pt-4">
+                                        <Button 
+                                            type="submit" 
                                             disabled={isSubmitting}
-                                            className="bg-primary hover:bg-primary/90 text-white px-8 py-4 text-base font-bold h-auto rounded-full w-full md:w-auto md:min-w-[260px] transition-all hover:scale-105 active:scale-95 disabled:opacity-70 disabled:cursor-not-allowed"
+                                            className="w-full bg-primary hover:bg-primary/95 text-white font-bold font-poppins py-4 text-base rounded-xl transition-all hover:scale-[1.01] active:scale-95 disabled:opacity-70 disabled:cursor-not-allowed"
                                         >
                                             {isSubmitting ? (
-                                                <div className="flex items-center gap-2">
+                                                <div className="flex items-center justify-center gap-2">
                                                     <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
                                                     Envoi en cours...
                                                 </div>
                                             ) : (
-                                                "Réserver maintenant"
+                                                "Être rappelé par un conseiller →"
                                             )}
                                         </Button>
+                                        <div className="text-center mt-4 text-slate-500 text-sm">
+                                            Ou contactez-nous directement sur WhatsApp au <b className="text-primary">06 64 33 14 63</b>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                        </form>
+                            </form>
+                        </div>
+
                     </div>
                 </main>
                 <OtherServices type="particulier" currentServiceUrl="/services/particulier/menage-airbnb" />
@@ -813,7 +598,7 @@ Il comprend le :
                     <DialogHeader>
                         <DialogTitle className="text-primary text-2xl font-bold">Confirmation</DialogTitle>
                         <DialogDescription className="text-slate-700 text-lg mt-4 leading-relaxed">
-                            {getConfirmationMessage(customerName, false)}
+                            Merci {customerName}, votre demande de rappel a bien été reçue. Un conseiller clientèle vous rappellera très vite pour organiser vos interventions.
                         </DialogDescription>
                     </DialogHeader>
                     <DialogFooter className="mt-6">
@@ -829,4 +614,3 @@ Il comprend le :
         </div>
     );
 }
-
