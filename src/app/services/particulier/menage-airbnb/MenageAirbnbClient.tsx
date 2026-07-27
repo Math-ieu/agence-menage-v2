@@ -41,6 +41,7 @@ export default function MenageAirbnbClient() {
     const [interestLinge, setInterestLinge] = useState<boolean>(false);
 
     // Contact info states
+    const [formIndicatif, setFormIndicatif] = useState<string>("+212");
     const [formTel, setFormTel] = useState<string>("");
     const [formNom, setFormNom] = useState<string>("");
     const [formMomentRappel, setFormMomentRappel] = useState<string>("Dès que possible");
@@ -78,11 +79,13 @@ export default function MenageAirbnbClient() {
 
             const servicesText = selectedServices.join(", ") || "Aucun";
 
+            const fullPhone = `${formIndicatif.trim()} ${formTel.trim()}`.trim();
+
             const bookingData = {
                 firstName: "",
                 lastName: formNom,
-                phoneNumber: formTel,
-                whatsappNumber: formTel,
+                phoneNumber: fullPhone,
+                whatsappNumber: fullPhone,
                 city: formVille,
                 frequency: "oneshot",
                 frequencyLabel: "Une fois",
@@ -149,6 +152,7 @@ Moment souhaité pour le rappel : ${formMomentRappel}`
             <div className="bg-[hsl(var(--primary)/0.05)]" style={{ "--primary": SERVICE_COLORS.AIRBNB.hsl } as React.CSSProperties}>
                 <ServiceHeroSection
                     title="Ménage Airbnb"
+                    hideReservationButton={true}
                     description={`Le ménage Airbnb a pour objectif d’assurer la propreté et l’entretien courant des espaces attribués.
 Il comprend le :
 
@@ -205,11 +209,11 @@ Il comprend le :
                                         </a>
                                     </Button>
                                 </div>
-                                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-4 rounded-xl bg-orange-50/50 border border-primary">
+                                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-4 rounded-xl bg-[#fbf5e8] border border-[#c9a84c]">
                                     <div className="text-slate-700 text-sm md:text-base">
                                         <strong className="text-slate-900">3 biens ou plus</strong> — vous bénéficiez de notre <strong className="text-primary">tarif Conciergerie</strong> ci-dessous
                                     </div>
-                                    <Button onClick={() => document.getElementById('grid-conciergerie')?.scrollIntoView({ behavior: 'smooth' })} variant="outline" className="border-primary text-primary hover:bg-primary/5 shrink-0 font-semibold">
+                                    <Button onClick={() => document.getElementById('grid-conciergerie')?.scrollIntoView({ behavior: 'smooth' })} variant="outline" className="border-[#c9a84c] text-primary hover:bg-[#c9a84c]/10 shrink-0 font-semibold">
                                         ↓ Voir la grille
                                     </Button>
                                 </div>
@@ -219,7 +223,7 @@ Il comprend le :
                         {/* Grille Tarif Conciergerie */}
                         <div id="grid-conciergerie" className="mb-10 max-w-3xl mx-auto scroll-mt-24">
                             <div className="mb-6 text-center sm:text-left">
-                                <span className="inline-block bg-primary text-white font-bold text-xs uppercase tracking-wider px-3 py-1 rounded-full mb-2">
+                                <span className="inline-block bg-[#c9a84c] text-[#0d0d08] font-bold text-xs uppercase tracking-wider px-3 py-1 rounded-full mb-2">
                                     Le plus avantageux
                                 </span>
                                 <h3 className="text-2xl font-bold font-poppins text-slate-800">
@@ -251,14 +255,14 @@ Il comprend le :
                                                 <td className="p-4 text-right font-bold text-primary">{item.price} DH</td>
                                             </tr>
                                         ))}
-                                        <tr className="bg-slate-900 text-white hover:bg-slate-900/95 transition-colors">
+                                        <tr className="bg-[#0d0d08] text-white hover:bg-[#0d0d08]/95 transition-colors">
                                             <td className="p-4">
                                                 <div className="font-semibold">Villa / Riad</div>
-                                                <div className="text-xs text-orange-200/80 font-medium mt-0.5">
+                                                <div className="text-xs text-[#e7d3a0]/90 font-medium mt-0.5">
                                                     Deux femmes de ménage systématiquement
                                                 </div>
                                             </td>
-                                            <td className="p-4 text-right font-black text-lg text-primary">
+                                            <td className="p-4 text-right font-black text-lg text-[#c9a84c]">
                                                 300 DH
                                             </td>
                                         </tr>
@@ -266,7 +270,7 @@ Il comprend le :
                                 </table>
                             </div>
                             
-                            <div className="mt-4 bg-orange-50/40 border-l-4 border-primary rounded-r-xl p-4 text-slate-700 text-sm leading-relaxed">
+                            <div className="mt-4 bg-[#fbf5e8] border border-[#c9a84c] rounded-xl p-4 text-slate-700 text-sm leading-relaxed">
                                 <strong className="text-primary font-bold">Supplément zone éloignée : +50 DH</strong> — Bouskoura, Dar Bouazza, Mansouria, Almaz, Sidi Rahal, Benslimane, Mohammédia, Ville Verte et zones assimilées.
                             </div>
                         </div>
@@ -294,7 +298,7 @@ Il comprend le :
                                             <h4 className="font-semibold text-slate-900 text-sm md:text-base">{opt.name}</h4>
                                             <p className="text-xs text-slate-500 leading-relaxed">{opt.desc}</p>
                                         </div>
-                                        <div className="font-extrabold text-lg text-primary shrink-0">
+                                        <div className="font-extrabold text-lg text-[#c9a84c] shrink-0">
                                             {opt.price} DH
                                         </div>
                                     </div>
@@ -310,7 +314,7 @@ Il comprend le :
                             <div className="flex-1 text-center md:text-left space-y-1">
                                 <h4 className="font-bold font-poppins text-lg flex flex-wrap justify-center md:justify-start items-center gap-2">
                                     Service linge
-                                    <span className="bg-white text-primary font-extrabold text-[10px] tracking-wide uppercase px-2 py-0.5 rounded-full">
+                                    <span className="bg-[#c9a84c] text-[#0d0d08] font-extrabold text-[10px] tracking-wide uppercase px-2.5 py-0.5 rounded-full">
                                         Casablanca uniquement
                                     </span>
                                 </h4>
@@ -318,7 +322,7 @@ Il comprend le :
                                     Lavage, séchage et repassage d'un set complet (8 pièces). Ramassage et livraison inclus. Pièce supplémentaire : <strong className="text-white">+5 DH</strong>.
                                 </p>
                             </div>
-                            <div className="text-3xl font-black font-poppins shrink-0 whitespace-nowrap text-orange-200">
+                            <div className="text-3xl font-black font-poppins shrink-0 whitespace-nowrap text-[#e7d3a0]">
                                 50 DH <span className="text-xs font-normal opacity-80">/ set</span>
                             </div>
                         </div>
@@ -367,7 +371,7 @@ Il comprend le :
                                     
                                     {/* Orientation redirect message */}
                                     {formBiensOption === "1-2" && (
-                                        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-4 rounded-xl bg-orange-50 border border-primary/20 animate-in fade-in slide-in-from-top-2 duration-300">
+                                        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-4 rounded-xl bg-[#fbf5e8] border border-[#c9a84c] animate-in fade-in slide-in-from-top-2 duration-300">
                                             <span className="text-slate-700 text-xs md:text-sm">
                                                 Pour 1 ou 2 biens, notre offre <strong>Ménage standard</strong> est plus adaptée.
                                             </span>
@@ -521,14 +525,23 @@ Il comprend le :
                                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                         <div className="space-y-2">
                                             <Label htmlFor="form-tel" className="font-bold text-slate-700 text-sm">Téléphone / WhatsApp*</Label>
-                                            <Input 
-                                                id="form-tel"
-                                                placeholder="06 __ __ __ __"
-                                                required
-                                                value={formTel}
-                                                onChange={(e) => setFormTel(e.target.value)}
-                                                className="h-11 rounded-xl border-slate-200"
-                                            />
+                                            <div className="flex gap-2">
+                                                <Input 
+                                                    id="form-indicatif"
+                                                    value={formIndicatif}
+                                                    onChange={(e) => setFormIndicatif(e.target.value)}
+                                                    placeholder="+212"
+                                                    className="w-24 h-11 rounded-xl border-slate-200 font-bold text-primary text-center shrink-0"
+                                                />
+                                                <Input 
+                                                    id="form-tel"
+                                                    placeholder="6 12 00 00 00"
+                                                    required
+                                                    value={formTel}
+                                                    onChange={(e) => setFormTel(e.target.value)}
+                                                    className="h-11 rounded-xl border-slate-200 flex-1"
+                                                />
+                                            </div>
                                         </div>
                                         
                                         <div className="space-y-2">
@@ -588,7 +601,7 @@ Il comprend le :
 
                     </div>
                 </main>
-                <OtherServices type="particulier" currentServiceUrl="/services/particulier/menage-airbnb" />
+                <OtherServices type="particulier" currentServiceUrl="/services/menage-airbnb" />
             </div>
 
             <Footer />

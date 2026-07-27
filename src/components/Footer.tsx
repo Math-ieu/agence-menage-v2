@@ -7,15 +7,18 @@ import logoPlaceholder from "@/assets/LOGO-AGENCE-MENAGE.webp";
 const particulierLinks = [
   { href: "/services/particulier/menage-standard", label: "Ménage standard" },
   { href: "/services/particulier/grand-menage", label: "Grand ménage" },
-  { href: "/services/particulier/menage-airbnb", label: "Ménage Airbnb" },
   { href: "/services/particulier/menage-fin-chantier", label: "Nettoyage Fin de chantier" },
   { href: "/services/particulier/garde-malade", label: "Auxiliaire de vie / garde malade" },
   { href: "/services/particulier/menage-post-sinistre", label: "Ménage Post-sinistre" },
 ];
 
+const airbnbLinks = [
+  { href: "/services/menage-airbnb", label: "Ménage Airbnb" },
+];
+
 const entrepriseLinks = [
   { href: "/services/entreprise/menage-bureaux", label: "Ménages bureaux" },
-  { href: "/services/entreprise/placement", label: "Placement & gestion de propriété" },
+  { href: "/services/entreprise/placement", label: "Placement & gestion" },
   { href: "/services/entreprise/menage-fin-chantier", label: "Nettoyage Fin de chantier" },
   { href: "/services/entreprise/menage-post-sinistre", label: "Ménage Post-sinistre" },
 ];
@@ -34,6 +37,7 @@ const bottomLinks = [
 
 const usefulLinks = [
   { href: "/", label: "Accueil" },
+  { href: "/services/menage-airbnb", label: "Services AirBnB" },
   { href: "/entreprise", label: "Services Entreprises" },
   { href: "/a-propos", label: "À propos" },
   { href: "/blog", label: "Notre Blog" },
@@ -53,7 +57,7 @@ const Footer = () => {
     <footer className="bg-primary text-primary-foreground">
       {/* CTA Band */}
       <div className="border-b border-primary-foreground/15 bg-black/10">
-        <div className="mx-auto max-w-[1400px] w-full px-6 md:px-12 lg:px-20 py-8 md:py-10">
+        <div className="mx-auto max-w-[1850px] w-full px-4 md:px-8 xl:px-10 py-8 md:py-10">
           <div className="flex flex-col md:flex-row items-center justify-between gap-6 text-center md:text-left">
             <div>
               <h2 className="text-2xl md:text-3xl font-black leading-tight">
@@ -77,8 +81,8 @@ const Footer = () => {
       </div>
 
       {/* Main */}
-      <div className="mx-auto max-w-[1400px] w-full px-6 md:px-12 lg:px-20 py-14">
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-10 lg:gap-12">
+      <div className="mx-auto max-w-[1850px] w-full px-4 md:px-8 xl:px-10 py-14">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-8 lg:gap-8">
           {/* Brand */}
           <div className="flex flex-col items-start">
             <Image
@@ -127,6 +131,25 @@ const Footer = () => {
             </Link>
             <ul className="space-y-3">
               {particulierLinks.map((link) => (
+                <li key={link.href}>
+                  <Link
+                    href={link.href}
+                    className="text-primary-foreground/85 hover:text-white transition-colors font-medium text-sm lg:text-base"
+                  >
+                    {link.label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          {/* AirBnB */}
+          <div>
+            <Link href="/services/menage-airbnb" className="group inline-block">
+              <ColumnTitle>Services AirBnB</ColumnTitle>
+            </Link>
+            <ul className="space-y-3">
+              {airbnbLinks.map((link) => (
                 <li key={link.href}>
                   <Link
                     href={link.href}
@@ -212,7 +235,7 @@ const Footer = () => {
 
       {/* Bottom bar */}
       <div className="border-t border-primary-foreground/15">
-        <div className="mx-auto max-w-[1400px] w-full px-6 md:px-12 lg:px-20 py-6">
+        <div className="mx-auto max-w-[1850px] w-full px-4 md:px-8 xl:px-10 py-6">
           <div className="flex flex-col md:flex-row items-center justify-between gap-4">
             <p className="text-primary-foreground/70 font-medium text-sm text-center md:text-left">
               © 2026 Agence Ménage — Casablanca &amp; Rabat, Maroc | Tous droits réservés

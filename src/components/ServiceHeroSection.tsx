@@ -12,9 +12,10 @@ interface ServiceHeroSectionProps {
     primaryColor?: string;
     isCollapsible?: boolean;
     faqs?: { question: string, answer: string }[];
+    hideReservationButton?: boolean;
 }
 
-const ServiceHeroSection = ({ title, description, image, primaryColor, isCollapsible = true, faqs = [] }: ServiceHeroSectionProps) => {
+const ServiceHeroSection = ({ title, description, image, primaryColor, isCollapsible = true, faqs = [], hideReservationButton = false }: ServiceHeroSectionProps) => {
     const [activeTab, setActiveTab] = useState<"description" | "faqs">("description");
     const [openAccordion, setOpenAccordion] = useState<"description" | "faqs" | null>(null);
     const [openFaqIndex, setOpenFaqIndex] = useState<number | null>(0);
@@ -236,15 +237,17 @@ const ServiceHeroSection = ({ title, description, image, primaryColor, isCollaps
                             </div>
 
                             {/* Reservation Button (Styled as redesign) */}
-                            <button
-                                onClick={scrollToReservation}
-                                className="w-full py-5 px-8 text-white font-bold rounded-2xl transition-all active:scale-[0.98] shadow-md flex items-center justify-center text-2xl mt-2"
-                                style={{
-                                    backgroundColor: `${primaryColor || "#287271"}66`, // Increased opacity for the mint/light green effect but using primary
-                                }}
-                            >
-                                Réservation
-                            </button>
+                            {!hideReservationButton && (
+                                <button
+                                    onClick={scrollToReservation}
+                                    className="w-full py-5 px-8 text-white font-bold rounded-2xl transition-all active:scale-[0.98] shadow-md flex items-center justify-center text-2xl mt-2"
+                                    style={{
+                                        backgroundColor: `${primaryColor || "#287271"}66`, // Increased opacity for the mint/light green effect but using primary
+                                    }}
+                                >
+                                    Réservation
+                                </button>
+                            )}
                         </div>
 
                         {/* Desktop Tab Content */}

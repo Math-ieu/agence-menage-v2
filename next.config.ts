@@ -39,6 +39,16 @@ const nextConfig: NextConfig = {
                 destination: "/",
                 permanent: false,
             },
+            {
+                source: "/services/particulier/menage-airbnb",
+                destination: "/services/menage-airbnb",
+                permanent: true,
+            },
+            {
+                source: "/services/airbnb",
+                destination: "/services/menage-airbnb",
+                permanent: true,
+            },
         ];
     },
 };

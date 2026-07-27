@@ -32,7 +32,7 @@ interface BlogCategorySectionProps {
 const particulierServices: ServiceReminder[] = [
   { icon: <Sparkles className="w-5 h-5" />, name: "Ménage Standard", url: "/services/particulier/menage-standard" },
   { icon: <Home className="w-5 h-5" />, name: "Grand Ménage", url: "/services/particulier/grand-menage" },
-  { icon: <Clock className="w-5 h-5" />, name: "Ménage Airbnb", url: "/services/particulier/menage-airbnb" },
+  { icon: <Clock className="w-5 h-5" />, name: "Ménage Airbnb", url: "/services/menage-airbnb" },
   { icon: <Settings className="w-5 h-5" />, name: "Ménage fin de chantier", url: "/services/particulier/menage-fin-chantier" },
   { icon: <UserCheck className="w-5 h-5" />, name: "Auxiliaire de vie / Garde malade", url: "/services/particulier/garde-malade" },
   { icon: <Shield className="w-5 h-5" />, name: "Ménage Post-sinistre", url: "/services/particulier/menage-post-sinistre" },

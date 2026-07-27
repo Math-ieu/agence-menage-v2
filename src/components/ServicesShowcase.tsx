@@ -19,7 +19,7 @@ const particulierServices = [
   {
     title: "Ménage Airbnb",
     description: "Un service de nettoyage rapide et impeccable entre chaque location pour vos logements saisonniers.",
-    url: "/services/particulier/menage-airbnb",
+    url: "/services/menage-airbnb",
     dotColor: "#E67E22",
   },
   {

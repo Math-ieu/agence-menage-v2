@@ -38,7 +38,7 @@ export const particulierServices: ServiceData[] = [
         description: "Un service de nettoyage rapide et impeccable entre chaque location pour vos logements saisonniers.",
         image: imgAirbnb.src,
         color: SERVICE_COLORS.AIRBNB.hex,
-        url: "/services/particulier/menage-airbnb"
+        url: "/services/menage-airbnb"
     },
     {
         title: "Ménage fin de chantier",

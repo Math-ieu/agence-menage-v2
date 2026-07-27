@@ -15,12 +15,16 @@ const Header = () => {
   const pathname = usePathname();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isPhoneDropdownOpen, setIsPhoneDropdownOpen] = useState(false);
-  const isParticulier = pathname === "/" || pathname.startsWith("/services/particulier");
+  const isAirbnb = pathname.includes("menage-airbnb") || pathname.includes("/services/airbnb");
+  const isParticulier = (pathname === "/" || (pathname.startsWith("/services/particulier") && !isAirbnb));
   const isEntreprise = pathname === "/entreprise" || pathname.startsWith("/services/entreprise");
+
+  const particulierServicesWithoutAirbnb = particulierServices.filter(s => !s.url.includes("menage-airbnb"));
 
   const navItems = [
     { label: "Accueil", href: "/" },
-    { label: "Services pour particuliers", href: "/", active: isParticulier, services: particulierServices },
+    { label: "Services pour particuliers", href: "/", active: isParticulier, services: particulierServicesWithoutAirbnb },
+    { label: "Services AirBnB", href: "/services/menage-airbnb", active: isAirbnb },
     { label: "Services pour entreprises", href: "/entreprise", active: isEntreprise, services: entrepriseServices },
     { label: "Espace employé", href: "/espace-employe", active: pathname === "/espace-employe" },
     { label: "Blog", href: "/blog", active: pathname.startsWith("/blog") },
@@ -35,7 +39,7 @@ const Header = () => {
   return (
     <header className={`sticky top-0 z-50 w-full shadow-sm border-b transition-colors duration-1000 ${isEntreprise ? "bg-primary border-primary/20" : "bg-background"
       }`}>
-      <div className="container flex h-20 items-center justify-between">
+      <div className="w-full max-w-[1850px] mx-auto px-4 md:px-8 xl:px-10 flex h-20 items-center justify-between">
         {/* Logo wrapper */}
         <div className="flex flex-shrink-0 justify-start">
           <Link href="/" className="flex items-center gap-2 flex-shrink-0">
@@ -54,7 +58,7 @@ const Header = () => {
             <div key={item.label} className="relative group py-6">
               <Link
                 href={item.href}
-                className={`font-bold transition-colors duration-1000 whitespace-nowrap text-sm xl:text-[15px] 2xl:text-base ${isEntreprise
+                className={`font-bold transition-colors duration-1000 whitespace-nowrap text-sm xl:text-[14px] 2xl:text-[16px] ${isEntreprise
                   ? `hover:text-white/80 ${item.active ? "text-white border-b-2 border-white pb-1" : "text-white/90"}`
                   : `hover:text-primary ${item.active ? "text-primary border-b-2 border-primary pb-1" : "text-foreground"}`
                   }`}

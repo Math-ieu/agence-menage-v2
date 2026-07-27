@@ -9,8 +9,8 @@ export const SERVICE_COLORS = {
         hsl: "183 95% 32%"
     },
     AIRBNB: {
-        hex: "#f78458",
-        hsl: "17 91% 66%"
+        hex: "#054a40",
+        hsl: "171 87% 15%"
     },
     DEMENAGEMENT: {
         hex: "#f8c170",
