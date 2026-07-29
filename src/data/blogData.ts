@@ -21,7 +21,7 @@ export interface BlogPost {
   description: string;
   category: BlogCategory;
   excerpt: string;
-  tags: string[];
+  tags: string[]; 
   bannerColor: string;
   imageUrl: string | StaticImageData;
   fullContent: string;
