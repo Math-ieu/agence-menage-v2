@@ -251,7 +251,6 @@ export default function ContactClient() {
                                                 <h4 className="font-bold text-slate-800">Service Client</h4>
                                                 <div className="flex flex-col gap-1 mt-1">
                                                     <a href="tel:+212664331463" className="text-slate-600 hover:text-primary transition-colors">06 64 33 14 63</a>
-                                                    <a href="tel:+212664226790" className="text-slate-600 hover:text-primary transition-colors">06 64 22 67 90</a>
                                                 </div>
                                             </div>
                                         </div>
