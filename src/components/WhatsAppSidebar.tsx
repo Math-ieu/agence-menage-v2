@@ -68,7 +68,7 @@ const WhatsAppSidebar = () => {
                         Contactez-nous sur
                     </span>
                     <span className="font-bold text-lg tracking-tight leading-tight">
-                        06 64 33 14 63
+                        06 64 22 67 90
                     </span>
                 </div>
             </a>

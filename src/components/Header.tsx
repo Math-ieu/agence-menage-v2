@@ -117,7 +117,7 @@ const Header = () => {
                 `}>
                   <div className="flex flex-col gap-1">
                     <a
-                      href="tel:+212664331463"
+                      href="tel:+212664226790"
                       className={`flex items-center gap-2.5 p-2.5 rounded-lg text-xs font-bold transition-colors ${
                         isEntreprise ? "hover:bg-white/10" : "hover:bg-slate-50"
                       }`}
@@ -150,7 +150,7 @@ const Header = () => {
               : "border-primary/30 text-primary hover:bg-primary/5 hover:border-primary hover:shadow-sm"}
           `}>
             <a
-              href="tel:+212664331463"
+              href="tel:+212664226790"
               id="am_phone_header"
               className="am-phone-header flex items-center"
               onClick={() => {
@@ -168,7 +168,7 @@ const Header = () => {
                 <Phone className={`w-4 h-4 mr-2 ${isEntreprise ? "text-white" : "text-primary"}`} />
               </div>
               <span className={`text-xs sm:text-sm md:text-base xl:text-[15px] 2xl:text-lg font-black tracking-tighter transition-all duration-300 ${isEntreprise ? "text-white" : "text-primary"}`}>
-                06 64 33 14 63
+                06 64 22 67 90
               </span>
             </a>
           </div>
@@ -226,7 +226,7 @@ const Header = () => {
               <div className="grid grid-cols-1 gap-2">
 
                 <a
-                  href="tel:+212664331463"
+                  href="tel:+212664226790"
                   className={`flex items-center gap-3 p-3 rounded-xl border transition-colors font-bold text-sm ${
                     isEntreprise
                       ? "border-white/10 text-white hover:bg-white/5 bg-white/5"
@@ -245,7 +245,7 @@ const Header = () => {
                   }}
                 >
                   <Phone className={`w-4 h-4 shrink-0 ${isEntreprise ? "text-white" : "text-primary"}`} />
-                  <span>06 64 33 14 63</span>
+                  <span>06 64 22 67 90</span>
                 </a>
               </div>
             </div>

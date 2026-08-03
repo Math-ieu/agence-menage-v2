@@ -592,7 +592,7 @@ Il comprend le :
                                             )}
                                         </Button>
                                         <div className="text-center mt-4 text-slate-500 text-sm">
-                                            Ou contactez-nous directement sur WhatsApp au <b className="text-primary">06 64 33 14 63</b>
+                                            Ou contactez-nous directement sur WhatsApp au <b className="text-primary">06 64 22 67 90</b>
                                         </div>
                                     </div>
                                 </div>

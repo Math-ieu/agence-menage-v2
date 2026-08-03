@@ -35,7 +35,7 @@ export default function Home() {
         "name": "Agence Ménage",
         "description": "Agence de ménage professionnelle au Maroc offrant des services de femmes de ménage qualifiées pour particuliers et entreprises.",
         "url": "https://www.agencemenage.ma",
-        "telephone": "+212664331463",
+        "telephone": "+212664226790",
         "email": "contact@agencemenage.ma",
         "address": {
             "@type": "PostalAddress",
