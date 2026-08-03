@@ -128,13 +128,13 @@ const Header = () => {
                           (window as any).dataLayer.push({
                             event: 'phone_click',
                             phone_location: 'header_mobile_dropdown',
-                            phone_number: '0664331463'
+                            phone_number: '0664226790'
                           });
                         }
                       }}
                     >
                       <Phone className="w-3.5 h-3.5" />
-                      <span>06 64 33 14 63</span>
+                      <span>06 64 22 67 90</span>
                     </a>
                   </div>
                 </div>
@@ -159,7 +159,7 @@ const Header = () => {
                   (window as any).dataLayer.push({
                     event: 'phone_click',
                     phone_location: 'header',
-                    phone_number: '0664331463'
+                    phone_number: '0664226790'
                   });
                 }
               }}
@@ -239,7 +239,7 @@ const Header = () => {
                       (window as any).dataLayer.push({
                         event: 'phone_click',
                         phone_location: 'mobile_menu',
-                        phone_number: '0664331463'
+                        phone_number: '0664226790'
                       });
                     }
                   }}
