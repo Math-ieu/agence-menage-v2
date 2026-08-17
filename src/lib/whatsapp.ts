@@ -44,6 +44,12 @@ export const formatBookingMessage = (serviceName: string, data: any, price: numb
     if (data.structureType) details.push(`*Structure :* ${data.structureType}`);
     if (data.propertyType) details.push(`*Type de bien :* ${data.propertyType}`);
     details.push(`*Fréquence :* ${data.frequency === "oneshot" ? "Une fois" : `Abonnement ( ${data.frequencyLabel || data.subFrequency || ""} )`}`);
+    if (Array.isArray(data.jours_passage) && data.jours_passage.length > 0) {
+        details.push(`*Jours de passage :* ${data.jours_passage.map((j: any) => `${(j.jour || '').toUpperCase()} (${j.heure_debut || ''} - ${j.heure_fin || ''})`).join(', ')}`);
+    }
+    if (data.prorata_actif) {
+        details.push(`*Prorata 1er mois :* ${data.nb_passages_mois_1} passage(s) sur ${data.nb_passages_theoriques} (Tarif standard : ${data.tarif_mensuel_standard} MAD/mois)`);
+    }
 
     // Prestation Details
     if (data.recommendedDuration && data.recommendedDuration > 0) details.push(`*Durée recommandée :* ${data.recommendedDuration}h`);

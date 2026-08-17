@@ -205,7 +205,17 @@ export async function sendBookingEmailResend(serviceName: string, data: any, pri
 
     const individual_name = [data.firstName, data.lastName].filter(Boolean).join(" ");
     const client_name = data.contactPerson || individual_name || data.entityName || "Client";
-    const frequency = data.frequency === "oneshot" ? "Une fois" : `Abonnement ( ${data.frequencyLabel || data.subFrequency || ""} )`;
+    const isSubscription = data.frequency === "subscription" || data.is_subscription === true;
+    const frequency = !isSubscription ? "Une fois" : `Abonnement ( ${data.frequencyLabel || data.subFrequency || "Mensuel"} )`;
+
+    if (isSubscription) {
+      data.is_subscription = true;
+      data.frequency = 'subscription';
+      if (!data.frequence) data.frequence = data.subFrequency || '2foisParSemaine';
+      if (!data.jours_passage && data.joursPassage) data.jours_passage = data.joursPassage;
+      if (!data.date_debut && data.schedulingDate) data.date_debut = data.schedulingDate;
+      if (!data.date_premiere_intervention && data.schedulingDate) data.date_premiere_intervention = data.schedulingDate;
+    }
 
     const scheduling_time = data.schedulingType === 'fixed' || (!data.schedulingType && data.fixedTime) ? data.fixedTime : (data.schedulingTime === 'morning' ? 'Le matin' : data.schedulingTime === 'afternoon' ? "L'après midi" : data.schedulingTime);
 
@@ -275,6 +285,9 @@ export async function sendBookingEmailResend(serviceName: string, data: any, pri
       const { createDemande } = await import('@/lib/api');
       
       const isDevis = typeof price === 'string' && price.toLowerCase().includes('devis');
+      const firstHour = Array.isArray(data.jours_passage) && data.jours_passage.length > 0 && data.jours_passage[0]?.heure_debut
+        ? data.jours_passage[0].heure_debut
+        : '';
       
       const apiPayload = {
         service: serviceName,
@@ -288,15 +301,15 @@ export async function sendBookingEmailResend(serviceName: string, data: any, pri
         client_ville: data.city || '',
         client_quartier: data.neighborhood || '',
         client_address: data.careAddress || data.neighborhood || '',
-        date_intervention: data.schedulingDate || null,
-        heure_intervention: scheduling_time || '',
+        date_intervention: data.schedulingDate || data.date_debut || null,
+        heure_intervention: firstHour || scheduling_time || '',
         preference_horaire: data.schedulingTime === 'morning' ? 'matin' : (data.schedulingTime === 'afternoon' ? 'apres_midi' : (data.schedulingTime || '')),
-        frequency_label: data.frequencyLabel || data.subFrequency || (data.frequency === 'oneshot' ? 'Une fois' : 'Mensuel'),
+        frequency_label: data.frequencyLabel || data.subFrequency || (isSubscription ? 'Abonnement' : 'Une fois'),
         statut: 'en_attente',
         source: 'site',
         is_devis: isDevis,
         prix: typeof price === "number" ? price.toString() : (!isDevis && typeof price === "string" ? price : null),
-        frequency: data.frequency === "oneshot" ? 'oneshot' as const : 'abonnement' as const,
+        frequency: isSubscription ? 'abonnement' as const : 'oneshot' as const,
         promo_code: data.promoCodeId || null,
         formulaire_data: data
       };
@@ -313,20 +326,81 @@ export async function sendBookingEmailResend(serviceName: string, data: any, pri
     let resData = null;
 
     try {
+      const emailSubject = `Nouvelle Réservation: ${isSubscription ? '[ABONNEMENT] ' : ''}${serviceName} - ${client_name}`;
       const emailResult = await resend.emails.send({
         from: 'Agence Ménage <onboarding@resend.dev>',
         to: ['notification@agencemenage.ma'],
-        subject: `Nouvelle Réservation: ${serviceName} - ${client_name}`,
+        subject: emailSubject,
         html: `
 <div style="font-family: Arial, sans-serif; max-width: 600px; margin: auto; border: 1px solid #ddd; padding: 20px; color: #333;">
-  <div style="text-align: center; border-bottom: 2px solid #edba54; padding-bottom: 10px; margin-bottom: 20px;">
-    <h2 style="color: #edba54; margin: 0;">
-      RESERVATION
+  <div style="text-align: center; border-bottom: 2px solid #edba54; padding-bottom: 12px; margin-bottom: 20px;">
+    <div style="margin-bottom: 8px;">
+      <span style="display: inline-block; background-color: ${isSubscription ? '#166534' : '#175e5c'}; color: #ffffff; padding: 4px 14px; border-radius: 9999px; font-size: 11px; font-weight: bold; text-transform: uppercase; letter-spacing: 0.05em;">
+        ${isSubscription ? '⭐ Formule Abonnement Récurrent' : 'Prestation Ponctuelle'}
+      </span>
+    </div>
+    <h2 style="color: #edba54; margin: 4px 0 0 0; text-transform: uppercase; font-size: 20px;">
+      ${isSubscription ? 'NOUVELLE DEMANDE D\'ABONNEMENT' : 'RESERVATION'}
     </h2>
-    <h3 style="color: #edba54; margin: 0;">
+    <h3 style="color: #64748b; margin: 4px 0 0 0; font-size: 13px; font-weight: normal;">
       SERVICES POUR ${isEntreprise ? 'ENTREPRISE' : 'PARTICULIER'}
     </h3>
   </div>
+
+  ${isSubscription ? `
+  <div style="margin-bottom: 20px; background-color: #f0fdf4; border: 1.5px solid #86efac; border-radius: 8px; padding: 16px;">
+    <h3 style="color: #166534; margin: 0 0 12px 0; font-size: 15px; border-bottom: 1px solid #bbf7d0; padding-bottom: 8px;">
+      📅 Configuration de l'Abonnement
+    </h3>
+    <table style="width: 100%; border-collapse: collapse; font-size: 13px;">
+      <tr>
+        <td style="padding: 5px 0; color: #166534; width: 42%;"><strong>Fréquence choisie :</strong></td>
+        <td style="padding: 5px 0; color: #0f172a; font-weight: bold;">${data.frequencyLabel || data.subFrequency || frequency}</td>
+      </tr>
+      <tr>
+        <td style="padding: 5px 0; color: #166534;"><strong>Date 1ère intervention :</strong></td>
+        <td style="padding: 5px 0; color: #0f172a; font-weight: bold;">${formattedDateWithDay}</td>
+      </tr>
+      ${Array.isArray(data.jours_passage) && data.jours_passage.length > 0 ? `
+      <tr>
+        <td style="padding: 5px 0; color: #166534; vertical-align: top;"><strong>Planning hebdomadaire :</strong></td>
+        <td style="padding: 5px 0; color: #0f172a;">
+          <table style="width: 100%; border-collapse: collapse; background: #ffffff; border: 1px solid #dcfce7; border-radius: 6px; margin-top: 4px;">
+            ${data.jours_passage.map((j: any) => `
+              <tr style="border-bottom: 1px solid #f0fdf4;">
+                <td style="padding: 6px 10px; font-weight: bold; color: #15803d; text-transform: capitalize; width: 35%;">${j.jour}</td>
+                <td style="padding: 6px 10px; color: #334155;">De <strong>${j.heure_debut || '-'}</strong> à <strong>${j.heure_fin || '-'}</strong></td>
+              </tr>
+            `).join('')}
+          </table>
+        </td>
+      </tr>
+      ` : ""}
+      ${data.prorata_actif ? `
+      <tr style="border-top: 1px dashed #86efac;">
+        <td style="padding: 8px 0 3px 0; color: #92400e;"><strong>Prorata 1er mois :</strong></td>
+        <td style="padding: 8px 0 3px 0; color: #92400e; font-weight: bold;">
+          ${data.montant_prorata || price} MAD <span style="font-weight: normal; font-size: 12px;">(${data.nb_passages_mois_1} passage(s) restant(s) sur ${data.nb_passages_theoriques} ce mois)</span>
+        </td>
+      </tr>
+      <tr>
+        <td style="padding: 3px 0; color: #166534;"><strong>Tarif mensuel dès le 2ᵉ mois :</strong></td>
+        <td style="padding: 3px 0; color: #15803d; font-weight: bold;">
+          ${data.tarif_mensuel_standard ? `${data.tarif_mensuel_standard} MAD / mois` : '-'}
+        </td>
+      </tr>
+      ` : `
+      <tr style="border-top: 1px dashed #86efac;">
+        <td style="padding: 8px 0 3px 0; color: #166534;"><strong>Tarif mensuel standard :</strong></td>
+        <td style="padding: 8px 0 3px 0; color: #15803d; font-weight: bold;">
+          ${typeof price === 'number' ? `${price} MAD / mois` : price}
+        </td>
+      </tr>
+      `}
+    </table>
+  </div>
+  ` : ""}
+
   <div style="margin-bottom: 20px;">
     <h3 style="color: #175e5c; border-left: 4px solid #175e5c; padding-left: 10px; margin-bottom: 10px;">Informations Client</h3>
     <table style="width: 100%; border-collapse: collapse;">
@@ -403,8 +477,9 @@ export async function sendBookingEmailResend(serviceName: string, data: any, pri
   <div style="margin-bottom: 20px;">
     <h3 style="color: #175e5c; border-left: 4px solid #175e5c; padding-left: 10px; margin-bottom: 10px;">Lieu et Horaire</h3>
     <table style="width: 100%; border-collapse: collapse;">
-      ${formattedDateWithDay !== "-" ? `<tr><td style="padding: 5px 0; width: 40%;"><strong>Date:</strong></td><td>${formattedDateWithDay}</td></tr>` : ""}
-      ${scheduling_time ? `<tr><td style="padding: 5px 0; width: 40%;"><strong>Heure:</strong></td><td>${scheduling_time}</td></tr>` : ""}
+      ${!isSubscription && formattedDateWithDay !== "-" ? `<tr><td style="padding: 5px 0; width: 40%;"><strong>Date :</strong></td><td>${formattedDateWithDay}</td></tr>` : ""}
+      ${!isSubscription && scheduling_time ? `<tr><td style="padding: 5px 0; width: 40%;"><strong>Heure :</strong></td><td>${scheduling_time}</td></tr>` : ""}
+      ${isSubscription && formattedDateWithDay !== "-" ? `<tr><td style="padding: 5px 0; width: 40%;"><strong>Démarrage :</strong></td><td>${formattedDateWithDay}</td></tr>` : ""}
       ${isGardeMalade && data.careLocation ? `<tr><td style="padding: 5px 0; width: 40%;"><strong>Lieu de garde:</strong></td><td>${data.careLocation}</td></tr>` : ""}
       ${isGardeMalade && data.careAddress ? `<tr><td style="padding: 5px 0; width: 40%;"><strong>Adresse de garde:</strong></td><td>${data.careAddress}</td></tr>` : ""}
       ${data.city ? `<tr><td style="padding: 5px 0; width: 40%;"><strong>Ville:</strong></td><td>${data.city}</td></tr>` : ""}
@@ -417,8 +492,22 @@ export async function sendBookingEmailResend(serviceName: string, data: any, pri
     <p style="background: #f9f9f9; padding: 10px; border-radius: 5px; margin: 0;">${combinedNotes.replace(/\n/g, '<br>')}</p>
   </div>
   ` : ""}
-  <div style="text-align: right; border-top: 2px solid #edba54; padding-top: 10px; margin-top: 20px;">
-    <h3 style="margin: 0;">${typeof price === "string" && price.toLowerCase().includes("rappel") ? "Type de demande:" : "Total Estimé:"} <span style="color: #edba54;">${typeof price === "number" ? `${price} MAD` : price}</span></h3>
+  <div style="text-align: right; border-top: 2px solid #edba54; padding-top: 12px; margin-top: 20px;">
+    ${isSubscription ? `
+      <div style="font-size: 12px; text-transform: uppercase; color: #64748b; font-weight: bold; margin-bottom: 4px;">
+        ${data.prorata_actif ? "Montant 1er mois (Calcul Prorata)" : "Tarif Mensuel Abonnement"}
+      </div>
+      <h3 style="margin: 0; font-size: 22px; color: #175e5c;">
+        <span style="color: #edba54;">${typeof price === "number" ? `${price} MAD` : price}</span>
+      </h3>
+      ${data.prorata_actif && data.tarif_mensuel_standard ? `
+        <div style="font-size: 13px; color: #64748b; margin-top: 4px;">
+          Tarif mensuel régulier dès le 2ᵉ mois : <strong style="color: #0f172a;">${data.tarif_mensuel_standard} MAD / mois</strong>
+        </div>
+      ` : ""}
+    ` : `
+      <h3 style="margin: 0;">${typeof price === "string" && price.toLowerCase().includes("rappel") ? "Type de demande:" : "Total Estimé:"} <span style="color: #edba54;">${typeof price === "number" ? `${price} MAD` : price}</span></h3>
+    `}
   </div>
 </div>
         `,

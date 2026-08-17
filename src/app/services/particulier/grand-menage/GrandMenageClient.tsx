@@ -35,6 +35,7 @@ import {
 } from "@/components/ui/dialog";
 import { CASABLANCA_NEIGHBORHOODS, DEFAULT_CITY, CITIES, SURCHARGE_CITIES, NEIGHBORHOODS_BY_CITY } from "@/constants/locations";
 import { FREQUENCES } from "@/app/frequences";
+import { SubscriptionScheduler, JourPassage, ProrataInfo } from "@/components/booking/SubscriptionScheduler";
 
 const PRODUCTS_LIST = [
     "Nettoyant multi-usage",
@@ -47,7 +48,11 @@ const PRODUCTS_LIST = [
 const INITIAL_FORM_DATA = {
     propertyType: "studio",
     frequency: "oneshot",
-    subFrequency: "",
+    subFrequency: "2foisParSemaine",
+    joursPassage: [
+        { jour: 'lundi', heure_debut: '09:00', heure_fin: '15:00' },
+        { jour: 'jeudi', heure_debut: '09:00', heure_fin: '15:00' }
+    ] as JourPassage[],
     surfaceArea: 70,
     duration: 6,
     numberOfPeople: 1,
@@ -76,6 +81,7 @@ export default function GrandMenageClient() {
     const [showConfirmation, setShowConfirmation] = useState(false);
     const [isSummaryExpanded, setIsSummaryExpanded] = useState(false);
     const [formData, setFormData] = useState(INITIAL_FORM_DATA);
+    const [prorataInfo, setProrataInfo] = useState<ProrataInfo | null>(null);
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [customerName, setCustomerName] = useState("");
     const [promoCode, setPromoCode] = useState<any>(null);
@@ -105,6 +111,8 @@ export default function GrandMenageClient() {
         formData.schedulingTime
     );
 
+    let regularMonthlyTotal = 0;
+
     if (formData.frequency === "subscription") {
         const visitsMap: Record<string, number> = {
             "1foisParSemaine": 1,
@@ -118,23 +126,33 @@ export default function GrandMenageClient() {
             "2foisParMois": 0.5,
             "1foisParMois": 0.25,
             "4foisParMois": 1,
-
         };
-        visitsPerWeek = visitsMap[formData.subFrequency] || 1;
+        visitsPerWeek = visitsMap[formData.subFrequency] || 2;
         discountRate = 0.1;
         const monthlyHours = formData.duration * visitsPerWeek * 4;
         const subtotalMonthly = monthlyHours * baseRate * formData.numberOfPeople;
         discountAmount = subtotalMonthly * discountRate;
-        totalServicePrice = (subtotalMonthly - discountAmount) * multiplier;
+        regularMonthlyTotal = (subtotalMonthly - discountAmount) * multiplier;
+        if (formData.additionalServices.produitsEtOutils) regularMonthlyTotal += 90 * visitsPerWeek * 4;
+        if (SURCHARGE_CITIES.includes(formData.city)) regularMonthlyTotal += 50 * visitsPerWeek * 4;
+        if (formData.additionalServices.torchonsEtSerpierres) regularMonthlyTotal += 40 * visitsPerWeek * 4;
+
+        if (prorataInfo?.prorataActive && prorataInfo.prorataAmount > 0) {
+            totalServicePrice = prorataInfo.prorataAmount;
+        } else {
+            totalServicePrice = regularMonthlyTotal;
+        }
     } else {
         totalServicePrice = formData.duration * baseRate * formData.numberOfPeople * multiplier;
     }
 
     const calculateTotal = () => {
         let price = totalServicePrice;
-        if (formData.additionalServices.produitsEtOutils) price += 90;
-        if (SURCHARGE_CITIES.includes(formData.city)) price += 50;
-        if (formData.additionalServices.torchonsEtSerpierres) price += 40;
+        if (formData.frequency === "oneshot") {
+            if (formData.additionalServices.produitsEtOutils) price += 90;
+            if (SURCHARGE_CITIES.includes(formData.city)) price += 50;
+            if (formData.additionalServices.torchonsEtSerpierres) price += 40;
+        }
 
         if (promoCode) {
             if (promoCode.reduction_type === 'pourcentage') {
@@ -147,6 +165,19 @@ export default function GrandMenageClient() {
     };
 
     const totalPrice = calculateTotal();
+
+    const calculateRegularTotal = () => {
+        if (formData.frequency !== "subscription") return totalPrice;
+        let reg = regularMonthlyTotal;
+        if (promoCode) {
+            if (promoCode.reduction_type === 'pourcentage') {
+                reg = reg * (1 - promoCode.reduction / 100);
+            } else if (promoCode.reduction_type === 'montant_fixe') {
+                reg = Math.max(0, reg - promoCode.reduction);
+            }
+        }
+        return reg;
+    };
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
@@ -166,10 +197,19 @@ export default function GrandMenageClient() {
         const neighborhood = neighborhoodRef.current?.value.trim() ?? "";
         const changeRepereNotes = changeRepereNotesRef.current?.value.trim() ?? "";
 
-        if (!firstName || !lastName || !phoneNumber || !formData.city || !neighborhood || !formData.schedulingDate) {
+        const isSub = formData.frequency === 'subscription';
+        const dateEffective = isSub
+            ? (formData.schedulingDate || (typeof window !== 'undefined' ? new Date().toISOString().split('T')[0] : ''))
+            : formData.schedulingDate;
+
+        if (!firstName || !lastName || !phoneNumber || !formData.city || !neighborhood || !dateEffective) {
             toast.error("Veuillez remplir tous les champs obligatoires");
             return;
         }
+
+        const frequencyLabel = isSub
+            ? (frequencies.find(f => f.value === formData.subFrequency)?.label ? `Abonnement (${frequencies.find(f => f.value === formData.subFrequency)?.label})` : "Abonnement")
+            : "Une fois";
 
         setIsSubmitting(true);
         try {
@@ -181,12 +221,24 @@ export default function GrandMenageClient() {
                 changeRepereNotes,
                 phonePrefix,
                 whatsappPrefix,
+                frequencyLabel,
                 phoneNumber: `${phonePrefix} ${phoneNumber}`,
                 whatsappNumber: formData.useWhatsappForPhone
                     ? `${phonePrefix} ${phoneNumber}`
                     : `${whatsappPrefix} ${whatsappNumber}`,
                 promoCodeId: promoCode ? promoCode.id : undefined,
-                promoCodeInput: promoCode ? promoCode.code : undefined
+                promoCodeInput: promoCode ? promoCode.code : undefined,
+                is_subscription: isSub,
+                frequence: isSub ? (formData.subFrequency || '2foisParSemaine') : 'oneshot',
+                jours_passage: isSub ? formData.joursPassage : [],
+                date_debut: dateEffective,
+                date_premiere_intervention: dateEffective,
+                prorata_actif: isSub ? (prorataInfo?.prorataActive || false) : false,
+                montant_prorata: isSub && prorataInfo?.prorataActive ? prorataInfo.prorataAmount : null,
+                tarif_mensuel_standard: isSub ? calculateRegularTotal() : null,
+                nb_passages_mois_1: isSub ? (prorataInfo?.passagesRestants || 0) : 0,
+                nb_passages_theoriques: isSub ? (prorataInfo?.passagesTheoriques || 0) : 0,
+                schedulingDate: dateEffective
             };
 
             setCustomerName(`${firstName} ${lastName}`);
@@ -342,8 +394,16 @@ Il comprend le :
                                             <div className={`space-y-3 ${!isSummaryExpanded ? 'max-lg:hidden' : ''}`}>
                                                 <div className="flex justify-between gap-4">
                                                     <span className="text-muted-foreground">Fréquence:</span>
-                                                    <span className="font-medium text-right text-sm text-slate-700">{getFrequencyLabel(formData.frequency, formData.subFrequency)}</span>
+                                                    <span className="font-medium text-right text-sm text-slate-700">{formData.frequency === 'subscription' ? 'Abonnement' : 'Une fois'}</span>
                                                 </div>
+                                                {formData.frequency === "subscription" && formData.joursPassage.length > 0 && (
+                                                    <div className="flex justify-between gap-4 border-t border-primary/10 pt-2 text-xs">
+                                                        <span className="text-muted-foreground">Jours:</span>
+                                                        <span className="font-medium text-right text-primary font-bold">
+                                                            {formData.joursPassage.map(j => j.jour.slice(0, 3).toUpperCase()).join(', ')}
+                                                        </span>
+                                                    </div>
+                                                )}
                                                 <div className="flex justify-between gap-4">
                                                     <span className="text-muted-foreground">Durée:</span>
                                                     <span className="font-medium text-right text-slate-700">{formData.duration} heures</span>
@@ -364,26 +424,39 @@ Il comprend le :
                                                         <span className="font-medium text-right text-slate-700">+40 MAD</span>
                                                     </div>
                                                 )}
-                                                {discountRate > 0 && (
-                                                    <div className="flex justify-between gap-4 text-red-600 font-bold bg-red-50 p-2 rounded">
-                                                        <span>Réduction (10%):</span>
-                                                        <span>-{discountAmount} MAD</span>
-                                                    </div>
-                                                )}
                                                 <div className="flex justify-between gap-4 border-t border-primary/10 pt-2">
-                                                    <span className="text-muted-foreground">Date:</span>
+                                                    <span className="text-muted-foreground">{formData.frequency === "subscription" ? "1ère intervention:" : "Date:"}</span>
                                                     <span className="font-medium text-right text-slate-700">{formData.schedulingDate || "Non définie"}</span>
                                                 </div>
-                                                <div className="flex justify-between gap-4">
-                                                    <span className="text-muted-foreground">Heure:</span>
-                                                    <span className="font-medium text-right text-slate-700">
-                                                        {formData.schedulingType === "fixed" ? formData.fixedTime : (formData.schedulingTime === "morning" ? "Le matin" : "L'après midi")}
-                                                    </span>
-                                                </div>
+                                                {formData.frequency === "oneshot" && (
+                                                    <div className="flex justify-between gap-4">
+                                                        <span className="text-muted-foreground">Heure:</span>
+                                                        <span className="font-medium text-right text-slate-700">
+                                                            {formData.schedulingType === "fixed" ? formData.fixedTime : (formData.schedulingTime === "morning" ? "Le matin" : "L'après midi")}
+                                                        </span>
+                                                    </div>
+                                                )}
                                             </div>
                                         </div>
 
                                         <div className="pt-4 border-t">
+                                            {formData.frequency === "subscription" && discountAmount > 0 && (
+                                                <div className="flex justify-between gap-4 text-emerald-600 font-bold bg-emerald-50 p-2 rounded mb-2 text-xs">
+                                                    <span>Remise abonnement (10%):</span>
+                                                    <span>-{Math.round(discountAmount)} MAD</span>
+                                                </div>
+                                            )}
+                                            {formData.frequency === "subscription" && prorataInfo?.prorataActive && (
+                                                <div className="bg-amber-50 p-2.5 rounded-lg border border-amber-200 mb-3 space-y-1">
+                                                    <div className="flex justify-between text-xs text-amber-900 font-bold">
+                                                        <span>Prorata 1er mois ({prorataInfo.passagesRestants}/{prorataInfo.passagesTheoriques} passages) :</span>
+                                                        <span>{Math.round(prorataInfo.prorataAmount)} MAD</span>
+                                                    </div>
+                                                    <div className="text-[11px] text-amber-700 font-medium">
+                                                        Dès le 2ᵉ mois : {Math.round(calculateRegularTotal())} MAD/mois
+                                                    </div>
+                                                </div>
+                                            )}
                                             {promoCode && (
                                                 <div className="flex justify-between text-emerald-600 font-medium mb-2 text-sm">
                                                     <span>Réduction ({promoCode.code}) :</span>
@@ -392,7 +465,7 @@ Il comprend le :
                                             )}
                                             <div className="flex justify-between items-center">
                                                 <span className="text-lg font-bold">
-                                                    {formData.frequency === "subscription" ? "Total Mensuel" : "Total"}
+                                                    {formData.frequency === "subscription" ? (prorataInfo?.prorataActive ? "Total 1er mois" : "Total Mensuel") : "Total"}
                                                 </span>
                                                 <span className="text-2xl font-bold text-primary">{Math.round(totalPrice)} MAD</span>
                                             </div>
@@ -410,10 +483,10 @@ Il comprend le :
                             </div>
 
                             <div className="lg:col-span-2 space-y-8">
-                                <div className="bg-card rounded-lg p-4 md:p-8 border shadow-sm space-y-10">
+                                <div className="bg-card rounded-lg p-6 border shadow-sm space-y-8">
                                     <div>
-                                        <h3 className="text-xl font-bold bg-primary/10 text-primary p-3 rounded-lg text-center mb-4 uppercase">
-                                            Type d'habitation
+                                        <h3 className="text-xl font-bold bg-primary text-white p-3 rounded-lg text-center mb-4 uppercase">
+                                            Choisissez votre type de logement
                                         </h3>
                                         <RadioGroup
                                             value={formData.propertyType}
@@ -430,7 +503,7 @@ Il comprend le :
                                     </div>
 
                                     <div>
-                                        <h3 className="text-xl font-bold bg-primary/10 text-primary p-3 rounded-lg text-center mb-4">
+                                        <h3 className="text-xl font-bold bg-primary text-white p-3 rounded-lg text-center mb-4 uppercase">
                                             Indiquez la superficie de votre espace en m².
                                         </h3>
                                         <div className="px-8 py-10 border rounded-xl bg-white shadow-sm space-y-8">
@@ -460,64 +533,60 @@ Il comprend le :
                                     </div>
 
                                     <div>
-                                        <h3 className="text-xl font-bold bg-primary/10 text-primary p-3 rounded-lg text-center mb-4">
-                                            Choisissez la fréquence
+                                        <h3 className="text-xl font-bold bg-primary text-white p-3 rounded-lg mb-4 text-center uppercase">
+                                            Choisissez la formule
                                         </h3>
-                                        <div className="p-4 space-y-4">
-                                            <div className="flex flex-col items-center gap-4">
-                                                <div className="flex bg-slate-100 p-1 rounded-full w-full max-w-md mx-auto">
-                                                    <button
-                                                        type="button"
-                                                        className={`flex-1 py-3 px-6 rounded-full font-bold transition-all ${formData.frequency === "oneshot"
+                                        <div className="p-4 bg-muted/30 rounded-xl space-y-4">
+                                            <div className="flex bg-slate-100 p-1.5 rounded-full w-full max-w-md mx-auto">
+                                                <button
+                                                    type="button"
+                                                    className={`flex-1 py-3 px-6 rounded-full font-bold transition-all text-sm ${
+                                                        formData.frequency === "oneshot"
                                                             ? "bg-primary text-white shadow-sm"
                                                             : "text-slate-500 hover:text-primary"
-                                                            }`}
-                                                        onClick={() => setFormData({ ...formData, frequency: "oneshot", subFrequency: "" })}
-                                                    >
-                                                        Une fois
-                                                    </button>
-                                                    <button
-                                                        type="button"
-                                                        className={`flex-1 py-3 px-6 rounded-full font-bold transition-all ${formData.frequency === "subscription"
+                                                    }`}
+                                                    onClick={() => setFormData({ ...formData, frequency: "oneshot", subFrequency: "" })}
+                                                >
+                                                    Une fois
+                                                </button>
+                                                <button
+                                                    type="button"
+                                                    className={`flex-1 py-3 px-6 rounded-full font-bold transition-all text-sm flex items-center justify-center gap-1.5 ${
+                                                        formData.frequency === "subscription"
                                                             ? "bg-primary text-white shadow-sm"
                                                             : "text-slate-500 hover:text-primary"
-                                                            }`}
-                                                        onClick={() => setFormData({ ...formData, frequency: "subscription" })}
-                                                    >
-                                                        Abonnement
-                                                    </button>
-                                                </div>
-
-                                                {formData.frequency === "subscription" && (
-                                                    <div className="w-full space-y-4 animate-in fade-in slide-in-from-top-2 duration-300">
-                                                        <div className="flex justify-center">
-                                                            <span className="text-red-600 font-bold px-3 py-1 bg-red-50 rounded-full text-xs animate-pulse">
-                                                                -10 % de réduction sur l'abonnement
-                                                            </span>
-                                                        </div>
-                                                        <Select
-                                                            value={formData.subFrequency}
-                                                            onValueChange={(value) => setFormData({ ...formData, subFrequency: value })}
-                                                        >
-                                                            <SelectTrigger className="w-full border-primary/20">
-                                                                <SelectValue placeholder="Sélectionnez une fréquence" />
-                                                            </SelectTrigger>
-                                                            <SelectContent>
-                                                                {frequencies.map((freq) => (
-                                                                    <SelectItem key={freq.value} value={freq.value}>
-                                                                        {freq.label}
-                                                                    </SelectItem>
-                                                                ))}
-                                                            </SelectContent>
-                                                        </Select>
-                                                    </div>
-                                                )}
+                                                    }`}
+                                                    onClick={() => setFormData({
+                                                        ...formData,
+                                                        frequency: "subscription",
+                                                        subFrequency: formData.subFrequency || "2foisParSemaine"
+                                                    })}
+                                                >
+                                                    <span>Abonnement</span>
+                                                    <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-emerald-500 text-white font-black">-10%</span>
+                                                </button>
                                             </div>
+
+                                            {formData.frequency === "subscription" && (
+                                                <div className="pt-2">
+                                                    <SubscriptionScheduler
+                                                        subFrequency={formData.subFrequency || "2foisParSemaine"}
+                                                        onFrequencyChange={(val, label) => setFormData(prev => ({ ...prev, subFrequency: val }))}
+                                                        joursPassage={formData.joursPassage}
+                                                        onJoursPassageChange={(jours) => setFormData(prev => ({ ...prev, joursPassage: jours }))}
+                                                        startDate={formData.schedulingDate}
+                                                        onStartDateChange={(date) => setFormData(prev => ({ ...prev, schedulingDate: date }))}
+                                                        durationHours={formData.duration}
+                                                        baseMonthlyPrice={calculateRegularTotal()}
+                                                        onProrataCalculated={(info) => setProrataInfo(info)}
+                                                    />
+                                                </div>
+                                            )}
                                         </div>
                                     </div>
 
                                     <div>
-                                        <h3 className="text-xl font-bold bg-primary/10 text-primary p-3 rounded-lg text-center mb-2">
+                                        <h3 className="text-xl font-bold bg-primary text-white p-3 rounded-lg text-center mb-2 uppercase">
                                             Durée de prestation
                                         </h3>
                                         <p className="text-red-500 text-xs text-center mb-4 font-bold">
@@ -550,15 +619,15 @@ Il comprend le :
                                     </div>
 
                                     <div>
-                                        <h3 className="text-xl font-bold bg-primary/10 text-primary p-3 rounded-lg text-center mb-4">
-                                            Nombre de personne
+                                        <h3 className="text-xl font-bold bg-primary text-white p-3 rounded-lg text-center mb-4 uppercase">
+                                            Nombre d'intervenant(e)s
                                         </h3>
                                         <div className="flex items-center justify-center gap-8 p-4 bg-white border rounded-xl">
                                             <Button
                                                 type="button"
                                                 variant="ghost"
                                                 size="icon"
-                                                className="h-10 w-10 rounded-full bg-slate-100 text-primary hover:bg-slate-200 border border-slate-200 shadow-sm disabled:opacity-30"
+                                                className="h-10 w-10 rounded-full bg-slate-100 text-primary hover:bg-slate-200 border border-slate-200 shadow-sm"
                                                 onClick={decrementPeople}
                                                 disabled={formData.numberOfPeople <= 1}
                                             >
@@ -579,76 +648,78 @@ Il comprend le :
                                         </div>
                                     </div>
 
-                                    <div>
-                                        <h3 className="text-xl font-bold bg-primary/10 text-primary p-3 rounded-lg text-center mb-4">
-                                            Planning pour votre demande
-                                        </h3>
-                                        <div className="grid md:grid-cols-3 gap-6 p-4 border rounded-xl bg-white shadow-sm">
-                                            <div className="text-center space-y-3">
-                                                <div className="flex items-center justify-center space-x-2">
-                                                    <input
-                                                        type="radio"
-                                                        id="fixed"
-                                                        name="schedulingType"
-                                                        checked={formData.schedulingType === "fixed"}
-                                                        onChange={() => setFormData({ ...formData, schedulingType: "fixed" })}
-                                                        className="w-4 h-4 text-primary"
-                                                    />
-                                                    <Label htmlFor="fixed" className="font-bold text-primary text-sm cursor-pointer text-center">Je souhaite une heure fixe</Label>
+                                    {formData.frequency === "oneshot" && (
+                                        <div>
+                                            <h3 className="text-xl font-bold bg-primary text-white p-3 rounded-lg mb-4 text-center uppercase">
+                                                Planning pour votre demande
+                                            </h3>
+                                            <div className="grid md:grid-cols-3 gap-6 p-4 border rounded-xl bg-white shadow-sm">
+                                                <div className="text-center space-y-3">
+                                                    <div className="flex items-center justify-center space-x-2">
+                                                        <input
+                                                            type="radio"
+                                                            id="fixed"
+                                                            name="schedulingType"
+                                                            checked={formData.schedulingType === "fixed"}
+                                                            onChange={() => setFormData({ ...formData, schedulingType: "fixed" })}
+                                                            className="w-4 h-4 text-primary"
+                                                        />
+                                                        <Label htmlFor="fixed" className="font-bold text-primary text-sm cursor-pointer text-center">Je souhaite une heure fixe</Label>
+                                                    </div>
+                                                    <div className="flex justify-center">
+                                                        <input
+                                                            type="time"
+                                                            required
+                                                            value={formData.fixedTime}
+                                                            onChange={(e) => setFormData({ ...formData, fixedTime: e.target.value })}
+                                                            disabled={formData.schedulingType !== "fixed"}
+                                                            className="w-32 text-center text-xl font-bold h-12 border-primary/30 rounded-md border"
+                                                        />
+                                                    </div>
                                                 </div>
-                                                <div className="flex justify-center">
-                                                    <input
-                                                        type="time"
+
+                                                <div className="text-center space-y-3">
+                                                    <div className="flex items-center justify-center space-x-2">
+                                                        <input
+                                                            type="radio"
+                                                            id="flexible"
+                                                            name="schedulingType"
+                                                            checked={formData.schedulingType === "flexible"}
+                                                            onChange={() => setFormData({ ...formData, schedulingType: "flexible" })}
+                                                            className="w-4 h-4 text-primary"
+                                                        />
+                                                        <Label htmlFor="flexible" className="font-bold text-primary text-sm cursor-pointer text-center">Je suis flexible</Label>
+                                                    </div>
+                                                    <RadioGroup
+                                                        value={formData.schedulingTime}
+                                                        onValueChange={(value) => setFormData({ ...formData, schedulingTime: value })}
+                                                        disabled={formData.schedulingType !== "flexible"}
+                                                        className="space-y-2 text-left inline-block"
+                                                    >
+                                                        <div className="flex items-center space-x-2">
+                                                            <RadioGroupItem value="morning" id="morning" className="border-primary/20 text-primary" />
+                                                            <Label htmlFor="morning" className="text-sm font-medium">Le matin</Label>
+                                                        </div>
+                                                        <div className="flex items-center space-x-2">
+                                                            <RadioGroupItem value="afternoon" id="afternoon" className="border-primary/20 text-primary" />
+                                                            <Label htmlFor="afternoon" className="text-sm font-medium">L'après midi</Label>
+                                                        </div>
+                                                    </RadioGroup>
+                                                </div>
+
+                                                <div className="text-center space-y-3">
+                                                    <div className="font-bold text-primary text-sm">Date</div>
+                                                    <Input
+                                                        type="date"
                                                         required
-                                                        value={formData.fixedTime}
-                                                        onChange={(e) => setFormData({ ...formData, fixedTime: e.target.value })}
-                                                        disabled={formData.schedulingType !== "fixed"}
-                                                        className="w-32 text-center text-xl font-bold h-12 border-primary/30 rounded-md border"
+                                                        value={formData.schedulingDate}
+                                                        onChange={(e) => setFormData({ ...formData, schedulingDate: e.target.value })}
+                                                        className="w-full border-slate-300"
                                                     />
                                                 </div>
-                                            </div>
-
-                                            <div className="text-center space-y-3">
-                                                <div className="flex items-center justify-center space-x-2">
-                                                    <input
-                                                        type="radio"
-                                                        id="flexible"
-                                                        name="schedulingType"
-                                                        checked={formData.schedulingType === "flexible"}
-                                                        onChange={() => setFormData({ ...formData, schedulingType: "flexible" })}
-                                                        className="w-4 h-4 text-primary"
-                                                    />
-                                                    <Label htmlFor="flexible" className="font-bold text-primary text-sm cursor-pointer text-center">Je suis flexible</Label>
-                                                </div>
-                                                <RadioGroup
-                                                    value={formData.schedulingTime}
-                                                    onValueChange={(value) => setFormData({ ...formData, schedulingTime: value })}
-                                                    disabled={formData.schedulingType !== "flexible"}
-                                                    className="space-y-2 text-left inline-block"
-                                                >
-                                                    <div className="flex items-center space-x-2">
-                                                        <RadioGroupItem value="morning" id="morning" className="border-primary/20 text-primary" />
-                                                        <Label htmlFor="morning" className="text-sm font-medium">Le matin</Label>
-                                                    </div>
-                                                    <div className="flex items-center space-x-2">
-                                                        <RadioGroupItem value="afternoon" id="afternoon" className="border-primary/20 text-primary" />
-                                                        <Label htmlFor="afternoon" className="text-sm font-medium">L'après midi</Label>
-                                                    </div>
-                                                </RadioGroup>
-                                            </div>
-
-                                            <div className="text-center space-y-3">
-                                                <div className="font-bold text-primary text-sm">Date</div>
-                                                <Input
-                                                    type="date"
-                                                    required
-                                                    value={formData.schedulingDate}
-                                                    onChange={(e) => setFormData({ ...formData, schedulingDate: e.target.value })}
-                                                    className="w-full border-slate-300"
-                                                />
                                             </div>
                                         </div>
-                                    </div>
+                                    )}
 
                                     <div>
                                         <h3 className="text-xl font-bold bg-primary/10 text-primary p-3 rounded-lg text-center mb-4">
