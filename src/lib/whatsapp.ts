@@ -1,11 +1,11 @@
-export const DESTINATION_PHONE_NUMBER = "+212664226790";
+export const DESTINATION_PHONE_NUMBER = "+212664331463";
 export const AGENCY_NOTIFICATION_NUMBERS = [
     "+212664331463",
     "+212664267811",
     "+212664226790",
     "+212619900923"
 ];
-export const CUSTOMER_SERVICE_NUMBERS = ["0664331463"];
+export const CUSTOMER_SERVICE_NUMBERS = ["0664226790", "0664331463"];
 
 export const createWhatsAppLink = (phoneNumber: string, message: string): string => {
     const cleanPhoneNumber = phoneNumber.replace(/[^0-9]/g, '');
