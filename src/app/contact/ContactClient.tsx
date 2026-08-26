@@ -3,6 +3,7 @@ import { useState, useRef } from "react";
 import { useRouter } from "next/navigation";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import SafeEmailLink from "@/components/SafeEmailLink";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -264,9 +265,12 @@ export default function ContactClient() {
                                             </div>
                                             <div>
                                                 <h4 className="font-bold text-slate-800">Email</h4>
-                                                <a href="mailto:contact@agencemenage.ma" className="text-slate-600 hover:text-primary transition-colors mt-1 block">
+                                                <SafeEmailLink
+                                                    email="contact@agencemenage.ma"
+                                                    className="text-slate-600 hover:text-primary transition-colors mt-1 block"
+                                                >
                                                     contact@agencemenage.ma
-                                                </a>
+                                                </SafeEmailLink>
                                             </div>
                                         </div>
                                     </div>

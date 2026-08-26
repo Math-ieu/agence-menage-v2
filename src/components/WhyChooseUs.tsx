@@ -1,6 +1,7 @@
 import { Users, Phone, Monitor, ShieldCheck, MapPin, Settings2 } from "lucide-react";
 import Link from "next/link";
 import { Button } from "./ui/button";
+import SafeEmailLink from "./SafeEmailLink";
 
 const WhyChooseUs = ({ isEntreprise = false }: { isEntreprise?: boolean }) => {
   const particuliersFeatures = [
@@ -71,7 +72,15 @@ const WhyChooseUs = ({ isEntreprise = false }: { isEntreprise?: boolean }) => {
                   </Button>
                 </Link>
               </div>
-              <p className="mt-4 text-sm text-muted-foreground">Ou écrivez-nous à <a href="mailto:contact@agencemenage.ma" className="underline">contact@agencemenage.ma</a></p>
+              <p className="mt-4 text-sm text-muted-foreground">
+                Ou écrivez-nous à{" "}
+                <SafeEmailLink
+                  email="contact@agencemenage.ma"
+                  className="underline"
+                >
+                  contact@agencemenage.ma
+                </SafeEmailLink>
+              </p>
             </>
           ) : (
             <>

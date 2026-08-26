@@ -35,6 +35,11 @@ const nextConfig: NextConfig = {
     async redirects() {
         return [
             {
+                source: "/cdn-cgi/l/:path*",
+                destination: "/contact",
+                permanent: false,
+            },
+            {
                 source: "/services/particulier/menage-demenagement",
                 destination: "/",
                 permanent: false,

@@ -2,6 +2,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { Facebook, Instagram, Mail, Phone, MapPin, ArrowRight } from "lucide-react";
 import { Button } from "./ui/button";
+import SafeEmailLink from "./SafeEmailLink";
 import logoPlaceholder from "@/assets/LOGO-AGENCE-MENAGE.webp";
 
 const particulierLinks = [
@@ -212,9 +213,12 @@ const Footer = () => {
               </li>
               <li className="flex items-center gap-3 font-bold text-sm lg:text-base">
                 <Mail className="w-5 h-5 shrink-0 text-secondary" />
-                <a href="mailto:contact@agencemenage.ma" className="hover:text-white transition-colors break-all">
+                <SafeEmailLink
+                  email="contact@agencemenage.ma"
+                  className="hover:text-white transition-colors break-all"
+                >
                   contact@agencemenage.ma
-                </a>
+                </SafeEmailLink>
               </li>
             </ul>
 
