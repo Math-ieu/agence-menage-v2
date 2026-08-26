@@ -20,9 +20,17 @@ export async function generateMetadata(props: Props): Promise<Metadata> {
   return {
     title: `${post.title} | Blog Agence Ménage`,
     description: post.excerpt,
+    alternates: {
+      canonical: `/blog/${params.slug}`,
+      languages: {
+        "fr-MA": `/blog/${params.slug}`,
+        "x-default": `/blog/${params.slug}`,
+      },
+    },
     openGraph: {
       title: post.title,
       description: post.excerpt,
+      url: `https://www.agencemenage.ma/blog/${params.slug}`,
       images: [
         {
           url: post.featured_image || "",
