@@ -279,16 +279,51 @@ export async function sendBookingEmailResend(serviceName: string, data: any, pri
       }
     }
 
+    if (isGardeMalade) {
+      if (data.patientAge && !data.age_personne) data.age_personne = data.patientAge;
+      if (data.patientGender && !data.sexe_personne) data.sexe_personne = data.patientGender;
+      if (data.mobility && !data.mobilite) data.mobilite = data.mobility;
+      if (data.healthIssues && !data.situation_medicale) data.situation_medicale = data.healthIssues;
+      if (data.careLocation && !data.lieu_garde) data.lieu_garde = data.careLocation;
+      if (data.careAddress && !data.adresse_garde) data.adresse_garde = data.careAddress;
+    }
+
     // --- ENREGISTREMENT API BACK-OFFICE ---
     let apiSuccess = false;
     try {
       const { createDemande } = await import('@/lib/api');
       
-      const isDevis = typeof price === 'string' && price.toLowerCase().includes('devis');
+      let parsedPrix: string | null = null;
+      let isDevis = false;
+
+      if (typeof price === 'number') {
+        parsedPrix = price.toString();
+        isDevis = false;
+      } else if (typeof price === 'string') {
+        const cleanPrice = price.trim();
+        const lowerPrice = cleanPrice.toLowerCase();
+        if (lowerPrice.includes('devis') || lowerPrice.includes('rappel') || lowerPrice.includes('gratuit') || !cleanPrice) {
+          parsedPrix = null;
+          isDevis = true;
+        } else {
+          const numericStr = cleanPrice.replace(/[^0-9.,]/g, '').replace(',', '.').trim();
+          if (numericStr && !isNaN(Number(numericStr))) {
+            parsedPrix = Number(numericStr).toString();
+            isDevis = false;
+          } else {
+            parsedPrix = null;
+            isDevis = true;
+          }
+        }
+      }
+
       const firstHour = Array.isArray(data.jours_passage) && data.jours_passage.length > 0 && data.jours_passage[0]?.heure_debut
         ? data.jours_passage[0].heure_debut
         : '';
       
+      const rawDate = data.schedulingDate || data.date_debut || null;
+      const cleanDate = rawDate && typeof rawDate === 'string' && rawDate.trim() !== '' ? rawDate.trim() : null;
+
       const apiPayload = {
         service: serviceName,
         segment: isEntreprise ? 'entreprise' as const : 'particulier' as const,
@@ -301,14 +336,14 @@ export async function sendBookingEmailResend(serviceName: string, data: any, pri
         client_ville: data.city || '',
         client_quartier: data.neighborhood || '',
         client_address: data.careAddress || data.neighborhood || '',
-        date_intervention: data.schedulingDate || data.date_debut || null,
+        date_intervention: cleanDate,
         heure_intervention: firstHour || scheduling_time || '',
         preference_horaire: data.schedulingTime === 'morning' ? 'matin' : (data.schedulingTime === 'afternoon' ? 'apres_midi' : (data.schedulingTime || '')),
         frequency_label: data.frequencyLabel || data.subFrequency || (isSubscription ? 'Abonnement' : 'Une fois'),
         statut: 'en_attente',
         source: 'site',
         is_devis: isDevis,
-        prix: typeof price === "number" ? price.toString() : (!isDevis && typeof price === "string" ? price : null),
+        prix: parsedPrix,
         frequency: isSubscription ? 'abonnement' as const : 'oneshot' as const,
         promo_code: data.promoCodeId || null,
         formulaire_data: data
