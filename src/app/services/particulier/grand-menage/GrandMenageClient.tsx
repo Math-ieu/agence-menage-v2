@@ -274,7 +274,7 @@ export default function GrandMenageClient() {
 
     const calculateMinResources = (surface: number) => {
         if (surface <= 70) return { duration: 6, people: 1 };
-        if (surface <= 150) return { duration: 4, people: 2 };
+        if (surface <= 150) return { duration: 6, people: 2 };
         if (surface < 300) return { duration: 8, people: 2 };
         return { duration: 8, people: 3 };
     };
@@ -286,16 +286,14 @@ export default function GrandMenageClient() {
             setFormData(prev => ({
                 ...prev,
                 numberOfPeople: newPeopleCount,
-                duration: newPeopleCount === 1 ? 6 : prev.duration
+                duration: Math.max(5, prev.duration)
             }));
         }
     };
 
     const incrementDuration = () => setFormData({ ...formData, duration: formData.duration + 1 });
     const decrementDuration = () => {
-        const minResources = calculateMinResources(formData.surfaceArea);
-        const minDuration = formData.numberOfPeople > 1 ? minResources.duration : 6;
-        if (formData.duration > minDuration) {
+        if (formData.duration > 5) {
             setFormData({ ...formData, duration: formData.duration - 1 });
         }
     };
@@ -306,7 +304,7 @@ export default function GrandMenageClient() {
         setFormData(prev => ({
             ...prev,
             surfaceArea: surface,
-            duration: finalDuration,
+            duration: Math.max(6, finalDuration),
             numberOfPeople: finalPeople
         }));
     };
@@ -354,7 +352,7 @@ Il comprend le :
                         },
                         {
                             question: "Combien de temps dure la prestation et combien de personnes interviennent ?",
-                            answer: "Un nettoyage en profondeur exige de la minutie, c'est pourquoi cette prestation démarre à partir de 6 heures d'intervention. La grande force d'Agence Ménage réside dans notre système de réservation intelligent : il vous suffit de renseigner la superficie de votre domicile, et notre algorithme vous proposera automatiquement la combinaison idéale (nombre d'heures + taille de l'équipe) pour vous garantir un résultat impeccable."
+                            answer: "Un nettoyage en profondeur exige de la minutie, c'est pourquoi cette prestation démarre à partir de 5 heures d'intervention. La grande force d'Agence Ménage réside dans notre système de réservation intelligent : il vous suffit de renseigner la superficie de votre domicile, et notre algorithme vous proposera automatiquement la combinaison idéale (nombre d'heures + taille de l'équipe) pour vous garantir un résultat impeccable."
                         },
                         {
                             question: "Fournissez-vous les produits spécifiques pour ce nettoyage en profondeur ?",
@@ -590,7 +588,7 @@ Il comprend le :
                                             Durée de prestation
                                         </h3>
                                         <p className="text-red-500 text-xs text-center mb-4 font-bold">
-                                            La durée minimale pour votre ménage est de 6 h
+                                            La durée minimale pour votre ménage est de 5 h
                                         </p>
                                         <div className="flex items-center justify-center gap-8 p-4 bg-white border rounded-xl">
                                             <Button
@@ -599,7 +597,7 @@ Il comprend le :
                                                 size="icon"
                                                 className="h-10 w-10 rounded-full bg-slate-100 text-primary hover:bg-slate-200 border border-slate-200 shadow-sm disabled:opacity-30"
                                                 onClick={decrementDuration}
-                                                disabled={formData.duration <= (formData.numberOfPeople > 1 ? calculateMinResources(formData.surfaceArea).duration : 6)}
+                                                disabled={formData.duration <= 5}
                                             >
                                                 <span className="text-2xl">-</span>
                                             </Button>

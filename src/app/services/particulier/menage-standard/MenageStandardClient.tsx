@@ -44,6 +44,10 @@ const PRODUCTS_LIST = [
     "Neutralisant d’odeur"
 ];
 
+// Contrôle d'activation/désactivation de la section descriptive des pièces (Cuisine, Chambres, etc.)
+// Mettre à `true` pour réactiver l'affichage et la validation sur le site
+const SHOW_ROOMS_SECTION = false;
+
 const INITIAL_FORM_DATA = {
     propertyType: "studio",
     frequency: "oneshot",
@@ -168,14 +172,16 @@ export default function MenageStandardClient() {
             return;
         }
 
-        const roomsSelected = Object.values(formData.rooms).some(count => count > 0);
-        if (!roomsSelected) {
-            toast.error("Veuillez décrire les pièces de votre logement avant de continuer");
-            const roomsSection = document.getElementById('rooms-section');
-            if (roomsSection) {
-                roomsSection.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        if (SHOW_ROOMS_SECTION) {
+            const roomsSelected = Object.values(formData.rooms).some(count => count > 0);
+            if (!roomsSelected) {
+                toast.error("Veuillez décrire les pièces de votre logement avant de continuer");
+                const roomsSection = document.getElementById('rooms-section');
+                if (roomsSection) {
+                    roomsSection.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }
+                return;
             }
-            return;
         }
 
         if (formData.frequency === "subscription" && (!formData.schedulingDate || formData.joursPassage.length === 0)) {
@@ -402,10 +408,12 @@ Il comprend le :
                                                     <span className="text-muted-foreground">Durée choisie:</span>
                                                     <span className="font-medium text-right">{formData.duration} heures / séance</span>
                                                 </div>
-                                                <div className="flex justify-between gap-4">
-                                                    <span className="text-muted-foreground">Temps recommandé:</span>
-                                                    <span className="font-medium text-right font-bold text-primary">{formData.recommendedDuration} heures</span>
-                                                </div>
+                                                {SHOW_ROOMS_SECTION && (
+                                                    <div className="flex justify-between gap-4">
+                                                        <span className="text-muted-foreground">Temps recommandé:</span>
+                                                        <span className="font-medium text-right font-bold text-primary">{formData.recommendedDuration} heures</span>
+                                                    </div>
+                                                )}
                                                 <div className="flex justify-between gap-4">
                                                     <span className="text-muted-foreground">Personnes:</span>
                                                     <span className="font-medium text-right">{formData.numberOfPeople}</span>
@@ -560,80 +568,89 @@ Il comprend le :
                                         </div>
                                     )}
 
-                                    <div id="rooms-section">
-                                        <h3 className="text-xl font-bold bg-primary text-white p-3 rounded-lg text-center mb-2">
-                                            Merci de nous décrire votre domicile ainsi que les différentes pièces qui le composent
-                                        </h3>
-                                        <p className="text-red-500 text-xs text-right mb-4 font-bold">
-                                            cliquez sur + ou - pour décrire les pièces de votre logement
-                                        </p>
-                                        <div className="space-y-4 p-4 border rounded-xl bg-white">
-                                            {[
-                                                { key: "cuisine", label: "Cuisine", time: "45 min" },
-                                                { key: "suiteAvecBain", label: "Suite parentale avec salle de bain", time: "75 min" },
-                                                { key: "suiteSansBain", label: "Suite parentale sans salle de bain", time: "45 min" },
-                                                { key: "salleDeBain", label: "Salle de bain", time: "30 min" },
-                                                { key: "chambre", label: "Chambre/pièce/bureau /chambre enfant", time: "40 min" },
-                                                { key: "salonMarocain", label: "Salon Marocain", time: "35 min" },
-                                                { key: "salonEuropeen", label: "Salon européen", time: "35 min" },
-                                                { key: "toilettesLavabo", label: "Toilette Lavabo", time: "25 min" },
-                                                { key: "rooftop", label: "Rooftop", time: "30 min", type: "checkbox" },
-                                                { key: "escalier", label: "Escalier", time: "25 min", type: "checkbox" }
-                                            ].map((room) => (
-                                                <div key={room.key} className="flex items-center justify-between border-b border-dashed pb-3 last:border-0 last:pb-0">
-                                                    <div className="flex-1">
-                                                        <div className="font-bold text-slate-800">{room.label}</div>
-                                                        <div className="text-xs text-slate-400 italic">{room.time}</div>
-                                                    </div>
-                                                    <div className="flex items-center gap-4">
-                                                        {room.type === "checkbox" ? (
-                                                            <Checkbox
-                                                                checked={formData.rooms[room.key] > 0}
-                                                                onCheckedChange={(checked) => {
-                                                                    updateRoomCount(room.key, !!checked);
-                                                                }}
-                                                                className="h-6 w-6 rounded border-slate-300 data-[state=checked]:bg-primary data-[state=checked]:border-primary"
-                                                            />
-                                                        ) : (
-                                                            <div className="flex items-center gap-3 bg-primary/5 rounded-full p-1">
-                                                                <Button
-                                                                    type="button"
-                                                                    variant="ghost"
-                                                                    size="icon"
-                                                                    className="h-6 w-6 rounded-full bg-slate-200 text-primary hover:bg-slate-300"
-                                                                    onClick={() => updateRoomCount(room.key, false)}
-                                                                >
-                                                                    -
-                                                                </Button>
-                                                                <span className="w-4 text-center font-bold text-primary text-sm">
-                                                                    {formData.rooms[room.key]}
-                                                                </span>
-                                                                <Button
-                                                                    type="button"
-                                                                    variant="ghost"
-                                                                    size="icon"
-                                                                    className="h-6 w-6 rounded-full bg-slate-200 text-primary hover:bg-slate-300"
-                                                                    onClick={() => updateRoomCount(room.key, true)}
-                                                                >
-                                                                    +
-                                                                </Button>
-                                                            </div>
-                                                        )}
-                                                    </div>
-                                                </div>
-                                            ))}
-                                        </div>
-                                    </div>
-
-                                    <div>
-                                        <div className="bg-[#f8fafc] border border-slate-200 rounded-xl p-6 flex flex-col items-center justify-center space-y-2 mb-8 shadow-inner">
-                                            <p className="text-red-500 text-xs text-center font-bold italic">
-                                                D'après les options choisies, nous recommandons {formData.recommendedDuration} heures pour un ménage optimal.
+                                    {SHOW_ROOMS_SECTION && (
+                                        <div id="rooms-section">
+                                            <h3 className="text-xl font-bold bg-primary text-white p-3 rounded-lg text-center mb-2">
+                                                Merci de nous décrire votre domicile ainsi que les différentes pièces qui le composent
+                                            </h3>
+                                            <p className="text-red-500 text-xs text-right mb-4 font-bold">
+                                                cliquez sur + ou - pour décrire les pièces de votre logement
                                             </p>
-                                            <div className="bg-primary/40 text-white text-3xl font-bold px-10 py-3 rounded-full shadow-lg">
-                                                {formData.recommendedDuration}H : 00
+                                            <div className="space-y-4 p-4 border rounded-xl bg-white">
+                                                {[
+                                                    { key: "cuisine", label: "Cuisine", time: "45 min" },
+                                                    { key: "suiteAvecBain", label: "Suite parentale avec salle de bain", time: "75 min" },
+                                                    { key: "suiteSansBain", label: "Suite parentale sans salle de bain", time: "45 min" },
+                                                    { key: "salleDeBain", label: "Salle de bain", time: "30 min" },
+                                                    { key: "chambre", label: "Chambre/pièce/bureau /chambre enfant", time: "40 min" },
+                                                    { key: "salonMarocain", label: "Salon Marocain", time: "35 min" },
+                                                    { key: "salonEuropeen", label: "Salon européen", time: "35 min" },
+                                                    { key: "toilettesLavabo", label: "Toilette Lavabo", time: "25 min" },
+                                                    { key: "rooftop", label: "Rooftop", time: "30 min", type: "checkbox" },
+                                                    { key: "escalier", label: "Escalier", time: "25 min", type: "checkbox" }
+                                                ].map((room) => (
+                                                    <div key={room.key} className="flex items-center justify-between border-b border-dashed pb-3 last:border-0 last:pb-0">
+                                                        <div className="flex-1">
+                                                            <div className="font-bold text-slate-800">{room.label}</div>
+                                                            <div className="text-xs text-slate-400 italic">{room.time}</div>
+                                                        </div>
+                                                        <div className="flex items-center gap-4">
+                                                            {room.type === "checkbox" ? (
+                                                                <Checkbox
+                                                                    checked={formData.rooms[room.key] > 0}
+                                                                    onCheckedChange={(checked) => {
+                                                                        updateRoomCount(room.key, !!checked);
+                                                                    }}
+                                                                    className="h-6 w-6 rounded border-slate-300 data-[state=checked]:bg-primary data-[state=checked]:border-primary"
+                                                                />
+                                                            ) : (
+                                                                <div className="flex items-center gap-3 bg-primary/5 rounded-full p-1">
+                                                                    <Button
+                                                                        type="button"
+                                                                        variant="ghost"
+                                                                        size="icon"
+                                                                        className="h-6 w-6 rounded-full bg-slate-200 text-primary hover:bg-slate-300"
+                                                                        onClick={() => updateRoomCount(room.key, false)}
+                                                                    >
+                                                                        -
+                                                                    </Button>
+                                                                    <span className="w-4 text-center font-bold text-primary text-sm">
+                                                                        {formData.rooms[room.key]}
+                                                                    </span>
+                                                                    <Button
+                                                                        type="button"
+                                                                        variant="ghost"
+                                                                        size="icon"
+                                                                        className="h-6 w-6 rounded-full bg-slate-200 text-primary hover:bg-slate-300"
+                                                                        onClick={() => updateRoomCount(room.key, true)}
+                                                                    >
+                                                                        +
+                                                                    </Button>
+                                                                </div>
+                                                            )}
+                                                        </div>
+                                                    </div>
+                                                ))}
                                             </div>
                                         </div>
+                                    )}
+
+                                    <div>
+                                        {SHOW_ROOMS_SECTION && (
+                                            <div className="bg-[#f8fafc] border border-slate-200 rounded-xl p-6 flex flex-col items-center justify-center space-y-2 mb-8 shadow-inner">
+                                                <div className="text-red-500 text-xs text-center space-y-1">
+                                                    <p className="font-bold">
+                                                        La durée minimale est de 4 heures. Veuillez définir la durée adaptée à votre logement.
+                                                    </p>
+                                                    <p className="italic">
+                                                        *NB : Cette durée pourra être confirmée ou ajustée après constat sur place par la femme de ménage.*
+                                                    </p>
+                                                </div>
+                                                <div className="bg-primary/40 text-white text-3xl font-bold px-10 py-3 rounded-full shadow-lg">
+                                                    {formData.recommendedDuration}H : 00
+                                                </div>
+                                            </div>
+                                        )}
 
                                         <h3 className="text-xl font-bold bg-primary text-white p-3 rounded-lg text-center mb-2">
                                             Précisez le temps qui vous convient le mieux.
