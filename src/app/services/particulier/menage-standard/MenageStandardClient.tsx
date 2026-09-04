@@ -639,11 +639,11 @@ Il comprend le :
                                         {SHOW_ROOMS_SECTION && (
                                             <div className="bg-[#f8fafc] border border-slate-200 rounded-xl p-6 flex flex-col items-center justify-center space-y-2 mb-8 shadow-inner">
                                                 <div className="text-red-500 text-xs text-center space-y-1">
-                                                    <p className="font-bold">
+                                                    <p>
                                                         La durée minimale est de 4 heures. Veuillez définir la durée adaptée à votre logement.
                                                     </p>
-                                                    <p className="italic">
-                                                        *NB : Cette durée pourra être confirmée ou ajustée après constat sur place par la femme de ménage.*
+                                                    <p className="font-bold">
+                                                        NB : Cette durée pourra être confirmée ou ajustée après constat sur place par la femme de ménage.
                                                     </p>
                                                 </div>
                                                 <div className="bg-primary/40 text-white text-3xl font-bold px-10 py-3 rounded-full shadow-lg">
@@ -655,9 +655,14 @@ Il comprend le :
                                         <h3 className="text-xl font-bold bg-primary text-white p-3 rounded-lg text-center mb-2">
                                             Précisez le temps qui vous convient le mieux.
                                         </h3>
-                                        <p className="text-red-500 text-[10px] text-center mb-4">
-                                            La durée minimale pour votre ménage est de 4 h
-                                        </p>
+                                        <div className="text-red-500 text-xs text-center space-y-1 mb-4">
+                                            <p>
+                                                La durée minimale est de 4 heures. Veuillez définir la durée adaptée à votre logement.
+                                            </p>
+                                            <p className="font-bold">
+                                                NB : Cette durée pourra être confirmée ou ajustée après constat sur place par la femme de ménage.
+                                            </p>
+                                        </div>
                                         <div className="flex items-center justify-center gap-8 p-4">
                                             <Button
                                                 type="button"

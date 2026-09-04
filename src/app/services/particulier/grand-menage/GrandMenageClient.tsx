@@ -587,9 +587,14 @@ Il comprend le :
                                         <h3 className="text-xl font-bold bg-primary text-white p-3 rounded-lg text-center mb-2 uppercase">
                                             Durée de prestation
                                         </h3>
-                                        <p className="text-red-500 text-xs text-center mb-4 font-bold">
-                                            La durée minimale pour votre ménage est de 5 h
-                                        </p>
+                                        <div className="text-red-500 text-xs text-center space-y-1 mb-4">
+                                            <p>
+                                                La durée minimale est de 5 heures. Veuillez définir la durée adaptée à votre logement.
+                                            </p>
+                                            <p className="font-bold">
+                                                NB : Cette durée pourra être confirmée ou ajustée après constat sur place par la femme de ménage.
+                                            </p>
+                                        </div>
                                         <div className="flex items-center justify-center gap-8 p-4 bg-white border rounded-xl">
                                             <Button
                                                 type="button"
