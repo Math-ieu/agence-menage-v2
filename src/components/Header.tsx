@@ -10,8 +10,10 @@ import { Menu, X, Phone } from "lucide-react";
 
 
 import { particulierServices, entrepriseServices } from "@/constants/services";
+import { useSiteConfig } from "@/context/SiteConfigContext";
 
 const Header = () => {
+  const { config } = useSiteConfig();
   const pathname = usePathname();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isPhoneDropdownOpen, setIsPhoneDropdownOpen] = useState(false);
@@ -116,46 +118,50 @@ const Header = () => {
                     : "bg-background border-slate-100 text-foreground"}
                 `}>
                   <div className="flex flex-col gap-1">
-                    <a
-                      href="tel:+212664226790"
-                      className={`flex items-center gap-2.5 p-2.5 rounded-lg text-xs font-bold transition-colors ${
-                        isEntreprise ? "hover:bg-white/10" : "hover:bg-slate-50"
-                      }`}
-                      onClick={() => {
-                        setIsPhoneDropdownOpen(false);
-                        if (typeof window !== 'undefined') {
-                          (window as any).dataLayer = (window as any).dataLayer || [];
-                          (window as any).dataLayer.push({
-                            event: 'phone_click',
-                            phone_location: 'header_mobile_dropdown',
-                            phone_number: '0664226790'
-                          });
-                        }
-                      }}
-                    >
-                      <Phone className="w-3.5 h-3.5" />
-                      <span>06 64 22 67 90</span>
-                    </a>
-                    <a
-                      href="tel:+212664331463"
-                      className={`flex items-center gap-2.5 p-2.5 rounded-lg text-xs font-bold transition-colors ${
-                        isEntreprise ? "hover:bg-white/10" : "hover:bg-slate-50"
-                      }`}
-                      onClick={() => {
-                        setIsPhoneDropdownOpen(false);
-                        if (typeof window !== 'undefined') {
-                          (window as any).dataLayer = (window as any).dataLayer || [];
-                          (window as any).dataLayer.push({
-                            event: 'phone_click',
-                            phone_location: 'header_mobile_dropdown',
-                            phone_number: '0664331463'
-                          });
-                        }
-                      }}
-                    >
-                      <Phone className="w-3.5 h-3.5" />
-                      <span>06 64 33 14 63</span>
-                    </a>
+                    {config.phone_mobile_1 && (
+                      <a
+                        href={`tel:${config.phone_mobile_1_intl || config.phone_mobile_1}`}
+                        className={`flex items-center gap-2.5 p-2.5 rounded-lg text-xs font-bold transition-colors ${
+                          isEntreprise ? "hover:bg-white/10" : "hover:bg-slate-50"
+                        }`}
+                        onClick={() => {
+                          setIsPhoneDropdownOpen(false);
+                          if (typeof window !== 'undefined') {
+                            (window as any).dataLayer = (window as any).dataLayer || [];
+                            (window as any).dataLayer.push({
+                              event: 'phone_click',
+                              phone_location: 'header_mobile_dropdown',
+                              phone_number: config.phone_mobile_1
+                            });
+                          }
+                        }}
+                      >
+                        <Phone className="w-3.5 h-3.5" />
+                        <span>{config.phone_mobile_1}</span>
+                      </a>
+                    )}
+                    {config.phone_mobile_2 && (
+                      <a
+                        href={`tel:${config.phone_mobile_2_intl || config.phone_mobile_2}`}
+                        className={`flex items-center gap-2.5 p-2.5 rounded-lg text-xs font-bold transition-colors ${
+                          isEntreprise ? "hover:bg-white/10" : "hover:bg-slate-50"
+                        }`}
+                        onClick={() => {
+                          setIsPhoneDropdownOpen(false);
+                          if (typeof window !== 'undefined') {
+                            (window as any).dataLayer = (window as any).dataLayer || [];
+                            (window as any).dataLayer.push({
+                              event: 'phone_click',
+                              phone_location: 'header_mobile_dropdown',
+                              phone_number: config.phone_mobile_2
+                            });
+                          }
+                        }}
+                      >
+                        <Phone className="w-3.5 h-3.5" />
+                        <span>{config.phone_mobile_2}</span>
+                      </a>
+                    )}
                   </div>
                 </div>
               </>
@@ -163,66 +169,70 @@ const Header = () => {
           </div>
 
           {/* Contact Info (Desktop & Tablet >= sm next to hamburger) */}
-          <div className={`
-            hidden sm:flex items-center gap-2 px-3 md:px-4 py-1.5 md:py-2 rounded-xl border-2 transition-all duration-300 whitespace-nowrap group
-            ${isEntreprise
-              ? "border-white/30 text-white hover:bg-white/5"
-              : "border-primary/30 text-primary hover:bg-primary/5 hover:border-primary hover:shadow-sm"}
-          `}>
-            <a
-              href="tel:+212664226790"
-              id="am_phone_header"
-              className="am-phone-header flex items-center"
-              onClick={() => {
-                if (typeof window !== 'undefined') {
-                  (window as any).dataLayer = (window as any).dataLayer || [];
-                  (window as any).dataLayer.push({
-                    event: 'phone_click',
-                    phone_location: 'header',
-                    phone_number: '0664226790'
-                  });
-                }
-              }}
-            >
-              <div className="w-0 group-hover:w-6 group-active:w-6 transition-all duration-300 overflow-hidden flex items-center shrink-0">
-                <Phone className={`w-4 h-4 mr-2 ${isEntreprise ? "text-white" : "text-primary"}`} />
-              </div>
-              <span className={`text-xs sm:text-sm md:text-base xl:text-[15px] 2xl:text-lg font-black tracking-tighter transition-all duration-300 ${isEntreprise ? "text-white" : "text-primary"}`}>
-                06 64 22 67 90
-              </span>
-            </a>
-          </div>
+          {config.phone_mobile_1 && (
+            <div className={`
+              hidden sm:flex items-center gap-2 px-3 md:px-4 py-1.5 md:py-2 rounded-xl border-2 transition-all duration-300 whitespace-nowrap group
+              ${isEntreprise
+                ? "border-white/30 text-white hover:bg-white/5"
+                : "border-primary/30 text-primary hover:bg-primary/5 hover:border-primary hover:shadow-sm"}
+            `}>
+              <a
+                href={`tel:${config.phone_mobile_1_intl || config.phone_mobile_1}`}
+                id="am_phone_header"
+                className="am-phone-header flex items-center"
+                onClick={() => {
+                  if (typeof window !== 'undefined') {
+                    (window as any).dataLayer = (window as any).dataLayer || [];
+                    (window as any).dataLayer.push({
+                      event: 'phone_click',
+                      phone_location: 'header',
+                      phone_number: config.phone_mobile_1
+                    });
+                  }
+                }}
+              >
+                <div className="w-0 group-hover:w-6 group-active:w-6 transition-all duration-300 overflow-hidden flex items-center shrink-0">
+                  <Phone className={`w-4 h-4 mr-2 ${isEntreprise ? "text-white" : "text-primary"}`} />
+                </div>
+                <span className={`text-xs sm:text-sm md:text-base xl:text-[15px] 2xl:text-lg font-black tracking-tighter transition-all duration-300 ${isEntreprise ? "text-white" : "text-primary"}`}>
+                  {config.phone_mobile_1}
+                </span>
+              </a>
+            </div>
+          )}
 
           {/* Contact Info 2 */}
-          <div className={`
-            hidden sm:flex xl:hidden 2xl:flex items-center gap-2 px-3 md:px-4 py-1.5 md:py-2 rounded-xl border-2 transition-all duration-300 whitespace-nowrap group
-            ${isEntreprise
-              ? "border-white/30 text-white hover:bg-white/5"
-              : "border-primary/30 text-primary hover:bg-primary/5 hover:border-primary hover:shadow-sm"}
-          `}>
-            <a
-              href="tel:+212664331463"
-              id="am_phone_header_2"
-              className="am-phone-header flex items-center"
-              onClick={() => {
-                if (typeof window !== 'undefined') {
-                  (window as any).dataLayer = (window as any).dataLayer || [];
-                  (window as any).dataLayer.push({
-                    event: 'phone_click',
-                    phone_location: 'header',
-                    phone_number: '0664331463'
-                  });
-                }
-              }}
-            >
-              <div className="w-0 group-hover:w-6 group-active:w-6 transition-all duration-300 overflow-hidden flex items-center shrink-0">
-                <Phone className={`w-4 h-4 mr-2 ${isEntreprise ? "text-white" : "text-primary"}`} />
-              </div>
-              <span className={`text-xs sm:text-sm md:text-base xl:text-[15px] 2xl:text-lg font-black tracking-tighter transition-all duration-300 ${isEntreprise ? "text-white" : "text-primary"}`}>
-                06 64 33 14 63
-              </span>
-            </a>
-          </div>
+          {config.phone_mobile_2 && (
+            <div className={`
+              hidden sm:flex xl:hidden 2xl:flex items-center gap-2 px-3 md:px-4 py-1.5 md:py-2 rounded-xl border-2 transition-all duration-300 whitespace-nowrap group
+              ${isEntreprise
+                ? "border-white/30 text-white hover:bg-white/5"
+                : "border-primary/30 text-primary hover:bg-primary/5 hover:border-primary hover:shadow-sm"}
+            `}>
+              <a
+                href={`tel:${config.phone_mobile_2_intl || config.phone_mobile_2}`}
+                id="am_phone_header_2"
+                className="am-phone-header flex items-center"
+                onClick={() => {
+                  if (typeof window !== 'undefined') {
+                    (window as any).dataLayer = (window as any).dataLayer || [];
+                    (window as any).dataLayer.push({
+                      event: 'phone_click',
+                      phone_location: 'header',
+                      phone_number: config.phone_mobile_2
+                    });
+                  }
+                }}
+              >
+                <div className="w-0 group-hover:w-6 group-active:w-6 transition-all duration-300 overflow-hidden flex items-center shrink-0">
+                  <Phone className={`w-4 h-4 mr-2 ${isEntreprise ? "text-white" : "text-primary"}`} />
+                </div>
+                <span className={`text-xs sm:text-sm md:text-base xl:text-[15px] 2xl:text-lg font-black tracking-tighter transition-all duration-300 ${isEntreprise ? "text-white" : "text-primary"}`}>
+                  {config.phone_mobile_2}
+                </span>
+              </a>
+            </div>
+          )}
 
           {/* Mobile Menu Button - Visible on non-desktop */}
           <button
@@ -275,51 +285,54 @@ const Header = () => {
                 Service Client
               </div>
               <div className="grid grid-cols-1 gap-2">
-
-                <a
-                  href="tel:+212664226790"
-                  className={`flex items-center gap-3 p-3 rounded-xl border transition-colors font-bold text-sm ${
-                    isEntreprise
-                      ? "border-white/10 text-white hover:bg-white/5 bg-white/5"
-                      : "border-slate-100 text-foreground hover:bg-slate-50 bg-slate-50/50"
-                  }`}
-                  onClick={() => {
-                    setIsMobileMenuOpen(false);
-                    if (typeof window !== 'undefined') {
-                      (window as any).dataLayer = (window as any).dataLayer || [];
-                      (window as any).dataLayer.push({
-                        event: 'phone_click',
-                        phone_location: 'mobile_menu',
-                        phone_number: '0664226790'
-                      });
-                    }
-                  }}
-                >
-                  <Phone className={`w-4 h-4 shrink-0 ${isEntreprise ? "text-white" : "text-primary"}`} />
-                  <span>06 64 22 67 90</span>
-                </a>
-                <a
-                  href="tel:+212664331463"
-                  className={`flex items-center gap-3 p-3 rounded-xl border transition-colors font-bold text-sm ${
-                    isEntreprise
-                      ? "border-white/10 text-white hover:bg-white/5 bg-white/5"
-                      : "border-slate-100 text-foreground hover:bg-slate-50 bg-slate-50/50"
-                  }`}
-                  onClick={() => {
-                    setIsMobileMenuOpen(false);
-                    if (typeof window !== 'undefined') {
-                      (window as any).dataLayer = (window as any).dataLayer || [];
-                      (window as any).dataLayer.push({
-                        event: 'phone_click',
-                        phone_location: 'mobile_menu',
-                        phone_number: '0664331463'
-                      });
-                    }
-                  }}
-                >
-                  <Phone className={`w-4 h-4 shrink-0 ${isEntreprise ? "text-white" : "text-primary"}`} />
-                  <span>06 64 33 14 63</span>
-                </a>
+                {config.phone_mobile_1 && (
+                  <a
+                    href={`tel:${config.phone_mobile_1_intl || config.phone_mobile_1}`}
+                    className={`flex items-center gap-3 p-3 rounded-xl border transition-colors font-bold text-sm ${
+                      isEntreprise
+                        ? "border-white/10 text-white hover:bg-white/5 bg-white/5"
+                        : "border-slate-100 text-foreground hover:bg-slate-50 bg-slate-50/50"
+                    }`}
+                    onClick={() => {
+                      setIsMobileMenuOpen(false);
+                      if (typeof window !== 'undefined') {
+                        (window as any).dataLayer = (window as any).dataLayer || [];
+                        (window as any).dataLayer.push({
+                          event: 'phone_click',
+                          phone_location: 'mobile_menu',
+                          phone_number: config.phone_mobile_1
+                        });
+                      }
+                    }}
+                  >
+                    <Phone className={`w-4 h-4 shrink-0 ${isEntreprise ? "text-white" : "text-primary"}`} />
+                    <span>{config.phone_mobile_1}</span>
+                  </a>
+                )}
+                {config.phone_mobile_2 && (
+                  <a
+                    href={`tel:${config.phone_mobile_2_intl || config.phone_mobile_2}`}
+                    className={`flex items-center gap-3 p-3 rounded-xl border transition-colors font-bold text-sm ${
+                      isEntreprise
+                        ? "border-white/10 text-white hover:bg-white/5 bg-white/5"
+                        : "border-slate-100 text-foreground hover:bg-slate-50 bg-slate-50/50"
+                    }`}
+                    onClick={() => {
+                      setIsMobileMenuOpen(false);
+                      if (typeof window !== 'undefined') {
+                        (window as any).dataLayer = (window as any).dataLayer || [];
+                        (window as any).dataLayer.push({
+                          event: 'phone_click',
+                          phone_location: 'mobile_menu',
+                          phone_number: config.phone_mobile_2
+                        });
+                      }
+                    }}
+                  >
+                    <Phone className={`w-4 h-4 shrink-0 ${isEntreprise ? "text-white" : "text-primary"}`} />
+                    <span>{config.phone_mobile_2}</span>
+                  </a>
+                )}
               </div>
             </div>
           </nav>

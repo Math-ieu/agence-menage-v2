@@ -1,5 +1,6 @@
 import { Metadata } from "next";
 import HomeClient from "./HomeClient";
+import { getSiteConfigServer } from "@/lib/site-config";
 
 export const metadata: Metadata = {
     title: "Agence Ménage Casablanca & Rabat | Femme de Ménage & Nettoyage",
@@ -27,7 +28,9 @@ export const metadata: Metadata = {
     },
 };
 
-export default function Home() {
+export default async function Home() {
+    const config = await getSiteConfigServer();
+
     const jsonLd = {
         "@context": "https://schema.org",
         "@type": "LocalBusiness",
@@ -35,11 +38,11 @@ export default function Home() {
         "name": "Agence Ménage",
         "description": "Agence de ménage professionnelle au Maroc offrant des services de femmes de ménage qualifiées pour particuliers et entreprises.",
         "url": "https://www.agencemenage.ma",
-        "telephone": "+212664226790",
-        "email": "contact@agencemenage.ma",
+        "telephone": config.phone_mobile_1_intl || config.phone_mobile_1 || "+212664226790",
+        "email": config.email_contact || "contact@agencemenage.ma",
         "address": {
             "@type": "PostalAddress",
-            "streetAddress": "36 Boulevard d'Anfa",
+            "streetAddress": config.bureau_casa_address || "36 Boulevard d'Anfa",
             "addressLocality": "Casablanca",
             "addressRegion": "Grand Casablanca",
             "addressCountry": "MA"
@@ -78,9 +81,10 @@ export default function Home() {
             }
         ],
         "sameAs": [
-            "https://www.facebook.com/profile.php?id=61586972460164",
-            "https://www.instagram.com/agencemenage/"
-        ],
+            config.facebook_url,
+            config.instagram_url,
+            config.tiktok_url
+        ].filter(Boolean),
         "founder": [
             {
                 "@type": "Person",

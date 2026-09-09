@@ -5,6 +5,8 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { Analytics } from "@vercel/analytics/react";
 import dynamic from "next/dynamic";
+import { getSiteConfigServer } from "@/lib/site-config";
+import { SiteConfigProvider } from "@/context/SiteConfigContext";
 
 const WhatsAppSidebar = dynamic(() => import("@/components/WhatsAppSidebar"));
 const ScrollToTop = dynamic(() => import("@/components/ScrollToTop"));
@@ -57,11 +59,13 @@ export const metadata: Metadata = {
     manifest: "/site.webmanifest",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
     children,
 }: Readonly<{
     children: React.ReactNode;
 }>) {
+    const siteConfig = await getSiteConfigServer();
+
     return (
         <html lang="fr-MA" suppressHydrationWarning>
             <head>
@@ -71,17 +75,19 @@ export default function RootLayout({
                 <link href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
             </head>
             <body className="antialiased min-h-screen flex flex-col overflow-x-hidden" suppressHydrationWarning>
-                <TrackingScripts />
-                <TooltipProvider>
-                    <ScrollToTop />
-                    <WhatsAppSidebar />
-                    <div className="flex-1 w-full relative">
-                        {children}
-                    </div>
-                    <Toaster />
-                    <Sonner />
-                    <Analytics />
-                </TooltipProvider>
+                <SiteConfigProvider initialConfig={siteConfig}>
+                    <TrackingScripts />
+                    <TooltipProvider>
+                        <ScrollToTop />
+                        <WhatsAppSidebar />
+                        <div className="flex-1 w-full relative">
+                            {children}
+                        </div>
+                        <Toaster />
+                        <Sonner />
+                        <Analytics />
+                    </TooltipProvider>
+                </SiteConfigProvider>
             </body>
         </html>
     );

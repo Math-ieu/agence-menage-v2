@@ -11,9 +11,11 @@ import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
 import { Checkbox } from "@/components/ui/checkbox";
 import { sendContactEmail } from "@/app/actions";
+import { useSiteConfig } from "@/context/SiteConfigContext";
 
 export default function ContactClient() {
     const router = useRouter();
+    const { config } = useSiteConfig();
     const [wasValidated, setWasValidated] = useState(false);
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [useWhatsappForPhone, setUseWhatsappForPhone] = useState(true);
@@ -220,107 +222,129 @@ export default function ContactClient() {
                                     <h3 className="text-2xl font-bold text-slate-800 mb-6 text-center xl:text-left">Nos Coordonnées</h3>
 
                                     <div className="space-y-6">
-                                        <div className="flex flex-col sm:flex-row items-center sm:items-start gap-4 text-center sm:text-left">
-                                            <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
-                                                <svg className="w-5 h-5 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                                                </svg>
-                                            </div>
-                                            <div>
-                                                <h4 className="font-bold text-slate-800">Nos Adresses</h4>
-                                                <div className="text-slate-600 mt-2 space-y-3">
-                                                    <p className="leading-relaxed text-sm sm:text-base">
-                                                        <span className="font-extrabold text-slate-800 block text-sm">Bureau Casablanca</span>
-                                                        36 boulevard d’anfa, résidence Anafe A, etage 7
-                                                    </p>
-                                                    <p className="leading-relaxed text-sm sm:text-base">
-                                                        <span className="font-extrabold text-slate-800 block text-sm">Bureau Rabat</span>
-                                                        Avenue Hassan II, centre commercial Reda, porte G, appt. 49
-                                                    </p>
+                                        {(config.bureau_casa_address || config.bureau_rabat_address) && (
+                                            <div className="flex flex-col sm:flex-row items-center sm:items-start gap-4 text-center sm:text-left">
+                                                <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
+                                                    <svg className="w-5 h-5 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                                                    </svg>
+                                                </div>
+                                                <div>
+                                                    <h4 className="font-bold text-slate-800">Nos Adresses</h4>
+                                                    <div className="text-slate-600 mt-2 space-y-3">
+                                                        {config.bureau_casa_address && (
+                                                            <p className="leading-relaxed text-sm sm:text-base">
+                                                                <span className="font-extrabold text-slate-800 block text-sm">{config.bureau_casa_label || "Bureau Casablanca"}</span>
+                                                                {config.bureau_casa_address}
+                                                            </p>
+                                                        )}
+                                                        {config.bureau_rabat_address && (
+                                                            <p className="leading-relaxed text-sm sm:text-base">
+                                                                <span className="font-extrabold text-slate-800 block text-sm">{config.bureau_rabat_label || "Bureau Rabat"}</span>
+                                                                {config.bureau_rabat_address}
+                                                            </p>
+                                                        )}
+                                                    </div>
                                                 </div>
                                             </div>
-                                        </div>
+                                        )}
 
-                                        <div className="flex flex-col sm:flex-row items-center sm:items-start gap-4 text-center sm:text-left">
-                                            <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
-                                                <svg className="w-5 h-5 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
-                                                </svg>
-                                            </div>
-                                            <div>
-                                                <h4 className="font-bold text-slate-800">Service Client</h4>
-                                                <div className="flex flex-col gap-1 mt-1">
-                                                    <a href="tel:+212664226790" className="text-slate-600 hover:text-primary transition-colors">06 64 22 67 90</a>
-                                                    <a href="tel:+212664331463" className="text-slate-600 hover:text-primary transition-colors">06 64 33 14 63</a>
+                                        {(config.phone_mobile_1 || config.phone_mobile_2) && (
+                                            <div className="flex flex-col sm:flex-row items-center sm:items-start gap-4 text-center sm:text-left">
+                                                <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
+                                                    <svg className="w-5 h-5 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+                                                    </svg>
+                                                </div>
+                                                <div>
+                                                    <h4 className="font-bold text-slate-800">Service Client</h4>
+                                                    <div className="flex flex-col gap-1 mt-1">
+                                                        {config.phone_mobile_1 && (
+                                                            <a href={`tel:${config.phone_mobile_1_intl || config.phone_mobile_1}`} className="text-slate-600 hover:text-primary transition-colors">
+                                                                {config.phone_mobile_1}
+                                                            </a>
+                                                        )}
+                                                        {config.phone_mobile_2 && (
+                                                            <a href={`tel:${config.phone_mobile_2_intl || config.phone_mobile_2}`} className="text-slate-600 hover:text-primary transition-colors">
+                                                                {config.phone_mobile_2}
+                                                            </a>
+                                                        )}
+                                                    </div>
                                                 </div>
                                             </div>
-                                        </div>
+                                        )}
 
-                                        <div className="flex flex-col sm:flex-row items-center sm:items-start gap-4 text-center sm:text-left">
-                                            <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
-                                                <svg className="w-5 h-5 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                                                </svg>
+                                        {config.email_contact && (
+                                            <div className="flex flex-col sm:flex-row items-center sm:items-start gap-4 text-center sm:text-left">
+                                                <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
+                                                    <svg className="w-5 h-5 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                                                    </svg>
+                                                </div>
+                                                <div>
+                                                    <h4 className="font-bold text-slate-800">Email</h4>
+                                                    <SafeEmailLink
+                                                        email={config.email_contact}
+                                                        className="text-slate-600 hover:text-primary transition-colors mt-1 block"
+                                                    >
+                                                        {config.email_contact}
+                                                    </SafeEmailLink>
+                                                </div>
                                             </div>
-                                            <div>
-                                                <h4 className="font-bold text-slate-800">Email</h4>
-                                                <SafeEmailLink
-                                                    email="contact@agencemenage.ma"
-                                                    className="text-slate-600 hover:text-primary transition-colors mt-1 block"
-                                                >
-                                                    contact@agencemenage.ma
-                                                </SafeEmailLink>
-                                            </div>
-                                        </div>
+                                        )}
                                     </div>
                                 </div>
 
                                 {/* Map */}
-                                <div className="flex-1 flex flex-col space-y-3">
-                                    {/* Map tabs */}
-                                    <div className="flex gap-2 bg-slate-100 p-1 rounded-xl">
-                                        <button
-                                            type="button"
-                                            onClick={() => setActiveMap("casablanca")}
-                                            className={`flex-1 py-2 text-sm font-bold rounded-lg transition-all ${
-                                                activeMap === "casablanca"
-                                                    ? "bg-white text-primary shadow-sm"
-                                                    : "text-slate-600 hover:text-slate-900"
-                                            }`}
-                                        >
-                                            Bureau de Casablanca
-                                        </button>
-                                        <button
-                                            type="button"
-                                            onClick={() => setActiveMap("rabat")}
-                                            className={`flex-1 py-2 text-sm font-bold rounded-lg transition-all ${
-                                                activeMap === "rabat"
-                                                    ? "bg-white text-primary shadow-sm"
-                                                    : "text-slate-600 hover:text-slate-900"
-                                            }`}
-                                        >
-                                            Bureau de Rabat
-                                        </button>
-                                    </div>
+                                {(config.bureau_casa_maps_url || config.bureau_rabat_maps_url) && (
+                                    <div className="flex-1 flex flex-col space-y-3">
+                                        {/* Map tabs */}
+                                        {config.bureau_casa_maps_url && config.bureau_rabat_maps_url && (
+                                            <div className="flex gap-2 bg-slate-100 p-1 rounded-xl">
+                                                <button
+                                                    type="button"
+                                                    onClick={() => setActiveMap("casablanca")}
+                                                    className={`flex-1 py-2 text-sm font-bold rounded-lg transition-all ${
+                                                        activeMap === "casablanca"
+                                                            ? "bg-white text-primary shadow-sm"
+                                                            : "text-slate-600 hover:text-slate-900"
+                                                    }`}
+                                                >
+                                                    {config.bureau_casa_label || "Bureau de Casablanca"}
+                                                </button>
+                                                <button
+                                                    type="button"
+                                                    onClick={() => setActiveMap("rabat")}
+                                                    className={`flex-1 py-2 text-sm font-bold rounded-lg transition-all ${
+                                                        activeMap === "rabat"
+                                                            ? "bg-white text-primary shadow-sm"
+                                                            : "text-slate-600 hover:text-slate-900"
+                                                    }`}
+                                                >
+                                                    {config.bureau_rabat_label || "Bureau de Rabat"}
+                                                </button>
+                                            </div>
+                                        )}
 
-                                    <div className="bg-white p-2 rounded-2xl shadow-sm border border-slate-100 flex-1 min-h-[400px] overflow-hidden">
-                                        <iframe
-                                            src={
-                                                activeMap === "casablanca"
-                                                    ? "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3323.4846067727145!2d-7.6324838!3d33.5932599!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMzPCsDM1JzM1LjciTiA3wrAzNyc1Ni45Ilc!5e0!3m2!1sfr!2sma!4v1635848529285!5m2!1sfr!2sma"
-                                                    : "https://maps.google.com/maps?q=34.020882,-6.836218(Agence%20M%C3%A9nage%20Rabat)&z=15&output=embed"
-                                            }
-                                            width="100%"
-                                            height="100%"
-                                            style={{ border: 0 }}
-                                            allowFullScreen
-                                            loading="lazy"
-                                            className="rounded-xl w-full h-full"
-                                            title={`Localisation Agence ${activeMap === "casablanca" ? "Casablanca" : "Rabat"}`}
-                                        ></iframe>
+                                        <div className="bg-white p-2 rounded-2xl shadow-sm border border-slate-100 flex-1 min-h-[400px] overflow-hidden">
+                                            <iframe
+                                                src={
+                                                    activeMap === "casablanca"
+                                                        ? (config.bureau_casa_maps_url || config.bureau_rabat_maps_url)
+                                                        : (config.bureau_rabat_maps_url || config.bureau_casa_maps_url)
+                                                }
+                                                width="100%"
+                                                height="100%"
+                                                style={{ border: 0 }}
+                                                allowFullScreen
+                                                loading="lazy"
+                                                className="rounded-xl w-full h-full"
+                                                title={`Localisation Agence ${activeMap === "casablanca" ? (config.bureau_casa_label || "Casablanca") : (config.bureau_rabat_label || "Rabat")}`}
+                                            ></iframe>
+                                        </div>
                                     </div>
-                                </div>
+                                )}
                             </div>
                         </div>
                     </div>

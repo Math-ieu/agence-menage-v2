@@ -1,9 +1,13 @@
+"use client";
+
 import { Users, Phone, Monitor, ShieldCheck, MapPin, Settings2 } from "lucide-react";
 import Link from "next/link";
 import { Button } from "./ui/button";
 import SafeEmailLink from "./SafeEmailLink";
+import { useSiteConfig } from "@/context/SiteConfigContext";
 
 const WhyChooseUs = ({ isEntreprise = false }: { isEntreprise?: boolean }) => {
+  const { config } = useSiteConfig();
   const particuliersFeatures = [
     {
       icon: ShieldCheck,
@@ -72,15 +76,17 @@ const WhyChooseUs = ({ isEntreprise = false }: { isEntreprise?: boolean }) => {
                   </Button>
                 </Link>
               </div>
-              <p className="mt-4 text-sm text-muted-foreground">
-                Ou écrivez-nous à{" "}
-                <SafeEmailLink
-                  email="contact@agencemenage.ma"
-                  className="underline"
-                >
-                  contact@agencemenage.ma
-                </SafeEmailLink>
-              </p>
+              {config.email_contact && (
+                <p className="mt-4 text-sm text-muted-foreground">
+                  Ou écrivez-nous à{" "}
+                  <SafeEmailLink
+                    email={config.email_contact}
+                    className="underline"
+                  >
+                    {config.email_contact}
+                  </SafeEmailLink>
+                </p>
+              )}
             </>
           ) : (
             <>

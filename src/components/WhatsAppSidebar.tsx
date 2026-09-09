@@ -3,17 +3,21 @@ import { useState } from "react";
 import { usePathname } from "next/navigation";
 import { createWhatsAppLink, DESTINATION_PHONE_NUMBER } from "@/lib/whatsapp";
 import { cn } from "@/lib/utils";
+import { useSiteConfig } from "@/context/SiteConfigContext";
 
 const WhatsAppSidebar = () => {
     const [isHovered, setIsHovered] = useState(false);
     const pathname = usePathname();
+    const { config } = useSiteConfig();
 
-    // Hide sidebar on "Espace employé" page
-    if (pathname === "/espace-employe") {
+    // Hide sidebar on "Espace employé" page or if WhatsApp is not configured
+    if (pathname === "/espace-employe" || (!config.whatsapp_number && !config.phone_mobile_2)) {
         return null;
     }
 
-    const whatsappLink = createWhatsAppLink(DESTINATION_PHONE_NUMBER, "Bonjour, j'aimerais avoir plus d'informations sur vos services.");
+    const targetPhone = config.whatsapp_number || config.phone_mobile_2_intl || DESTINATION_PHONE_NUMBER;
+    const displayPhone = config.phone_mobile_2 || config.phone_mobile_1 || "06 64 33 14 63";
+    const whatsappLink = createWhatsAppLink(targetPhone, "Bonjour, j'aimerais avoir plus d'informations sur vos services.");
 
     return (
         <div className="fixed right-6 bottom-6 z-[100] flex justify-end">
@@ -68,7 +72,7 @@ const WhatsAppSidebar = () => {
                         Contactez-nous sur
                     </span>
                     <span className="font-bold text-lg tracking-tight leading-tight">
-                        06 64 33 14 63
+                        {displayPhone}
                     </span>
                 </div>
             </a>

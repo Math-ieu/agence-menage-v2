@@ -24,9 +24,11 @@ import {
     DialogDescription,
     DialogFooter,
 } from "@/components/ui/dialog";
+import { useSiteConfig } from "@/context/SiteConfigContext";
 
 export default function MenageAirbnbClient() {
     const router = useRouter();
+    const { config } = useSiteConfig();
 
     // Form states
     const [formBiensOption, setFormBiensOption] = useState<"1-2" | "3+">("3+");
@@ -591,9 +593,11 @@ Il comprend le :
                                                 "Être rappelé par un conseiller →"
                                             )}
                                         </Button>
-                                        <div className="text-center mt-4 text-slate-500 text-sm">
-                                            Ou contactez-nous directement sur WhatsApp au <b className="text-primary">06 64 22 67 90</b>
-                                        </div>
+                                        {(config.phone_mobile_1 || config.whatsapp_number) && (
+                                            <div className="text-center mt-4 text-slate-500 text-sm">
+                                                Ou contactez-nous directement sur WhatsApp au <b className="text-primary">{config.phone_mobile_1 || config.whatsapp_number}</b>
+                                            </div>
+                                        )}
                                     </div>
                                 </div>
                             </form>
