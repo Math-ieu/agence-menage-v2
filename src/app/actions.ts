@@ -324,6 +324,15 @@ export async function sendBookingEmailResend(serviceName: string, data: any, pri
       const rawDate = data.schedulingDate || data.date_debut || null;
       const cleanDate = rawDate && typeof rawDate === 'string' && rawDate.trim() !== '' ? rawDate.trim() : null;
 
+      const cleanerCount = data.numberOfPeople || data.nb_intervenants || data.nb_intervenantes || data.nb_personnel || 1;
+      const enrichedFormData = {
+        ...data,
+        numberOfPeople: cleanerCount,
+        nb_intervenants: cleanerCount,
+        nb_intervenantes: cleanerCount,
+        nb_personnel: cleanerCount,
+      };
+
       const apiPayload = {
         service: serviceName,
         segment: isEntreprise ? 'entreprise' as const : 'particulier' as const,
@@ -345,8 +354,9 @@ export async function sendBookingEmailResend(serviceName: string, data: any, pri
         is_devis: isDevis,
         prix: parsedPrix,
         frequency: isSubscription ? 'abonnement' as const : 'oneshot' as const,
+        nb_intervenants: cleanerCount,
         promo_code: data.promoCodeId || null,
-        formulaire_data: data
+        formulaire_data: enrichedFormData
       };
       
       await createDemande(apiPayload);
