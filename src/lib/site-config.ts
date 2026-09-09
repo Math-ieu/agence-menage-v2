@@ -52,21 +52,27 @@ export const DEFAULT_SITE_CONFIG: SiteConfig = {
 const API_URL = (process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000').replace(/\/$/, '');
 
 export async function getSiteConfigServer(): Promise<SiteConfig> {
-  try {
-    const res = await fetch(`${API_URL}/api/public/site-config/`, {
-      next: { revalidate: 60 },
-    });
-    if (!res.ok) {
-      console.warn(`[getSiteConfigServer] API returned status ${res.status}, using default config`);
-      return DEFAULT_SITE_CONFIG;
+  const endpoints = [
+    `${API_URL}/api/public/site-config/`,
+    `${API_URL}/api/site/public/config/`
+  ];
+
+  for (const url of endpoints) {
+    try {
+      const res = await fetch(url, {
+        cache: "no-store",
+      });
+      if (res.ok) {
+        const data = await res.json();
+        return {
+          ...DEFAULT_SITE_CONFIG,
+          ...data,
+        };
+      }
+    } catch {
+      // Continuer vers l'URL suivante si échec
     }
-    const data = await res.json();
-    return {
-      ...DEFAULT_SITE_CONFIG,
-      ...data,
-    };
-  } catch (error) {
-    console.warn("[getSiteConfigServer] Failed to fetch site config from API, using default config:", error);
-    return DEFAULT_SITE_CONFIG;
   }
+
+  return DEFAULT_SITE_CONFIG;
 }

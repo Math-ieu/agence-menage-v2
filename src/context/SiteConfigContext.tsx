@@ -25,28 +25,33 @@ export function SiteConfigProvider({
   const [config, setConfig] = useState<SiteConfig>(initialConfig || DEFAULT_SITE_CONFIG);
 
   const fetchFreshConfig = async () => {
-    try {
-      const res = await fetch(`${API_URL}/api/public/site-config/`, {
-        cache: "no-store",
-      });
-      if (res.ok) {
-        const data = await res.json();
-        setConfig((prev) => ({
-          ...prev,
-          ...data,
-        }));
+    const endpoints = [
+      `${API_URL}/api/public/site-config/`,
+      `${API_URL}/api/site/public/config/`
+    ];
+
+    for (const url of endpoints) {
+      try {
+        const res = await fetch(url, {
+          cache: "no-store",
+        });
+        if (res.ok) {
+          const data = await res.json();
+          setConfig((prev) => ({
+            ...prev,
+            ...data,
+          }));
+          return;
+        }
+      } catch {
+        // Continuer vers l'URL suivante si échec
       }
-    } catch {
-      // Ignorer silencieusement et conserver la configuration actuelle
     }
   };
 
   useEffect(() => {
-    // Si initialConfig n'a pas été fourni côté serveur, tenter une récupération côté client
-    if (!initialConfig) {
-      fetchFreshConfig();
-    }
-  }, [initialConfig]);
+    fetchFreshConfig();
+  }, []);
 
   return (
     <SiteConfigContext.Provider value={{ config, refreshConfig: fetchFreshConfig }}>
