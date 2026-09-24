@@ -22,7 +22,7 @@ import cleaningProduct from "@/assets/cleaning-product.webp";
 import cleaningClothsMop from "@/assets/cleaning-cloths-mop.webp";
 import { createWhatsAppLink, formatBookingMessage, DESTINATION_PHONE_NUMBER, getConfirmationMessage } from "@/lib/whatsapp";
 import { sendBookingEmail } from "@/lib/email";
-import { calculateSurchargeMultiplier } from "@/lib/pricing";
+import { calculateSurchargeMultiplier, getSurchargeDetails } from "@/lib/pricing";
 import "@/styles/sticky-summary.css";
 import { Checkbox } from "@/components/ui/checkbox";
 import {
@@ -104,13 +104,16 @@ export default function GrandMenageClient() {
     let discountAmount = 0;
     let totalServicePrice = 0;
 
-    const multiplier = calculateSurchargeMultiplier(
+    const surchargeInfo = getSurchargeDetails(
         formData.schedulingDate,
         formData.schedulingType,
         formData.fixedTime,
         formData.schedulingTime
     );
+    const multiplier = surchargeInfo.multiplier;
 
+    let baseServicePrice = 0;
+    let surchargeAmount = 0;
     let regularMonthlyTotal = 0;
 
     if (formData.frequency === "subscription") {
@@ -132,7 +135,9 @@ export default function GrandMenageClient() {
         const monthlyHours = formData.duration * visitsPerWeek * 4;
         const subtotalMonthly = monthlyHours * baseRate * formData.numberOfPeople;
         discountAmount = subtotalMonthly * discountRate;
-        regularMonthlyTotal = (subtotalMonthly - discountAmount) * multiplier;
+        baseServicePrice = subtotalMonthly - discountAmount;
+        surchargeAmount = baseServicePrice * (multiplier - 1);
+        regularMonthlyTotal = baseServicePrice * multiplier;
         if (formData.additionalServices.produitsEtOutils) regularMonthlyTotal += 90 * visitsPerWeek * 4;
         if (SURCHARGE_CITIES.includes(formData.city)) regularMonthlyTotal += 50 * visitsPerWeek * 4;
         if (formData.additionalServices.torchonsEtSerpierres) regularMonthlyTotal += 40 * visitsPerWeek * 4;
@@ -143,7 +148,9 @@ export default function GrandMenageClient() {
             totalServicePrice = regularMonthlyTotal;
         }
     } else {
-        totalServicePrice = formData.duration * baseRate * formData.numberOfPeople * multiplier;
+        baseServicePrice = formData.duration * baseRate * formData.numberOfPeople;
+        surchargeAmount = baseServicePrice * (multiplier - 1);
+        totalServicePrice = baseServicePrice * multiplier;
     }
 
     const calculateTotal = () => {
@@ -238,7 +245,11 @@ export default function GrandMenageClient() {
                 tarif_mensuel_standard: isSub ? calculateRegularTotal() : null,
                 nb_passages_mois_1: isSub ? (prorataInfo?.passagesRestants || 0) : 0,
                 nb_passages_theoriques: isSub ? (prorataInfo?.passagesTheoriques || 0) : 0,
-                schedulingDate: dateEffective
+                schedulingDate: dateEffective,
+                surchargeLabel: surchargeInfo.label,
+                surchargePercent: surchargeInfo.surchargePercent,
+                surchargeAmount: Math.round(surchargeAmount),
+                baseServicePrice: Math.round(baseServicePrice)
             };
 
             setCustomerName(`${firstName} ${lastName}`);
@@ -420,6 +431,12 @@ Il comprend le :
                                                     <div className="flex justify-between gap-4 text-xs">
                                                         <span className="text-muted-foreground">Torchons:</span>
                                                         <span className="font-medium text-right text-slate-700">+40 MAD</span>
+                                                    </div>
+                                                )}
+                                                {surchargeInfo.multiplier > 1 && surchargeAmount > 0 && (
+                                                    <div className="flex justify-between gap-4 text-amber-800 font-bold bg-amber-50 p-2 rounded text-xs border border-amber-200">
+                                                        <span>{surchargeInfo.label}:</span>
+                                                        <span>+{Math.round(surchargeAmount)} MAD</span>
                                                     </div>
                                                 )}
                                                 <div className="flex justify-between gap-4 border-t border-primary/10 pt-2">
@@ -721,6 +738,22 @@ Il comprend le :
                                                     />
                                                 </div>
                                             </div>
+                                            {surchargeInfo.isEvening && (
+                                                <div className="mt-3 p-3 bg-amber-50 border border-amber-200 rounded-lg text-xs text-amber-900 flex items-start gap-2 text-left">
+                                                    <span className="text-base leading-none">🌙</span>
+                                                    <div>
+                                                        <strong className="font-bold">Majoration soirée (+50%) :</strong> applicable pour toute intervention à partir de 18h00 (+{Math.round(surchargeAmount)} MAD).
+                                                    </div>
+                                                </div>
+                                            )}
+                                            {surchargeInfo.isSunday && !surchargeInfo.isEvening && (
+                                                <div className="mt-3 p-3 bg-blue-50 border border-blue-200 rounded-lg text-xs text-blue-900 flex items-start gap-2 text-left">
+                                                    <span className="text-base leading-none">☀️</span>
+                                                    <div>
+                                                        <strong className="font-bold">Majoration dimanche (+25%) :</strong> applicable pour toute intervention le dimanche (+{Math.round(surchargeAmount)} MAD).
+                                                    </div>
+                                                </div>
+                                            )}
                                         </div>
                                     )}
 

@@ -2,6 +2,7 @@
 
 import { Resend } from 'resend';
 import { AGENCY_NOTIFICATION_NUMBERS } from '@/lib/whatsapp';
+import { getSurchargeDetails } from '@/lib/pricing';
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
@@ -218,6 +219,23 @@ export async function sendBookingEmailResend(serviceName: string, data: any, pri
     }
 
     const scheduling_time = data.schedulingType === 'fixed' || (!data.schedulingType && data.fixedTime) ? data.fixedTime : (data.schedulingTime === 'morning' ? 'Le matin' : data.schedulingTime === 'afternoon' ? "L'après midi" : data.schedulingTime);
+
+    // Surcharge determination
+    const surchargeInfo = getSurchargeDetails(
+      data.schedulingDate,
+      data.schedulingType,
+      data.fixedTime,
+      data.schedulingTime
+    );
+    const surchargeLabel = data.surchargeLabel || surchargeInfo.label;
+    let surchargeAmount = data.surchargeAmount;
+    let basePrice = data.baseServicePrice || data.basePrice;
+
+    if (surchargeInfo.multiplier > 1 && (!surchargeAmount || !basePrice) && typeof price === 'number') {
+      const estimatedBase = Math.round(price / surchargeInfo.multiplier);
+      basePrice = basePrice || estimatedBase;
+      surchargeAmount = surchargeAmount || (price - estimatedBase);
+    }
 
     // Dynamic fields
     const isGardeMalade = serviceName.toLowerCase().includes("garde malade");
@@ -505,6 +523,7 @@ export async function sendBookingEmailResend(serviceName: string, data: any, pri
           .join(", ");
       })()}</td></tr>` : ""}
       ${optionalServices.length > 0 ? `<tr><td style="padding: 5px 0;"><strong>Services optionnels:</strong></td><td>${optionalServices.join(", ")}</td></tr>` : ""}
+      ${surchargeLabel ? `<tr><td style="padding: 5px 0; color: #b45309;"><strong>Majoration horaire:</strong></td><td style="padding: 5px 0; color: #b45309; font-weight: bold;">${surchargeLabel}${surchargeAmount ? ` (+${surchargeAmount} MAD)` : ''}</td></tr>` : ""}
       ${formattedSurface ? `<tr><td style="padding: 5px 0;"><strong>Surface:</strong></td><td>${formattedSurface}</td></tr>` : ""}
       ${serviceName === "Ménage post-déménagement" ? `
         <tr><td style="padding: 5px 0;"><strong>État du logement:</strong></td><td>${data.accommodationState || "-"}</td></tr>
@@ -551,6 +570,14 @@ export async function sendBookingEmailResend(serviceName: string, data: any, pri
         </div>
       ` : ""}
     ` : `
+      ${surchargeLabel && surchargeAmount && basePrice ? `
+        <div style="font-size: 13px; color: #64748b; margin-bottom: 4px;">
+          Tarif base (${data.duration ? `${data.duration}h` : ''}${data.numberOfPeople ? ` × ${data.numberOfPeople} pers.` : ''}) : <strong style="color: #334155;">${basePrice} MAD</strong>
+        </div>
+        <div style="font-size: 13px; color: #b45309; margin-bottom: 6px;">
+          ${surchargeLabel} : <strong style="color: #b45309;">+${surchargeAmount} MAD</strong>
+        </div>
+      ` : ""}
       <h3 style="margin: 0;">${typeof price === "string" && price.toLowerCase().includes("rappel") ? "Type de demande:" : "Total Estimé:"} <span style="color: #edba54;">${typeof price === "number" ? `${price} MAD` : price}</span></h3>
     `}
   </div>

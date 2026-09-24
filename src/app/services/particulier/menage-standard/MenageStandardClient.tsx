@@ -22,7 +22,7 @@ import serviceRegulier from "@/assets/service-menage-standard.webp";
 import cleaningProduct from "@/assets/cleaning-product.webp";
 import { createWhatsAppLink, formatBookingMessage, DESTINATION_PHONE_NUMBER, getConfirmationMessage } from "@/lib/whatsapp";
 import { sendBookingEmail } from "@/lib/email";
-import { calculateSurchargeMultiplier } from "@/lib/pricing";
+import { calculateSurchargeMultiplier, getSurchargeDetails } from "@/lib/pricing";
 import "@/styles/sticky-summary.css";
 import { FREQUENCES, visitsMap } from "@/app/frequences";
 import { SubscriptionScheduler, JourPassage, ProrataInfo } from "@/components/booking/SubscriptionScheduler";
@@ -113,12 +113,16 @@ export default function MenageStandardClient() {
     let discountRate = 0;
     let discountAmount = 0;
 
-    const multiplier = calculateSurchargeMultiplier(
+    const surchargeInfo = getSurchargeDetails(
         formData.schedulingDate,
         formData.schedulingType,
         formData.fixedTime,
         formData.schedulingTime
     );
+    const multiplier = surchargeInfo.multiplier;
+
+    let baseServicePrice = 0;
+    let surchargeAmount = 0;
 
     if (formData.frequency === "subscription") {
         visitsPerWeek = visitsMap[formData.subFrequency] || 2;
@@ -126,9 +130,13 @@ export default function MenageStandardClient() {
         const monthlyHours = formData.duration * visitsPerWeek * 4;
         const subtotalMonthly = monthlyHours * baseRate * formData.numberOfPeople;
         discountAmount = subtotalMonthly * discountRate;
-        totalServicePrice = (subtotalMonthly - discountAmount) * multiplier;
+        baseServicePrice = subtotalMonthly - discountAmount;
+        surchargeAmount = baseServicePrice * (multiplier - 1);
+        totalServicePrice = baseServicePrice * multiplier;
     } else {
-        totalServicePrice = formData.duration * baseRate * formData.numberOfPeople * multiplier;
+        baseServicePrice = formData.duration * baseRate * formData.numberOfPeople;
+        surchargeAmount = baseServicePrice * (multiplier - 1);
+        totalServicePrice = baseServicePrice * multiplier;
     }
 
     const calculateTotal = () => {
@@ -235,7 +243,11 @@ export default function MenageStandardClient() {
                     ? `${phonePrefix} ${phoneNumber}`
                     : `${whatsappPrefix} ${whatsappNumber}`,
                 promoCodeId: promoCode ? promoCode.id : undefined,
-                promoCodeInput: promoCode ? promoCode.code : undefined
+                promoCodeInput: promoCode ? promoCode.code : undefined,
+                surchargeLabel: surchargeInfo.label,
+                surchargePercent: surchargeInfo.surchargePercent,
+                surchargeAmount: Math.round(surchargeAmount),
+                baseServicePrice: Math.round(baseServicePrice)
             };
 
             setCustomerName(`${firstName} ${lastName}`);
@@ -434,6 +446,12 @@ Il comprend le :
                                                     <div className="flex justify-between gap-4 text-red-600 font-bold bg-red-50 p-2 rounded text-xs">
                                                         <span>Réduction abonnement (10%):</span>
                                                         <span>-{Math.round(discountAmount)} MAD</span>
+                                                    </div>
+                                                )}
+                                                {surchargeInfo.multiplier > 1 && surchargeAmount > 0 && (
+                                                    <div className="flex justify-between gap-4 text-amber-800 font-bold bg-amber-50 p-2 rounded text-xs border border-amber-200">
+                                                        <span>{surchargeInfo.label}:</span>
+                                                        <span>+{Math.round(surchargeAmount)} MAD</span>
                                                     </div>
                                                 )}
                                                 <div className="flex justify-between gap-4 border-t border-primary/10 pt-2">
@@ -791,6 +809,22 @@ Il comprend le :
                                                     />
                                                 </div>
                                             </div>
+                                            {surchargeInfo.isEvening && (
+                                                <div className="mt-3 p-3 bg-amber-50 border border-amber-200 rounded-lg text-xs text-amber-900 flex items-start gap-2 text-left">
+                                                    <span className="text-base leading-none">🌙</span>
+                                                    <div>
+                                                        <strong className="font-bold">Majoration soirée (+50%) :</strong> applicable pour toute intervention à partir de 18h00 (+{Math.round(surchargeAmount)} MAD).
+                                                    </div>
+                                                </div>
+                                            )}
+                                            {surchargeInfo.isSunday && !surchargeInfo.isEvening && (
+                                                <div className="mt-3 p-3 bg-blue-50 border border-blue-200 rounded-lg text-xs text-blue-900 flex items-start gap-2 text-left">
+                                                    <span className="text-base leading-none">☀️</span>
+                                                    <div>
+                                                        <strong className="font-bold">Majoration dimanche (+25%) :</strong> applicable pour toute intervention le dimanche (+{Math.round(surchargeAmount)} MAD).
+                                                    </div>
+                                                </div>
+                                            )}
                                         </div>
                                     )}
 
