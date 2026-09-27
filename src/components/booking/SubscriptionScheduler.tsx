@@ -3,6 +3,7 @@
 import React, { useMemo, useEffect } from 'react';
 import { Calendar, Clock, Check, Info, AlertCircle, ChevronDown, ChevronUp } from 'lucide-react';
 import { FREQUENCES, visitsMap } from '@/app/frequences';
+import { getEntrepriseSubscriptionDiscountRate } from '@/lib/pricing';
 
 export interface JourPassage {
     jour: string; // 'lundi', 'mardi', etc.
@@ -29,6 +30,7 @@ interface SubscriptionSchedulerProps {
     durationHours?: number;
     baseMonthlyPrice: number;
     onProrataCalculated?: (info: ProrataInfo) => void;
+    isEntreprise?: boolean;
 }
 
 const ALL_DAYS = [
@@ -50,7 +52,8 @@ export const SubscriptionScheduler: React.FC<SubscriptionSchedulerProps> = ({
     onStartDateChange,
     durationHours = 4,
     baseMonthlyPrice,
-    onProrataCalculated
+    onProrataCalculated,
+    isEntreprise = false
 }) => {
     const [showAllFrequencies, setShowAllFrequencies] = React.useState(false);
 
@@ -136,6 +139,13 @@ export const SubscriptionScheduler: React.FC<SubscriptionSchedulerProps> = ({
         }
     }, [maxDaysAllowed, subFrequency]);
 
+    const currentDiscountPercent = useMemo(() => {
+        if (isEntreprise) {
+            return Math.round(getEntrepriseSubscriptionDiscountRate(subFrequency) * 100);
+        }
+        return 10;
+    }, [isEntreprise, subFrequency]);
+
     // Prorata calculation
     const prorataCalculation = useMemo(() => {
         if (!startDate || joursPassage.length === 0 || baseMonthlyPrice <= 0) {
@@ -145,7 +155,7 @@ export const SubscriptionScheduler: React.FC<SubscriptionSchedulerProps> = ({
                 regularAmount: baseMonthlyPrice,
                 passagesRestants: 0,
                 passagesTheoriques: 0,
-                discountPercent: 10
+                discountPercent: currentDiscountPercent
             };
         }
 
@@ -158,7 +168,7 @@ export const SubscriptionScheduler: React.FC<SubscriptionSchedulerProps> = ({
                     regularAmount: baseMonthlyPrice,
                     passagesRestants: 0,
                     passagesTheoriques: 0,
-                    discountPercent: 10
+                    discountPercent: currentDiscountPercent
                 };
             }
 
@@ -181,7 +191,7 @@ export const SubscriptionScheduler: React.FC<SubscriptionSchedulerProps> = ({
                     regularAmount: baseMonthlyPrice,
                     passagesRestants: 0,
                     passagesTheoriques: 0,
-                    discountPercent: 10
+                    discountPercent: currentDiscountPercent
                 };
             }
 
@@ -206,7 +216,7 @@ export const SubscriptionScheduler: React.FC<SubscriptionSchedulerProps> = ({
                     regularAmount: baseMonthlyPrice,
                     passagesRestants: 0,
                     passagesTheoriques: 0,
-                    discountPercent: 10
+                    discountPercent: currentDiscountPercent
                 };
             }
 
@@ -220,7 +230,7 @@ export const SubscriptionScheduler: React.FC<SubscriptionSchedulerProps> = ({
                 regularAmount: baseMonthlyPrice,
                 passagesRestants: totalRestants,
                 passagesTheoriques: totalTheoriques,
-                discountPercent: 10
+                discountPercent: currentDiscountPercent
             };
         } catch (e) {
             console.error('Error calculating prorata:', e);
@@ -230,10 +240,10 @@ export const SubscriptionScheduler: React.FC<SubscriptionSchedulerProps> = ({
                 regularAmount: baseMonthlyPrice,
                 passagesRestants: 0,
                 passagesTheoriques: 0,
-                discountPercent: 10
+                discountPercent: currentDiscountPercent
             };
         }
-    }, [startDate, joursPassage, baseMonthlyPrice]);
+    }, [startDate, joursPassage, baseMonthlyPrice, currentDiscountPercent]);
 
     // Notify parent on prorata calculation change
     useEffect(() => {
@@ -269,15 +279,29 @@ export const SubscriptionScheduler: React.FC<SubscriptionSchedulerProps> = ({
                 <div className="flex items-center justify-between">
                     <label className="text-sm font-bold text-slate-800 flex items-center gap-2">
                         <span>1. Choisissez la fréquence de passage</span>
-                        <span className="text-xs font-semibold px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800">
-                            -10% inclus
-                        </span>
+                        {isEntreprise ? (
+                            currentDiscountPercent > 0 ? (
+                                <span className="text-xs font-semibold px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800">
+                                    -{currentDiscountPercent}% de remise
+                                </span>
+                            ) : (
+                                <span className="text-xs font-medium px-2 py-0.5 rounded-full bg-slate-100 text-slate-600">
+                                    Tarif standard
+                                </span>
+                            )
+                        ) : (
+                            <span className="text-xs font-semibold px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800">
+                                -10% inclus
+                            </span>
+                        )}
                     </label>
                 </div>
 
                 <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-2.5">
                     {primaryFrequencies.map((freq) => {
                         const isSelected = subFrequency === freq.value;
+                        const discountRate = isEntreprise ? getEntrepriseSubscriptionDiscountRate(freq.value) : 0;
+                        const discountPct = Math.round(discountRate * 100);
                         return (
                             <button
                                 key={freq.value}
@@ -289,6 +313,11 @@ export const SubscriptionScheduler: React.FC<SubscriptionSchedulerProps> = ({
                                         : 'border-slate-200 bg-white text-slate-700 hover:border-slate-300 hover:bg-slate-50 font-medium'
                                 }`}
                             >
+                                {isEntreprise && discountPct > 0 && (
+                                    <span className="absolute -top-2 -right-1 text-[10px] font-black px-1.5 py-0.5 rounded-full bg-emerald-600 text-white shadow-xs">
+                                        -{discountPct}%
+                                    </span>
+                                )}
                                 <span className="text-xs sm:text-sm">{freq.label}</span>
                                 <span className="text-[11px] text-slate-400 font-normal">{freq.desc}</span>
                             </button>
@@ -315,17 +344,24 @@ export const SubscriptionScheduler: React.FC<SubscriptionSchedulerProps> = ({
                     <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 pt-2 animate-in fade-in duration-200">
                         {extraFrequencies.map((freq) => {
                             const isSelected = subFrequency === freq.value;
+                            const discountRate = isEntreprise ? getEntrepriseSubscriptionDiscountRate(freq.value) : 0;
+                            const discountPct = Math.round(discountRate * 100);
                             return (
                                 <button
                                     key={freq.value}
                                     type="button"
                                     onClick={() => onFrequencyChange(freq.value, freq.label)}
-                                    className={`p-2.5 rounded-xl text-center border transition-all ${
+                                    className={`relative p-2.5 rounded-xl text-center border transition-all ${
                                         isSelected
                                             ? 'border-primary bg-primary/5 text-primary font-bold ring-2 ring-primary/20'
                                             : 'border-slate-200 bg-white text-slate-700 hover:bg-slate-50'
                                     }`}
                                 >
+                                    {isEntreprise && discountPct > 0 && (
+                                        <span className="absolute -top-2 -right-1 text-[9px] font-black px-1.5 py-0.5 rounded-full bg-emerald-600 text-white shadow-xs">
+                                            -{discountPct}%
+                                        </span>
+                                    )}
                                     <div className="text-xs font-bold">{freq.label}</div>
                                     <div className="text-[10px] text-slate-400">{freq.desc}</div>
                                 </button>

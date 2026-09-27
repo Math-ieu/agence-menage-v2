@@ -439,26 +439,61 @@ export async function sendBookingEmailResend(serviceName: string, data: any, pri
         </td>
       </tr>
       ` : ""}
-      ${data.prorata_actif ? `
-      <tr style="border-top: 1px dashed #86efac;">
-        <td style="padding: 8px 0 3px 0; color: #92400e;"><strong>Prorata 1er mois :</strong></td>
-        <td style="padding: 8px 0 3px 0; color: #92400e; font-weight: bold;">
-          ${data.montant_prorata || price} MAD <span style="font-weight: normal; font-size: 12px;">(${data.nb_passages_mois_1} passage(s) restant(s) sur ${data.nb_passages_theoriques} ce mois)</span>
-        </td>
-      </tr>
-      <tr>
-        <td style="padding: 3px 0; color: #166534;"><strong>Tarif mensuel dès le 2ᵉ mois :</strong></td>
-        <td style="padding: 3px 0; color: #15803d; font-weight: bold;">
-          ${data.tarif_mensuel_standard ? `${data.tarif_mensuel_standard} MAD / mois` : '-'}
-        </td>
-      </tr>
+      ${isEntreprise ? `
+        ${data.discountAmount > 0 ? `
+        <tr>
+          <td style="padding: 5px 0; color: #166534;"><strong>Remise abonnement :</strong></td>
+          <td style="padding: 5px 0; color: #15803d; font-weight: bold;">
+            -${data.discountAmount} MAD HT (-${data.discountRate}%)
+          </td>
+        </tr>
+        ` : ""}
+        ${data.prorata_actif ? `
+        <tr style="border-top: 1px dashed #86efac;">
+          <td style="padding: 8px 0 3px 0; color: #92400e;"><strong>Prorata 1er mois :</strong></td>
+          <td style="padding: 8px 0 3px 0; color: #92400e; font-weight: bold;">
+            ${data.totalHT || data.montant_prorata} MAD HT (${data.totalTTC || Math.round((data.montant_prorata || 0) * 1.20)} MAD TTC)
+            <span style="font-weight: normal; font-size: 12px; display: block; color: #78350f;">
+              (${data.nb_passages_mois_1} passage(s) restant(s) sur ${data.nb_passages_theoriques} ce mois)
+            </span>
+          </td>
+        </tr>
+        <tr>
+          <td style="padding: 3px 0; color: #166534;"><strong>Tarif mensuel dès le 2ᵉ mois :</strong></td>
+          <td style="padding: 3px 0; color: #15803d; font-weight: bold;">
+            ${data.tarif_mensuel_standard_ht || data.tarif_mensuel_standard} MAD HT / mois (${data.tarif_mensuel_standard_ttc || Math.round((data.tarif_mensuel_standard || 0) * 1.20)} MAD TTC / mois)
+          </td>
+        </tr>
+        ` : `
+        <tr style="border-top: 1px dashed #86efac;">
+          <td style="padding: 8px 0 3px 0; color: #166534;"><strong>Tarif mensuel standard :</strong></td>
+          <td style="padding: 8px 0 3px 0; color: #15803d; font-weight: bold;">
+            ${data.totalHT || data.tarif_mensuel_standard || price} MAD HT / mois (${data.totalTTC || (typeof price === 'number' ? `${price} MAD` : price)} MAD TTC / mois)
+          </td>
+        </tr>
+        `}
       ` : `
-      <tr style="border-top: 1px dashed #86efac;">
-        <td style="padding: 8px 0 3px 0; color: #166534;"><strong>Tarif mensuel standard :</strong></td>
-        <td style="padding: 8px 0 3px 0; color: #15803d; font-weight: bold;">
-          ${typeof price === 'number' ? `${price} MAD / mois` : price}
-        </td>
-      </tr>
+        ${data.prorata_actif ? `
+        <tr style="border-top: 1px dashed #86efac;">
+          <td style="padding: 8px 0 3px 0; color: #92400e;"><strong>Prorata 1er mois :</strong></td>
+          <td style="padding: 8px 0 3px 0; color: #92400e; font-weight: bold;">
+            ${data.montant_prorata || price} MAD <span style="font-weight: normal; font-size: 12px;">(${data.nb_passages_mois_1} passage(s) restant(s) sur ${data.nb_passages_theoriques} ce mois)</span>
+          </td>
+        </tr>
+        <tr>
+          <td style="padding: 3px 0; color: #166534;"><strong>Tarif mensuel dès le 2ᵉ mois :</strong></td>
+          <td style="padding: 3px 0; color: #15803d; font-weight: bold;">
+            ${data.tarif_mensuel_standard ? `${data.tarif_mensuel_standard} MAD / mois` : '-'}
+          </td>
+        </tr>
+        ` : `
+        <tr style="border-top: 1px dashed #86efac;">
+          <td style="padding: 8px 0 3px 0; color: #166534;"><strong>Tarif mensuel standard :</strong></td>
+          <td style="padding: 8px 0 3px 0; color: #15803d; font-weight: bold;">
+            ${typeof price === 'number' ? `${price} MAD / mois` : price}
+          </td>
+        </tr>
+        `}
       `}
     </table>
   </div>
@@ -556,29 +591,65 @@ export async function sendBookingEmailResend(serviceName: string, data: any, pri
     <p style="background: #f9f9f9; padding: 10px; border-radius: 5px; margin: 0;">${combinedNotes.replace(/\n/g, '<br>')}</p>
   </div>
   ` : ""}
-  <div style="text-align: right; border-top: 2px solid #edba54; padding-top: 12px; margin-top: 20px;">
-    ${isSubscription ? `
-      <div style="font-size: 12px; text-transform: uppercase; color: #64748b; font-weight: bold; margin-bottom: 4px;">
-        ${data.prorata_actif ? "Montant 1er mois (Calcul Prorata)" : "Tarif Mensuel Abonnement"}
+  <div style="border-top: 2px solid #edba54; padding-top: 12px; margin-top: 20px;">
+    ${isEntreprise && (data.totalHT !== undefined || typeof price === 'number') ? `
+      <div style="background-color: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 14px; margin-bottom: 8px;">
+        <table style="width: 100%; border-collapse: collapse; font-size: 13px;">
+          ${data.discountAmount > 0 ? `
+          <tr>
+            <td style="padding: 4px 0; color: #166534; font-weight: bold;">Remise abonnement (${data.discountRate}%) :</td>
+            <td style="padding: 4px 0; text-align: right; color: #166534; font-weight: bold;">-${data.discountAmount} MAD HT</td>
+          </tr>
+          ` : ""}
+          <tr>
+            <td style="padding: 4px 0; color: #475569;">Total HT :</td>
+            <td style="padding: 4px 0; text-align: right; color: #1e293b; font-weight: bold;">${data.totalHT ?? (typeof price === 'number' ? Math.round(price / 1.2) : price)} MAD</td>
+          </tr>
+          <tr>
+            <td style="padding: 4px 0; color: #475569;">TVA (20%) :</td>
+            <td style="padding: 4px 0; text-align: right; color: #1e293b; font-weight: bold;">${data.tvaAmount ?? (typeof price === 'number' ? (price - Math.round(price / 1.2)) : "20%")} MAD</td>
+          </tr>
+          <tr style="border-top: 1.5px solid #cbd5e1;">
+            <td style="padding: 8px 0 4px 0; color: #0f172a; font-size: 15px; font-weight: bold;">
+              ${isSubscription ? (data.prorata_actif ? "Total 1er mois TTC :" : "Total Mensuel TTC :") : "Total TTC :"}
+            </td>
+            <td style="padding: 8px 0 4px 0; text-align: right; color: #edba54; font-size: 20px; font-weight: bold;">
+              ${data.totalTTC ?? (typeof price === 'number' ? `${price} MAD` : price)} ${typeof (data.totalTTC ?? price) === 'number' ? 'MAD' : ''}
+            </td>
+          </tr>
+        </table>
+        ${isSubscription && data.prorata_actif && (data.tarif_mensuel_standard_ttc || data.tarif_mensuel_standard) ? `
+          <div style="font-size: 12px; color: #64748b; margin-top: 6px; text-align: right;">
+            Dès le 2ᵉ mois : <strong style="color: #0f172a;">${data.tarif_mensuel_standard_ttc || Math.round(data.tarif_mensuel_standard * 1.20)} MAD TTC / mois</strong> (${data.tarif_mensuel_standard_ht || data.tarif_mensuel_standard} MAD HT)
+          </div>
+        ` : ""}
       </div>
-      <h3 style="margin: 0; font-size: 22px; color: #175e5c;">
-        <span style="color: #edba54;">${typeof price === "number" ? `${price} MAD` : price}</span>
-      </h3>
-      ${data.prorata_actif && data.tarif_mensuel_standard ? `
-        <div style="font-size: 13px; color: #64748b; margin-top: 4px;">
-          Tarif mensuel régulier dès le 2ᵉ mois : <strong style="color: #0f172a;">${data.tarif_mensuel_standard} MAD / mois</strong>
+    ` : isSubscription ? `
+      <div style="text-align: right;">
+        <div style="font-size: 12px; text-transform: uppercase; color: #64748b; font-weight: bold; margin-bottom: 4px;">
+          ${data.prorata_actif ? "Montant 1er mois (Calcul Prorata)" : "Tarif Mensuel Abonnement"}
         </div>
-      ` : ""}
+        <h3 style="margin: 0; font-size: 22px; color: #175e5c;">
+          <span style="color: #edba54;">${typeof price === "number" ? `${price} MAD` : price}</span>
+        </h3>
+        ${data.prorata_actif && data.tarif_mensuel_standard ? `
+          <div style="font-size: 13px; color: #64748b; margin-top: 4px;">
+            Tarif mensuel régulier dès le 2ᵉ mois : <strong style="color: #0f172a;">${data.tarif_mensuel_standard} MAD / mois</strong>
+          </div>
+        ` : ""}
+      </div>
     ` : `
-      ${surchargeLabel && surchargeAmount && basePrice ? `
-        <div style="font-size: 13px; color: #64748b; margin-bottom: 4px;">
-          Tarif base (${data.duration ? `${data.duration}h` : ''}${data.numberOfPeople ? ` × ${data.numberOfPeople} pers.` : ''}) : <strong style="color: #334155;">${basePrice} MAD</strong>
-        </div>
-        <div style="font-size: 13px; color: #b45309; margin-bottom: 6px;">
-          ${surchargeLabel} : <strong style="color: #b45309;">+${surchargeAmount} MAD</strong>
-        </div>
-      ` : ""}
-      <h3 style="margin: 0;">${typeof price === "string" && price.toLowerCase().includes("rappel") ? "Type de demande:" : "Total Estimé:"} <span style="color: #edba54;">${typeof price === "number" ? `${price} MAD` : price}</span></h3>
+      <div style="text-align: right;">
+        ${surchargeLabel && surchargeAmount && basePrice ? `
+          <div style="font-size: 13px; color: #64748b; margin-bottom: 4px;">
+            Tarif base (${data.duration ? `${data.duration}h` : ''}${data.numberOfPeople ? ` × ${data.numberOfPeople} pers.` : ''}) : <strong style="color: #334155;">${basePrice} MAD</strong>
+          </div>
+          <div style="font-size: 13px; color: #b45309; margin-bottom: 6px;">
+            ${surchargeLabel} : <strong style="color: #b45309;">+${surchargeAmount} MAD</strong>
+          </div>
+        ` : ""}
+        <h3 style="margin: 0;">${typeof price === "string" && price.toLowerCase().includes("rappel") ? "Type de demande:" : "Total Estimé:"} <span style="color: #edba54;">${typeof price === "number" ? `${price} MAD` : price}</span></h3>
+      </div>
     `}
   </div>
 </div>
@@ -599,7 +670,26 @@ export async function sendBookingEmailResend(serviceName: string, data: any, pri
       try {
         const formattedDate = formattedDateWithDay;
         const formattedHour = scheduling_time || "-";
-        const fallbackPrice = typeof price === "number" ? `${price} MAD` : String(price);
+        
+        let clientPriceWa = typeof price === "number" ? `${price} MAD` : String(price);
+        let agencyPriceWa = clientPriceWa;
+
+        if (isEntreprise && (data.totalHT !== undefined || data.totalTTC !== undefined)) {
+          const ht = data.totalHT ?? (typeof price === 'number' ? Math.round(price / 1.2) : price);
+          const ttc = data.totalTTC ?? (typeof price === 'number' ? price : `${price} TTC`);
+          if (isSubscription) {
+            if (data.prorata_actif) {
+              clientPriceWa = `${ttc} MAD TTC (1er mois prorata) [${ht} MAD HT + TVA 20%]`;
+              agencyPriceWa = `${ttc} MAD TTC (1er mois prorata) [${ht} MAD HT + TVA 20%]`;
+            } else {
+              clientPriceWa = `${ttc} MAD TTC/mois (${ht} MAD HT + TVA 20%)`;
+              agencyPriceWa = `${ttc} MAD TTC/mois (${ht} MAD HT + TVA 20%)`;
+            }
+          } else {
+            clientPriceWa = `${ttc} MAD TTC (${ht} MAD HT + TVA 20%)`;
+            agencyPriceWa = `${ttc} MAD TTC (${ht} MAD HT + TVA 20%)`;
+          }
+        }
 
         const waPromises = [];
 
@@ -624,7 +714,7 @@ export async function sendBookingEmailResend(serviceName: string, data: any, pri
                 formattedDate,
                 formattedHour,
                 waOptionalServices,
-                fallbackPrice
+                clientPriceWa
               ]
             ).catch(err => console.error("Client WA Error:", err))
           );
@@ -642,7 +732,7 @@ export async function sendBookingEmailResend(serviceName: string, data: any, pri
                 serviceName,
                 `${formattedDate} à ${formattedHour}`,
                 data.city || data.neighborhood || "Non précisé",
-                fallbackPrice
+                agencyPriceWa
               ]
             ).catch(err => console.error(`Agency WA Error (${number}):`, err))
           );

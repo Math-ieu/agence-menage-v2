@@ -18,7 +18,7 @@ import { toast } from "sonner";
 import serviceBureaux from "@/assets/service-menage-bureaux.webp";
 import { getConfirmationMessage } from "@/lib/whatsapp";
 import { sendBookingEmail } from "@/lib/email";
-import { calculateSurchargeMultiplier } from "@/lib/pricing";
+import { calculateSurchargeMultiplier, getEntrepriseSubscriptionDiscountRate, calculateTvaAndTotals } from "@/lib/pricing";
 import PromoCodeInput from "@/components/PromoCodeInput";
 import "@/styles/sticky-summary.css";
 import { FREQUENCES } from "@/app/frequences";
@@ -153,9 +153,9 @@ export default function MenageBureauxClient() {
     const perVisitBasePrice = formData.duration * formData.numberOfPeople * hourlyRate * multiplier;
     const perVisitTotal = perVisitBasePrice;
 
-    let totalPrice = 0;
+    let totalPriceHT = 0;
     let discountAmount = 0;
-    const discountRate = 0.1;
+    const discountRate = getEntrepriseSubscriptionDiscountRate(formData.subFrequency);
 
     const visitsMap: Record<string, number> = {
         "1foisParSemaine": 1,
@@ -173,25 +173,29 @@ export default function MenageBureauxClient() {
     const visitsPerWeek = visitsMap[formData.subFrequency] || 2;
     const subtotalMonthly = perVisitTotal * visitsPerWeek * 4;
     discountAmount = subtotalMonthly * discountRate;
-    const regularMonthlyTotal = subtotalMonthly - discountAmount;
+    const regularMonthlyTotalHT = subtotalMonthly - discountAmount;
 
     if (formData.frequency === "subscription") {
         if (prorataInfo?.prorataActive && prorataInfo.prorataAmount > 0) {
-            totalPrice = prorataInfo.prorataAmount;
+            totalPriceHT = prorataInfo.prorataAmount;
         } else {
-            totalPrice = regularMonthlyTotal;
+            totalPriceHT = regularMonthlyTotalHT;
         }
     } else {
-        totalPrice = perVisitTotal;
+        totalPriceHT = perVisitTotal;
     }
 
     if (promoCode) {
         if (promoCode.reduction_type === 'pourcentage') {
-            totalPrice = totalPrice * (1 - promoCode.reduction / 100);
+            totalPriceHT = totalPriceHT * (1 - promoCode.reduction / 100);
         } else if (promoCode.reduction_type === 'montant_fixe') {
-            totalPrice = Math.max(0, totalPrice - promoCode.reduction);
+            totalPriceHT = Math.max(0, totalPriceHT - promoCode.reduction);
         }
     }
+
+    // TVA 20% calculations
+    const { totalHT, tvaAmount, totalTTC } = calculateTvaAndTotals(totalPriceHT, 0.20);
+    const regularMonthlyTTC = Math.round(regularMonthlyTotalHT * 1.20);
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
@@ -249,17 +253,24 @@ export default function MenageBureauxClient() {
             date_premiere_intervention: dateEffective,
             prorata_actif: isSub ? (prorataInfo?.prorataActive || false) : false,
             montant_prorata: isSub && prorataInfo?.prorataActive ? prorataInfo.prorataAmount : null,
-            tarif_mensuel_standard: isSub ? regularMonthlyTotal : null,
+            tarif_mensuel_standard: isSub ? Math.round(regularMonthlyTotalHT) : null,
+            tarif_mensuel_standard_ht: isSub ? Math.round(regularMonthlyTotalHT) : null,
+            tarif_mensuel_standard_ttc: isSub ? regularMonthlyTTC : null,
             nb_passages_mois_1: isSub ? (prorataInfo?.passagesRestants || 0) : 0,
             nb_passages_theoriques: isSub ? (prorataInfo?.passagesTheoriques || 0) : 0,
-            schedulingDate: dateEffective
+            schedulingDate: dateEffective,
+            totalHT,
+            tvaAmount,
+            totalTTC,
+            discountRate: Math.round(discountRate * 100),
+            discountAmount: Math.round(discountAmount)
         };
 
         setCustomerName(contactPerson);
 
         setIsSubmitting(true);
         try {
-            const result = await sendBookingEmail("Ménage Bureaux", bookingData, totalPrice, true);
+            const result = await sendBookingEmail("Ménage Bureaux", bookingData, totalTTC, true);
 
             if (result.success) {
                 setShowConfirmation(true);
@@ -402,37 +413,47 @@ export default function MenageBureauxClient() {
                                             </div>
                                         </div>
 
-                                        <div className="pt-4 border-t">
+                                        <div className="pt-4 border-t space-y-3">
                                             {formData.frequency === "subscription" && discountAmount > 0 && (
-                                                <div className="flex justify-between gap-4 text-emerald-600 font-bold bg-emerald-50 p-2 rounded mb-2 text-xs">
-                                                    <span>Remise abonnement (10%):</span>
-                                                    <span>-{Math.round(discountAmount)} MAD</span>
+                                                <div className="flex justify-between gap-4 text-emerald-600 font-bold bg-emerald-50 p-2 rounded text-xs">
+                                                    <span>Remise abonnement ({Math.round(discountRate * 100)}%):</span>
+                                                    <span>-{Math.round(discountAmount)} MAD HT</span>
                                                 </div>
                                             )}
                                             {formData.frequency === "subscription" && prorataInfo?.prorataActive && (
-                                                <div className="bg-amber-50 p-2.5 rounded-lg border border-amber-200 mb-3 space-y-1">
+                                                <div className="bg-amber-50 p-2.5 rounded-lg border border-amber-200 space-y-1">
                                                     <div className="flex justify-between text-xs text-amber-900 font-bold">
                                                         <span>Prorata 1er mois ({prorataInfo.passagesRestants}/{prorataInfo.passagesTheoriques} passages) :</span>
-                                                        <span>{Math.round(prorataInfo.prorataAmount)} MAD</span>
+                                                        <span>{Math.round(prorataInfo.prorataAmount)} MAD HT</span>
                                                     </div>
                                                     <div className="text-[11px] text-amber-700 font-medium">
-                                                        Dès le 2ᵉ mois : {Math.round(regularMonthlyTotal)} MAD/mois
+                                                        Dès le 2ᵉ mois : {Math.round(regularMonthlyTotalHT)} MAD HT/mois ({regularMonthlyTTC} MAD TTC)
                                                     </div>
                                                 </div>
                                             )}
                                             {promoCode && (
-                                                <div className="flex justify-between text-emerald-600 font-medium mb-2 text-sm">
+                                                <div className="flex justify-between text-emerald-600 font-medium text-sm">
                                                     <span>Réduction ({promoCode.code}) :</span>
                                                     <span>-{promoCode.reduction_type === 'pourcentage' ? `${promoCode.reduction}%` : `${promoCode.reduction} MAD`}</span>
                                                 </div>
                                             )}
-                                            <div className="flex justify-between items-center">
-                                                <span className="text-lg font-bold">
-                                                    {formData.frequency === "subscription" ? (prorataInfo?.prorataActive ? "Total 1er mois HT" : "Total Mensuel HT") : "Total HT"}
-                                                </span>
-                                                <span className="text-2xl font-bold text-primary">
-                                                    {totalPrice > 0 ? `${Math.round(totalPrice)} MAD` : "0 MAD"}
-                                                </span>
+                                            <div className="space-y-1.5 pt-2 border-t border-slate-200">
+                                                <div className="flex justify-between items-center text-sm text-slate-600">
+                                                    <span>{formData.frequency === "subscription" ? (prorataInfo?.prorataActive ? "Total 1er mois HT :" : "Total Mensuel HT :") : "Total HT :"}</span>
+                                                    <span className="font-semibold text-slate-800">{totalHT > 0 ? `${totalHT} MAD` : "0 MAD"}</span>
+                                                </div>
+                                                <div className="flex justify-between items-center text-sm text-slate-600">
+                                                    <span>TVA (20%) :</span>
+                                                    <span className="font-semibold text-slate-800">{totalHT > 0 ? `${tvaAmount} MAD` : "0 MAD"}</span>
+                                                </div>
+                                                <div className="flex justify-between items-center pt-2 border-t border-slate-200">
+                                                    <span className="text-base font-bold text-slate-900">
+                                                        {formData.frequency === "subscription" ? (prorataInfo?.prorataActive ? "Total 1er mois TTC" : "Total Mensuel TTC") : "Total TTC"}
+                                                    </span>
+                                                    <span className="text-2xl font-black text-primary">
+                                                        {totalTTC > 0 ? `${totalTTC} MAD` : "0 MAD"}
+                                                    </span>
+                                                </div>
                                             </div>
                                         </div>
 
@@ -560,7 +581,9 @@ export default function MenageBureauxClient() {
                                                     })}
                                                 >
                                                     <span>Abonnement</span>
-                                                    <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-emerald-500 text-white font-black">-10%</span>
+                                                    <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-emerald-500 text-white font-black">
+                                                        {formData.frequency === "subscription" && discountRate > 0 ? `-${Math.round(discountRate * 100)}%` : "Jusqu'à -25%"}
+                                                    </span>
                                                 </button>
                                             </div>
 
@@ -574,8 +597,9 @@ export default function MenageBureauxClient() {
                                                         startDate={formData.schedulingDate}
                                                         onStartDateChange={(date) => setFormData(prev => ({ ...prev, schedulingDate: date }))}
                                                         durationHours={formData.duration}
-                                                        baseMonthlyPrice={regularMonthlyTotal}
+                                                        baseMonthlyPrice={regularMonthlyTotalHT}
                                                         onProrataCalculated={(info) => setProrataInfo(info)}
+                                                        isEntreprise={true}
                                                     />
                                                 </div>
                                             )}
