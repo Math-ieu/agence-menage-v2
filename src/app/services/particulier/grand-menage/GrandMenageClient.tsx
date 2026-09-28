@@ -746,14 +746,6 @@ Il comprend le :
                                                     </div>
                                                 </div>
                                             )}
-                                            {surchargeInfo.isSunday && !surchargeInfo.isEvening && (
-                                                <div className="mt-3 p-3 bg-blue-50 border border-blue-200 rounded-lg text-xs text-blue-900 flex items-start gap-2 text-left">
-                                                    <span className="text-base leading-none">☀️</span>
-                                                    <div>
-                                                        <strong className="font-bold">Majoration dimanche (+25%) :</strong> applicable pour toute intervention le dimanche (+{Math.round(surchargeAmount)} MAD).
-                                                    </div>
-                                                </div>
-                                            )}
                                         </div>
                                     )}
 

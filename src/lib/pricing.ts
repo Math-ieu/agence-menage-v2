@@ -12,8 +12,6 @@ export interface SurchargeDetails {
  * 
  * Rules:
  * - After 6 PM (18h): +50% surcharge (1.5x)
- * - Sunday during the day: +25% surcharge (1.25x)
- * - Sunday after 6 PM (18h): +50% surcharge (1.5x)
  */
 export const getSurchargeDetails = (
     dateStr: string,
@@ -52,17 +50,6 @@ export const getSurchargeDetails = (
             surchargePercent: 50,
             label: "Majoration soirée (+50%)",
             description: "Intervention à partir de 18h00"
-        };
-    }
-
-    if (isSunday) {
-        return {
-            multiplier: 1.25,
-            isEvening: false,
-            isSunday: true,
-            surchargePercent: 25,
-            label: "Majoration dimanche (+25%)",
-            description: "Intervention le dimanche"
         };
     }
 
