@@ -343,12 +343,22 @@ Nos auxiliaires de vie assurent une présence 24h/24, 7j/7, selon les besoins en
                                                         </span>
                                                     </div>
                                                     {formData.frequency === "subscription" && formData.joursPassage.length > 0 && (
-                                                        <div className="flex justify-between gap-4 border-t border-primary/5 pt-2 text-xs">
-                                                            <span className="text-muted-foreground">Jours:</span>
-                                                            <span className="font-medium text-right text-primary font-bold">
-                                                                {formData.joursPassage.map(j => j.jour.slice(0, 3).toUpperCase()).join(', ')}
-                                                            </span>
-                                                        </div>
+                                                        <>
+                                                            <div className="flex justify-between gap-4 border-t border-primary/5 pt-2 text-xs">
+                                                                <span className="text-muted-foreground">Jours:</span>
+                                                                <span className="font-medium text-right text-primary font-bold">
+                                                                    {formData.joursPassage.map(j => j.jour.slice(0, 3).toUpperCase()).join(', ')}
+                                                                </span>
+                                                            </div>
+                                                            {prorataInfo && prorataInfo.passagesTheoriques > 0 && (
+                                                                <div className="flex justify-between gap-4 text-xs">
+                                                                    <span className="text-muted-foreground">Interventions :</span>
+                                                                    <span className="font-bold text-right text-slate-700">
+                                                                        {prorataInfo.passagesTheoriques} interventions / mois
+                                                                    </span>
+                                                                </div>
+                                                            )}
+                                                        </>
                                                     )}
                                                     {formData.frequency === "oneshot" && (
                                                         <div className="flex justify-between gap-4">
@@ -360,22 +370,38 @@ Nos auxiliaires de vie assurent une présence 24h/24, 7j/7, selon les besoins en
                                                         <span className="text-muted-foreground">Personnes:</span>
                                                         <span className="font-medium text-right text-slate-700">{formData.numberOfPeople}</span>
                                                     </div>
-                                                    <div className="flex justify-between gap-4 border-t border-primary/5 pt-2">
-                                                        <span className="text-muted-foreground text-sm">{formData.frequency === "subscription" ? "1ère intervention:" : "Date début:"}</span>
-                                                        <span className="font-medium text-right text-slate-700 text-sm">{formData.schedulingDate || "Non définie"}</span>
-                                                    </div>
                                                     {formData.frequency === "oneshot" && (
-                                                        <div className="flex justify-between gap-4 border-b border-primary/5 pb-2">
-                                                            <span className="text-muted-foreground text-sm">Heure:</span>
-                                                            <span className="font-medium text-right text-slate-700 text-sm">
-                                                                {formData.schedulingType === "fixed" ? formData.fixedTime : (formData.schedulingTime === "morning" ? "Le matin" : "L'après midi")}
-                                                            </span>
-                                                        </div>
+                                                        <>
+                                                            <div className="flex justify-between gap-4 border-t border-primary/5 pt-2">
+                                                                <span className="text-muted-foreground text-sm">Date début:</span>
+                                                                <span className="font-medium text-right text-slate-700 text-sm">{formData.schedulingDate || "Non définie"}</span>
+                                                            </div>
+                                                            <div className="flex justify-between gap-4 border-b border-primary/5 pb-2">
+                                                                <span className="text-muted-foreground text-sm">Heure:</span>
+                                                                <span className="font-medium text-right text-slate-700 text-sm">
+                                                                    {formData.schedulingType === "fixed" ? formData.fixedTime : (formData.schedulingTime === "morning" ? "Le matin" : "L'après midi")}
+                                                                </span>
+                                                            </div>
+                                                        </>
                                                     )}
                                                 </div>
                                             </div>
 
-                                            <div className="pt-4 border-t border-primary/20">
+                                            <div className="pt-4 border-t border-primary/20 space-y-3">
+                                                {formData.frequency === "subscription" && prorataInfo && (prorataInfo.passagesTheoriques > 0 || prorataInfo.passagesRestants > 0) && (
+                                                    <div className="bg-amber-50 p-2.5 rounded-lg border border-amber-200 space-y-1.5">
+                                                        <div className="flex justify-between items-baseline text-xs text-amber-900 font-bold">
+                                                            <span>
+                                                                {prorataInfo.prorataActive ? "Prorata 1er mois" : "1er mois"} ({prorataInfo.passagesRestants || prorataInfo.passagesTheoriques} intervention{(prorataInfo.passagesRestants || prorataInfo.passagesTheoriques) > 1 ? 's' : ''}) :
+                                                            </span>
+                                                            <span className="font-extrabold text-amber-900">Sur devis</span>
+                                                        </div>
+                                                        <div className="flex justify-between items-baseline text-[11px] text-amber-800 font-medium pt-1 border-t border-amber-200/60">
+                                                            <span>À partir du 2ᵉ mois ({prorataInfo.passagesTheoriques} intervention{prorataInfo.passagesTheoriques > 1 ? 's' : ''}) :</span>
+                                                            <span className="font-bold text-amber-900 text-right">Sur devis</span>
+                                                        </div>
+                                                    </div>
+                                                )}
                                                 {promoCode && (
                                                     <div className="flex justify-between text-emerald-600 font-medium mb-2 text-sm">
                                                         <span>Code promo :</span>
@@ -407,10 +433,30 @@ Nos auxiliaires de vie assurent une présence 24h/24, 7j/7, selon les besoins en
                                     <div className="bg-white rounded-lg p-4 md:p-6 border shadow-sm space-y-10">
                                         {/* Frequency Section */}
                                         <div className="space-y-6">
-                                            <h3 className="text-xl font-bold bg-primary text-white p-3 rounded-lg text-center mb-4 uppercase">
-                                                Choisissez la formule
+                                            <h3 className="text-xl font-bold bg-primary text-white p-3 rounded-lg text-center mb-4">
+                                                Formule : Ponctuelle ou Abonnement ?
                                             </h3>
                                             <div className="p-4 bg-slate-50/50 rounded-xl border border-slate-100 space-y-4">
+                                                {formData.frequency === "oneshot" && (
+                                                    <div className="max-w-xl mx-auto px-2 py-1 text-red-500 font-semibold text-xs sm:text-sm md:text-base space-y-1">
+                                                        <p className="font-bold text-red-500 text-sm sm:text-base mb-1.5">
+                                                            Pourquoi choisir un abonnement ?
+                                                        </p>
+                                                        <p className="flex items-start gap-2">
+                                                            <span className="select-none font-bold">•</span>
+                                                            <span>Votre accompagnement est planifié à l&apos;avance.</span>
+                                                        </p>
+                                                        <p className="flex items-start gap-2">
+                                                            <span className="select-none font-bold">•</span>
+                                                            <span>Vous avez la même intervenante planifiée pour toutes les interventions.</span>
+                                                        </p>
+                                                        <p className="flex items-start gap-2">
+                                                            <span className="select-none font-bold">•</span>
+                                                            <span>Vous bénéficiez d&apos;un tarif réduit grâce à l&apos;abonnement.</span>
+                                                        </p>
+                                                    </div>
+                                                )}
+
                                                 <div className="flex bg-slate-100 p-1 rounded-full w-full max-w-md mx-auto">
                                                     <button
                                                         type="button"
@@ -424,7 +470,7 @@ Nos auxiliaires de vie assurent une présence 24h/24, 7j/7, selon les besoins en
                                                     </button>
                                                     <button
                                                         type="button"
-                                                        className={`flex-1 py-3 px-6 rounded-full font-bold transition-all text-sm ${formData.frequency === "subscription"
+                                                        className={`flex-1 py-3 px-6 rounded-full font-bold transition-all text-sm flex items-center justify-center gap-1.5 ${formData.frequency === "subscription"
                                                             ? "bg-primary text-white shadow-sm"
                                                             : "text-slate-500 hover:text-primary"
                                                             }`}
@@ -434,7 +480,10 @@ Nos auxiliaires de vie assurent une présence 24h/24, 7j/7, selon les besoins en
                                                             subFrequency: formData.subFrequency || "2foisParSemaine"
                                                         })}
                                                     >
-                                                        Abonnement
+                                                        <span>Abonnement</span>
+                                                        <span className="text-[10px] bg-amber-400 text-amber-950 font-extrabold px-2 py-0.5 rounded-full whitespace-nowrap">
+                                                            jusqu&apos;à -25%
+                                                        </span>
                                                     </button>
                                                 </div>
 
@@ -450,6 +499,7 @@ Nos auxiliaires de vie assurent une présence 24h/24, 7j/7, selon les besoins en
                                                             durationHours={8}
                                                             baseMonthlyPrice={0}
                                                             onProrataCalculated={(info) => setProrataInfo(info)}
+                                                            serviceName="garde-malade"
                                                         />
                                                     </div>
                                                 )}

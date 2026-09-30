@@ -1,9 +1,9 @@
 "use client";
 
 import React, { useMemo, useEffect } from 'react';
-import { Calendar, Clock, Check, Info, AlertCircle, ChevronDown, ChevronUp } from 'lucide-react';
+import { Calendar, Clock, AlertCircle, ChevronDown, ChevronUp } from 'lucide-react';
 import { FREQUENCES, visitsMap } from '@/app/frequences';
-import { getEntrepriseSubscriptionDiscountRate } from '@/lib/pricing';
+import { getSubscriptionDiscountRate } from '@/lib/pricing';
 
 export interface JourPassage {
     jour: string; // 'lundi', 'mardi', etc.
@@ -31,6 +31,7 @@ interface SubscriptionSchedulerProps {
     baseMonthlyPrice: number;
     onProrataCalculated?: (info: ProrataInfo) => void;
     isEntreprise?: boolean;
+    serviceName?: string;
 }
 
 const ALL_DAYS = [
@@ -53,7 +54,8 @@ export const SubscriptionScheduler: React.FC<SubscriptionSchedulerProps> = ({
     durationHours = 4,
     baseMonthlyPrice,
     onProrataCalculated,
-    isEntreprise = false
+    isEntreprise = false,
+    serviceName
 }) => {
     const [showAllFrequencies, setShowAllFrequencies] = React.useState(false);
 
@@ -140,11 +142,13 @@ export const SubscriptionScheduler: React.FC<SubscriptionSchedulerProps> = ({
     }, [maxDaysAllowed, subFrequency]);
 
     const currentDiscountPercent = useMemo(() => {
-        if (isEntreprise) {
-            return Math.round(getEntrepriseSubscriptionDiscountRate(subFrequency) * 100);
-        }
-        return 10;
-    }, [isEntreprise, subFrequency]);
+        const rate = getSubscriptionDiscountRate(
+            subFrequency,
+            serviceName || (isEntreprise ? 'menage-bureaux' : undefined),
+            durationHours
+        );
+        return Math.round(rate * 100);
+    }, [subFrequency, serviceName, isEntreprise, durationHours]);
 
     // Prorata calculation
     const prorataCalculation = useMemo(() => {
@@ -172,10 +176,6 @@ export const SubscriptionScheduler: React.FC<SubscriptionSchedulerProps> = ({
                 };
             }
 
-            const year = startD.getFullYear();
-            const month = startD.getMonth();
-            const lastDayOfMonth = new Date(year, month + 1, 0).getDate();
-
             // JS day numbers for selected days
             const selectedJsDays = new Set(
                 joursPassage.map(j => {
@@ -195,6 +195,30 @@ export const SubscriptionScheduler: React.FC<SubscriptionSchedulerProps> = ({
                 };
             }
 
+            // Étape 1 : Trouver la 1ère intervention réelle (premier jour sélectionné >= startDate)
+            const startYear = startD.getFullYear();
+            const startMonth = startD.getMonth();
+            const startDay = startD.getDate();
+
+            let firstIntervYear = startYear;
+            let firstIntervMonth = startMonth;
+            let firstIntervDay = startDay;
+
+            for (let offset = 0; offset <= 31; offset++) {
+                const candidate = new Date(startYear, startMonth, startDay + offset);
+                if (selectedJsDays.has(candidate.getDay())) {
+                    firstIntervYear = candidate.getFullYear();
+                    firstIntervMonth = candidate.getMonth();
+                    firstIntervDay = candidate.getDate();
+                    break;
+                }
+            }
+
+            // Étape 2 : Scanner le mois de la première intervention réelle
+            const year = firstIntervYear;
+            const month = firstIntervMonth;
+            const lastDayOfMonth = new Date(year, month + 1, 0).getDate();
+
             let totalTheoriques = 0;
             let totalRestants = 0;
 
@@ -203,7 +227,7 @@ export const SubscriptionScheduler: React.FC<SubscriptionSchedulerProps> = ({
                 const jsDay = curDate.getDay();
                 if (selectedJsDays.has(jsDay)) {
                     totalTheoriques++;
-                    if (day >= startD.getDate()) {
+                    if (day >= firstIntervDay) {
                         totalRestants++;
                     }
                 }
@@ -252,10 +276,21 @@ export const SubscriptionScheduler: React.FC<SubscriptionSchedulerProps> = ({
         }
     }, [prorataCalculation, onProrataCalculated]);
 
-    // Minimum start date is today
+    // Minimum start date is today (local time)
     const minDateStr = useMemo(() => {
-        return new Date().toISOString().split('T')[0];
+        const today = new Date();
+        const year = today.getFullYear();
+        const month = String(today.getMonth() + 1).padStart(2, '0');
+        const day = String(today.getDate()).padStart(2, '0');
+        return `${year}-${month}-${day}`;
     }, []);
+
+    // Set default start date to today if not provided
+    useEffect(() => {
+        if (!startDate && minDateStr) {
+            onStartDateChange(minDateStr);
+        }
+    }, [startDate, minDateStr, onStartDateChange]);
 
     const primaryFrequencies = [
         { value: "1foisParSemaine", label: "1 fois / semaine", desc: "4 passages / mois" },
@@ -277,22 +312,22 @@ export const SubscriptionScheduler: React.FC<SubscriptionSchedulerProps> = ({
             {/* 1. Fréquence d'intervention */}
             <div className="space-y-3">
                 <div className="flex items-center justify-between">
-                    <label className="text-sm font-bold text-slate-800 flex items-center gap-2">
+                    <label className="text-sm font-bold text-slate-800 flex items-center justify-between w-full">
                         <span>1. Choisissez la fréquence de passage</span>
-                        {isEntreprise ? (
-                            currentDiscountPercent > 0 ? (
-                                <span className="text-xs font-semibold px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800">
-                                    -{currentDiscountPercent}% de remise
+                        {currentDiscountPercent > 0 ? (
+                            <span className="text-xs font-semibold px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800">
+                                -{currentDiscountPercent}% de remise
+                            </span>
+                        ) : (
+                            ((serviceName && (serviceName.toLowerCase().includes('bureau') || serviceName.toLowerCase().includes('bureaux'))) || isEntreprise) && durationHours < 4 ? (
+                                <span className="text-xs font-semibold px-2 py-0.5 rounded-full bg-slate-100 text-slate-600">
+                                    Réduction -10% dès 4h de ménage
                                 </span>
                             ) : (
                                 <span className="text-xs font-medium px-2 py-0.5 rounded-full bg-slate-100 text-slate-600">
                                     Tarif standard
                                 </span>
                             )
-                        ) : (
-                            <span className="text-xs font-semibold px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800">
-                                -10% inclus
-                            </span>
                         )}
                     </label>
                 </div>
@@ -300,7 +335,11 @@ export const SubscriptionScheduler: React.FC<SubscriptionSchedulerProps> = ({
                 <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-2.5">
                     {primaryFrequencies.map((freq) => {
                         const isSelected = subFrequency === freq.value;
-                        const discountRate = isEntreprise ? getEntrepriseSubscriptionDiscountRate(freq.value) : 0;
+                        const discountRate = getSubscriptionDiscountRate(
+                            freq.value,
+                            serviceName || (isEntreprise ? 'menage-bureaux' : undefined),
+                            durationHours
+                        );
                         const discountPct = Math.round(discountRate * 100);
                         return (
                             <button
@@ -313,7 +352,7 @@ export const SubscriptionScheduler: React.FC<SubscriptionSchedulerProps> = ({
                                         : 'border-slate-200 bg-white text-slate-700 hover:border-slate-300 hover:bg-slate-50 font-medium'
                                 }`}
                             >
-                                {isEntreprise && discountPct > 0 && (
+                                {discountPct > 0 && (
                                     <span className="absolute -top-2 -right-1 text-[10px] font-black px-1.5 py-0.5 rounded-full bg-emerald-600 text-white shadow-xs">
                                         -{discountPct}%
                                     </span>
@@ -344,7 +383,11 @@ export const SubscriptionScheduler: React.FC<SubscriptionSchedulerProps> = ({
                     <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 pt-2 animate-in fade-in duration-200">
                         {extraFrequencies.map((freq) => {
                             const isSelected = subFrequency === freq.value;
-                            const discountRate = isEntreprise ? getEntrepriseSubscriptionDiscountRate(freq.value) : 0;
+                            const discountRate = getSubscriptionDiscountRate(
+                                freq.value,
+                                serviceName || (isEntreprise ? 'menage-bureaux' : undefined),
+                                durationHours
+                            );
                             const discountPct = Math.round(discountRate * 100);
                             return (
                                 <button
@@ -357,7 +400,7 @@ export const SubscriptionScheduler: React.FC<SubscriptionSchedulerProps> = ({
                                             : 'border-slate-200 bg-white text-slate-700 hover:bg-slate-50'
                                     }`}
                                 >
-                                    {isEntreprise && discountPct > 0 && (
+                                    {discountPct > 0 && (
                                         <span className="absolute -top-2 -right-1 text-[9px] font-black px-1.5 py-0.5 rounded-full bg-emerald-600 text-white shadow-xs">
                                             -{discountPct}%
                                         </span>
@@ -503,82 +546,27 @@ export const SubscriptionScheduler: React.FC<SubscriptionSchedulerProps> = ({
                 )}
             </div>
 
-            {/* 3. Date de première intervention & Prorata */}
+            {/* 3. Date de réservation */}
             <div className="space-y-3 bg-white p-4 sm:p-5 rounded-2xl border border-slate-200 shadow-xs">
                 <div className="flex items-center justify-between">
                     <label className="text-sm font-bold text-slate-800 flex items-center gap-2">
                         <Calendar size={16} className="text-primary" />
-                        <span>3. Date de la 1ère intervention (Début d'abonnement)</span>
+                        <span>3. Date de réservation</span>
                     </label>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-start">
-                    <div>
-                        <input
-                            type="date"
-                            required
-                            min={minDateStr}
-                            value={startDate}
-                            onChange={(e) => onStartDateChange(e.target.value)}
-                            className="w-full h-12 px-4 bg-white border-2 border-slate-200 rounded-xl text-slate-800 font-bold text-sm focus:border-primary focus:outline-none transition-colors"
-                        />
-                        <p className="text-[11px] text-slate-500 mt-1.5">
-                            Votre abonnement démarre le jour de votre première intervention et se renouvelle chaque mois.
-                        </p>
-                    </div>
-
-                    {/* Prorata Info Card */}
-                    {startDate && joursPassage.length > 0 && (
-                        <div className={`p-4 rounded-xl border transition-all ${
-                            prorataCalculation.prorataActive
-                                ? 'bg-gradient-to-br from-emerald-50 to-teal-50/50 border-emerald-200'
-                                : 'bg-slate-50 border-slate-200'
-                        }`}>
-                            {prorataCalculation.prorataActive ? (
-                                <div className="space-y-2">
-                                    <div className="flex items-center justify-between">
-                                        <span className="text-xs font-bold text-emerald-800 uppercase tracking-wider flex items-center gap-1">
-                                            <Check size={14} className="text-emerald-600" />
-                                            Prorata 1er mois appliqué
-                                        </span>
-                                        <span className="text-xs font-semibold px-2 py-0.5 bg-emerald-200/70 text-emerald-900 rounded-md">
-                                            {prorataCalculation.passagesRestants} passage{prorataCalculation.passagesRestants > 1 ? 's' : ''} restant{prorataCalculation.passagesRestants > 1 ? 's' : ''} sur {prorataCalculation.passagesTheoriques}
-                                        </span>
-                                    </div>
-                                    <p className="text-xs text-emerald-700 leading-relaxed">
-                                        Vous ne payez que les <strong>{prorataCalculation.passagesRestants} passage(s)</strong> restants pour le mois en cours.
-                                    </p>
-                                    <div className="pt-2 border-t border-emerald-200/60 flex items-baseline justify-between">
-                                        <span className="text-xs text-slate-600">Montant du 1er mois :</span>
-                                        <div className="text-right">
-                                            <span className="text-base font-extrabold text-emerald-700">
-                                                {prorataCalculation.prorataAmount} MAD
-                                            </span>
-                                            <span className="text-xs text-slate-400 line-through ml-2">
-                                                {prorataCalculation.regularAmount} MAD
-                                            </span>
-                                        </div>
-                                    </div>
-                                </div>
-                            ) : (
-                                <div className="space-y-1">
-                                    <div className="flex items-center gap-1.5 text-xs font-bold text-slate-700">
-                                        <Info size={14} className="text-primary" />
-                                        <span>Forfait mensuel complet</span>
-                                    </div>
-                                    <p className="text-xs text-slate-500">
-                                        Votre abonnement démarre en début de mois. Vous bénéficiez de l'intégralité des <strong>{prorataCalculation.passagesTheoriques} passages</strong> mensuels.
-                                    </p>
-                                    <div className="pt-2 border-t border-slate-200 flex items-baseline justify-between">
-                                        <span className="text-xs text-slate-600">Tarif mensuel :</span>
-                                        <span className="text-base font-extrabold text-primary">
-                                            {prorataCalculation.regularAmount} MAD / mois
-                                        </span>
-                                    </div>
-                                </div>
-                            )}
-                        </div>
-                    )}
+                <div className="max-w-md">
+                    <input
+                        type="date"
+                        required
+                        min={minDateStr}
+                        value={startDate || minDateStr}
+                        onChange={(e) => onStartDateChange(e.target.value)}
+                        className="w-full h-12 px-4 bg-white border-2 border-slate-200 rounded-xl text-slate-800 font-bold text-sm focus:border-primary focus:outline-none transition-colors"
+                    />
+                    <p className="text-[11px] text-slate-500 mt-1.5">
+                        Votre abonnement démarre le jour de votre réservation et se renouvelle chaque mois.
+                    </p>
                 </div>
             </div>
         </div>

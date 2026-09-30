@@ -73,31 +73,73 @@ export const calculateSurchargeMultiplier = (
 };
 
 /**
- * Returns the subscription discount rate for enterprise services based on frequency.
- * - 1x/semaine, 1x/mois, 2x/mois (and other monthly): 0%
- * - 2x/semaine, 3x/semaine: 10%
- * - 4x/semaine, 5x/semaine: 20%
- * - 6x/semaine, 7x/semaine: 25%
+ * Returns the subscription discount rate for any service based on frequency, service and duration.
+ *
+ * Universal Grid:
+ * - 1 fois par semaine : 10%
+ * - 2 fois par semaine : 15%
+ * - 3 fois par semaine : 15%
+ * - 4 fois par semaine : 20%
+ * - 5 fois par semaine : 20%
+ * - 6 fois par semaine : 25%
+ * - 7 fois par semaine : 25%
+ * - 1 fois par mois : 10%
+ * - 2 fois par mois : 10%
+ *
+ * Special rule for Ménage Bureaux:
+ * - Only the 10% discount is subject to the restriction (< 4h => 0%).
+ * - The 10% discount is applied starting from 4 hours of cleaning.
+ * - Higher discounts (15%, 20%, 25%) are applied normally.
  */
-export const getEntrepriseSubscriptionDiscountRate = (subFrequency: string): number => {
-    switch (subFrequency) {
-        case "2foisParSemaine":
-        case "3foisParSemaine":
-            return 0.10;
-        case "4foisParSemaine":
-        case "5foisParSemaine":
-            return 0.20;
-        case "6foisParSemaine":
-        case "7foisParSemaine":
-            return 0.25;
-        case "1foisParSemaine":
-        case "1foisParMois":
-        case "2foisParMois":
-        case "3foisParMois":
-        case "4foisParMois":
-        default:
-            return 0;
+export const getSubscriptionDiscountRate = (
+    subFrequency: string,
+    service?: string,
+    duration?: number
+): number => {
+    if (!subFrequency) return 0;
+
+    const val = subFrequency.toLowerCase().replace(/\s+/g, '').replace(/_/g, '');
+
+    let rate = 0;
+
+    // Mensuel (1x/mois, 2x/mois, 3x/mois, 4x/mois) => 10%
+    if (val.includes('mois') || val.includes('mensuel')) {
+        rate = 0.10;
+    } else if (val.includes('6fois') || val.includes('6/sem') || val.includes('7fois') || val.includes('7/sem')) {
+        // 6 or 7 fois par semaine => 25%
+        rate = 0.25;
+    } else if (val.includes('4fois') || val.includes('4/sem') || val.includes('5fois') || val.includes('5/sem')) {
+        // 4 or 5 fois par semaine => 20%
+        rate = 0.20;
+    } else if (val.includes('2fois') || val.includes('2/sem') || val.includes('3fois') || val.includes('3/sem')) {
+        // 2 or 3 fois par semaine => 15%
+        rate = 0.15;
+    } else if (val.includes('1fois') || val.includes('1/sem') || val.includes('hebdo')) {
+        // 1 fois par semaine => 10%
+        rate = 0.10;
     }
+
+    // Règle spécifique Ménage bureau : seule la réduction de 10% nécessite au moins 4h de ménage (non appliquée si < 4h)
+    const isBureau = service && (
+        service.toLowerCase().includes('bureau') ||
+        service.toLowerCase().includes('bureaux')
+    );
+
+    if (isBureau && rate === 0.10 && duration !== undefined && duration < 4) {
+        return 0;
+    }
+
+    return rate;
+};
+
+/**
+ * Backward compatibility alias for entreprise services.
+ */
+export const getEntrepriseSubscriptionDiscountRate = (
+    subFrequency: string,
+    duration?: number
+): number => {
+    return getSubscriptionDiscountRate(subFrequency, 'menage-bureaux', duration);
 };
 
 /**

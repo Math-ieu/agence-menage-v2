@@ -346,33 +346,59 @@ export default function PlacementClient() {
                                                             </span>
                                                         </div>
                                                         {formData.frequency === "subscription" && formData.joursPassage.length > 0 && (
-                                                            <div className="flex justify-between gap-4 border-t border-primary/10 pt-2 text-xs">
-                                                                <span className="text-muted-foreground text-sm">Jours:</span>
-                                                                <span className="font-medium text-right text-primary font-bold">
-                                                                    {formData.joursPassage.map(j => j.jour.slice(0, 3).toUpperCase()).join(', ')}
-                                                                </span>
-                                                            </div>
+                                                            <>
+                                                                <div className="flex justify-between gap-4 border-t border-primary/10 pt-2 text-xs">
+                                                                    <span className="text-muted-foreground text-sm">Jours:</span>
+                                                                    <span className="font-medium text-right text-primary font-bold">
+                                                                        {formData.joursPassage.map(j => j.jour.slice(0, 3).toUpperCase()).join(', ')}
+                                                                    </span>
+                                                                </div>
+                                                                {prorataInfo && prorataInfo.passagesTheoriques > 0 && (
+                                                                    <div className="flex justify-between gap-4 text-xs">
+                                                                        <span className="text-muted-foreground text-sm">Interventions :</span>
+                                                                        <span className="font-bold text-right text-slate-700">
+                                                                            {prorataInfo.passagesTheoriques} interventions / mois
+                                                                        </span>
+                                                                    </div>
+                                                                )}
+                                                            </>
                                                         )}
                                                         <div className="flex justify-between gap-4">
                                                             <span className="text-muted-foreground text-sm">Personnel:</span>
                                                             <span className="font-medium text-right text-slate-700 text-sm">{formData.numberOfPeople} Pers.</span>
                                                         </div>
-                                                        <div className="flex justify-between gap-4">
-                                                            <span className="text-muted-foreground text-sm">{formData.frequency === "subscription" ? "1ère intervention:" : "Date:"}</span>
-                                                            <span className="font-medium text-right text-slate-700 text-sm">{formData.schedulingDate || "Non définie"}</span>
-                                                        </div>
                                                         {formData.frequency === "oneshot" && (
-                                                            <div className="flex justify-between gap-4">
-                                                                <span className="text-muted-foreground text-sm">Heure:</span>
-                                                                <span className="font-medium text-right text-slate-700 text-sm">
-                                                                    {formData.schedulingType === "fixed" ? formData.fixedTime : (formData.schedulingTime === "morning" ? "Le matin" : "L'après midi")}
-                                                                </span>
-                                                            </div>
+                                                            <>
+                                                                <div className="flex justify-between gap-4">
+                                                                    <span className="text-muted-foreground text-sm">Date:</span>
+                                                                    <span className="font-medium text-right text-slate-700 text-sm">{formData.schedulingDate || "Non définie"}</span>
+                                                                </div>
+                                                                <div className="flex justify-between gap-4">
+                                                                    <span className="text-muted-foreground text-sm">Heure:</span>
+                                                                    <span className="font-medium text-right text-slate-700 text-sm">
+                                                                        {formData.schedulingType === "fixed" ? formData.fixedTime : (formData.schedulingTime === "morning" ? "Le matin" : "L'après midi")}
+                                                                    </span>
+                                                                </div>
+                                                            </>
                                                         )}
                                                     </div>
                                                 </div>
 
-                                                <div className="pt-4 border-t border-primary/20">
+                                                <div className="pt-4 border-t border-primary/20 space-y-3">
+                                                    {formData.frequency === "subscription" && prorataInfo && (prorataInfo.passagesTheoriques > 0 || prorataInfo.passagesRestants > 0) && (
+                                                        <div className="bg-amber-50 p-2.5 rounded-lg border border-amber-200 space-y-1.5">
+                                                            <div className="flex justify-between items-baseline text-xs text-amber-900 font-bold">
+                                                                <span>
+                                                                    {prorataInfo.prorataActive ? "Prorata 1er mois" : "1er mois"} ({prorataInfo.passagesRestants || prorataInfo.passagesTheoriques} intervention{(prorataInfo.passagesRestants || prorataInfo.passagesTheoriques) > 1 ? 's' : ''}) :
+                                                                </span>
+                                                                <span className="font-extrabold text-amber-900">Sur devis</span>
+                                                            </div>
+                                                            <div className="flex justify-between items-baseline text-[11px] text-amber-800 font-medium pt-1 border-t border-amber-200/60">
+                                                                <span>À partir du 2ᵉ mois ({prorataInfo.passagesTheoriques} intervention{prorataInfo.passagesTheoriques > 1 ? 's' : ''}) :</span>
+                                                                <span className="font-bold text-amber-900 text-right">Sur devis</span>
+                                                            </div>
+                                                        </div>
+                                                    )}
                                                     {promoCode && (
                                                         <div className="flex justify-between text-emerald-600 font-medium mb-2 text-sm">
                                                             <span>Code promo :</span>
@@ -449,9 +475,28 @@ export default function PlacementClient() {
                                             {/* Frequency Section */}
                                             <div className="space-y-4">
                                                 <h3 className="text-lg font-bold bg-primary/10 text-primary p-3 rounded-lg text-center uppercase border border-primary/20">
-                                                    Choisissez la formule
+                                                    Formule : Ponctuelle ou Abonnement ?
                                                 </h3>
                                                 <div className="p-4 bg-muted/20 rounded-xl space-y-4">
+                                                    {formData.frequency === "oneshot" && (
+                                                        <div className="max-w-xl mx-auto px-2 py-1 text-red-500 font-semibold text-xs sm:text-sm md:text-base space-y-1">
+                                                            <p className="font-bold text-red-500 text-sm sm:text-base mb-1.5">
+                                                                Pourquoi choisir un abonnement ?
+                                                            </p>
+                                                            <p className="flex items-start gap-2">
+                                                                <span className="select-none font-bold">•</span>
+                                                                <span>Vos interventions sont planifiées à l&apos;avance.</span>
+                                                            </p>
+                                                            <p className="flex items-start gap-2">
+                                                                <span className="select-none font-bold">•</span>
+                                                                <span>Vous avez le même profil planifié pour toutes les interventions.</span>
+                                                            </p>
+                                                            <p className="flex items-start gap-2">
+                                                                <span className="select-none font-bold">•</span>
+                                                                <span>Vous bénéficiez d&apos;un tarif réduit grâce à l&apos;abonnement.</span>
+                                                            </p>
+                                                        </div>
+                                                    )}
                                                     <div className="flex bg-slate-100 p-1.5 rounded-full w-full max-w-md mx-auto">
                                                         <button
                                                             type="button"
@@ -465,7 +510,7 @@ export default function PlacementClient() {
                                                         </button>
                                                         <button
                                                             type="button"
-                                                            className={`flex-1 py-2 px-4 rounded-full text-sm font-bold transition-all ${formData.frequency === "subscription"
+                                                            className={`flex-1 py-2 px-4 rounded-full text-sm font-bold transition-all flex items-center justify-center gap-1.5 ${formData.frequency === "subscription"
                                                                 ? "bg-primary text-slate-800 shadow-sm"
                                                                 : "text-slate-500 hover:text-primary"
                                                             }`}
@@ -475,7 +520,10 @@ export default function PlacementClient() {
                                                                 subFrequency: formData.subFrequency || "2foisParSemaine"
                                                             })}
                                                         >
-                                                            Abonnement
+                                                            <span>Abonnement</span>
+                                                            <span className="text-[10px] bg-amber-400 text-amber-950 font-extrabold px-2 py-0.5 rounded-full whitespace-nowrap">
+                                                                jusqu&apos;à -25%
+                                                            </span>
                                                         </button>
                                                     </div>
                                                     {formData.frequency === "subscription" && (
@@ -490,6 +538,8 @@ export default function PlacementClient() {
                                                                 durationHours={8}
                                                                 baseMonthlyPrice={0}
                                                                 onProrataCalculated={(info) => setProrataInfo(info)}
+                                                                isEntreprise={true}
+                                                                serviceName="placement"
                                                             />
                                                         </div>
                                                     )}

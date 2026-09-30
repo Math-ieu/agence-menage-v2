@@ -22,7 +22,7 @@ import cleaningProduct from "@/assets/cleaning-product.webp";
 import cleaningClothsMop from "@/assets/cleaning-cloths-mop.webp";
 import { createWhatsAppLink, formatBookingMessage, DESTINATION_PHONE_NUMBER, getConfirmationMessage } from "@/lib/whatsapp";
 import { sendBookingEmail } from "@/lib/email";
-import { calculateSurchargeMultiplier, getSurchargeDetails } from "@/lib/pricing";
+import { calculateSurchargeMultiplier, getSurchargeDetails, getSubscriptionDiscountRate } from "@/lib/pricing";
 import "@/styles/sticky-summary.css";
 import { Checkbox } from "@/components/ui/checkbox";
 import {
@@ -131,7 +131,7 @@ export default function GrandMenageClient() {
             "4foisParMois": 1,
         };
         visitsPerWeek = visitsMap[formData.subFrequency] || 2;
-        discountRate = 0.1;
+        discountRate = getSubscriptionDiscountRate(formData.subFrequency, "grand-menage", formData.duration);
         const monthlyHours = formData.duration * visitsPerWeek * 4;
         const subtotalMonthly = monthlyHours * baseRate * formData.numberOfPeople;
         discountAmount = subtotalMonthly * discountRate;
@@ -249,7 +249,9 @@ export default function GrandMenageClient() {
                 surchargeLabel: surchargeInfo.label,
                 surchargePercent: surchargeInfo.surchargePercent,
                 surchargeAmount: Math.round(surchargeAmount),
-                baseServicePrice: Math.round(baseServicePrice)
+                baseServicePrice: Math.round(baseServicePrice),
+                discountRate: Math.round(discountRate * 100),
+                discountAmount: Math.round(discountAmount)
             };
 
             setCustomerName(`${firstName} ${lastName}`);
@@ -406,12 +408,22 @@ Il comprend le :
                                                     <span className="font-medium text-right text-sm text-slate-700">{formData.frequency === 'subscription' ? 'Abonnement' : 'Une fois'}</span>
                                                 </div>
                                                 {formData.frequency === "subscription" && formData.joursPassage.length > 0 && (
-                                                    <div className="flex justify-between gap-4 border-t border-primary/10 pt-2 text-xs">
-                                                        <span className="text-muted-foreground">Jours:</span>
-                                                        <span className="font-medium text-right text-primary font-bold">
-                                                            {formData.joursPassage.map(j => j.jour.slice(0, 3).toUpperCase()).join(', ')}
-                                                        </span>
-                                                    </div>
+                                                    <>
+                                                        <div className="flex justify-between gap-4 border-t border-primary/10 pt-2 text-xs">
+                                                            <span className="text-muted-foreground">Jours:</span>
+                                                            <span className="font-medium text-right text-primary font-bold">
+                                                                {formData.joursPassage.map(j => j.jour.slice(0, 3).toUpperCase()).join(', ')}
+                                                            </span>
+                                                        </div>
+                                                        {prorataInfo && prorataInfo.passagesTheoriques > 0 && (
+                                                            <div className="flex justify-between gap-4 text-xs">
+                                                                <span className="text-muted-foreground">Interventions :</span>
+                                                                <span className="font-bold text-right text-slate-700">
+                                                                    {prorataInfo.passagesTheoriques} interventions / mois
+                                                                </span>
+                                                            </div>
+                                                        )}
+                                                    </>
                                                 )}
                                                 <div className="flex justify-between gap-4">
                                                     <span className="text-muted-foreground">Durée:</span>
@@ -439,17 +451,19 @@ Il comprend le :
                                                         <span>+{Math.round(surchargeAmount)} MAD</span>
                                                     </div>
                                                 )}
-                                                <div className="flex justify-between gap-4 border-t border-primary/10 pt-2">
-                                                    <span className="text-muted-foreground">{formData.frequency === "subscription" ? "1ère intervention:" : "Date:"}</span>
-                                                    <span className="font-medium text-right text-slate-700">{formData.schedulingDate || "Non définie"}</span>
-                                                </div>
                                                 {formData.frequency === "oneshot" && (
-                                                    <div className="flex justify-between gap-4">
-                                                        <span className="text-muted-foreground">Heure:</span>
-                                                        <span className="font-medium text-right text-slate-700">
-                                                            {formData.schedulingType === "fixed" ? formData.fixedTime : (formData.schedulingTime === "morning" ? "Le matin" : "L'après midi")}
-                                                        </span>
-                                                    </div>
+                                                    <>
+                                                        <div className="flex justify-between gap-4 border-t border-primary/10 pt-2">
+                                                            <span className="text-muted-foreground">Date:</span>
+                                                            <span className="font-medium text-right text-slate-700">{formData.schedulingDate || "Non définie"}</span>
+                                                        </div>
+                                                        <div className="flex justify-between gap-4">
+                                                            <span className="text-muted-foreground">Heure:</span>
+                                                            <span className="font-medium text-right text-slate-700">
+                                                                {formData.schedulingType === "fixed" ? formData.fixedTime : (formData.schedulingTime === "morning" ? "Le matin" : "L'après midi")}
+                                                            </span>
+                                                        </div>
+                                                    </>
                                                 )}
                                             </div>
                                         </div>
@@ -457,18 +471,23 @@ Il comprend le :
                                         <div className="pt-4 border-t">
                                             {formData.frequency === "subscription" && discountAmount > 0 && (
                                                 <div className="flex justify-between gap-4 text-emerald-600 font-bold bg-emerald-50 p-2 rounded mb-2 text-xs">
-                                                    <span>Remise abonnement (10%):</span>
+                                                    <span>Remise abonnement ({Math.round(discountRate * 100)}%):</span>
                                                     <span>-{Math.round(discountAmount)} MAD</span>
                                                 </div>
                                             )}
-                                            {formData.frequency === "subscription" && prorataInfo?.prorataActive && (
-                                                <div className="bg-amber-50 p-2.5 rounded-lg border border-amber-200 mb-3 space-y-1">
-                                                    <div className="flex justify-between text-xs text-amber-900 font-bold">
-                                                        <span>Prorata 1er mois ({prorataInfo.passagesRestants}/{prorataInfo.passagesTheoriques} passages) :</span>
-                                                        <span>{Math.round(prorataInfo.prorataAmount)} MAD</span>
+                                            {formData.frequency === "subscription" && prorataInfo && (prorataInfo.passagesTheoriques > 0 || prorataInfo.passagesRestants > 0) && (
+                                                <div className="bg-amber-50 p-2.5 rounded-lg border border-amber-200 mb-3 space-y-1.5">
+                                                    <div className="flex justify-between items-baseline text-xs text-amber-900 font-bold">
+                                                        <span>
+                                                            {prorataInfo.prorataActive ? "Prorata 1er mois" : "1er mois"} ({prorataInfo.passagesRestants || prorataInfo.passagesTheoriques} intervention{(prorataInfo.passagesRestants || prorataInfo.passagesTheoriques) > 1 ? 's' : ''}) :
+                                                        </span>
+                                                        <span className="font-extrabold">
+                                                            {Math.round(prorataInfo.prorataActive ? prorataInfo.prorataAmount : calculateRegularTotal())} MAD
+                                                        </span>
                                                     </div>
-                                                    <div className="text-[11px] text-amber-700 font-medium">
-                                                        Dès le 2ᵉ mois : {Math.round(calculateRegularTotal())} MAD/mois
+                                                    <div className="flex justify-between items-baseline text-[11px] text-amber-800 font-medium pt-1 border-t border-amber-200/60">
+                                                        <span>À partir du 2ᵉ mois ({prorataInfo.passagesTheoriques} intervention{prorataInfo.passagesTheoriques > 1 ? 's' : ''}) :</span>
+                                                        <span className="font-bold text-amber-900 text-right">{Math.round(calculateRegularTotal())} MAD/mois</span>
                                                     </div>
                                                 </div>
                                             )}
@@ -548,10 +567,30 @@ Il comprend le :
                                     </div>
 
                                     <div>
-                                        <h3 className="text-xl font-bold bg-primary text-white p-3 rounded-lg mb-4 text-center uppercase">
-                                            Choisissez la formule
+                                        <h3 className="text-xl font-bold bg-primary text-white p-3 rounded-lg mb-4 text-center">
+                                            Formule : Ponctuelle ou Abonnement ?
                                         </h3>
                                         <div className="p-4 bg-muted/30 rounded-xl space-y-4">
+                                            {formData.frequency === "oneshot" && (
+                                                <div className="max-w-xl mx-auto px-2 py-1 text-red-500 font-semibold text-xs sm:text-sm md:text-base space-y-1">
+                                                    <p className="font-bold text-red-500 text-sm sm:text-base mb-1.5">
+                                                        Pourquoi choisir un abonnement ?
+                                                    </p>
+                                                    <p className="flex items-start gap-2">
+                                                        <span className="select-none font-bold">•</span>
+                                                        <span>Votre ménage est planifié à l&apos;avance.</span>
+                                                    </p>
+                                                    <p className="flex items-start gap-2">
+                                                        <span className="select-none font-bold">•</span>
+                                                        <span>Vous avez la même femme de ménage planifiée pour toutes les interventions.</span>
+                                                    </p>
+                                                    <p className="flex items-start gap-2">
+                                                        <span className="select-none font-bold">•</span>
+                                                        <span>Vous bénéficiez d&apos;un tarif réduit grâce à l&apos;abonnement.</span>
+                                                    </p>
+                                                </div>
+                                            )}
+
                                             <div className="flex bg-slate-100 p-1.5 rounded-full w-full max-w-md mx-auto">
                                                 <button
                                                     type="button"
@@ -578,7 +617,9 @@ Il comprend le :
                                                     })}
                                                 >
                                                     <span>Abonnement</span>
-                                                    <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-emerald-500 text-white font-black">-10%</span>
+                                                    <span className="text-[10px] bg-amber-400 text-amber-950 font-extrabold px-2 py-0.5 rounded-full whitespace-nowrap">
+                                                        jusqu&apos;à -25%
+                                                    </span>
                                                 </button>
                                             </div>
 
@@ -594,6 +635,7 @@ Il comprend le :
                                                         durationHours={formData.duration}
                                                         baseMonthlyPrice={calculateRegularTotal()}
                                                         onProrataCalculated={(info) => setProrataInfo(info)}
+                                                        serviceName="grand-menage"
                                                     />
                                                 </div>
                                             )}
