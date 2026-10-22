@@ -29,6 +29,7 @@ interface SubscriptionSchedulerProps {
     onStartDateChange: (date: string) => void;
     durationHours?: number;
     baseMonthlyPrice: number;
+    unitPricePerPassage?: number;
     onProrataCalculated?: (info: ProrataInfo) => void;
     isEntreprise?: boolean;
     serviceName?: string;
@@ -53,6 +54,7 @@ export const SubscriptionScheduler: React.FC<SubscriptionSchedulerProps> = ({
     onStartDateChange,
     durationHours = 4,
     baseMonthlyPrice,
+    unitPricePerPassage,
     onProrataCalculated,
     isEntreprise = false,
     serviceName
@@ -79,8 +81,8 @@ export const SubscriptionScheduler: React.FC<SubscriptionSchedulerProps> = ({
     const calculateEndTime = (startTime: string, hours: number) => {
         if (!startTime) return '13:00';
         const [h, m] = startTime.split(':').map(Number);
-        const endHour = Math.min(22, (h || 9) + (hours || 4));
-        return `${String(endHour).padStart(2, '0')}:${String(m || 0).padStart(2, '0')}`;
+        const endHour = Math.min(23, (isNaN(h) ? 9 : h) + (isNaN(hours) ? 4 : hours));
+        return `${String(endHour).padStart(2, '0')}:${String(isNaN(m) ? 0 : m).padStart(2, '0')}`;
     };
 
     // Toggle day selection
@@ -143,6 +145,24 @@ export const SubscriptionScheduler: React.FC<SubscriptionSchedulerProps> = ({
             }]);
         }
     }, [maxDaysAllowed, subFrequency]);
+
+    // Synchroniser automatiquement l'heure de fin des créneaux sélectionnés dès que la durée (durationHours) change
+    useEffect(() => {
+        if (joursPassage.length > 0 && durationHours > 0) {
+            let hasChanges = false;
+            const updated = joursPassage.map(j => {
+                const expectedEnd = calculateEndTime(j.heure_debut, durationHours);
+                if (j.heure_fin !== expectedEnd) {
+                    hasChanges = true;
+                    return { ...j, heure_fin: expectedEnd };
+                }
+                return j;
+            });
+            if (hasChanges) {
+                onJoursPassageChange(updated);
+            }
+        }
+    }, [durationHours, joursPassage, onJoursPassageChange]);
 
     const currentDiscountPercent = useMemo(() => {
         const rate = getSubscriptionDiscountRate(
@@ -223,10 +243,13 @@ export const SubscriptionScheduler: React.FC<SubscriptionSchedulerProps> = ({
                 // Si la 1ère intervention tombe dans le mois calendaire de démarrage
                 const fallsInStartMonth = (firstIntervYear === startYear && firstIntervMonth === startMonth);
                 const totalRestants = fallsInStartMonth ? 1 : 0;
+                const unitPrice = (unitPricePerPassage && unitPricePerPassage > 0) ? unitPricePerPassage : baseMonthlyPrice;
+                const regularAmount = Math.round(unitPrice * 1);
+                const prorataAmount = regularAmount;
                 return {
                     prorataActive: false,
-                    prorataAmount: baseMonthlyPrice,
-                    regularAmount: baseMonthlyPrice,
+                    prorataAmount,
+                    regularAmount,
                     passagesRestants: totalRestants,
                     passagesTheoriques: totalTheoriques,
                     discountPercent: currentDiscountPercent
@@ -248,13 +271,14 @@ export const SubscriptionScheduler: React.FC<SubscriptionSchedulerProps> = ({
                 }
 
                 const isProrata = totalRestants < totalTheoriques;
-                const ratio = totalTheoriques > 0 ? (totalRestants / totalTheoriques) : 1;
-                const prorataAmount = isProrata ? Math.round(baseMonthlyPrice * ratio) : baseMonthlyPrice;
+                const unitPrice = (unitPricePerPassage && unitPricePerPassage > 0) ? unitPricePerPassage : (baseMonthlyPrice / 2);
+                const regularAmount = (unitPricePerPassage && unitPricePerPassage > 0) ? Math.round(unitPricePerPassage * 2) : baseMonthlyPrice;
+                const prorataAmount = isProrata ? Math.round(unitPrice * totalRestants) : regularAmount;
 
                 return {
                     prorataActive: isProrata,
                     prorataAmount,
-                    regularAmount: baseMonthlyPrice,
+                    regularAmount,
                     passagesRestants: totalRestants,
                     passagesTheoriques: totalTheoriques,
                     discountPercent: currentDiscountPercent
@@ -292,13 +316,20 @@ export const SubscriptionScheduler: React.FC<SubscriptionSchedulerProps> = ({
             }
 
             const isProrata = totalRestants < totalTheoriques;
-            const ratio = totalRestants / totalTheoriques;
-            const prorataAmount = isProrata ? Math.round(baseMonthlyPrice * ratio) : baseMonthlyPrice;
+            const unitPrice = (unitPricePerPassage && unitPricePerPassage > 0)
+                ? unitPricePerPassage
+                : (totalTheoriques > 0 ? baseMonthlyPrice / totalTheoriques : baseMonthlyPrice);
+
+            const regularAmount = (unitPricePerPassage && unitPricePerPassage > 0)
+                ? Math.round(unitPricePerPassage * totalTheoriques)
+                : baseMonthlyPrice;
+
+            const prorataAmount = isProrata ? Math.round(unitPrice * totalRestants) : regularAmount;
 
             return {
                 prorataActive: isProrata,
                 prorataAmount,
-                regularAmount: baseMonthlyPrice,
+                regularAmount,
                 passagesRestants: totalRestants,
                 passagesTheoriques: totalTheoriques,
                 discountPercent: currentDiscountPercent
@@ -314,7 +345,7 @@ export const SubscriptionScheduler: React.FC<SubscriptionSchedulerProps> = ({
                 discountPercent: currentDiscountPercent
             };
         }
-    }, [startDate, joursPassage, baseMonthlyPrice, currentDiscountPercent]);
+    }, [startDate, joursPassage, baseMonthlyPrice, unitPricePerPassage, currentDiscountPercent]);
 
     // Notify parent on prorata calculation change
     useEffect(() => {

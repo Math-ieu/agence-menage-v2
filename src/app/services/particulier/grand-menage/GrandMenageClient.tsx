@@ -115,6 +115,7 @@ export default function GrandMenageClient() {
     let baseServicePrice = 0;
     let surchargeAmount = 0;
     let regularMonthlyTotal = 0;
+    let unitPricePerPassage = 0;
 
     if (formData.frequency === "subscription") {
         const visitsMap: Record<string, number> = {
@@ -132,12 +133,22 @@ export default function GrandMenageClient() {
         };
         visitsPerWeek = visitsMap[formData.subFrequency] || 2;
         discountRate = getSubscriptionDiscountRate(formData.subFrequency, "grand-menage", formData.duration);
-        const monthlyHours = formData.duration * visitsPerWeek * 4;
-        const subtotalMonthly = monthlyHours * baseRate * formData.numberOfPeople;
-        discountAmount = subtotalMonthly * discountRate;
+        const singlePassageGross = formData.duration * baseRate * formData.numberOfPeople;
+        const singlePassageDiscount = singlePassageGross * discountRate;
+        const singlePassageNet = singlePassageGross - singlePassageDiscount;
+        unitPricePerPassage = Math.round(singlePassageNet * multiplier);
+
+        const theoreticalPassages = (prorataInfo && prorataInfo.passagesTheoriques > 0)
+            ? prorataInfo.passagesTheoriques
+            : (visitsPerWeek * 4);
+
+        const subtotalMonthly = theoreticalPassages * singlePassageGross;
+        discountAmount = theoreticalPassages * singlePassageDiscount;
         baseServicePrice = subtotalMonthly - discountAmount;
         surchargeAmount = baseServicePrice * (multiplier - 1);
-        regularMonthlyTotal = baseServicePrice * multiplier;
+        regularMonthlyTotal = (prorataInfo && prorataInfo.regularAmount > 0)
+            ? prorataInfo.regularAmount
+            : Math.round(baseServicePrice * multiplier);
         if (formData.additionalServices.produitsEtOutils) regularMonthlyTotal += 90 * visitsPerWeek * 4;
         if (SURCHARGE_CITIES.includes(formData.city)) regularMonthlyTotal += 50 * visitsPerWeek * 4;
         if (formData.additionalServices.torchonsEtSerpierres) regularMonthlyTotal += 40 * visitsPerWeek * 4;
@@ -151,6 +162,7 @@ export default function GrandMenageClient() {
         baseServicePrice = formData.duration * baseRate * formData.numberOfPeople;
         surchargeAmount = baseServicePrice * (multiplier - 1);
         totalServicePrice = baseServicePrice * multiplier;
+        unitPricePerPassage = totalServicePrice;
     }
 
     const calculateTotal = () => {
@@ -236,6 +248,11 @@ export default function GrandMenageClient() {
                 promoCodeId: promoCode ? promoCode.id : undefined,
                 promoCodeInput: promoCode ? promoCode.code : undefined,
                 is_subscription: isSub,
+                duration: formData.duration,
+                duree_heures: formData.duration,
+                nb_heures: formData.duration,
+                duree: formData.duration,
+                unitPricePerPassage: Math.round(unitPricePerPassage),
                 frequence: isSub ? (formData.subFrequency || '2foisParSemaine') : 'oneshot',
                 jours_passage: isSub ? formData.joursPassage : [],
                 date_debut: dateEffective,
@@ -634,6 +651,7 @@ Il comprend le :
                                                         onStartDateChange={(date) => setFormData(prev => ({ ...prev, schedulingDate: date }))}
                                                         durationHours={formData.duration}
                                                         baseMonthlyPrice={calculateRegularTotal()}
+                                                        unitPricePerPassage={unitPricePerPassage}
                                                         onProrataCalculated={(info) => setProrataInfo(info)}
                                                         serviceName="grand-menage"
                                                     />

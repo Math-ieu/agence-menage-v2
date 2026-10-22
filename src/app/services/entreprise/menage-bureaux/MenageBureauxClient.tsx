@@ -173,9 +173,15 @@ export default function MenageBureauxClient() {
         "4foisParMois": 1,
     };
     const visitsPerWeek = visitsMap[formData.subFrequency] || 2;
-    const subtotalMonthly = perVisitTotal * visitsPerWeek * 4;
+    const unitPricePerPassage = isSubscriptionForm ? Math.round(perVisitTotal * (1 - subDiscountRate)) : Math.round(perVisitTotal);
+    const theoreticalPassages = (prorataInfo && prorataInfo.passagesTheoriques > 0)
+        ? prorataInfo.passagesTheoriques
+        : (visitsPerWeek * 4);
+    const subtotalMonthly = perVisitTotal * theoreticalPassages;
     discountAmount = isSubscriptionForm ? subtotalMonthly * discountRate : 0;
-    const regularMonthlyTotalHT = subtotalMonthly - (subtotalMonthly * subDiscountRate);
+    const regularMonthlyTotalHT = (prorataInfo && prorataInfo.regularAmount > 0)
+        ? prorataInfo.regularAmount
+        : Math.round(subtotalMonthly - (subtotalMonthly * subDiscountRate));
 
     if (formData.frequency === "subscription") {
         if (prorataInfo?.prorataActive && prorataInfo.prorataAmount > 0) {
@@ -249,6 +255,11 @@ export default function MenageBureauxClient() {
             promoCodeId: promoCode ? promoCode.id : undefined,
             promoCodeInput: promoCode ? promoCode.code : undefined,
             is_subscription: isSub,
+            duration: formData.duration,
+            duree_heures: formData.duration,
+            nb_heures: formData.duration,
+            duree: formData.duration,
+            unitPricePerPassage: Math.round(unitPricePerPassage),
             frequence: isSub ? (formData.subFrequency || '2foisParSemaine') : 'oneshot',
             jours_passage: isSub ? formData.joursPassage : [],
             date_debut: dateEffective,
@@ -639,6 +650,7 @@ export default function MenageBureauxClient() {
                                                         onStartDateChange={(date) => setFormData(prev => ({ ...prev, schedulingDate: date }))}
                                                         durationHours={formData.duration}
                                                         baseMonthlyPrice={regularMonthlyTotalHT}
+                                                        unitPricePerPassage={unitPricePerPassage}
                                                         onProrataCalculated={(info) => setProrataInfo(info)}
                                                         isEntreprise={true}
                                                         serviceName="menage-bureaux"

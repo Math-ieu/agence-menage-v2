@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useState, useRef, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { SERVICE_COLORS } from "@/constants/service-colors";
 import { ChevronDown, ChevronUp } from "lucide-react";
@@ -105,6 +105,10 @@ export default function MenageStandardClient() {
     const neighborhoodRef = useRef<HTMLInputElement>(null);
     const changeRepereNotesRef = useRef<HTMLTextAreaElement>(null);
 
+    const handleProrataCalculated = useCallback((info: ProrataInfo) => {
+        setProrataInfo(info);
+    }, []);
+
     const baseRate = 60;
 
     // Pricing Logic
@@ -123,26 +127,45 @@ export default function MenageStandardClient() {
 
     let baseServicePrice = 0;
     let surchargeAmount = 0;
+    let unitPricePerPassage = 0;
 
     if (formData.frequency === "subscription") {
         visitsPerWeek = visitsMap[formData.subFrequency] || 2;
         discountRate = getSubscriptionDiscountRate(formData.subFrequency, "menage-standard", formData.duration);
-        const monthlyHours = formData.duration * visitsPerWeek * 4;
-        const subtotalMonthly = monthlyHours * baseRate * formData.numberOfPeople;
-        discountAmount = subtotalMonthly * discountRate;
+
+        // Tarif unitaire brut & net par passage (heures × taux × pers × (1 - remise) × majoration)
+        const singlePassageGross = formData.duration * baseRate * formData.numberOfPeople;
+        const singlePassageDiscount = singlePassageGross * discountRate;
+        const singlePassageNet = singlePassageGross - singlePassageDiscount;
+        unitPricePerPassage = Math.round(singlePassageNet * multiplier);
+
+        // Nombre de passages mensuels théoriques : calendrier réel si prorata calculé, sinon base standard
+        const theoreticalPassages = (prorataInfo && prorataInfo.passagesTheoriques > 0)
+            ? prorataInfo.passagesTheoriques
+            : (visitsPerWeek * 4);
+
+        const subtotalMonthly = theoreticalPassages * singlePassageGross;
+        discountAmount = theoreticalPassages * singlePassageDiscount;
         baseServicePrice = subtotalMonthly - discountAmount;
         surchargeAmount = baseServicePrice * (multiplier - 1);
-        totalServicePrice = baseServicePrice * multiplier;
+        totalServicePrice = (prorataInfo && prorataInfo.regularAmount > 0)
+            ? prorataInfo.regularAmount
+            : Math.round(baseServicePrice * multiplier);
     } else {
         baseServicePrice = formData.duration * baseRate * formData.numberOfPeople;
+        discountAmount = 0;
+        discountRate = 0;
         surchargeAmount = baseServicePrice * (multiplier - 1);
         totalServicePrice = baseServicePrice * multiplier;
+        unitPricePerPassage = totalServicePrice;
     }
 
     const calculateTotal = () => {
         let price = (formData.frequency === "subscription" && prorataInfo?.prorataActive)
             ? prorataInfo.prorataAmount
-            : totalServicePrice;
+            : ((formData.frequency === "subscription" && prorataInfo?.regularAmount)
+                ? prorataInfo.regularAmount
+                : totalServicePrice);
 
         if (formData.additionalServices.produitsEtOutils) price += 90;
         if (SURCHARGE_CITIES.includes(formData.city)) price += 50;
@@ -159,7 +182,9 @@ export default function MenageStandardClient() {
     };
 
     const calculateRegularTotal = () => {
-        let price = totalServicePrice;
+        let price = (formData.frequency === "subscription" && prorataInfo?.regularAmount)
+            ? prorataInfo.regularAmount
+            : totalServicePrice;
         if (formData.additionalServices.produitsEtOutils) price += 90;
         if (SURCHARGE_CITIES.includes(formData.city)) price += 50;
         if (formData.additionalServices.torchonsEtSerpierres) price += 40;
@@ -229,6 +254,11 @@ export default function MenageStandardClient() {
                 whatsappPrefix,
                 frequencyLabel,
                 is_subscription: isSub,
+                duration: formData.duration,
+                duree_heures: formData.duration,
+                nb_heures: formData.duration,
+                duree: formData.duration,
+                unitPricePerPassage: Math.round(unitPricePerPassage),
                 frequence: isSub ? (formData.subFrequency || '2foisParSemaine') : 'oneshot',
                 jours_passage: isSub ? formData.joursPassage : [],
                 date_debut: formData.schedulingDate || '',
@@ -286,8 +316,37 @@ export default function MenageStandardClient() {
     const incrementPeople = () => setFormData({ ...formData, numberOfPeople: formData.numberOfPeople + 1 });
     const decrementPeople = () => setFormData({ ...formData, numberOfPeople: Math.max(1, formData.numberOfPeople - 1) });
 
-    const incrementDuration = () => setFormData({ ...formData, duration: formData.duration + 1 });
-    const decrementDuration = () => setFormData({ ...formData, duration: Math.max(4, formData.duration - 1) });
+    const incrementDuration = () => {
+        const newDuration = formData.duration + 1;
+        setFormData(prev => ({
+            ...prev,
+            duration: newDuration,
+            joursPassage: prev.joursPassage.map(j => {
+                const [startH] = j.heure_debut.split(':').map(Number);
+                const endH = Math.min((startH || 9) + newDuration, 23);
+                return {
+                    ...j,
+                    heure_fin: `${String(endH).padStart(2, '0')}:00`
+                };
+            })
+        }));
+    };
+
+    const decrementDuration = () => {
+        const newDuration = Math.max(4, formData.duration - 1);
+        setFormData(prev => ({
+            ...prev,
+            duration: newDuration,
+            joursPassage: prev.joursPassage.map(j => {
+                const [startH] = j.heure_debut.split(':').map(Number);
+                const endH = Math.min((startH || 9) + newDuration, 23);
+                return {
+                    ...j,
+                    heure_fin: `${String(endH).padStart(2, '0')}:00`
+                };
+            })
+        }));
+    };
 
     const calculateEstimation = (rooms: typeof formData.rooms) => {
         const roomTimes: Record<string, number> = {
@@ -616,7 +675,8 @@ Il comprend le :
                                                 onStartDateChange={(date) => setFormData(prev => ({ ...prev, schedulingDate: date }))}
                                                 durationHours={formData.duration}
                                                 baseMonthlyPrice={totalServicePrice}
-                                                onProrataCalculated={(info) => setProrataInfo(info)}
+                                                unitPricePerPassage={unitPricePerPassage}
+                                                onProrataCalculated={handleProrataCalculated}
                                                 serviceName="menage-standard"
                                             />
                                         </div>

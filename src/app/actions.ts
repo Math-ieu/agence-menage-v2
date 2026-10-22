@@ -343,12 +343,17 @@ export async function sendBookingEmailResend(serviceName: string, data: any, pri
       const cleanDate = rawDate && typeof rawDate === 'string' && rawDate.trim() !== '' ? rawDate.trim() : null;
 
       const cleanerCount = data.numberOfPeople || data.nb_intervenants || data.nb_intervenantes || data.nb_personnel || 1;
+      const durationHours = Number(data.duration || data.duree_heures || data.nb_heures || data.duree || 4);
       const enrichedFormData = {
         ...data,
         numberOfPeople: cleanerCount,
         nb_intervenants: cleanerCount,
         nb_intervenantes: cleanerCount,
         nb_personnel: cleanerCount,
+        duration: durationHours,
+        duree_heures: durationHours,
+        nb_heures: durationHours,
+        duree: durationHours,
       };
 
       const apiPayload = {
