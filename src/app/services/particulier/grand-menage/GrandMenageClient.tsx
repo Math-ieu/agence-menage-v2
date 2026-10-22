@@ -116,6 +116,9 @@ export default function GrandMenageClient() {
     let surchargeAmount = 0;
     let regularMonthlyTotal = 0;
     let unitPricePerPassage = 0;
+    const isSurchargeCity = SURCHARGE_CITIES.includes(formData.city);
+    const travelFeePerPassage = isSurchargeCity ? (50 * formData.numberOfPeople) : 0;
+    let theoreticalPassages = 1;
 
     if (formData.frequency === "subscription") {
         const visitsMap: Record<string, number> = {
@@ -136,9 +139,9 @@ export default function GrandMenageClient() {
         const singlePassageGross = formData.duration * baseRate * formData.numberOfPeople;
         const singlePassageDiscount = singlePassageGross * discountRate;
         const singlePassageNet = singlePassageGross - singlePassageDiscount;
-        unitPricePerPassage = Math.round(singlePassageNet * multiplier);
+        unitPricePerPassage = Math.round(singlePassageNet * multiplier) + travelFeePerPassage;
 
-        const theoreticalPassages = (prorataInfo && prorataInfo.passagesTheoriques > 0)
+        theoreticalPassages = (prorataInfo && prorataInfo.passagesTheoriques > 0)
             ? prorataInfo.passagesTheoriques
             : (visitsPerWeek * 4);
 
@@ -148,10 +151,9 @@ export default function GrandMenageClient() {
         surchargeAmount = baseServicePrice * (multiplier - 1);
         regularMonthlyTotal = (prorataInfo && prorataInfo.regularAmount > 0)
             ? prorataInfo.regularAmount
-            : Math.round(baseServicePrice * multiplier);
-        if (formData.additionalServices.produitsEtOutils) regularMonthlyTotal += 90 * visitsPerWeek * 4;
-        if (SURCHARGE_CITIES.includes(formData.city)) regularMonthlyTotal += 50 * visitsPerWeek * 4;
-        if (formData.additionalServices.torchonsEtSerpierres) regularMonthlyTotal += 40 * visitsPerWeek * 4;
+            : Math.round(baseServicePrice * multiplier) + (travelFeePerPassage * theoreticalPassages);
+        if (formData.additionalServices.produitsEtOutils) regularMonthlyTotal += 90 * theoreticalPassages;
+        if (formData.additionalServices.torchonsEtSerpierres) regularMonthlyTotal += 40 * theoreticalPassages;
 
         if (prorataInfo?.prorataActive && prorataInfo.prorataAmount > 0) {
             totalServicePrice = prorataInfo.prorataAmount;
@@ -161,7 +163,7 @@ export default function GrandMenageClient() {
     } else {
         baseServicePrice = formData.duration * baseRate * formData.numberOfPeople;
         surchargeAmount = baseServicePrice * (multiplier - 1);
-        totalServicePrice = baseServicePrice * multiplier;
+        totalServicePrice = (baseServicePrice * multiplier) + travelFeePerPassage;
         unitPricePerPassage = totalServicePrice;
     }
 
@@ -169,7 +171,6 @@ export default function GrandMenageClient() {
         let price = totalServicePrice;
         if (formData.frequency === "oneshot") {
             if (formData.additionalServices.produitsEtOutils) price += 90;
-            if (SURCHARGE_CITIES.includes(formData.city)) price += 50;
             if (formData.additionalServices.torchonsEtSerpierres) price += 40;
         }
 
@@ -268,7 +269,17 @@ export default function GrandMenageClient() {
                 surchargeAmount: Math.round(surchargeAmount),
                 baseServicePrice: Math.round(baseServicePrice),
                 discountRate: Math.round(discountRate * 100),
-                discountAmount: Math.round(discountAmount)
+                discountAmount: Math.round(discountAmount),
+                travel_fee_per_passage: travelFeePerPassage,
+                travel_fee_total: isSub
+                    ? (prorataInfo?.prorataActive ? (travelFeePerPassage * (prorataInfo?.passagesRestants || 0)) : (travelFeePerPassage * theoreticalPassages))
+                    : travelFeePerPassage,
+                is_surcharge_city: isSurchargeCity,
+                frais_deplacement_unitaire: travelFeePerPassage,
+                frais_deplacement_total: isSub
+                    ? (prorataInfo?.prorataActive ? (travelFeePerPassage * (prorataInfo?.passagesRestants || 0)) : (travelFeePerPassage * theoreticalPassages))
+                    : travelFeePerPassage,
+                ville_avec_supplement: isSurchargeCity
             };
 
             setCustomerName(`${firstName} ${lastName}`);
@@ -466,6 +477,22 @@ Il comprend le :
                                                     <div className="flex justify-between gap-4 text-amber-800 font-bold bg-amber-50 p-2 rounded text-xs border border-amber-200">
                                                         <span>{surchargeInfo.label}:</span>
                                                         <span>+{Math.round(surchargeAmount)} MAD</span>
+                                                    </div>
+                                                )}
+                                                {isSurchargeCity && travelFeePerPassage > 0 && (
+                                                    <div className="flex justify-between gap-4 text-orange-800 font-bold bg-orange-50 p-2 rounded text-xs border border-orange-200">
+                                                        <div className="flex flex-col text-left">
+                                                            <span>Frais de déplacement ({formData.city}) :</span>
+                                                            <span className="text-[10px] font-normal text-orange-700">
+                                                                {formData.frequency === "subscription"
+                                                                    ? `50 MAD × ${formData.numberOfPeople} pers. × ${theoreticalPassages} passages`
+                                                                    : `50 MAD × ${formData.numberOfPeople} pers.`}
+                                                            </span>
+                                                        </div>
+                                                        <span className="whitespace-nowrap">
+                                                            +{formData.frequency === "subscription" ? (travelFeePerPassage * theoreticalPassages) : travelFeePerPassage} MAD
+                                                            {formData.frequency === "subscription" ? "/mois" : ""}
+                                                        </span>
                                                     </div>
                                                 )}
                                                 {formData.frequency === "oneshot" && (
@@ -928,7 +955,7 @@ Il comprend le :
                                                 </svg>
                                             </div>
                                             <p className="text-xs font-medium text-orange-800 leading-relaxed">
-                                                Si vous êtes dans les zones <span className="font-bold">Bouskoura, Dar Bouazza, Mansouria, Almaz, Sidi Rahal, Benslimane, Mohammédia, Ville Verte...</span> un supplément de <span className="font-bold whitespace-nowrap px-1 bg-orange-200/50 rounded-md text-orange-700">50 MAD</span> vous sera facturé pour faciliter le déplacement.
+                                                Si vous êtes dans les zones <span className="font-bold">Bouskoura, Dar Bouazza, Mansouria, Almaz, Sidi Rahal, Benslimane, Mohammédia, Ville Verte...</span> un supplément de <span className="font-bold whitespace-nowrap px-1 bg-orange-200/50 rounded-md text-orange-700">50 MAD par intervenante et par passage</span> vous sera facturé pour faciliter le déplacement.
                                             </p>
                                         </div>
                                         <div className="p-4 border rounded-xl bg-white shadow-sm">

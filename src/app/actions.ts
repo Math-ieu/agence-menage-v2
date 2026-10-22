@@ -564,6 +564,7 @@ export async function sendBookingEmailResend(serviceName: string, data: any, pri
       })()}</td></tr>` : ""}
       ${optionalServices.length > 0 ? `<tr><td style="padding: 5px 0;"><strong>Services optionnels:</strong></td><td>${optionalServices.join(", ")}</td></tr>` : ""}
       ${surchargeLabel ? `<tr><td style="padding: 5px 0; color: #b45309;"><strong>Majoration horaire:</strong></td><td style="padding: 5px 0; color: #b45309; font-weight: bold;">${surchargeLabel}${surchargeAmount ? ` (+${surchargeAmount} MAD)` : ''}</td></tr>` : ""}
+      ${data.frais_deplacement_total && data.frais_deplacement_total > 0 ? `<tr><td style="padding: 5px 0; color: #c2410c;"><strong>Frais de déplacement:</strong></td><td style="padding: 5px 0; color: #c2410c; font-weight: bold;">+${data.frais_deplacement_total} MAD (${data.city || "Zone périphérique"}${data.frais_deplacement_unitaire ? ` : ${data.frais_deplacement_unitaire} MAD / passage` : ''})</td></tr>` : ""}
       ${formattedSurface ? `<tr><td style="padding: 5px 0;"><strong>Surface:</strong></td><td>${formattedSurface}</td></tr>` : ""}
       ${serviceName === "Ménage post-déménagement" ? `
         <tr><td style="padding: 5px 0;"><strong>État du logement:</strong></td><td>${data.accommodationState || "-"}</td></tr>

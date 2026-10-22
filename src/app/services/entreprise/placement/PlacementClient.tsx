@@ -801,7 +801,7 @@ export default function PlacementClient() {
                                                 </svg>
                                             </div>
                                             <p className="text-xs font-medium text-orange-800 leading-relaxed">
-                                                Si vous êtes dans les zones <span className="font-bold">Bouskoura, Dar Bouazza, Mansouria, Almaz, Sidi Rahal, Benslimane, Mohammédia, Ville Verte...</span> un supplément de <span className="font-bold whitespace-nowrap px-1 bg-orange-200/50 rounded-md text-orange-700">50 MAD</span> vous sera facturé pour faciliter le déplacement.
+                                                Si vous êtes dans les zones <span className="font-bold">Bouskoura, Dar Bouazza, Mansouria, Almaz, Sidi Rahal, Benslimane, Mohammédia, Ville Verte...</span> un supplément de <span className="font-bold whitespace-nowrap px-1 bg-orange-200/50 rounded-md text-orange-700">50 MAD par intervenant et par passage</span> vous sera facturé pour faciliter le déplacement.
                                             </p>
                                         </div>
                                                 <Textarea

@@ -100,6 +100,8 @@ const MenageDemenagementContent = () => {
     let totalPrice = 0;
     let discountAmount = 0;
     const discountRate = 0.1;
+    const isSurchargeCity = SURCHARGE_CITIES.includes(formData.city);
+    const travelFeePerPassage = (isSurchargeCity && basePrice > 0) ? 50 : 0;
 
     const multiplier = calculateSurchargeMultiplier(
         formData.schedulingDate,
@@ -120,12 +122,13 @@ const MenageDemenagementContent = () => {
             "1foisAn": 1 / 52 // Very low frequency, but following the pattern
         };
         const visitsPerWeek = visitsMap[formData.subFrequency] || 1;
-        const perVisitPrice = corePrice + additionalCosts;
-        const subtotalMonthly = perVisitPrice * visitsPerWeek * 4;
+        const theoreticalPassages = visitsPerWeek * 4;
+        const perVisitPrice = corePrice + additionalCosts + travelFeePerPassage;
+        const subtotalMonthly = perVisitPrice * theoreticalPassages;
         discountAmount = subtotalMonthly * discountRate;
         totalPrice = subtotalMonthly - discountAmount;
     } else {
-        totalPrice = corePrice > 0 ? corePrice + additionalCosts : 0;
+        totalPrice = corePrice > 0 ? (corePrice + additionalCosts + travelFeePerPassage) : 0;
     }
 
     if (promoCode && totalPrice > 0) {
@@ -174,7 +177,13 @@ const MenageDemenagementContent = () => {
                     ? `${phonePrefix} ${phoneNumber}`
                     : `${whatsappPrefix} ${whatsappNumber}`,
                 promoCodeId: promoCode ? promoCode.id : undefined,
-                promoCodeInput: promoCode ? promoCode.code : undefined
+                promoCodeInput: promoCode ? promoCode.code : undefined,
+                travel_fee_per_passage: travelFeePerPassage,
+                travel_fee_total: travelFeePerPassage,
+                is_surcharge_city: isSurchargeCity,
+                frais_deplacement_unitaire: travelFeePerPassage,
+                frais_deplacement_total: travelFeePerPassage,
+                ville_avec_supplement: isSurchargeCity
             };
 
             setCustomerName(`${firstName} ${lastName}`);
@@ -312,6 +321,15 @@ Options possibles : vitres extérieures/grandes baies, terrasse.`}
                                                     <div className="flex justify-between gap-4 text-red-600 font-bold bg-red-50 p-2 rounded">
                                                         <span>Majoration Intensif (15%):</span>
                                                         <span>+{intensivePrice} MAD</span>
+                                                    </div>
+                                                )}
+                                                {isSurchargeCity && travelFeePerPassage > 0 && (
+                                                    <div className="flex justify-between gap-4 text-orange-800 font-bold bg-orange-50 p-2 rounded text-xs border border-orange-200">
+                                                        <div className="flex flex-col text-left">
+                                                            <span>Frais de déplacement ({formData.city}) :</span>
+                                                            <span className="text-[10px] font-normal text-orange-700">Zone périphérique</span>
+                                                        </div>
+                                                        <span className="whitespace-nowrap">+{travelFeePerPassage} MAD</span>
                                                     </div>
                                                 )}
                                                 <div className="flex justify-between gap-4 border-t border-primary/10 pt-2">
@@ -615,7 +633,7 @@ Options possibles : vitres extérieures/grandes baies, terrasse.`}
                                                 </svg>
                                             </div>
                                             <p className="text-xs font-medium text-orange-800 leading-relaxed">
-                                                Si vous êtes dans les zones <span className="font-bold">Bouskoura, Dar Bouazza, Mansouria, Almaz, Sidi Rahal, Benslimane, Mohammédia, Ville Verte...</span> un supplément de <span className="font-bold whitespace-nowrap px-1 bg-orange-200/50 rounded-md text-orange-700">50 MAD</span> vous sera facturé pour faciliter le déplacement.
+                                                Si vous êtes dans les zones <span className="font-bold">Bouskoura, Dar Bouazza, Mansouria, Almaz, Sidi Rahal, Benslimane, Mohammédia, Ville Verte...</span> un supplément de <span className="font-bold whitespace-nowrap px-1 bg-orange-200/50 rounded-md text-orange-700">50 MAD par passage</span> vous sera facturé pour faciliter le déplacement.
                                             </p>
                                         </div>
                                         <div className="p-4 border rounded-xl bg-white shadow-sm">
