@@ -426,7 +426,7 @@ export async function sendBookingEmailResend(serviceName: string, data: any, pri
       </tr>
       ${Array.isArray(data.jours_passage) && data.jours_passage.length > 0 ? `
       <tr>
-        <td style="padding: 5px 0; color: #166534; vertical-align: top;"><strong>Planning hebdomadaire :</strong></td>
+        <td style="padding: 5px 0; color: #166534; vertical-align: top;"><strong>${(data.subFrequency || data.frequence || data.frequencyLabel || '').toLowerCase().includes('mois') ? 'Planning des interventions :' : 'Planning hebdomadaire :'}</strong></td>
         <td style="padding: 5px 0; color: #0f172a;">
           <table style="width: 100%; border-collapse: collapse; background: #ffffff; border: 1px solid #dcfce7; border-radius: 6px; margin-top: 4px;">
             ${data.jours_passage.map((j: any) => `
@@ -595,7 +595,7 @@ export async function sendBookingEmailResend(serviceName: string, data: any, pri
     ${isEntreprise && (data.totalHT !== undefined || typeof price === 'number') ? `
       <div style="background-color: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 14px; margin-bottom: 8px;">
         <table style="width: 100%; border-collapse: collapse; font-size: 13px;">
-          ${data.discountAmount > 0 ? `
+          ${isSubscription && data.discountAmount > 0 ? `
           <tr>
             <td style="padding: 4px 0; color: #166534; font-weight: bold;">Remise abonnement (${data.discountRate}%) :</td>
             <td style="padding: 4px 0; text-align: right; color: #166534; font-weight: bold;">-${data.discountAmount} MAD HT</td>

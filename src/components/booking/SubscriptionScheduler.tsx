@@ -62,10 +62,13 @@ export const SubscriptionScheduler: React.FC<SubscriptionSchedulerProps> = ({
     // Get max days allowed based on frequency
     const maxDaysAllowed = useMemo(() => {
         if (!subFrequency) return 1;
-        if (subFrequency === '1foisParSemaine' || subFrequency === '1foisParMois') return 1;
-        if (subFrequency === '2foisParSemaine' || subFrequency === '2foisParMois') return 2;
-        if (subFrequency === '3foisParSemaine' || subFrequency === '3foisParMois') return 3;
-        if (subFrequency === '4foisParSemaine' || subFrequency === '4foisParMois') return 4;
+        // Pour les fréquences mensuelles (1 fois/mois ou 2 fois/mois tous les 15j),
+        // l'utilisateur choisit 1 seul jour de référence dans la semaine
+        if (subFrequency === '1foisParMois' || subFrequency === '2foisParMois') return 1;
+        if (subFrequency === '1foisParSemaine') return 1;
+        if (subFrequency === '2foisParSemaine') return 2;
+        if (subFrequency === '3foisParSemaine') return 3;
+        if (subFrequency === '4foisParSemaine') return 4;
         if (subFrequency === '5foisParSemaine') return 5;
         if (subFrequency === '6foisParSemaine') return 6;
         if (subFrequency === '7foisParSemaine') return 7;
@@ -214,7 +217,51 @@ export const SubscriptionScheduler: React.FC<SubscriptionSchedulerProps> = ({
                 }
             }
 
-            // Étape 2 : Scanner le mois de la première intervention réelle
+            // Cas A : Fréquence mensuelle « 1 fois par mois »
+            if (subFrequency === '1foisParMois') {
+                const totalTheoriques = 1;
+                // Si la 1ère intervention tombe dans le mois calendaire de démarrage
+                const fallsInStartMonth = (firstIntervYear === startYear && firstIntervMonth === startMonth);
+                const totalRestants = fallsInStartMonth ? 1 : 0;
+                return {
+                    prorataActive: false,
+                    prorataAmount: baseMonthlyPrice,
+                    regularAmount: baseMonthlyPrice,
+                    passagesRestants: totalRestants,
+                    passagesTheoriques: totalTheoriques,
+                    discountPercent: currentDiscountPercent
+                };
+            }
+
+            // Cas B : Fréquence mensuelle « 2 fois par mois » (Tous les 15 jours)
+            if (subFrequency === '2foisParMois') {
+                const totalTheoriques = 2;
+                const firstDate = new Date(firstIntervYear, firstIntervMonth, firstIntervDay);
+                const secondDate = new Date(firstIntervYear, firstIntervMonth, firstIntervDay + 14);
+
+                let totalRestants = 0;
+                if (firstDate.getFullYear() === startYear && firstDate.getMonth() === startMonth) {
+                    totalRestants++;
+                }
+                if (secondDate.getFullYear() === startYear && secondDate.getMonth() === startMonth) {
+                    totalRestants++;
+                }
+
+                const isProrata = totalRestants < totalTheoriques;
+                const ratio = totalTheoriques > 0 ? (totalRestants / totalTheoriques) : 1;
+                const prorataAmount = isProrata ? Math.round(baseMonthlyPrice * ratio) : baseMonthlyPrice;
+
+                return {
+                    prorataActive: isProrata,
+                    prorataAmount,
+                    regularAmount: baseMonthlyPrice,
+                    passagesRestants: totalRestants,
+                    passagesTheoriques: totalTheoriques,
+                    discountPercent: currentDiscountPercent
+                };
+            }
+
+            // Étape 2 : Scanner le mois de la première intervention réelle (Fréquences hebdomadaires)
             const year = firstIntervYear;
             const month = firstIntervMonth;
             const lastDayOfMonth = new Date(year, month + 1, 0).getDate();
@@ -419,7 +466,7 @@ export const SubscriptionScheduler: React.FC<SubscriptionSchedulerProps> = ({
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1">
                     <label className="text-sm font-bold text-slate-800 flex items-center gap-2">
                         <Calendar size={16} className="text-primary" />
-                        <span>2. Jours de passage dans la semaine</span>
+                        <span>{subFrequency?.toLowerCase().includes('mois') ? "2. Jour de passage souhaité" : "2. Jours de passage dans la semaine"}</span>
                     </label>
                     <span className="text-xs font-semibold px-2.5 py-1 rounded-full bg-slate-100 text-slate-600">
                         {joursPassage.length}/{maxDaysAllowed} jour{maxDaysAllowed > 1 ? 's' : ''} sélectionné{joursPassage.length > 1 ? 's' : ''}

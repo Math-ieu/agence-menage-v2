@@ -155,7 +155,9 @@ export default function MenageBureauxClient() {
 
     let totalPriceHT = 0;
     let discountAmount = 0;
-    const discountRate = getSubscriptionDiscountRate(formData.subFrequency, "menage-bureaux", formData.duration);
+    const isSubscriptionForm = formData.frequency === "subscription";
+    const subDiscountRate = getSubscriptionDiscountRate(formData.subFrequency, "menage-bureaux", formData.duration);
+    const discountRate = isSubscriptionForm ? subDiscountRate : 0;
 
     const visitsMap: Record<string, number> = {
         "1foisParSemaine": 1,
@@ -172,8 +174,8 @@ export default function MenageBureauxClient() {
     };
     const visitsPerWeek = visitsMap[formData.subFrequency] || 2;
     const subtotalMonthly = perVisitTotal * visitsPerWeek * 4;
-    discountAmount = subtotalMonthly * discountRate;
-    const regularMonthlyTotalHT = subtotalMonthly - discountAmount;
+    discountAmount = isSubscriptionForm ? subtotalMonthly * discountRate : 0;
+    const regularMonthlyTotalHT = subtotalMonthly - (subtotalMonthly * subDiscountRate);
 
     if (formData.frequency === "subscription") {
         if (prorataInfo?.prorataActive && prorataInfo.prorataAmount > 0) {
@@ -262,8 +264,8 @@ export default function MenageBureauxClient() {
             totalHT,
             tvaAmount,
             totalTTC,
-            discountRate: Math.round(discountRate * 100),
-            discountAmount: Math.round(discountAmount)
+            discountRate: isSub ? Math.round(discountRate * 100) : 0,
+            discountAmount: isSub ? Math.round(discountAmount) : 0
         };
 
         setCustomerName(contactPerson);
